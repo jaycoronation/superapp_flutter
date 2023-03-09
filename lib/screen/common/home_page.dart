@@ -123,7 +123,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +142,7 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.only(left: 15, bottom: 15, top: 15, right: 2),
+                          padding: const EdgeInsets.only(left: 15, bottom: 20, top: 20, right: 2),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,10 +187,13 @@ class _HomePageState extends BaseState<HomePage> {
                     Expanded(
                         child: InkWell(
                           onTap: (){
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()), (Route<dynamic> route) => false);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => EStateVaultHomePage()),
+                            );
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(15),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +220,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +239,7 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +264,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,7 +283,7 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
