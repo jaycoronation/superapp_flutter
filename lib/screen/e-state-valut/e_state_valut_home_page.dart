@@ -17,13 +17,168 @@ class EStateVaultHomePage extends StatefulWidget {
 class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   final bool _isLoading = false;
   List<HeaderGetSet> menuList = List<HeaderGetSet>.empty(growable: true);
-  List<MenuGetSet> directions = List<MenuGetSet>.empty(growable: true);
-  List<MenuGetSet> assets = List<MenuGetSet>.empty(growable: true);
-  List<MenuGetSet> debt = List<MenuGetSet>.empty(growable: true);
+  int headerPosition = 0;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    setListData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: appBg,
+        appBar: AppBar(
+            toolbarHeight: 60,
+            automaticallyImplyLeading: false,
+            backgroundColor: appBg,
+            elevation: 0,
+            centerTitle: false,
+            title: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(right: 8),
+                    child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
+                  ),
+                ),
+                const Expanded(
+                    child: Text(
+                   "Estate Vault",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                )),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.all(8),
+                    width: 32,
+                    height: 32,
+                    child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32,color: blue),
+                  ),
+                ),
+              ],
+            )),
+        body: SafeArea(
+          top: false,
+          child: _isLoading
+              ? const LoadingWidget()
+              : Column(
+                  children: [
+                    Expanded(child: Padding(
+                        padding: const EdgeInsets.only(left: 15,right: 15),
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Container(
+                            child: _headerList(),
+                          ),
+                        )))
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  ListView _headerList() {
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        controller: _scrollController,
+        physics: const NeverScrollableScrollPhysics(),
+        primary: false,
+        padding: EdgeInsets.zero,
+        itemCount: menuList.length,
+        itemBuilder: (ctx, index) => (GestureDetector(
+            onTap: () async {
+              setState(() {
+                headerPosition = index;
+              });
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              color: white,
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(top: 8,bottom: 8),
+                    decoration: BoxDecoration(color: headerPosition == index ? blue : semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          menuList[index].name,
+                          style: TextStyle(color: headerPosition == index ? white : blue, fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        const Spacer(),
+                        Image.asset(headerPosition == index ? 'assets/images/ic_arrow_double_down.png' : 'assets/images/ic_arrow_double_right.png', width: 24, height: 24,color: headerPosition == index ? white : blue),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: headerPosition == index,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 6,bottom: 6),
+                        child: _menuList(menuList[index].menuItems),
+                      ))
+                ],
+              ),
+            ))));
+  }
+
+  GridView _menuList(List<MenuGetSet> menuItems) {
+    return GridView.builder(
+      gridDelegate:
+      const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisExtent: 120, crossAxisSpacing: 6, mainAxisSpacing: 6),
+      controller: _scrollController,
+      itemCount: menuItems.length,
+      physics: const NeverScrollableScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      primary: false,
+      itemBuilder: (BuildContext context, int index) {
+        return InkWell(
+          hoverColor: Colors.white.withOpacity(0.0),
+          onTap: () async {
+          },
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(menuItems[index].itemIcon, color: blue, height: 32, width: 32),
+                Gap(18),
+                Text(
+                  menuItems[index].name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: black , fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void setListData() {
     HeaderGetSet headerGetSet = HeaderGetSet();
     headerGetSet.setName = "General Information";
     List<MenuGetSet> temp1 = List<MenuGetSet>.empty(growable: true);
@@ -81,303 +236,97 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
           nameStatic: "Domestic Employees",
           itemIconStatic: "assets/images/vault_ic_domestic_employee.png")
     ];
-    headerGetSet1.setList = temp1;
+    headerGetSet1.setList = temp2;
     menuList.add(headerGetSet1);
+
+    HeaderGetSet headerGetSet2 = HeaderGetSet();
+    headerGetSet2.setName = "Assets";
+    List<MenuGetSet> temp3 = List<MenuGetSet>.empty(growable: true);
+    temp3 = [
+      MenuGetSet(
+          idStatic : 12,
+          nameStatic: "Government Related",
+          itemIconStatic: "assets/images/vault_ic_goverment.png"),
+      MenuGetSet(
+          idStatic : 13,
+          nameStatic: "Employment-Related",
+          itemIconStatic: "assets/images/vault_ic_employee.png"),
+      MenuGetSet(
+          idStatic : 14,
+          nameStatic: "Insurance Policies",
+          itemIconStatic: "assets/images/vault_ic_instruction.png"),
+      MenuGetSet(
+          idStatic : 15,
+          nameStatic: "Mutual Funds",
+          itemIconStatic: "assets/images/vault_ic_finance.png"),
+      MenuGetSet(
+          idStatic : 16,
+          nameStatic: "Shares Bonds",
+          itemIconStatic: "assets/images/vault_ic_finance.png"),
+      MenuGetSet(
+          idStatic : 17,
+          nameStatic: "Other Financial Assets",
+          itemIconStatic: "assets/images/vault_ic_finance.png"),
+      MenuGetSet(
+          idStatic : 18,
+          nameStatic: "Bank Accounts",
+          itemIconStatic: "assets/images/vault_ic_bank.png"),
+      MenuGetSet(
+          idStatic : 19,
+          nameStatic: "Intellectual Property",
+          itemIconStatic: "assets/images/vault_ic_property.png"),
+      MenuGetSet(
+          idStatic : 20,
+          nameStatic: "Real Estate",
+          itemIconStatic: "assets/images/vault_ic_real_estate.png"),
+      MenuGetSet(
+          idStatic : 21,
+          nameStatic: "Other Assets",
+          itemIconStatic: "assets/images/vault_ic_other_assests.png")
+    ];
+    headerGetSet2.setList = temp3;
+    menuList.add(headerGetSet2);
+
+    HeaderGetSet headerGetSet3 = HeaderGetSet();
+    headerGetSet3.setName = "Obligation & Debt";
+    List<MenuGetSet> temp4 = List<MenuGetSet>.empty(growable: true);
+    temp4 = [
+      MenuGetSet(
+          idStatic : 22,
+          nameStatic: "Credit Cards and Loans",
+          itemIconStatic: "assets/images/vault_ic_credit_card.png"),
+      MenuGetSet(
+          idStatic : 23,
+          nameStatic: "Former Spouse/ Children from previous marriage",
+          itemIconStatic: "assets/images/vault_ic_former_spouse.png"),
+      MenuGetSet(
+          idStatic : 24,
+          nameStatic: "Charity Related",
+          itemIconStatic: "assets/images/vault_ic_charity.png"),
+      MenuGetSet(
+          idStatic : 25,
+          nameStatic: "Fiduciary Obligations",
+          itemIconStatic: "assets/images/vault_ic_fiduciary_obligations.png"),
+      MenuGetSet(
+          idStatic : 26,
+          nameStatic: "Other Debts",
+          itemIconStatic: "assets/images/vault_ic_debts.png")
+    ];
+    headerGetSet3.setList = temp4;
+    menuList.add(headerGetSet3);
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        SystemNavigator.pop();
-        return Future.value(true);
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: appBg,
-        appBar: AppBar(
-            toolbarHeight: 60,
-            automaticallyImplyLeading: false,
-            backgroundColor: appBg,
-            elevation: 0,
-            centerTitle: false,
-            title: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
-                  ),
-                ),
-                Expanded(
-                    child: Text(
-                  "Hi,${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                )),
-              ],
-            )),
-        body: SafeArea(
-          top: false,
-          child: _isLoading
-              ? LoadingWidget()
-              : Column(
-                  children: [
-                    Expanded(
-                        child: Container(
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                          color: dashboardBg, borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            EStateVaultHomePageBlocks(),
-                            Container(
-                              alignment: Alignment.center,
-                              child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ))
-                  ],
-                ),
-        ),
-      ),
-    );
-  }
-
-  Expanded EStateVaultHomePageBlocks() {
-    return Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Gap(10),
-            Expanded(
-                flex: 1,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_portfolio.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Alpha Portfolio",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        )),
-                    const Gap(15),
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15, bottom: 15, top: 15, right: 2),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_consolidated.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Consolidated Portfolio",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
-                )),
-            const Gap(15),
-            Expanded(
-                flex: 1,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_estate_a.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Estate Analysis",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        )),
-                    const Gap(15),
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_vault.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Estate Vault",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
-                )),
-            const Gap(15),
-            Expanded(
-                flex: 1,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_meeting.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Fix Meeting",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        )),
-                    const Gap(15),
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_contact.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Contact",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
-                )),
-            const Gap(15),
-            Expanded(
-                flex: 1,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_blog.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Blogs",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        )),
-                    const Gap(15),
-                    Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_videos.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Videos",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
-                )),
-            const Gap(15),
-          ],
-        ));
-  }
-
-
-
-
-
-  /*updateDeviceTokenData() async {
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL + updateDeviceToken);
-
-    var deviceType = "";
-    if (Platform.isIOS) {
-      deviceType = "IOS";
-    } else {
-      deviceType = "Android";
-    }
-
-    Map<String, String> jsonBody = {
-      'logged_in_master_user_id': sessionManager.getMasterUserId().toString(),
-      'device_type': deviceType,
-      'token_id': sessionManager.getDeviceToken().toString().trim()
-    };
-
-    final response = await http.post(url, body: jsonBody, headers: {
-      "Authorization": sessionManager.getAuthToken().toString().trim(),
-    });
-
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> apiResponse = jsonDecode(body);
-    var dataResponse = CommanResponse.fromJson(apiResponse);
-    if (statusCode == 200 && dataResponse.success == 1) {
-    } else {}
-  }*/
 
   @override
   void castStatefulWidget() {
     widget is EStateVaultHomePage;
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
 
 
 }

@@ -212,7 +212,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
   @override
   void castStatefulWidget() {
-    // TODO: implement castStatefulWidget
     widget is LoginScreen;
   }
 
@@ -236,24 +235,35 @@ class _LoginScreenState extends BaseState<LoginScreen> {
     Map<String, dynamic> user = jsonDecode(body);
     var dataResponse = InvestWellResponse.fromJson(user);
 
-    if (statusCode == 200) {
-      try {
-        if (dataResponse.flag == "Y")
-        {
-          _makeLoginInRequest(checkValidString(dataResponse.uid.toString()));
-        }
-        else
-        {
-           showSnackBar("Invalid Username or Password.", context);
-           setState(() {
-             _isLoading = false;
-           });
-        }
-      } catch (e) {
-        print(e);
-      }
+    try {
+      if (statusCode == 200) {
+            try {
+              if (dataResponse.flag == "Y")
+              {
+                _makeLoginInRequest(checkValidString(dataResponse.uid.toString()));
+              }
+              else
+              {
+                 showSnackBar("Invalid Username or Password.", context);
+                 setState(() {
+                   _isLoading = false;
+                 });
+              }
+            } catch (e) {
+              print(e);
+              setState(() {
+                _isLoading = false;
+              });
+            }
 
-    } else {
+          } else {
+            setState(() {
+              _isLoading = false;
+            });
+            showSnackBar("Failed to login.", context);
+          }
+    } catch (e) {
+      print(e);
       setState(() {
         _isLoading = false;
       });

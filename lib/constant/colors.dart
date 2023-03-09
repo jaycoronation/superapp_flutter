@@ -24,6 +24,8 @@ const Color graySemiDark= Color(0xff9F9F9F);
 const Color grayDark= Color(0xff72716d);
 const Color blue= Color(0xff2042FE);
 const Color lightBlue= Color(0xffedf1fb);
+const Color semiBlue= Color(0xffE8EFFC);
+
 const Color purple= Color(0xffB255E1);
 const Color dashboardBg = Color(0xfff3f6fd);
 

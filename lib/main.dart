@@ -108,17 +108,16 @@ class _MyHomePageState extends State<MyHomePage> {
       WidgetsFlutterBinding.ensureInitialized();
       SessionManager sessionManager = SessionManager();
       isLoggedIn = sessionManager.checkIsLoggedIn() ?? false;
-      print("<><> NOTIF TYPE :" + NavigationService.notif_type + " <><>");
       if(isLoggedIn)
       {
-        Timer(const Duration(microseconds: 0),
+        Timer(const Duration(seconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
              const HomePage()), (Route<dynamic> route) => false));
       }
       else
       {
         Timer(
-            const Duration(microseconds:0),
+            const Duration(seconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
             const LoginScreen()), (Route<dynamic> route) => false));
       }
