@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 var bottomWidgetKey = GlobalKey<State<BottomNavigationBar>>();
 
 var keyHome = GlobalKey<ScaffoldState>();
-double kEditTextCornerRadius = 4.0;
+double kEditTextCornerRadius = 10.0;
 double kBorderRadius = 6.0;
 double kButtonCornerRadius = 8.0;
 double kButtonHeight = 42;
@@ -25,6 +25,7 @@ const Color grayDark= Color(0xff72716d);
 const Color blue= Color(0xff2042FE);
 const Color lightBlue= Color(0xffedf1fb);
 const Color semiBlue= Color(0xffE8EFFC);
+
 
 const Color purple= Color(0xffB255E1);
 const Color dashboardBg = Color(0xfff3f6fd);

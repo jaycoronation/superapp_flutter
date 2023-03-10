@@ -16,13 +16,13 @@ class MyNoDataWidget extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: 100),
         alignment: Alignment.center,
-        decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(22)),
-        width: 330,
-        height: 220,
+        // decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(22)),
+        // width: 330,
+        // height: 220,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/ic_logo.png', width: 120, height: 120),
+            // Image.asset('assets/images/ic_logo.png', width: 120, height: 120),
             Visibility(
               visible: msg.isNotEmpty,
               child: const Gap(15),
@@ -31,7 +31,7 @@ class MyNoDataWidget extends StatelessWidget {
               visible: msg.isNotEmpty,
               child: Text(
                 msg,
-                style: const TextStyle(color: black, fontSize: 20, fontWeight: FontWeight.w600),
+                style: const TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
               ),
             )
           ],

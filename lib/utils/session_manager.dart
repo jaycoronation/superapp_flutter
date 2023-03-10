@@ -1,5 +1,6 @@
 
-import 'session_manager_methods.dart';
+
+import 'package:superapp/utils/session_manager_methods.dart';
 
 class SessionManager {
   final String isLoggedIn = "isLoggedIn";

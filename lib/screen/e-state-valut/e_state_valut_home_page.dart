@@ -120,6 +120,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+
                         Text(
                           menuList[index].name,
                           style: TextStyle(color: headerPosition == index ? white : blue, fontSize: 16, fontWeight: FontWeight.w600),
@@ -326,7 +327,4 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
     _scrollController.dispose();
     super.dispose();
   }
-
-
-
 }

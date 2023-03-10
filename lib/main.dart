@@ -12,6 +12,8 @@ import 'package:superapp/screen/common/login_screen.dart';
 import 'package:superapp/utils/app_utils.dart';
 import 'package:superapp/utils/session_manager.dart';
 import 'package:superapp/utils/session_manager_methods.dart';
+import 'package:superapp/utils/session_manager_methods_pms.dart';
+import 'package:superapp/utils/session_manager_methods_vault.dart';
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
 
@@ -23,6 +25,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SessionManagerMethods.init();
+  await SessionManagerMethodsPMS.init();
+  await SessionManagerMethodsVault.init();
   PaintingBinding.instance.imageCache.maximumSizeBytes = 1000 << 40; // for increase the cache memory
   await PushNotificationService().setupInteractedMessage();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -52,25 +56,25 @@ class MyApp extends StatelessWidget {
             platform: TargetPlatform.iOS,
             inputDecorationTheme: InputDecorationTheme(
               filled: true,
-              fillColor: white,
+              fillColor: lightBlue,
               contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide:  const BorderSide(width: 0.5, style: BorderStyle.solid, color: grayDark)),
+                  borderSide:  const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width: 0.5, style: BorderStyle.solid, color: grayDark)),
+                  borderSide: const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
               errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width: 0.8, color: Colors.red)),
+                  borderSide: const BorderSide(width: 0, color: Colors.red)),
               focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width:0.8, color: Colors.red)),
+                  borderSide: const BorderSide(width:0, color: Colors.red)),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width:0.5, style: BorderStyle.solid, color: grayDark)),
+                  borderSide: const BorderSide(width:0, style: BorderStyle.solid, color: lightBlue)),
               labelStyle: const TextStyle(
-                color: grayDark,
+                color: black,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),
@@ -106,7 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> doSomeAsyncStuff() async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-      SessionManager sessionManager = SessionManager();
       isLoggedIn = sessionManager.checkIsLoggedIn() ?? false;
       if(isLoggedIn)
       {
