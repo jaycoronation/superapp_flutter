@@ -28,64 +28,59 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context);
-        return Future.value(true);
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: appBg,
-        appBar: AppBar(
-            toolbarHeight: 60,
-            automaticallyImplyLeading: false,
-            backgroundColor: appBg,
-            elevation: 0,
-            centerTitle: false,
-            title: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {},
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: appBg,
+      appBar: AppBar(
+          toolbarHeight: 60,
+          automaticallyImplyLeading: false,
+          backgroundColor: appBg,
+          elevation: 0,
+          centerTitle: false,
+          title: Row(
+            children: [
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(right: 8),
+                  child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
+                ),
+              ),
+              const Expanded(
+                  child: Text(
+                    "Estate Vault",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                  )),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(right: 5),
+                  padding: EdgeInsets.all(3),
+                  width: 32,
+                  height: 32,
+                  child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32,color: blue),
+                ),
+              ),
+            ],
+          )),
+      body: SafeArea(
+        top: false,
+        child: _isLoading
+            ? const LoadingWidget()
+            : Column(
+          children: [
+            Expanded(child: Padding(
+                padding: const EdgeInsets.only(left: 15,right: 15),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
                   child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
+                    child: _headerList(),
                   ),
-                ),
-                const Expanded(
-                    child: Text(
-                   "Estate Vault",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                )),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.all(8),
-                    width: 32,
-                    height: 32,
-                    child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32,color: blue),
-                  ),
-                ),
-              ],
-            )),
-        body: SafeArea(
-          top: false,
-          child: _isLoading
-              ? const LoadingWidget()
-              : Column(
-                  children: [
-                    Expanded(child: Padding(
-                        padding: const EdgeInsets.only(left: 15,right: 15),
-                        child: SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Container(
-                            child: _headerList(),
-                          ),
-                        )))
-                  ],
-                ),
+                )))
+          ],
         ),
       ),
     );
@@ -113,7 +108,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(15),
                     margin: const EdgeInsets.only(top: 8,bottom: 8),
                     decoration: BoxDecoration(color: headerPosition == index ? blue : semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: Row(
@@ -144,7 +139,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   GridView _menuList(List<MenuGetSet> menuItems) {
     return GridView.builder(
       gridDelegate:
-      const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisExtent: 120, crossAxisSpacing: 6, mainAxisSpacing: 6),
+      const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisExtent: 120, crossAxisSpacing: 10, mainAxisSpacing: 10),
       controller: _scrollController,
       itemCount: menuItems.length,
       physics: const NeverScrollableScrollPhysics(),
@@ -157,7 +152,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
           onTap: () async {
           },
           child: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.only(left: 5,right: 5),
             decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
             width: double.infinity,
             child: Column(
@@ -165,9 +160,10 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(menuItems[index].itemIcon, color: blue, height: 32, width: 32),
-                Gap(18),
+                const Gap(18),
                 Text(
                   menuItems[index].name,
+                  maxLines: 2,
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: black , fontSize: 16, fontWeight: FontWeight.w500),
                 ),

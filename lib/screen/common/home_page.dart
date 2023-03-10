@@ -2,10 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:superapp/screen/e-state-analysis/e_state_analysis_home_page.dart';
 import 'package:superapp/screen/e-state-valut/e_state_valut_home_page.dart';
-import 'package:superapp/utils/session_manager_methods_pms.dart';
-import 'package:superapp/utils/session_manager_methods_vault.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
@@ -126,7 +123,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +142,7 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.only(left: 15, bottom: 15, top: 15, right: 2),
+                          padding: const EdgeInsets.only(left: 15, bottom: 20, top: 20, right: 2),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,29 +166,21 @@ class _HomePageState extends BaseState<HomePage> {
                 child: Row(
                   children: [
                     Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => EStateAnalysisHomePage()),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset('assets/images/ic_estate_a.png', width: 40, height: 40),
-                                const Spacer(),
-                                const Text(
-                                  "Estate Analysis",
-                                  maxLines: 2,
-                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                                )
-                              ],
-                            ),
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset('assets/images/ic_estate_a.png', width: 40, height: 40),
+                              const Spacer(),
+                              const Text(
+                                "Estate Analysis",
+                                maxLines: 2,
+                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                              )
+                            ],
                           ),
                         )),
                     const Gap(15),
@@ -204,7 +193,7 @@ class _HomePageState extends BaseState<HomePage> {
                             );
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(15),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +220,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +239,7 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,7 +264,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +283,7 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,8 +382,6 @@ class _HomePageState extends BaseState<HomePage> {
                               onPressed: () {
                                 Navigator.pop(context);
                                 SessionManagerMethods.clear();
-                                SessionManagerMethodsPMS.clear();
-                                SessionManagerMethodsVault.clear();
                                 Navigator.pushAndRemoveUntil(
                                     context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
                               },
