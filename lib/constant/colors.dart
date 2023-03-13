@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 var bottomWidgetKey = GlobalKey<State<BottomNavigationBar>>();
 
 var keyHome = GlobalKey<ScaffoldState>();
-double kEditTextCornerRadius = 10.0;
+double kEditTextCornerRadius = 15.0;
 double kBorderRadius = 6.0;
 double kButtonCornerRadius = 8.0;
 double kButtonHeight = 42;

@@ -1,5 +1,4 @@
-import 'package:superapp/utils/session_manager_methods_vault.dart';
-
+import 'package:superapp/utils/session_manager_methods.dart';
 
 class SessionManagerVault {
   final String isLoggedIn = "isLoggedInVault";
@@ -24,118 +23,118 @@ class SessionManagerVault {
       String citynameApi,
       String cityIdApi) async {
 
-    await SessionManagerMethodsVault.setBool(isLoggedIn, true);
-    await SessionManagerMethodsVault.setString(userId,userIdApi);
-    await SessionManagerMethodsVault.setString(username,usernameApi);
-    await SessionManagerMethodsVault.setString(email,emailApi);
-    await SessionManagerMethodsVault.setString(phone, phoneApi);
-    await SessionManagerMethodsVault.setString(image, imageApi);
-    await SessionManagerMethodsVault.setString(country_name, countrynameApi);
-    await SessionManagerMethodsVault.setString(countryId, countryIdApi);
-    await SessionManagerMethodsVault.setString(state_name, statenameApi);
-    await SessionManagerMethodsVault.setString(stateId, stateIdApi);
-    await SessionManagerMethodsVault.setString(city_name, citynameApi);
-    await SessionManagerMethodsVault.setString(cityId, cityIdApi);
+    await SessionManagerMethods.setBool(isLoggedIn, true);
+    await SessionManagerMethods.setString(userId,userIdApi);
+    await SessionManagerMethods.setString(username,usernameApi);
+    await SessionManagerMethods.setString(email,emailApi);
+    await SessionManagerMethods.setString(phone, phoneApi);
+    await SessionManagerMethods.setString(image, imageApi);
+    await SessionManagerMethods.setString(country_name, countrynameApi);
+    await SessionManagerMethods.setString(countryId, countryIdApi);
+    await SessionManagerMethods.setString(state_name, statenameApi);
+    await SessionManagerMethods.setString(stateId, stateIdApi);
+    await SessionManagerMethods.setString(city_name, citynameApi);
+    await SessionManagerMethods.setString(cityId, cityIdApi);
   }
 
   bool? checkIsLoggedIn() {
-    return SessionManagerMethodsVault.getBool(isLoggedIn);
+    return SessionManagerMethods.getBool(isLoggedIn);
   }
 
   Future<void> setIsLoggedIn(bool isLogin)
   async {
-    await SessionManagerMethodsVault.setBool(isLoggedIn, isLogin);
+    await SessionManagerMethods.setBool(isLoggedIn, isLogin);
   }
 
   String getUserId() {
-    return checkValidString(SessionManagerMethodsVault.getString(userId));
+    return checkValidString(SessionManagerMethods.getString(userId));
   }
 
   Future<void> setUserId(String data)
   async {
-    await SessionManagerMethodsVault.setString(userId, data);
+    await SessionManagerMethods.setString(userId, data);
   }
 
   String getEmail() {
-    return checkValidString(SessionManagerMethodsVault.getString(email));
+    return checkValidString(SessionManagerMethods.getString(email));
   }
 
   Future<void> setEmail(String data)
   async {
-    await SessionManagerMethodsVault.setString(email, data);
+    await SessionManagerMethods.setString(email, data);
   }
 
   String getPhoneNo() {
-    return checkValidString(SessionManagerMethodsVault.getString(phone));
+    return checkValidString(SessionManagerMethods.getString(phone));
   }
 
   Future<void> setPhoneNo(String data)
   async {
-    await SessionManagerMethodsVault.setString(phone, data);
+    await SessionManagerMethods.setString(phone, data);
   }
 
   String getImage() {
-    return checkValidString(SessionManagerMethodsVault.getString(image));
+    return checkValidString(SessionManagerMethods.getString(image));
   }
 
   Future<void> setImage(String data)
   async {
-    await SessionManagerMethodsVault.setString(image, data);
+    await SessionManagerMethods.setString(image, data);
   }
 
 
   String getCountryName() {
-    return checkValidString(SessionManagerMethodsVault.getString(country_name));
+    return checkValidString(SessionManagerMethods.getString(country_name));
   }
 
   Future<void> setCountryName(String data)
   async {
-    await SessionManagerMethodsVault.setString(country_name, data);
+    await SessionManagerMethods.setString(country_name, data);
   }
 
   String getCountryId() {
-    return checkValidString(SessionManagerMethodsVault.getString(countryId));
+    return checkValidString(SessionManagerMethods.getString(countryId));
   }
 
   Future<void> setCountryId(String data)
   async {
-    await SessionManagerMethodsVault.setString(countryId, data);
+    await SessionManagerMethods.setString(countryId, data);
   }
 
   String getStateName() {
-    return checkValidString(SessionManagerMethodsVault.getString(state_name));
+    return checkValidString(SessionManagerMethods.getString(state_name));
   }
 
   Future<void> setStateName(String data)
   async {
-    await SessionManagerMethodsVault.setString(state_name, data);
+    await SessionManagerMethods.setString(state_name, data);
   }
 
   String getStateId() {
-    return checkValidString(SessionManagerMethodsVault.getString(stateId));
+    return checkValidString(SessionManagerMethods.getString(stateId));
   }
 
   Future<void> setStateId(String data)
   async {
-    await SessionManagerMethodsVault.setString(stateId, data);
+    await SessionManagerMethods.setString(stateId, data);
   }
 
   String getCityName() {
-    return checkValidString(SessionManagerMethodsVault.getString(city_name));
+    return checkValidString(SessionManagerMethods.getString(city_name));
   }
 
   Future<void> setCityName(String data)
   async {
-    await SessionManagerMethodsVault.setString(city_name, data);
+    await SessionManagerMethods.setString(city_name, data);
   }
 
   String getCityId() {
-    return checkValidString(SessionManagerMethodsVault.getString(cityId));
+    return checkValidString(SessionManagerMethods.getString(cityId));
   }
 
   Future<void> setCityId(String data)
   async {
-    await SessionManagerMethodsVault.setString(cityId, data);
+    await SessionManagerMethods.setString(cityId, data);
   }
 
   checkValidString (String? value) {

@@ -1,10 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:superapp/screen/e-state-analysis/e_state_aspiration_page.dart';
+import 'package:superapp/screen/e-state-analysis/e_state_existing_assets_page.dart';
+import 'package:superapp/screen/e-state-analysis/e_state_existing_liabilities_page.dart';
+import 'package:superapp/screen/e-state-analysis/e_state_future_inflow_main_page.dart';
+import 'package:superapp/screen/e-state-analysis/e_state_future_inflow_page.dart';
+import 'package:superapp/screen/e-state-analysis/e_state_risk_profile_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 
+import '../../constant/analysis_api_end_point.dart';
 import '../../model/e-state-analysis/analysis_menu_model.dart';
 import '../../widget/loading.dart';
 
@@ -24,6 +34,11 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
   void initState() {
     super.initState();
 
+    setMenuData();
+
+  }
+
+  void setMenuData() {
     menuList = [
       AnalysisMenuGetSet(
           idStatic : 1,
@@ -48,10 +63,9 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
       AnalysisMenuGetSet(
           idStatic : 5,
           itemPrefixIconStatic: 'assets/images/ic_final_report.png',
-          nameStatic: "Risk Profile",
+          nameStatic: sessionManager.getRiskProfile().toString().isEmpty ? "Risk Profile" : "Risk Profile(${sessionManager.getRiskProfile().toString()})",
           itemPostIconStatic: "assets/images/ic_arrow_double_right.png"),
     ];
-
   }
 
   @override
@@ -115,6 +129,15 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                                 onTap: () {
                                   if (menuList[index].id == 1) {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAspirationPage()));
+                                  }else if (menuList[index].id == 2) {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateExistingAssetsPage()));
+                                  }else if (menuList[index].id == 3) {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateExistingLiabilitiesPage()));
+                                  }else if (menuList[index].id == 4) {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateFutureInflowMainPage()));
+                                  }else if (menuList[index].id == 5) {
+                                    _redirectToNextPage(context);
+                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateRiskProfilePage()));
                                   }
 
                                 },
@@ -149,6 +172,14 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                             }),
                         InkWell(
                           onTap: () {
+                            final bytes = utf8.encode(sessionManager.getUserId().toString().trim());
+                            final base64Str = base64.encode(bytes);
+                            print(base64Str);
+
+                            var _url = API_URL + generateFinalReport + base64Str;
+                            if(_url.isNotEmpty) {
+                              launch(_url);
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(15),
@@ -180,6 +211,22 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
         ),
       ),
     );
+  }
+
+
+  Future<void> _redirectToNextPage(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const EStateRiskProfilePage()),
+    );
+    print("result ===== $result");
+    if (result == "success") {
+      setMenuData();
+
+      setState(() {
+
+      });
+    }
   }
 
   @override
