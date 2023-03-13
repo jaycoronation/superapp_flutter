@@ -1,4 +1,4 @@
-import 'package:superapp/utils/session_manager_methods_pms.dart';
+import 'package:superapp/utils/session_manager_methods.dart';
 
 class SessionManagerPMS {
   final String isLoggedIn = "isLoggedInPMS";
@@ -10,56 +10,56 @@ class SessionManagerPMS {
   //set data into shared preferences...
   Future createLoginSession(String userIdApi,String firstNameApi,String lastNameApi ,String emailApi) async {
 
-    await SessionManagerMethodsPMS.setBool(isLoggedIn, true);
-    await SessionManagerMethodsPMS.setString(userId,userIdApi);
-    await SessionManagerMethodsPMS.setString(firstName,firstNameApi);
-    await SessionManagerMethodsPMS.setString(lastName, lastNameApi);
-    await SessionManagerMethodsPMS.setString(email,emailApi);
+    await SessionManagerMethods.setBool(isLoggedIn, true);
+    await SessionManagerMethods.setString(userId,userIdApi);
+    await SessionManagerMethods.setString(firstName,firstNameApi);
+    await SessionManagerMethods.setString(lastName, lastNameApi);
+    await SessionManagerMethods.setString(email,emailApi);
   }
 
   bool? checkIsLoggedIn() {
-    return SessionManagerMethodsPMS.getBool(isLoggedIn);
+    return SessionManagerMethods.getBool(isLoggedIn);
   }
 
   Future<void> setIsLoggedIn(bool isLogin)
   async {
-    await SessionManagerMethodsPMS.setBool(isLoggedIn, isLogin);
+    await SessionManagerMethods.setBool(isLoggedIn, isLogin);
   }
 
   String getUserId() {
-    return checkValidString(SessionManagerMethodsPMS.getString(userId));
+    return checkValidString(SessionManagerMethods.getString(userId));
   }
 
   Future<void> setUserId(String data)
   async {
-    await SessionManagerMethodsPMS.setString(userId, data);
+    await SessionManagerMethods.setString(userId, data);
   }
 
   String getFristName() {
-    return checkValidString(SessionManagerMethodsPMS.getString(firstName));
+    return checkValidString(SessionManagerMethods.getString(firstName));
   }
 
   Future<void> setFristName(String data)
   async {
-    await SessionManagerMethodsPMS.setString(firstName, data);
+    await SessionManagerMethods.setString(firstName, data);
   }
 
   String getLastName() {
-    return checkValidString(SessionManagerMethodsPMS.getString(lastName));
+    return checkValidString(SessionManagerMethods.getString(lastName));
   }
 
   Future<void> setLastName(String data)
   async {
-    await SessionManagerMethodsPMS.setString(lastName, data);
+    await SessionManagerMethods.setString(lastName, data);
   }
 
   String getEmail() {
-    return checkValidString(SessionManagerMethodsPMS.getString(email));
+    return checkValidString(SessionManagerMethods.getString(email));
   }
 
   Future<void> setEmail(String data)
   async {
-    await SessionManagerMethodsPMS.setString(email, data);
+    await SessionManagerMethods.setString(email, data);
   }
 
 

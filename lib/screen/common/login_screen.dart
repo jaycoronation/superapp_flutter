@@ -325,8 +325,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
             checkValidString(dataResponse.vault!.cityId.toString()),
             );
 
-
-
         openHomePage();
       } catch (e) {
         print(e);

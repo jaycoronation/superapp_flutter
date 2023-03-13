@@ -106,4 +106,17 @@ class SessionManager {
     }
     return value.trim();
   }
+
+
+  // Risk Profile....
+  late final String risk_profile = "risk_profile";
+
+  Future<void> setRiskProfile(String apiRiskProfile)
+  async {
+    await SessionManagerMethods.setString(risk_profile, apiRiskProfile);
+  }
+
+  String? getRiskProfile() {
+    return SessionManagerMethods.getString(risk_profile);
+  }
 }

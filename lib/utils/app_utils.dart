@@ -219,8 +219,23 @@ String universalDateConverter(String inputDateFormat,String outputDateFormat, St
   return outputDate;
 }
 
+List<String> getYear(int currentYear) {
+  List<String> listData = [];
+
+  int lastYear = currentYear+100;
+
+  for (int i = currentYear; i <= lastYear; i++) {
+    listData.add("$i");
+  }
+  return listData;
+}
 
 
+List<String> getPeriodicity() {
+  List<String> listData = [];
 
-
-
+  for (int i = 1; i <= 20; i++) {
+    listData.add("$i");
+  }
+  return listData;
+}

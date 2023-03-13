@@ -7,64 +7,56 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/constant/analysis_api_end_point.dart';
 import 'package:superapp/model/CommanResponse.dart';
 import 'package:superapp/model/e-state-analysis/aspiration_types_response_model.dart';
+import 'package:superapp/model/e-state-analysis/future_inflow_list_reponse_model.dart';
 import '../../constant/colors.dart';
 import '../../model/e-state-analysis/aspiration_response_model.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 
-class EStateAddFutureExpensePage extends StatefulWidget {
-  final ListData dataGetSet;
+class EStateAddFutureInflowPage extends StatefulWidget {
+  final FutureInflows dataGetSet;
   final bool isFromList;
 
-  const EStateAddFutureExpensePage(this.dataGetSet, this.isFromList, {Key? key}) : super(key: key);
+  const EStateAddFutureInflowPage(this.dataGetSet, this.isFromList, {Key? key}) : super(key: key);
 
   @override
-  _EStateAddFutureExpensePageState createState() => _EStateAddFutureExpensePageState();
+  _EStateAddFutureInflowPageState createState() => _EStateAddFutureInflowPageState();
 }
 
-class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpensePage> {
+class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPage> {
   bool _isLoading = false;
 
-  final TextEditingController _aspirationTypeController = TextEditingController();
+  final TextEditingController _sourceController = TextEditingController();
   final TextEditingController _startYearController = TextEditingController();
   final TextEditingController _endYearController = TextEditingController();
-  final TextEditingController _periodicityController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _expectedGrowthController = TextEditingController();
+
 
   final TextEditingController _searchYearController = TextEditingController();
   List<String> listItem = List<String>.empty();
   List<String> _tempListItem = [];
 
-  final TextEditingController _searchAspirationTypeController = TextEditingController();
-  List<AspirationTypes> _tempListAspirationType = [];
-  List<AspirationTypes> listAspirationTypes = List<AspirationTypes>.empty();
 
-  bool _validAspirationType = true;
+  bool _validSource = true;
   bool _validStartYear = true;
   bool _validEndYear = true;
-  bool _validPeriodicity = true;
-  bool _validAmount = true;
+  bool _validExpectedGrowth = true;
 
-  var dataGetSet = ListData();
+  var dataGetSet = FutureInflows();
 
   @override
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
-      getAspirationType();
-    }else{
-      noInterNet(context);
-    }
-
-    dataGetSet = (widget as EStateAddFutureExpensePage).dataGetSet;
-    if (dataGetSet.aspirationId.toString().isNotEmpty) {
-      _aspirationTypeController.text = checkValidString(dataGetSet.aspirationType.toString());
+    dataGetSet = (widget as EStateAddFutureInflowPage).dataGetSet;
+    if (dataGetSet.futureInflowId.toString().isNotEmpty) {
+      _sourceController.text = checkValidString(dataGetSet.source.toString());
       _startYearController.text = checkValidString(dataGetSet.startYear.toString());
       _endYearController.text = checkValidString(dataGetSet.endYear.toString());
-      _periodicityController.text = checkValidString(dataGetSet.periodicity.toString());
       _amountController.text = checkValidString(dataGetSet.amount.toString());
+      _expectedGrowthController.text = checkValidString(dataGetSet.expectedGrowth.toString());
     }
 
   }
@@ -94,7 +86,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                           margin: const EdgeInsets.only(right: 8),
                           child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
                         )),
-                     Expanded(child: Text((widget as EStateAddFutureExpensePage).isFromList ? "Update Future Expense" : "Add Future Expense",
+                     Expanded(child: Text((widget as EStateAddFutureInflowPage).isFromList ? "Update Future Inflow" : "Add Future Inflow",
                       textAlign: TextAlign.start,
                       style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
                     )),
@@ -132,28 +124,22 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                 margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
                                 child: TextField(
                                   cursorColor: black,
-                                  controller: _aspirationTypeController,
-                                  readOnly: true,
+                                  controller: _sourceController,
                                   keyboardType: TextInputType.text,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
                                   onChanged: (text) {
                                     setState(() {
                                       if (text.isEmpty) {
-                                        _validAspirationType = false;
+                                        _validSource = false;
                                       } else {
-                                        _validAspirationType = true;
+                                        _validSource = true;
                                       }
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Aspiration Type',
-                                      errorText: _validAspirationType ? null : "Please select aspiration type for future expense"
+                                      hintText: 'Source',
+                                      errorText: _validSource ? null : "Please enter future inflow source"
                                   ),
-                                  onTap: () {
-                                    _searchAspirationTypeController.clear();
-                                    _tempListAspirationType.clear();
-                                    _showAspirationTypeDialog(context);
-                                  },
                                 ),
                               ),
                               Row(
@@ -226,52 +212,37 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                 margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
                                 child: TextField(
                                   cursorColor: black,
-                                  controller: _periodicityController,
-                                  readOnly: true,
-                                  keyboardType: TextInputType.text,
+                                  controller: _amountController,
+                                  keyboardType: TextInputType.number,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
-                                  onChanged: (text) {
-                                    setState(() {
-                                      if (text.isEmpty) {
-                                        _validPeriodicity = false;
-                                      } else {
-                                        _validPeriodicity = true;
-                                      }
-                                    });
-                                  },
                                   decoration: InputDecoration(
-                                      hintText: 'Periodicity',
-                                      errorText: _validPeriodicity ? null : "Please select periodicity of expense"
+                                      hintText: 'Amount',
                                   ),
-                                  onTap: () {
-                                    _showPeriodicityDialog();
-                                  },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                 ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
                                 child: TextField(
                                   cursorColor: black,
-                                  controller: _amountController,
-                                  keyboardType: TextInputType.number,
+                                  controller: _expectedGrowthController,
+                                  keyboardType: TextInputType.text,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
                                   onChanged: (text) {
                                     setState(() {
                                       if (text.isEmpty) {
-                                        _validAmount = false;
+                                        _validExpectedGrowth = false;
                                       } else {
-                                        _validAmount = true;
+                                        _validExpectedGrowth = true;
                                       }
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Amount',
-                                      errorText: _validAmount ? null : "Please enter expense amount"
-
+                                      hintText: 'Expected Growth(In %)',
+                                      errorText: _validExpectedGrowth ? null : "Please enter expected growth"
                                   ),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
                                 ),
                               ),
                               const Spacer(),
@@ -293,9 +264,9 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                     ),
                                     onPressed: () {
 
-                                      if(_aspirationTypeController.text.isEmpty) {
+                                      if(_sourceController.text.isEmpty) {
                                         setState(() {
-                                          _validAspirationType = false;
+                                          _validSource = false;
                                           return;
                                         });
 
@@ -311,22 +282,16 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                           return;
                                         });
 
-                                      } else if(_periodicityController.text.isEmpty) {
+                                      } else if(_expectedGrowthController.text.isEmpty) {
                                         setState(() {
-                                          _validPeriodicity = false;
-                                          return;
-                                        });
-
-                                      } else if(_amountController.text.isEmpty) {
-                                        setState(() {
-                                          _validAmount = false;
+                                          _validExpectedGrowth = false;
                                           return;
                                         });
 
                                       } else {
                                         if(isInternetConnected)
                                         {
-                                          saveAspirationsFutureExpense();
+                                          saveDetails();
                                           FocusScope.of(context).unfocus();
                                         }
                                         else
@@ -352,148 +317,6 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
           ),)
     );
   }
-
-
-  void _showAspirationTypeDialog(context) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height * 0.88,
-              child: Column(children: [
-                Container(
-                    width: 60,
-                    margin: const EdgeInsets.only(top: 12),
-                    child: const Divider(
-                      height: 1.5,
-                      thickness: 1.5,
-                      color: blue,
-                    )),
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-                  child: const Text("Select aspiration type",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: black),
-                  ),
-                ),
-                Gap(10),
-                Card(
-                    margin: const EdgeInsets.only(left: 15, right: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // if you need this
-                    ),
-                    elevation: 0,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: TextField(
-                        keyboardType: TextInputType.text,
-                        textAlign: TextAlign.start,
-                        controller: _searchYearController,
-                        cursorColor: black,
-                        style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: black,),
-                        decoration:  InputDecoration(
-                          hintText: "Search...",
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: lightBlue, width: 0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: lightBlue, width: 0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: black,
-                          ),
-
-                        ),
-                        enabled: true,
-                        onChanged: (text) {
-                          if(text.isNotEmpty)
-                          {
-                            state(() {
-                              _tempListAspirationType = _buildSearchListForAspirationType(text);
-                            });
-                          }
-                          else
-                          {
-                            state(() {
-                              _searchAspirationTypeController.clear();
-                              _tempListAspirationType.clear();
-                            });
-                          }
-                        },
-                      ),
-                    )),
-                Container(height: 6),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: _tempListAspirationType.isNotEmpty ? _tempListAspirationType.length : listAspirationTypes.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                            child: _tempListAspirationType.isNotEmpty
-                                ? _showBottomSheetForAspirationType(index, _tempListAspirationType)
-                                : _showBottomSheetForAspirationType(index, listAspirationTypes),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              setState(() {
-                                if (_tempListAspirationType.isNotEmpty) {
-                                  _aspirationTypeController.text = checkValidString(_tempListAspirationType[index].aspirationType.toString());
-                                  _validAspirationType = true;
-                                } else {
-                                  _aspirationTypeController.text = toDisplayCase(listAspirationTypes[index].aspirationType.toString());
-                                  _validAspirationType = true;
-                                }
-                              });
-                            });
-                      }),
-                ),
-              ]),
-            );
-          });
-        });
-  }
-
-  Widget _showBottomSheetForAspirationType(int index, List<AspirationTypes> listData) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
-          alignment: Alignment.centerLeft,
-          child: listData[index].aspirationType == _aspirationTypeController.text.toString()
-              ? Text(
-            checkValidString(toDisplayCase(listData[index].aspirationType.toString())),
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: blue),
-          )
-              : Text(
-            checkValidString(toDisplayCase(listData[index].aspirationType.toString())),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
-        ),
-        const Divider(
-          thickness: 0.5,
-          color: grayLight,
-          endIndent: 16,
-          indent: 16,
-        )
-      ],
-    );
-  }
-
-  List<AspirationTypes> _buildSearchListForAspirationType(String userSearchTerm) {
-    List<AspirationTypes> _searchList = [];
-    for (int i = 0; i < listAspirationTypes.length; i++) {
-      String aspirationType = listAspirationTypes[i].aspirationType.toString().toLowerCase();
-      if (aspirationType.toLowerCase().contains(userSearchTerm.toLowerCase())) {
-        _searchList.add(listAspirationTypes[i]);
-      }
-    }
-    return _searchList;
-  }
-  
 
   void _showStartYearDialog(int year, String isFor) {
     _searchYearController.clear();
@@ -627,109 +450,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
 
                                  });
                            })
-                       /*SingleChildScrollView(
-                          child: ListView.builder(
-                              itemCount: listItem.length,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          if(isFor == "End year") {
-                                            _endYearController.text = checkValidString(listItem[index]);
-                                          }else {
-                                            _startYearController.text = checkValidString(listItem[index]);
-                                          }
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
-                                        alignment: Alignment.center,
-                                        child: Text(checkValidString(listItem[index]),
-                                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: black),
-                                        ),
-                                      ),
-                                    ),
-                                    const Divider(thickness: 0.5, color: grayLight, endIndent: 16, indent: 16),
-                                  ],
-                                );
-                              }),
-                        )*/
                        )
-                      ],
-                    ),
-                  ),
-                );
-              });
-        });
-  }
-
-  void _showPeriodicityDialog() {
-    List<String> listPeriodicityData = getPeriodicity();
-
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: white,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.85,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12,right: 12,top: 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                            width: 60,
-                            child: const Divider(height: 1.5, thickness: 1.5, color: blue,)),
-                        Container(
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.only(top: 12),
-                          // padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-                          child: const Text("Select Periodicity",
-                            style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15),
-                            textAlign: TextAlign.center,),
-                        ),
-                        Container(height: 6),
-                        Expanded(child: ListView.builder(
-                            itemCount: listPeriodicityData.length,
-                            shrinkWrap: true,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                          _periodicityController.text = checkValidString(listPeriodicityData[index]);
-                                          _validPeriodicity = true;
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
-                                      alignment: Alignment.center,
-                                      child: Text(checkValidString(listPeriodicityData[index]),
-                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: black),
-                                      ),
-                                    ),
-                                  ),
-                                  const Divider(thickness: 0.5, color: grayLight, endIndent: 16, indent: 16),
-                                ],
-                              );
-                            })
-
-                        )
                       ],
                     ),
                   ),
@@ -765,11 +486,11 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
 
   @override
   void castStatefulWidget() {
-    widget is EStateAddFutureExpensePage;
+    widget is EStateAddFutureInflowPage;
   }
 
   //API call func..
-  void saveAspirationsFutureExpense() async {
+  void saveDetails() async {
     setState(() {
       _isLoading = true;
     });
@@ -777,16 +498,16 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + aspirationsFutureExpenseSave);
+    final url = Uri.parse(API_URL + futureInflowSave);
 
     Map<String, String> jsonBody = {
       'user_id': sessionManager.getUserId().toString().trim(),
-      'aspiration_type': _aspirationTypeController.value.text.trim(),
+      'source': _sourceController.value.text.trim(),
       'start_year' : _startYearController.value.text.trim(),
       'end_year' : _endYearController.value.text.trim(),
-      'periodicity': _periodicityController.value.text.trim(),
+      'expected_growth': _expectedGrowthController.value.text.trim(),
       'amount' : _amountController.value.text.trim(),
-      'aspiration_id' : (widget as EStateAddFutureExpensePage).isFromList ? dataGetSet.aspirationId.toString() : '',
+      'future_inflow_id' : (widget as EStateAddFutureInflowPage).isFromList ? dataGetSet.futureInflowId.toString() : '',
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -809,38 +530,6 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
         _isLoading = false;
       });
     }
-  }
-
-  void getAspirationType() async {
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL + aspirationTypes);
-    final response = await http.get(url);
-    final statusCode = response.statusCode;
-
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = AspirationTypesResponseModel.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      listAspirationTypes = dataResponse.aspirationTypes!;
-
-      // setState(() {
-      //   _isLoading = false;
-      // });
-
-    }else {
-      setState(() {
-        _isLoading = false;
-      });
-      showSnackBar(dataResponse.message, context);
-    }
-
   }
 
 }

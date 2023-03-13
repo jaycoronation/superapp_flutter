@@ -12,8 +12,6 @@ import 'package:superapp/screen/common/login_screen.dart';
 import 'package:superapp/utils/app_utils.dart';
 import 'package:superapp/utils/session_manager.dart';
 import 'package:superapp/utils/session_manager_methods.dart';
-import 'package:superapp/utils/session_manager_methods_pms.dart';
-import 'package:superapp/utils/session_manager_methods_vault.dart';
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
 
@@ -25,8 +23,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SessionManagerMethods.init();
-  await SessionManagerMethodsPMS.init();
-  await SessionManagerMethodsVault.init();
   PaintingBinding.instance.imageCache.maximumSizeBytes = 1000 << 40; // for increase the cache memory
   await PushNotificationService().setupInteractedMessage();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -57,7 +53,7 @@ class MyApp extends StatelessWidget {
             inputDecorationTheme: InputDecorationTheme(
               filled: true,
               fillColor: lightBlue,
-              contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
+              contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 18, bottom: 18),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(kEditTextCornerRadius),
                   borderSide:  const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
