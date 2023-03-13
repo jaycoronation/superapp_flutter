@@ -25,6 +25,7 @@ class _HomePageState extends BaseState<HomePage> {
   @override
   void initState() {
     super.initState();
+    print("<><> SESS :: " + sessionManager.getUserId() + " <><> " + sessionManagerPMS.getUserId() + " <><> " + sessionManagerVault.getUserId());
   }
 
   @override
@@ -405,8 +406,6 @@ class _HomePageState extends BaseState<HomePage> {
     );
   }
 
-
-
   /*updateDeviceTokenData() async {
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
@@ -443,6 +442,4 @@ class _HomePageState extends BaseState<HomePage> {
   void castStatefulWidget() {
     widget is HomePage;
   }
-
-
 }
