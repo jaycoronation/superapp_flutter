@@ -16,15 +16,20 @@ class MyToolBar extends StatelessWidget {
             Navigator.of(context).pop();
           },
           child: Container(
+            width: 40,
+            height: 40,
             alignment: Alignment.centerLeft,
             margin: const EdgeInsets.only(right: 8),
-            child: Image.asset('assets/images/ic_back_arrow.png', width: 40, height: 40),
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
+            ),
           ),
         ),
         Expanded(
             child: Text(
               pageName,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
               style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
             )),
       ],

@@ -6,3 +6,4 @@ const String FROM_APP = "true";
 String holders = "holders";
 String accountHolders = "account_holders/list";
 String constitutionValues = "constitution_values/list";
+String deathNotification = "notification/list";

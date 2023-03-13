@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/screen/e-state-valut/constitution_value_page.dart';
+import 'package:superapp/screen/e-state-valut/death_notification_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -167,6 +168,10 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               if(menuItems[index].id == 1)
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const ConstitutionValuesPage()));
+              }
+              else if(menuItems[index].id == 2)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DeathNotificationPage()));
               }
             },
             child: Container(

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp/widget/no_data.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -20,7 +22,6 @@ class ConstitutionValuesPage extends StatefulWidget {
 class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
   bool _isLoading = false;
   List<Data> listData = List<Data>.empty(growable: true);
-  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -37,10 +38,10 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: appBg,
-      appBar : AppBar(
+      appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName : "Constitution And Values"),
+        title: const MyToolBar(pageName: "Constitution And Values"),
         centerTitle: false,
         elevation: 0,
         backgroundColor: appBg,
@@ -54,12 +55,30 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
                   Expanded(
                       child: Padding(
                           padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                            child: _itemList(),
+                          child: Stack(
+                            children: [
+                              listData.isNotEmpty ? Container(
+                                child: _itemList(),
+                              ) : MyNoDataWidget(msg: "No data found."),
+                              Positioned(
+                                  bottom: 40,
+                                  right: 10,
+                                  child: InkWell(
+                                    onTap: ()
+                                    {
+
+                                    },
+                                    child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: const BoxDecoration(color: blue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                    child: const Icon(Icons.add, color: white, size: 32)),
+                                  ))
+                            ],
                           )))
                 ],
               ),
-      ),
+      )
     );
   }
 
@@ -67,15 +86,13 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         primary: false,
         padding: EdgeInsets.zero,
         itemCount: listData.length,
         itemBuilder: (ctx, index) => (GestureDetector(
             onTap: () async {
-              setState(() {
-              });
+              setState(() {});
             },
             child: Container(
               alignment: Alignment.center,
@@ -86,33 +103,42 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
                   Container(
                     padding: const EdgeInsets.all(15),
                     margin: const EdgeInsets.only(top: 8, bottom: 8),
-                    decoration: const BoxDecoration(color: semiBlue,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        Expanded(
+                            child: Text(
                           checkValidString(listData[index].notes),
+                          maxLines: 3,
                           style: const TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                        )),
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Image.asset('assets/images/fin_plan_ic_edit_gray.png', width: 24, height: 24, color: black),
+                          ),
                         ),
-                        const Spacer(),
-                        Image.asset(headerPosition == index ? 'assets/images/ic_arrow_double_down.png' : 'assets/images/ic_arrow_double_right.png',
-                            width: 24, height: 24, color: headerPosition == index ? white : blue),
+                        Gap(10),
+                        Container(
+                            width: 32,
+                            height: 32,
+                            decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: Image.asset('assets/images/fin_plan_ic_delete_black.png', width: 24, height: 24, color: black),
+                            )),
                       ],
                     ),
-                  ),
-                  Visibility(
-                      visible: headerPosition == index,
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 6, bottom: 6),
-                        child: _menuList(menuList[index].menuItems),
-                      ))
+                  )
                 ],
               ),
             ))));
   }
-
 
   _getApiData() async {
     setState(() {
@@ -131,21 +157,31 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
     Map<String, dynamic> user = jsonDecode(body);
     var dataResponse = ConstitutionValuesResponse.fromJson(user);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
+    if (statusCode == 200 && dataResponse.success == 1)
+    {
       try {
         if (dataResponse.data != null) {
           listData = dataResponse.data!;
+          setState(() {
+            _isLoading = false;
+          });
         }
       } catch (e) {
+        listData = [];
+        showSnackBar(dataResponse.message, context);
+        setState(() {
+          _isLoading = false;
+        });
         print(e);
       }
-    } else {
-      showSnackBar(dataResponse.message, context);
     }
-
-    setState(() {
-      _isLoading = false;
-    });
+    else {
+      listData = [];
+      showSnackBar(dataResponse.message, context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -155,7 +191,6 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
 }
