@@ -10,22 +10,28 @@ import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 
-class AddMedicalFuneralPage extends StatefulWidget {
+class AddDependentChildrenPage extends StatefulWidget {
 
-  AddMedicalFuneralPage({Key? key}) : super(key: key);
+  AddDependentChildrenPage({Key? key}) : super(key: key);
 
   @override
-  BaseState<AddMedicalFuneralPage> createState() => _AddMedicalFuneralPageState();
+  BaseState<AddDependentChildrenPage> createState() => _AddDependentChildrenPageState();
 }
 
-class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
+class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage> {
   bool _isLoading = false;
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
   final TextEditingController _controller3 = TextEditingController();
+  final TextEditingController _controller4 = TextEditingController();
+  final TextEditingController _controller5 = TextEditingController();
+  final TextEditingController _controller6 = TextEditingController();
   bool _validController1 = true;
   bool _validController2 = true;
   bool _validController3 = true;
+  bool _validController4 = true;
+  bool _validController5 = true;
+  bool _validController6 = true;
 
   @override
   void initState() {
@@ -44,7 +50,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: "Medical & Funeral"),
+          title: MyToolBar(pageName: "Dependent Children"),
           centerTitle: false,
           elevation: 0,
           backgroundColor: appBg,
@@ -64,7 +70,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   child: const Text(
-                    "Enter details related to Medical &amp; Funeral",
+                    "Enter details related to Dependent Children",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w600),
                   ),
@@ -72,7 +78,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Directions about Medical or Nursing Home Care",
+                    "Please list minor children and/or adult dependents in your care, including their ages",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -94,7 +100,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController1 ? null : "Please enter Directions about Medical or Nursing Home Care"
+                        errorText: _validController1 ? null : "Please enter Please list minor children and/or adult dependents in your care, including their ages"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -103,7 +109,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Your wishes about Organ Donation",
+                    "Name, address and phone number of prospective guardian(s) as designated in your will",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -125,7 +131,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController2 ? null : "Please enter Your wishes about Organ Donation"
+                        errorText: _validController2 ? null : "Please enter Name, address and phone number of prospective guardian(s) as designated in your will"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -134,7 +140,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Instructions regarding your Funeral, Memorial Services, Disposition of Remains, etc.",
+                    "Has this person (or persons) agreed to assume this responsibility?",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -156,7 +162,100 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController3 ? null : "Please enter Instructions regarding your Funeral, Memorial Services, Disposition of Remains, etc."
+                        errorText: _validController3 ? null : "Please enter Has this person (or persons) agreed to assume this responsibility?"
+
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
+                  child: Text(
+                    "Have you (1) discussed with this person, or (2) documented your specific goals and aspirations for, or suggestions regarding, continuing care of any minor children or adult dependents?",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: TextField(
+                    keyboardType: TextInputType.text,
+                    cursorColor: black,
+                    controller: _controller4,
+                    onChanged: (text) {
+                      setState(() {
+                        if (text.isEmpty) {
+                          _validController4 = false;
+                        } else {
+                          _validController4 = true;
+                        }
+                      });
+                    },
+                    decoration: InputDecoration(
+                        labelText: '',
+                        errorText: _validController4 ? null : "Please enter Have you (1) discussed with this person, or (2) documented your specific goals and aspirations for, or suggestions regarding, continuing care of any minor children or adult dependents?"
+
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
+                  child: const Text(
+                    "If you have prepared a document, where is this document located?",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: TextField(
+                    keyboardType: TextInputType.text,
+                    cursorColor: black,
+                    controller: _controller5,
+                    onChanged: (text) {
+                      setState(() {
+                        if (text.isEmpty) {
+                          _validController5 = false;
+                        } else {
+                          _validController5 = true;
+                        }
+                      });
+                    },
+                    decoration: InputDecoration(
+                        labelText: '',
+                        errorText: _validController5 ? null : "Please enter If you have prepared a document, where is this document located?"
+
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
+                  child: const Text(
+                    "Would you like to include here any instructions, directions or suggestions to the prospective guardian(s)?",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: TextField(
+                    keyboardType: TextInputType.text,
+                    cursorColor: black,
+                    controller: _controller6,
+                    onChanged: (text) {
+                      setState(() {
+                        if (text.isEmpty) {
+                          _validController6 = false;
+                        } else {
+                          _validController6 = true;
+                        }
+                      });
+                    },
+                    decoration: InputDecoration(
+                        labelText: '',
+                        errorText: _validController6 ? null : "Please enter Would you like to include here any instructions, directions or suggestions to the prospective guardian(s)?"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -198,6 +297,27 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                         {
                           setState(() {
                             _validController3 = false;
+                            return;
+                          });
+                        }
+                        else if(_controller4.text.isEmpty)
+                        {
+                          setState(() {
+                            _validController4 = false;
+                            return;
+                          });
+                        }
+                        else if(_controller5.text.isEmpty)
+                        {
+                          setState(() {
+                            _validController5 = false;
+                            return;
+                          });
+                        }
+                        else if(_controller6.text.isEmpty)
+                        {
+                          setState(() {
+                            _validController6 = false;
                             return;
                           });
                         }
@@ -251,6 +371,6 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
 
   @override
   void castStatefulWidget() {
-    widget is AddMedicalFuneralPage;
+    widget is AddDependentChildrenPage;
   }
 }

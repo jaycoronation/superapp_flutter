@@ -1,10 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:gap/gap.dart';
 import 'package:superapp/model/blogs_response_model.dart';
 import 'package:superapp/utils/app_utils.dart';
-
 import '../../constant/colors.dart';
 import '../../utils/base_class.dart';
 

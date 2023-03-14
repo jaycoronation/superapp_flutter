@@ -16,6 +16,7 @@ import '../../model/e-state-vault/header_model.dart';
 import '../../model/e-state-vault/menu_model.dart';
 import '../../utils/app_utils.dart';
 import '../../widget/loading.dart';
+import 'add_dependent_children.dart';
 import 'add_medical_funeral.dart';
 import 'imp_doc_page_list.dart';
 import 'key_to_residence_page_list.dart';
@@ -198,6 +199,11 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicalFuneralPage()));
               }
+              else if(menuItems[index].id == 8)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddDependentChildrenPage()));
+              }
+
               },
             child: Container(
               padding: const EdgeInsets.only(left: 5, right: 5),
