@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp/screen/e-state-valut/constitution_value_page.dart';
-import 'package:superapp/screen/e-state-valut/death_notification_page.dart';
+import 'package:superapp/screen/e-state-valut/advisors_page_list.dart';
+import 'package:superapp/screen/e-state-valut/constitution_value_page_list.dart';
+import 'package:superapp/screen/e-state-valut/death_notification_page_list.dart';
+import 'package:superapp/screen/e-state-valut/safe_deposite_box_page_list.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -14,6 +16,9 @@ import '../../model/e-state-vault/header_model.dart';
 import '../../model/e-state-vault/menu_model.dart';
 import '../../utils/app_utils.dart';
 import '../../widget/loading.dart';
+import 'add_medical_funeral.dart';
+import 'imp_doc_page_list.dart';
+import 'key_to_residence_page_list.dart';
 
 class EStateVaultHomePage extends StatefulWidget {
   const EStateVaultHomePage({Key? key}) : super(key: key);
@@ -173,7 +178,27 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DeathNotificationPage()));
               }
-            },
+              else if(menuItems[index].id == 3)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvisorsListPage()));
+              }
+              else if(menuItems[index].id == 4)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const KeyToResidencePageList()));
+              }
+              else if(menuItems[index].id == 5)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SafeDepositeBoxPageList()));
+              }
+              else if(menuItems[index].id == 6)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ImpDocPageList()));
+              }
+              else if(menuItems[index].id == 7)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicalFuneralPage()));
+              }
+              },
             child: Container(
               padding: const EdgeInsets.only(left: 5, right: 5),
               decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
