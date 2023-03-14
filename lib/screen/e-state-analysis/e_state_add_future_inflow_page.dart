@@ -137,7 +137,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Source',
+                                      labelText: 'Source',
                                       errorText: _validSource ? null : "Please enter future inflow source"
                                   ),
                                 ),
@@ -163,7 +163,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: 'Start Year',
+                                            labelText: 'Start Year',
                                             errorText: _validStartYear ? null : "Please select start year"
                                         ),
                                         onTap: () {
@@ -193,7 +193,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: 'End year',
+                                            labelText: 'End year',
                                             errorText: _validEndYear ? null : "Please select end year"
                                         ),
                                         onTap: () {
@@ -216,7 +216,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                   keyboardType: TextInputType.number,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
                                   decoration: InputDecoration(
-                                      hintText: 'Amount',
+                                      labelText: 'Amount',
                                   ),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
@@ -240,7 +240,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Expected Growth(In %)',
+                                      labelText: 'Expected Growth(In %)',
                                       errorText: _validExpectedGrowth ? null : "Please enter expected growth"
                                   ),
                                 ),
@@ -447,7 +447,6 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                      }
                                      Navigator.of(context).pop();
                                    });
-
                                  });
                            })
                        )
@@ -498,7 +497,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + futureInflowSave);
+    final url = Uri.parse(API_URL_ANALYSIS + futureInflowSave);
 
     Map<String, String> jsonBody = {
       'user_id': sessionManager.getUserId().toString().trim(),

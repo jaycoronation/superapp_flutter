@@ -355,7 +355,7 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
 
-      final url = Uri.parse(API_URL + existingLiabilities);
+      final url = Uri.parse(API_URL_ANALYSIS + existingLiabilities);
 
       Map<String, String> jsonBody = {
         'user_id': sessionManager.getUserId().toString().trim(),
@@ -419,7 +419,7 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + existingLiabilitiesDelete);
+    final url = Uri.parse(API_URL_ANALYSIS + existingLiabilitiesDelete);
 
     Map<String, String> jsonBody = {
       'existing_liability_id': listData[index].existingLiabilityId.toString(),

@@ -2,6 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:superapp/screen/common/contact_page.dart';
+import 'package:superapp/screen/common/meeting_page.dart';
+import 'package:superapp/screen/common/video_list_page.dart';
 import 'package:superapp/screen/e-state-analysis/e_state_analysis_home_page.dart';
 import 'package:superapp/screen/e-state-valut/e_state_valut_home_page.dart';
 import '../../../constant/colors.dart';
@@ -9,6 +12,7 @@ import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
+import 'blogs_page.dart';
 import 'login_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -223,40 +227,50 @@ class _HomePageState extends BaseState<HomePage> {
                 child: Row(
                   children: [
                     Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_meeting.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Fix Meeting",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const MeetingPage()),);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_meeting.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text(
+                                  "Fix Meeting",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
                         )),
                     const Gap(15),
                     Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_contact.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Contact",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                        child: InkWell(
+                          onTap: () {
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactPage()),);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_contact.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text(
+                                  "Contact",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
                         ))
                   ],
@@ -267,40 +281,48 @@ class _HomePageState extends BaseState<HomePage> {
                 child: Row(
                   children: [
                     Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_blog.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Blogs",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()),);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_blog.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text("Blogs",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
                         )),
                     const Gap(15),
                     Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_videos.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Videos",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()),);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_videos.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text("Videos",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
                         ))
                   ],

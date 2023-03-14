@@ -176,7 +176,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                             final base64Str = base64.encode(bytes);
                             print(base64Str);
 
-                            var _url = API_URL + generateFinalReport + base64Str;
+                            var _url = API_URL_ANALYSIS + generateFinalReport + base64Str;
                             if(_url.isNotEmpty) {
                               launch(_url);
                             }

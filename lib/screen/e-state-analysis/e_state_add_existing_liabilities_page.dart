@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,13 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/constant/analysis_api_end_point.dart';
 import 'package:superapp/model/CommanResponse.dart';
-import 'package:superapp/model/e-state-analysis/aspiration_types_response_model.dart';
-import 'package:superapp/model/e-state-analysis/existing_assets_response_model.dart';
 import 'package:superapp/model/e-state-analysis/existing_liabilities_response_model.dart';
-import 'package:superapp/model/e-state-analysis/investment_type_response_model.dart';
 import 'package:superapp/model/e-state-analysis/liabilities_response_model.dart';
 import '../../constant/colors.dart';
-import '../../model/e-state-analysis/aspiration_response_model.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
@@ -30,7 +25,7 @@ class EStateAddExistingLiabilitiesPage extends StatefulWidget {
 class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExistingLiabilitiesPage> {
   bool _isLoading = false;
 
-  final TextEditingController _investmentTypeController = TextEditingController();
+  final TextEditingController _liabilityTypeController = TextEditingController();
   final TextEditingController _assetsTypeController = TextEditingController();
   final TextEditingController _currentValueController = TextEditingController();
 
@@ -38,7 +33,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
   List<Liabilities> _tempListLiabilities = [];
   List<Liabilities> listLiabilities = List<Liabilities>.empty();
 
-  bool _validInvestementType = true;
+  bool _validLiabilityType = true;
   bool _validCurrentValue = true;
 
   var dataGetSet = ExistingLiabilities();
@@ -55,10 +50,9 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
 
     dataGetSet = (widget as EStateAddExistingLiabilitiesPage).dataGetSet;
     if (dataGetSet.liabilityType.toString().isNotEmpty) {
-      _investmentTypeController.text = checkValidString(dataGetSet.liabilityType.toString());
+      _liabilityTypeController.text = checkValidString(dataGetSet.liabilityType.toString());
       _assetsTypeController.text = checkValidString(dataGetSet.assetType.toString());
       _currentValueController.text = checkValidString(dataGetSet.currentValue.toString());
-
     }
 
   }
@@ -88,9 +82,9 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                           margin: const EdgeInsets.only(right: 8),
                           child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
                         )),
-                     Expanded(child: Text((widget as EStateAddExistingLiabilitiesPage).isFromList ? "Update Existing Assets" : "Add Existing Assets",
+                     Expanded(child: Text((widget as EStateAddExistingLiabilitiesPage).isFromList ? "Update Existing Liabilities" : "Add Existing Liabilities",
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                      style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
                     )),
                   ],
                 ),
@@ -126,27 +120,27 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                                 margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
                                 child: TextField(
                                   cursorColor: black,
-                                  controller: _investmentTypeController,
+                                  controller: _liabilityTypeController,
                                   readOnly: true,
                                   keyboardType: TextInputType.text,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
                                   onChanged: (text) {
                                     setState(() {
                                       if (text.isEmpty) {
-                                        _validInvestementType = false;
+                                        _validLiabilityType = false;
                                       } else {
-                                        _validInvestementType = true;
+                                        _validLiabilityType = true;
                                       }
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Investment Type',
-                                      errorText: _validInvestementType ? null : "Please select investment type"
+                                      labelText: 'Liability Type',
+                                      errorText: _validLiabilityType ? null : "Please select liability type"
                                   ),
                                   onTap: () {
                                     _searchLiabilitiesController.clear();
                                     _tempListLiabilities.clear();
-                                    _showInvestmentTypeDialog(context);
+                                    _showLiabilityTypeDialog(context);
                                   },
                                 ),
                               ),
@@ -158,8 +152,8 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                                   readOnly: true,
                                   keyboardType: TextInputType.text,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
-                                  decoration: InputDecoration(
-                                      hintText: 'Assets Type',
+                                  decoration: const InputDecoration(
+                                      labelText: 'Assets Type',
                                   ),
                                 ),
                               ),
@@ -180,9 +174,8 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Current Value',
+                                      labelText: 'Current Value',
                                       errorText: _validCurrentValue ? null : "Please enter current value"
-
                                   ),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
@@ -207,10 +200,9 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                                       alignment: Alignment.center,
                                     ),
                                     onPressed: () {
-
-                                      if(_investmentTypeController.text.isEmpty) {
+                                      if(_liabilityTypeController.text.isEmpty) {
                                         setState(() {
-                                          _validInvestementType = false;
+                                          _validLiabilityType = false;
                                           return;
                                         });
 
@@ -221,13 +213,10 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                                         });
 
                                       } else {
-                                        if(isInternetConnected)
-                                        {
+                                        if(isInternetConnected) {
                                           saveDetails();
                                           FocusScope.of(context).unfocus();
-                                        }
-                                        else
-                                        {
+                                        } else {
                                           noInterNet(context);
                                         }
                                       }
@@ -250,8 +239,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
     );
   }
 
-
-  void _showInvestmentTypeDialog(context) {
+  void _showLiabilityTypeDialog(context) {
     showModalBottomSheet(
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
@@ -272,7 +260,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                 Container(
                   margin: const EdgeInsets.only(top: 12),
                   padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-                  child: const Text("Select Investment Type",
+                  child: const Text("Select Liabilities Type",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: black),
                   ),
                 ),
@@ -292,7 +280,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                         cursorColor: black,
                         style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: black,),
                         decoration:  InputDecoration(
-                          hintText: "Search...",
+                          labelText: "Search...",
                           focusedBorder: OutlineInputBorder(
                             borderSide: const BorderSide(color: lightBlue, width: 0),
                             borderRadius: BorderRadius.circular(10.0),
@@ -338,14 +326,14 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                               Navigator.of(context).pop();
                               setState(() {
                                 if (_tempListLiabilities.isNotEmpty) {
-                                  _investmentTypeController.text = checkValidString(_tempListLiabilities[index].liability.toString());
+                                  _liabilityTypeController.text = checkValidString(_tempListLiabilities[index].liability.toString());
                                   _assetsTypeController.text = checkValidString(_tempListLiabilities[index].assetType.toString());
-                                  _validInvestementType = true;
+                                  _validLiabilityType = true;
                                 } else {
-                                  _investmentTypeController.text = toDisplayCase(listLiabilities[index].liability.toString());
+                                  _liabilityTypeController.text = toDisplayCase(listLiabilities[index].liability.toString());
                                   _assetsTypeController.text = checkValidString(listLiabilities[index].assetType.toString());
 
-                                  _validInvestementType = true;
+                                  _validLiabilityType = true;
                                 }
                               });
                             });
@@ -363,7 +351,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
         Container(
           padding: const EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
           alignment: Alignment.centerLeft,
-          child: listData[index].liability == _investmentTypeController.text.toString()
+          child: listData[index].liability == _liabilityTypeController.text.toString()
               ? Text(
             checkValidString(toDisplayCase(listData[index].liability.toString().trim())),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: blue),
@@ -386,8 +374,8 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
   List<Liabilities> _buildSearchListForILiabilities(String userSearchTerm) {
     List<Liabilities> _searchList = [];
     for (int i = 0; i < listLiabilities.length; i++) {
-      String investmentType = listLiabilities[i].liability.toString().toLowerCase();
-      if (investmentType.toLowerCase().contains(userSearchTerm.toLowerCase())) {
+      String liabilitiesType = listLiabilities[i].liability.toString().toLowerCase();
+      if (liabilitiesType.toLowerCase().contains(userSearchTerm.toLowerCase())) {
         _searchList.add(listLiabilities[i]);
       }
     }
@@ -408,11 +396,11 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + existingLiabilitiesSave);
+    final url = Uri.parse(API_URL_ANALYSIS + existingLiabilitiesSave);
 
     Map<String, String> jsonBody = {
       'user_id': sessionManager.getUserId().toString().trim(),
-      'liability_type': _investmentTypeController.value.text.trim(),
+      'liability_type': _liabilityTypeController.value.text.trim(),
       'asset_type' : _assetsTypeController.value.text.trim(),
       'current_value' : _currentValueController.value.text.trim(),
       'existing_liability_id' : (widget as EStateAddExistingLiabilitiesPage).isFromList ? dataGetSet.existingLiabilityId.toString() : '',
@@ -448,7 +436,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + liabilities);
+    final url = Uri.parse(API_URL_ANALYSIS + liabilities);
     final response = await http.get(url);
     final statusCode = response.statusCode;
 

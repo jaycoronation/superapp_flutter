@@ -384,8 +384,8 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
           children: [
             Container(
               margin: const EdgeInsets.all(15),
-              decoration:
-              BoxDecoration(borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                  color: white),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -399,7 +399,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text('Delete?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
+                      child: const Text('Delete?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
                     child: const Text('Are you sure you want to delete this entry?',
@@ -416,7 +416,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          side: BorderSide(width: 1, color: blue),
+                                          side: const BorderSide(width: 1, color: blue),
                                           borderRadius: BorderRadius.circular(kBorderRadius),
                                         ),
                                       ),
@@ -444,7 +444,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
                                   deleteData( index);
                                 });
                               },
-                              child: const Text("Delete", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
+                              child: const Text("Delete", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
                             ),
                           ),
                         ),
@@ -490,7 +490,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
 
-      final url = Uri.parse(API_URL + futureInflowMainList);
+      final url = Uri.parse(API_URL_ANALYSIS + futureInflowMainList);
 
       Map<String, String> jsonBody = {
         'user_id': sessionManager.getUserId().toString().trim(),
@@ -555,7 +555,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + futureInflowDelete);
+    final url = Uri.parse(API_URL_ANALYSIS + futureInflowDelete);
 
     Map<String, String> jsonBody = {
       'future_inflow_id': listData[index].futureInflowId.toString(),

@@ -44,12 +44,12 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
   @override
   void initState() {
     super.initState();
+
     dataGetSet = (widget as EStateAddExistingAssetsPage).dataGetSet;
     if (dataGetSet.existingAssetsId.toString().isNotEmpty) {
       _investmentTypeController.text = checkValidString(dataGetSet.investmentType.toString());
       _assetsTypeController.text = checkValidString(dataGetSet.assetType.toString());
       _currentValueController.text = checkValidString(dataGetSet.currentValue.toString());
-
     }
 
     if(isInternetConnected) {
@@ -57,7 +57,6 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
     }else{
       noInterNet(context);
     }
-
   }
 
   @override
@@ -87,7 +86,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                         )),
                      Expanded(child: Text((widget as EStateAddExistingAssetsPage).isFromList ? "Update Existing Assets" : "Add Existing Assets",
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                      style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
                     )),
                   ],
                 ),
@@ -137,7 +136,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Investment Type',
+                                      labelText: 'Investment Type',
                                       errorText: _validInvestementType ? null : "Please select investment type"
                                   ),
                                   onTap: () {
@@ -155,8 +154,8 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                   readOnly: true,
                                   keyboardType: TextInputType.text,
                                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
-                                  decoration: InputDecoration(
-                                      hintText: 'Assets Type',
+                                  decoration: const InputDecoration(
+                                      labelText: 'Assets Type',
                                   ),
                                 ),
                               ),
@@ -177,7 +176,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Current Value',
+                                      labelText: 'Current Value',
                                       errorText: _validCurrentValue ? null : "Please enter current value"
 
                                   ),
@@ -218,13 +217,10 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                         });
 
                                       } else {
-                                        if(isInternetConnected)
-                                        {
+                                        if(isInternetConnected) {
                                           saveDetails();
                                           FocusScope.of(context).unfocus();
-                                        }
-                                        else
-                                        {
+                                        } else {
                                           noInterNet(context);
                                         }
                                       }
@@ -246,7 +242,6 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
           ),)
     );
   }
-
 
   void _showInvestmentTypeDialog(context) {
     showModalBottomSheet(
@@ -289,7 +284,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                         cursorColor: black,
                         style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: black,),
                         decoration:  InputDecoration(
-                          hintText: "Search...",
+                          labelText: "Search...",
                           focusedBorder: OutlineInputBorder(
                             borderSide: const BorderSide(color: lightBlue, width: 0),
                             borderRadius: BorderRadius.circular(10.0),
@@ -302,18 +297,15 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                             fontWeight: FontWeight.w300,
                             color: black,
                           ),
-
                         ),
                         enabled: true,
                         onChanged: (text) {
-                          if(text.isNotEmpty)
-                          {
+                          if(text.isNotEmpty) {
                             state(() {
                               _tempListInvestmentTypes = _buildSearchListForInvestmentType(text);
                             });
-                          }
-                          else
-                          {
+
+                          } else {
                             state(() {
                               _searchInvestmentTypeController.clear();
                               _tempListInvestmentTypes.clear();
@@ -341,7 +333,6 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                 } else {
                                   _investmentTypeController.text = toDisplayCase(listInvestmentTypes[index].investmentType.toString());
                                   _assetsTypeController.text = checkValidString(listInvestmentTypes[index].assetType.toString());
-
                                   _validInvestementType = true;
                                 }
                               });
@@ -405,7 +396,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + existingAssetsSave);
+    final url = Uri.parse(API_URL_ANALYSIS + existingAssetsSave);
 
     Map<String, String> jsonBody = {
       'user_id': sessionManager.getUserId().toString().trim(),
@@ -445,7 +436,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + investmentTypes);
+    final url = Uri.parse(API_URL_ANALYSIS + investmentTypes);
     final response = await http.get(url);
     final statusCode = response.statusCode;
 
@@ -455,18 +446,14 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
 
     if (statusCode == 200 && dataResponse.success == 1) {
       listInvestmentTypes = dataResponse.investmentTypes!;
-
       // setState(() {
       //   _isLoading = false;
       // });
-
     }else {
       setState(() {
         _isLoading = false;
       });
       showSnackBar(dataResponse.message, context);
     }
-
   }
-
 }
