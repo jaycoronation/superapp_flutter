@@ -65,6 +65,10 @@ dependencies:
   slide_indexed_stack: ^0.0.1
   chip_list: ^2.3.3+8
   dotted_line: ^3.1.0
+  flutter_inappwebview:
+  flutter_widget_from_html:
+  auto_orientation: ^2.2.1
+  youtube_player_flutter: ^8.1.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0

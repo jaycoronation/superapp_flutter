@@ -355,7 +355,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
 
-      final url = Uri.parse(API_URL + existingAssetsList);
+      final url = Uri.parse(API_URL_ANALYSIS + existingAssetsList);
 
       Map<String, String> jsonBody = {
         'user_id': sessionManager.getUserId().toString().trim(),
@@ -419,7 +419,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + existingAssetsDelete);
+    final url = Uri.parse(API_URL_ANALYSIS + existingAssetsDelete);
 
     Map<String, String> jsonBody = {
       'existing_assets_id': listData[index].existingAssetsId.toString(),

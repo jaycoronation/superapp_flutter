@@ -340,7 +340,7 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
 
-      final url = Uri.parse(API_URL + riskProfiler);
+      final url = Uri.parse(API_URL_ANALYSIS + riskProfiler);
 
       final response = await http.get(url);
       final statusCode = response.statusCode;
@@ -385,7 +385,7 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + getRiskProfile);
+    final url = Uri.parse(API_URL_ANALYSIS + getRiskProfile);
 
     Map<String, String> jsonBody = {
       'user_id': sessionManager.getUserId().toString().trim(),

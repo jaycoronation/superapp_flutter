@@ -413,7 +413,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
 
-      final url = Uri.parse(API_URL + futureInflowList);
+      final url = Uri.parse(API_URL_ANALYSIS + futureInflowList);
 
       Map<String, String> jsonBody = {
         'user_id': sessionManager.getUserId().toString().trim(),
@@ -477,7 +477,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + futureInflowDelete);
+    final url = Uri.parse(API_URL_ANALYSIS + futureInflowDelete);
 
     Map<String, String> jsonBody = {
       'future_inflow_id': listData[index].futureInflowId.toString(),

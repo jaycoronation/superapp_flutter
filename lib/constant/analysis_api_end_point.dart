@@ -1,6 +1,6 @@
 
 //Live
-const String API_URL = "https://php1.coronation.in/online-financial-planning/api/index.php/services/";
+const String API_URL_ANALYSIS = "https://php1.coronation.in/online-financial-planning/api/index.php/services/";
 
 //=====
 String aspirations = "aspirations";

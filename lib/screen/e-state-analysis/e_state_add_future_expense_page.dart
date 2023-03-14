@@ -146,7 +146,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Aspiration Type',
+                                      labelText: 'Aspiration Type',
                                       errorText: _validAspirationType ? null : "Please select aspiration type for future expense"
                                   ),
                                   onTap: () {
@@ -177,7 +177,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: 'Start Year',
+                                            labelText: 'Start Year',
                                             errorText: _validStartYear ? null : "Please select start year"
                                         ),
                                         onTap: () {
@@ -207,7 +207,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            hintText: 'End year',
+                                            labelText: 'End year',
                                             errorText: _validEndYear ? null : "Please select end year"
                                         ),
                                         onTap: () {
@@ -240,7 +240,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Periodicity',
+                                      labelText: 'Periodicity',
                                       errorText: _validPeriodicity ? null : "Please select periodicity of expense"
                                   ),
                                   onTap: () {
@@ -265,7 +265,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      hintText: 'Amount',
+                                      labelText: 'Amount',
                                       errorText: _validAmount ? null : "Please enter expense amount"
 
                                   ),
@@ -777,7 +777,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + aspirationsFutureExpenseSave);
+    final url = Uri.parse(API_URL_ANALYSIS + aspirationsFutureExpenseSave);
 
     Map<String, String> jsonBody = {
       'user_id': sessionManager.getUserId().toString().trim(),
@@ -819,7 +819,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + aspirationTypes);
+    final url = Uri.parse(API_URL_ANALYSIS + aspirationTypes);
     final response = await http.get(url);
     final statusCode = response.statusCode;
 

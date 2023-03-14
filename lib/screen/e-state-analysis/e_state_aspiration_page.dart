@@ -407,7 +407,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
 
-      final url = Uri.parse(API_URL + aspirations);
+      final url = Uri.parse(API_URL_ANALYSIS + aspirations);
 
       Map<String, String> jsonBody = {
         'user_id': sessionManager.getUserId().toString().trim(),
@@ -474,7 +474,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL + aspirationsFutureExpenseDelete);
+    final url = Uri.parse(API_URL_ANALYSIS + aspirationsFutureExpenseDelete);
 
     Map<String, String> jsonBody = {
       'aspiration_id': listData[index].aspirationId.toString(),
