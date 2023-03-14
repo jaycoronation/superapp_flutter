@@ -9,11 +9,11 @@ String existingLiabilitiesResponseModelToJson(ExistingLiabilitiesResponseModel d
 class ExistingLiabilitiesResponseModel {
   ExistingLiabilitiesResponseModel({
       List<ExistingLiabilities>? existingLiabilities, 
-      String? totalCount, 
+      // String? totalCount,
       num? success, 
       String? message,}){
     _existingLiabilities = existingLiabilities;
-    _totalCount = totalCount;
+    // _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -25,25 +25,25 @@ class ExistingLiabilitiesResponseModel {
         _existingLiabilities?.add(ExistingLiabilities.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
+    // _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
   List<ExistingLiabilities>? _existingLiabilities;
-  String? _totalCount;
+  // String? _totalCount;
   num? _success;
   String? _message;
 ExistingLiabilitiesResponseModel copyWith({  List<ExistingLiabilities>? existingLiabilities,
-  String? totalCount,
+  // String? totalCount,
   num? success,
   String? message,
 }) => ExistingLiabilitiesResponseModel(  existingLiabilities: existingLiabilities ?? _existingLiabilities,
-  totalCount: totalCount ?? _totalCount,
+  // totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<ExistingLiabilities>? get existingLiabilities => _existingLiabilities;
-  String? get totalCount => _totalCount;
+  // String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -52,7 +52,7 @@ ExistingLiabilitiesResponseModel copyWith({  List<ExistingLiabilities>? existing
     if (_existingLiabilities != null) {
       map['existing_liabilities'] = _existingLiabilities?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
+    // map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;

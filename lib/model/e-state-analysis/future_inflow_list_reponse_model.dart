@@ -9,11 +9,11 @@ String futureInflowListReponseModelToJson(FutureInflowListReponseModel data) => 
 class FutureInflowListReponseModel {
   FutureInflowListReponseModel({
       List<FutureInflows>? futureInflows, 
-      String? totalCount, 
+      // String? totalCount,
       num? success, 
       String? message,}){
     _futureInflows = futureInflows;
-    _totalCount = totalCount;
+    // _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -25,7 +25,7 @@ class FutureInflowListReponseModel {
         _futureInflows?.add(FutureInflows.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
+    // _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
@@ -38,12 +38,12 @@ FutureInflowListReponseModel copyWith({  List<FutureInflows>? futureInflows,
   num? success,
   String? message,
 }) => FutureInflowListReponseModel(  futureInflows: futureInflows ?? _futureInflows,
-  totalCount: totalCount ?? _totalCount,
+  // totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<FutureInflows>? get futureInflows => _futureInflows;
-  String? get totalCount => _totalCount;
+  // String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -52,7 +52,7 @@ FutureInflowListReponseModel copyWith({  List<FutureInflows>? futureInflows,
     if (_futureInflows != null) {
       map['future_inflows'] = _futureInflows?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
+    // map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;

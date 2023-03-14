@@ -9,11 +9,11 @@ String existingAssetsResponseModelToJson(ExistingAssetsResponseModel data) => js
 class ExistingAssetsResponseModel {
   ExistingAssetsResponseModel({
       List<ExistingAssets>? existingAssets, 
-      String? totalCount, 
+      // String? totalCount,
       num? success, 
       String? message,}){
     _existingAssets = existingAssets;
-    _totalCount = totalCount;
+    // _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -25,25 +25,25 @@ class ExistingAssetsResponseModel {
         _existingAssets?.add(ExistingAssets.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
+    // _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
   List<ExistingAssets>? _existingAssets;
-  String? _totalCount;
+  // String? _totalCount;
   num? _success;
   String? _message;
 ExistingAssetsResponseModel copyWith({  List<ExistingAssets>? existingAssets,
-  String? totalCount,
+  // String? totalCount,
   num? success,
   String? message,
 }) => ExistingAssetsResponseModel(  existingAssets: existingAssets ?? _existingAssets,
-  totalCount: totalCount ?? _totalCount,
+  // totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<ExistingAssets>? get existingAssets => _existingAssets;
-  String? get totalCount => _totalCount;
+  // String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -52,7 +52,7 @@ ExistingAssetsResponseModel copyWith({  List<ExistingAssets>? existingAssets,
     if (_existingAssets != null) {
       map['existing_assets'] = _existingAssets?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
+    // map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;

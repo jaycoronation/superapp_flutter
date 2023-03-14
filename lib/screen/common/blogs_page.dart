@@ -32,7 +32,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
   bool _isLoadingMore = false;
   int _pageIndex = 1;
-  final int _pageResult = 15;
+  final int _pageResult = 10;
   bool _isLastPage = false;
   bool isScrollingDown = false;
 
@@ -135,101 +135,130 @@ class _BlogsPageState extends BaseState<BlogsPage> {
       body: isInternetConnected
           ? _isLoading
           ? const LoadingWidget()
-          : SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-            child: listData.isEmpty ?
-            const Center(
-                child: MyNoDataWidget(msg: 'No blogs found!')
-            )
-                :AnimationLimiter(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  primary: false,
-                  padding: EdgeInsets.zero,
-                  itemCount: listData.length,
-                  itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 20),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border:Border.all(color: black, width: 1,)
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 160,
-                                    width: MediaQuery.of(context).size.width,
-                                    // color: grayLight,
-                                    child: listData[index].image.toString().isNotEmpty
-                                        ? FadeInImage.assetNetwork(
-                                      image: listData[index].image.toString(),
-                                      fit: BoxFit.cover,
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 160,
-                                      placeholder: 'assets/images/ic_alpha_logo.png',
-                                    ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                        width: 50, height: 50),
-                                  ),
-                                  const Gap(10),
-                                  Text(checkValidString(listData[index].title.toString()),
-                                    textAlign: TextAlign.start,
-                                    maxLines: 2,
-                                    style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
-                                  ),
-                                  const Gap(10),
-                                  Text(checkValidString(listData[index].author!.name.toString()),
-                                    textAlign: TextAlign.start,
-                                    maxLines: 2,
-                                    style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
-                                  ),
-                                  const Gap(15),
-                                  const Divider(height: 0.5, color: black, thickness: 1,),
-                                  const Gap(25),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].datePublished.toString()),
-                                        textAlign: TextAlign.start,
-                                        style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+          : listData.isEmpty
+          ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
+          :  _setData()
+          : const NoInternetWidget()
+    );
+  }
+
+  SafeArea _setData() {
+    return SafeArea(
+      child: Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                  child:SingleChildScrollView(
+                    controller: _scrollViewController,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          primary: false,
+                          padding: EdgeInsets.zero,
+                          itemCount: listData.length,
+                          itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                            position: index,
+                            duration: const Duration(milliseconds: 375),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border:Border.all(color: black, width: 1,)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 160,
+                                            width: MediaQuery.of(context).size.width,
+                                            // color: grayLight,
+                                            child: listData[index].image.toString().isNotEmpty
+                                                ? FadeInImage.assetNetwork(
+                                              image: listData[index].image.toString(),
+                                              fit: BoxFit.cover,
+                                              width: MediaQuery.of(context).size.width,
+                                              height: 160,
+                                              placeholder: 'assets/images/ic_alpha_logo.png',
+                                            ) : Image.asset('assets/images/ic_alpha_logo.png',
+                                                width: 50, height: 50),
+                                          ),
+                                          const Gap(10),
+                                          Text(checkValidString(listData[index].title.toString()),
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
+                                          ),
+                                          const Gap(10),
+                                          Text(checkValidString(listData[index].author!.name.toString()),
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
+                                          ),
+                                          const Gap(15),
+                                          const Divider(height: 0.5, color: black, thickness: 1,),
+                                          const Gap(25),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].datePublished.toString()),
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+                                              ),
+                                              Container(
+                                                alignment: Alignment.topLeft,
+                                                margin: const EdgeInsets.only(right: 8),
+                                                child: Image.asset('assets/images/ic_arrow_right_round_gray.png',height: 26, width: 26, color: black,),
+                                              ),
+                                            ],
+                                          ),
+                                          const Gap(10),
+                                        ],
                                       ),
-                                      Container(
-                                        alignment: Alignment.topLeft,
-                                        margin: const EdgeInsets.only(right: 8),
-                                        child: Image.asset('assets/images/ic_arrow_right_round_gray.png',height: 26, width: 26, color: black,),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                  const Gap(10),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                          )
                       ),
                     ),
-                  )
+                  )),
+              Visibility(
+                visible: _isLoadingMore,
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10,bottom: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 30, height: 30,
+                          child: Lottie.asset('assets/images/loader_new.json',repeat: true, animate: true, frameRate: FrameRate.max)),
+                      const Text(' Loading more...',
+                          style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 16)
+                      )
+                    ],
+                  ),
+                ),
               ),
-            )
-        ),)
-          : const NoInternetWidget(),
+            ],
+          )
+      ),
     );
   }
 
@@ -266,78 +295,6 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                           child: const Text("Filter", style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15)),
                         ),
                         Container(height: 6),
-                       Expanded(child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                  itemCount: listFilterData.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  itemBuilder: (context, index) {
-                                    return Column(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            updateSetState(() {
-                                              selectedFilterText = checkValidString(toDisplayCase(listFilterData[index].title.toString()));
-                                            });
-
-                                            // for(int i = 0; i < listFilterData.length; i++) {
-                                            if (index == 0) {
-                                              getList(false);
-
-                                            }else if (index == 1) {
-                                              getFinancialPlanningData();
-
-                                            }else if (index == 2) {
-                                              getGeneralData();
-
-                                            }else if (index == 3) {
-                                              getInvestmentIdeasData();
-
-                                            }else if (index == 4) {
-                                              getTaxPlanningData();
-
-                                            }
-                                            // }
-
-                                            setState(() {
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
-                                            alignment: Alignment.centerLeft,
-                                            child:Text(checkValidString(toDisplayCase(listFilterData[index].title.toString())),
-                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500,
-                                                  color: checkValidString(toDisplayCase(listFilterData[index].title.toString())) == selectedFilterText
-                                                      ? blue : black ),
-                                            ),
-                                          ),
-                                        ),
-                                        const Divider(thickness: 0.5, color: black, endIndent: 16, indent: 16),
-                                      ],
-                                    );
-                                  }),
-                              if (_isLoadingMore == true)
-                                Container(
-                                  padding: const EdgeInsets.only(top: 10,bottom: 10),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(width: 30, height: 30,
-                                          child: Lottie.asset('assets/images/loader.json',repeat: true, animate: true, frameRate: FrameRate.max)),
-                                      const Text(' Loading more...',
-                                          style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 16)
-                                      )
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ))
                       ],
                     ),
                   ),
@@ -432,14 +389,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
     if (statusCode == 200) {
       listFilterData = dataResponse.url!;
 
-      setState(() {
-        _isLoading = false;
-      });
-
     }else {
-      setState(() {
-        _isLoading = false;
-      });
     }
 
   }
