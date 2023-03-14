@@ -1,4 +1,7 @@
 import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+import 'package:superapp/utils/app_utils.dart';
 /// data : [{"id":"45","user_id":"164","notes":"test2","timestamp":"1678439178"},{"id":"44","user_id":"164","notes":"test","timestamp":"1678438825"}]
 /// total_count : "2"
 /// success : 1
@@ -9,11 +12,9 @@ String constitutionValuesResponseToJson(ConstitutionValuesResponse data) => json
 class ConstitutionValuesResponse {
   ConstitutionValuesResponse({
       List<Data>? data, 
-      String? totalCount, 
-      num? success, 
+      num? success,
       String? message,}){
     _data = data;
-    _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -25,25 +26,20 @@ class ConstitutionValuesResponse {
         _data?.add(Data.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
   List<Data>? _data;
-  String? _totalCount;
   num? _success;
   String? _message;
 ConstitutionValuesResponse copyWith({  List<Data>? data,
-  String? totalCount,
   num? success,
   String? message,
 }) => ConstitutionValuesResponse(  data: data ?? _data,
-  totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<Data>? get data => _data;
-  String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -52,7 +48,6 @@ ConstitutionValuesResponse copyWith({  List<Data>? data,
     if (_data != null) {
       map['data'] = _data?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;
@@ -103,12 +98,20 @@ Data copyWith({  String? id,
   String? get notes => _notes;
   String? get timestamp => _timestamp;
 
+  TextEditingController notesController = TextEditingController();
+
+  set setNotes(String value)
+  {
+    _notes = value;
+  }
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['id'] = _id;
-    map['user_id'] = _userId;
-    map['notes'] = _notes;
-    map['timestamp'] = _timestamp;
+    if(checkValidString(_id).toString().isNotEmpty)
+    {
+        map['id'] = _id;
+    }
+    map['notes'] = checkValidString(_notes);
     return map;
   }
 

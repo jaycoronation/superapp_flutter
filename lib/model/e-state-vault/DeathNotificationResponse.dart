@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:superapp/utils/app_utils.dart';
 /// notifications : [{"notification_id":"36","user_id":"164","holder_id":"97","name":"Ravi","holder_name":"","phone":"8469940500","email":"ravi@coronation.in","address":"506","holder":"A","timestamp":"1678443307"}]
 /// total_count : "1"
 /// success : 1
@@ -11,11 +12,9 @@ String deathNotificationResponseToJson(DeathNotificationResponse data) => json.e
 class DeathNotificationResponse {
   DeathNotificationResponse({
       List<Notifications>? notifications, 
-      String? totalCount, 
-      num? success, 
+      num? success,
       String? message,}){
     _notifications = notifications;
-    _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -27,25 +26,20 @@ class DeathNotificationResponse {
         _notifications?.add(Notifications.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
   List<Notifications>? _notifications;
-  String? _totalCount;
   num? _success;
   String? _message;
 DeathNotificationResponse copyWith({  List<Notifications>? notifications,
-  String? totalCount,
   num? success,
   String? message,
 }) => DeathNotificationResponse(  notifications: notifications ?? _notifications,
-  totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<Notifications>? get notifications => _notifications;
-  String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -54,7 +48,6 @@ DeathNotificationResponse copyWith({  List<Notifications>? notifications,
     if (_notifications != null) {
       map['notifications'] = _notifications?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;
@@ -181,16 +174,12 @@ Notifications copyWith({  String? notificationId,
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['notification_id'] = _notificationId;
-    map['user_id'] = _userId;
-    map['holder_id'] = _holderId;
-    map['name'] = _name;
-    map['holder_name'] = _holderName;
-    map['phone'] = _phone;
-    map['email'] = _email;
-    map['address'] = _address;
-    map['holder'] = _holder;
-    map['timestamp'] = _timestamp;
+    map['name'] = checkValidString(_name);
+    map['phone'] = checkValidString(_phone);
+    map['email'] = checkValidString(_email);
+    map['address'] = checkValidString(_address);
+    map['holder'] = checkValidString(_holder);
+    map['notification_id'] = checkValidString(_notificationId);
     return map;
   }
 

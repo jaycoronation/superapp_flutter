@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
 import '../constant/colors.dart';
 
 class MyNoDataWidget extends StatelessWidget {
@@ -14,11 +13,8 @@ class MyNoDataWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: EdgeInsets.only(bottom: 100),
+        margin: const EdgeInsets.only(bottom: 100),
         alignment: Alignment.center,
-        // decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(22)),
-        // width: 330,
-        // height: 220,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
