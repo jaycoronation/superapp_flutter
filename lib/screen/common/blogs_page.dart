@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/model/blogs_filter_response_model.dart';
 import 'package:superapp/model/blogs_response_model.dart';
@@ -318,7 +319,22 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                         const Divider(thickness: 0.5, color: black, endIndent: 16, indent: 16),
                                       ],
                                     );
-                                  })
+                                  }),
+                              if (_isLoadingMore == true)
+                                Container(
+                                  padding: const EdgeInsets.only(top: 10,bottom: 10),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(width: 30, height: 30,
+                                          child: Lottie.asset('assets/images/loader.json',repeat: true, animate: true, frameRate: FrameRate.max)),
+                                      const Text(' Loading more...',
+                                          style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 16)
+                                      )
+                                    ],
+                                  ),
+                                ),
                             ],
                           ),
                         ))
