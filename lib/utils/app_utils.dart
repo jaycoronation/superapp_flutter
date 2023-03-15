@@ -199,6 +199,14 @@ checkValidString (String? value) {
   return value.trim();
 }
 
+checkValidStringWithToDisplayCase (String? value) {
+  if (value == null || value == "null" || value == "<null>")
+  {
+    value = "";
+  }
+  return value.isNotEmpty ? toDisplayCase(value.trim()) : value.trim();
+}
+
 getTimeStampDate (String value,String dateFormat) {
     int timestamp = 0;
     if(value.isNotEmpty)

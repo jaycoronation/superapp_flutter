@@ -16,8 +16,11 @@ import '../../model/e-state-vault/header_model.dart';
 import '../../model/e-state-vault/menu_model.dart';
 import '../../utils/app_utils.dart';
 import '../../widget/loading.dart';
+import 'add_business_page.dart';
 import 'add_dependent_children.dart';
+import 'add_domestic_employee.dart';
 import 'add_medical_funeral.dart';
+import 'add_will_page.dart';
 import 'imp_doc_page_list.dart';
 import 'key_to_residence_page_list.dart';
 
@@ -203,7 +206,18 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddDependentChildrenPage()));
               }
-
+              else if(menuItems[index].id == 9)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddWillPage()));
+              }
+              else if(menuItems[index].id == 10)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddBusinessPage()));
+              }
+              else if(menuItems[index].id == 11)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddDomesticEmployee()));
+              }
               },
             child: Container(
               padding: const EdgeInsets.only(left: 5, right: 5),

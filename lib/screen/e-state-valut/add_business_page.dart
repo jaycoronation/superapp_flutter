@@ -2,26 +2,28 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/constant/colors.dart';
 import 'package:superapp/utils/my_toolbar.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
 import '../../model/CommanResponse.dart';
+import '../../model/e-state-vault/BusinessDataResponse.dart';
 import '../../model/e-state-vault/MinorChildrenDependentsData.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 
-class AddDependentChildrenPage extends StatefulWidget {
+class AddBusinessPage extends StatefulWidget {
 
-  AddDependentChildrenPage({Key? key}) : super(key: key);
+  AddBusinessPage({Key? key}) : super(key: key);
 
   @override
-  BaseState<AddDependentChildrenPage> createState() => _AddDependentChildrenPageState();
+  BaseState<AddBusinessPage> createState() => _AddBusinessPageState();
 }
 
-class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage> {
+class _AddBusinessPageState extends BaseState<AddBusinessPage> {
   bool _isLoading = false;
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
@@ -36,6 +38,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
   bool _validController5 = true;
   bool _validController6 = true;
   var mcadId = "";
+  var businessData = Business();
 
   @override
   void initState() {
@@ -54,7 +57,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: "Dependent Children"),
+          title: MyToolBar(pageName: "Business(es)"),
           centerTitle: false,
           elevation: 0,
           backgroundColor: appBg,
@@ -74,7 +77,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   child: const Text(
-                    "Enter details related to Dependent Children",
+                    "Enter details of your Business",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w600),
                   ),
@@ -82,7 +85,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Please list minor children and/or adult dependents in your care, including their ages",
+                    "Do you own or jointly own a business or businesses?",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -93,6 +96,10 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                     keyboardType: TextInputType.text,
                     cursorColor: black,
                     controller: _controller1,
+                    readOnly: true,
+                    onTap: () {
+                      showSelection(0);
+                    },
                     onChanged: (text) {
                       setState(() {
                         if (text.isEmpty) {
@@ -104,7 +111,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController1 ? null : "Please enter Please list minor children and/or adult dependents in your care, including their ages"
+                        errorText: _validController1 ? null : "Please enter Do you own or jointly own a business or businesses?"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -113,13 +120,13 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Name, address and phone number of prospective guardian(s) as designated in your will",
+                    "If yes, list the name, line/area of business and type of organization (e.g., sole proprietorship, partnership,limited liability partnership, corporation, closely held corporation).",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                   child: TextField(
                     keyboardType: TextInputType.text,
                     cursorColor: black,
@@ -134,23 +141,15 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                       });
                     },
                     decoration: InputDecoration(
-                        labelText: '',
-                        errorText: _validController2 ? null : "Please enter Name, address and phone number of prospective guardian(s) as designated in your will"
+                        labelText: 'Name',
+                        errorText: _validController2 ? null : "Please enter Name."
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
-                  child: const Text(
-                    "Has this person (or persons) agreed to assume this responsibility?",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                   child: TextField(
                     keyboardType: TextInputType.text,
                     cursorColor: black,
@@ -165,23 +164,15 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                       });
                     },
                     decoration: InputDecoration(
-                        labelText: '',
-                        errorText: _validController3 ? null : "Please enter Has this person (or persons) agreed to assume this responsibility?"
+                        labelText: 'Line/Area of Business',
+                        errorText: _validController3 ? null : "Please enter Line/Area of Business"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
-                  child: Text(
-                    "Have you (1) discussed with this person, or (2) documented your specific goals and aspirations for, or suggestions regarding, continuing care of any minor children or adult dependents?",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                   child: TextField(
                     keyboardType: TextInputType.text,
                     cursorColor: black,
@@ -196,17 +187,17 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                       });
                     },
                     decoration: InputDecoration(
-                        labelText: '',
-                        errorText: _validController4 ? null : "Please enter Have you (1) discussed with this person, or (2) documented your specific goals and aspirations for, or suggestions regarding, continuing care of any minor children or adult dependents?"
+                        labelText: 'Type of Organization',
+                        errorText: _validController4 ? null : "Please enter Type of Organization"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
+                  margin: const EdgeInsets.only(top:15,left: 15, right: 10),
                   child: const Text(
-                    "If you have prepared a document, where is this document located?",
+                    "Do you have a document stating your wishes as to the treatment of this entity after your death?",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -217,6 +208,10 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                     keyboardType: TextInputType.text,
                     cursorColor: black,
                     controller: _controller5,
+                    readOnly: true,
+                    onTap: () {
+                      showSelection(1);
+                    },
                     onChanged: (text) {
                       setState(() {
                         if (text.isEmpty) {
@@ -228,7 +223,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController5 ? null : "Please enter If you have prepared a document, where is this document located?"
+                        errorText: _validController5 ? null : "Please enter Do you have a document stating your wishes as to the treatment of this entity after your death?"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -237,7 +232,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Would you like to include here any instructions, directions or suggestions to the prospective guardian(s)?",
+                    "If yes, please write below the location(s) of the document(s). If no, would you like to include any instructions or directions here as to the business or any employees?",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -259,7 +254,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController6 ? null : "Please enter Would you like to include here any instructions, directions or suggestions to the prospective guardian(s)?"
+                        errorText: _validController6 ? null : "Please enter If yes, please write below the location(s) of the document(s). If no, would you like to include any instructions or directions here as to the business or any employees?"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -356,73 +351,87 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + getMinorChildrenAdultDependents);
+    final url = Uri.parse(API_URL_VAULT + getBusinessesData);
     Map<String, String> jsonBody = {'user_id': sessionManagerVault.getUserId().trim()};
 
     final response = await http.post(url, body: jsonBody);
     final statusCode = response.statusCode;
     final body = response.body;
-    Map<String, dynamic> jsonData = jsonDecode(body);
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = BusinessDataResponse.fromJson(user);
 
-    if (statusCode == 200 && jsonData['success'] == 1)
+    if (statusCode == 200 && dataResponse.success == 1)
     {
-      List<MinorChildrenDependentsData> itemData = [];
-      final parsedJson = jsonData['minor_children_adult_dependents'];
-      parsedJson.forEach((key, value)
-      {
-        if(key == NavigationService.accountHolder[0].holderId)
-        {
-          itemData.add(MinorChildrenDependentsData.fromJson(value));
+      try {
+        if (dataResponse.business != null) {
+          businessData = dataResponse.business!;
+
+          _controller1.text = checkValidStringWithToDisplayCase(businessData.ownOrJointlyBusiness);
+          _controller5.text = checkValidStringWithToDisplayCase(businessData.documentStatingYourWishes);
+          _controller6.text = checkValidString(businessData.documentInstructions);
+
+          if(businessData.businessesDetails != null)
+          {
+            if(businessData.businessesDetails!.isNotEmpty)
+            {
+              _controller2.text = checkValidString(businessData.businessesDetails![0].name);
+              _controller3.text = checkValidString(businessData.businessesDetails![0].areaOfBusiness);
+              _controller4.text = checkValidString(businessData.businessesDetails![0].typeOfOrganization);
+            }
+          }
+          
+          setState(() {
+            _isLoading = false;
+          });
         }
-      });
-
-      if(itemData.isNotEmpty)
-      {
-        var generally = MinorChildrenDependentsData();
-        generally = itemData[0];
-        mcadId = checkValidString(generally.mcadId);
-        _controller1.text = checkValidString(generally.minorChildrenAndDependents);
-        _controller2.text = checkValidString(generally.nameAddressPhone);
-        _controller3.text = checkValidString(generally.agreedToAssumeResponsibility);
-        _controller4.text = checkValidString(generally.haveYou);
-        _controller5.text = checkValidString(generally.documentLocated);
-        _controller6.text = checkValidString(generally.instructionsDirectionsSuggestions);
+        else
+          {
+            businessData = Business();
+            showSnackBar(dataResponse.message, context);
+            setState(() {
+              _isLoading = false;
+            });
+          }
+      } catch (e) {
+        businessData = Business();
+        showSnackBar(dataResponse.message, context);
+        setState(() {
+          _isLoading = false;
+        });
+        print(e);
       }
-
     }
-
-    setState(() {
-      _isLoading = false;
-    });
+    else {
+      businessData = Business();
+      showSnackBar(dataResponse.message, context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   String _makeJsonData()  {
     String jsonData = "";
 
     try {
+      Map<String, dynamic> objSelectedValueMain = <String, dynamic>{};
       Map<String, dynamic> objSelectedValue = <String, dynamic>{};
       objSelectedValue[NavigationService.accountHolder[0].holderId.toString()] = makeData();
-      jsonData = jsonEncode(objSelectedValue).toString();
+      objSelectedValueMain["items"] = objSelectedValue;
+      jsonData = jsonEncode(objSelectedValueMain).toString();
       print("<><> JSON DATA "+ jsonData + " <><>");
     } catch (e) {
       print(e);
     }
+
     return jsonData;
   }
 
   Map<String, dynamic> makeData() {
     final map = <String, dynamic>{};
-    if(mcadId.isNotEmpty)
-    {
-      map['mcad_id'] = mcadId;
-    }
-    map['minor_children_and_dependents'] = _controller1.text.toString().trim();
-    map['name_address_phone'] = _controller2.text.toString().trim();
-    map['agreed_to_assume_responsibility'] = _controller3.text.toString().trim();
-    map['have_you'] = _controller4.text.toString().trim();
-    map['document_located'] = _controller5.text.toString().trim();
-    map['instructions_directions_suggestions'] = _controller6.text.toString().trim();
-
+    map['name'] = _controller2.text.toString().trim();
+    map['area_of_business'] = _controller3.text.toString().trim();
+    map['type_of_organization'] = _controller4.text.toString().trim();
     return map;
   }
 
@@ -434,10 +443,13 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + saveMinorChildrenAdultDependents);
+    final url = Uri.parse(API_URL_VAULT + saveBusinessesData);
     Map<String, String> jsonBody = {
       'user_id': sessionManagerVault.getUserId().trim(),
-      'items' : data
+      'items' : data,
+      'own_or_jointly_business' : _controller1.text.toString().trim(),
+      'document_stating_your_wishes' : _controller5.text.toString().trim(),
+      'document_instructions' : _controller6.text.toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -462,8 +474,92 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
     }
   }
 
+  void showSelection(int isFor) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(15),
+              decoration:
+              BoxDecoration(borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 2,
+                    width: 40,
+                    alignment: Alignment.center,
+                    color: black,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      if(isFor == 0)
+                      {
+                         setState(() {
+                           _controller1.text = "Yes";
+                         });
+                      }
+                      else
+                      {
+                        setState(() {
+                          _controller5.text = "Yes";
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10, bottom: 15),
+                      child: const Text('Yes',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black)),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 1,
+                    color: grayLight
+                  ),
+                  InkWell(
+                    onTap: (){
+                      if(isFor == 0)
+                      {
+                        setState(() {
+                          _controller1.text = "No";
+                        });
+                      }
+                      else
+                      {
+                        setState(() {
+                          _controller5.text = "No";
+                        });
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 10, bottom: 15),
+                      child: const Text('No',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black)),
+                    ),
+                  ),
+                  Gap(30)
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void castStatefulWidget() {
-    widget is AddDependentChildrenPage;
+    widget is AddBusinessPage;
   }
 }

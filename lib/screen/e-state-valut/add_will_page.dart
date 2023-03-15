@@ -1,35 +1,37 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/constant/colors.dart';
 import 'package:superapp/utils/my_toolbar.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
 import '../../model/CommanResponse.dart';
-import '../../model/e-state-vault/MedicalFuneralData.dart';
+import '../../model/e-state-vault/WillDataResponse.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 
-class AddMedicalFuneralPage extends StatefulWidget {
+class AddWillPage extends StatefulWidget {
 
-  AddMedicalFuneralPage({Key? key}) : super(key: key);
+  AddWillPage({Key? key}) : super(key: key);
 
   @override
-  BaseState<AddMedicalFuneralPage> createState() => _AddMedicalFuneralPageState();
+  BaseState<AddWillPage> createState() => _AddWillPageState();
 }
 
-class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
+class _AddWillPageState extends BaseState<AddWillPage> {
   bool _isLoading = false;
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
-  final TextEditingController _controller3 = TextEditingController();
   bool _validController1 = true;
   bool _validController2 = true;
-  bool _validController3 = true;
-  var generallyId = "";
+  var willId = "";
+  var filePath = "";
 
   @override
   void initState() {
@@ -48,7 +50,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: "Medical & Funeral"),
+          title: MyToolBar(pageName: "Will"),
           centerTitle: false,
           elevation: 0,
           backgroundColor: appBg,
@@ -68,7 +70,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   child: const Text(
-                    "Enter details related to Medical &amp; Funeral",
+                    "Enter details of your Will",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w600),
                   ),
@@ -76,7 +78,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Directions about Medical or Nursing Home Care",
+                    "Where is your original Will located?",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -98,7 +100,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController1 ? null : "Please enter Directions about Medical or Nursing Home Care"
+                        errorText: _validController1 ? null : "Please enter Where is your original Will located?"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -107,7 +109,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                 Container(
                   margin: const EdgeInsets.only(top:10,left: 15, right: 10),
                   child: const Text(
-                    "Your wishes about Organ Donation",
+                    "Upload Document",
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
                   ),
@@ -118,6 +120,10 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                     keyboardType: TextInputType.text,
                     cursorColor: black,
                     controller: _controller2,
+                    readOnly: true,
+                    onTap: () {
+                      pickImagesFromGallery();
+                    },
                     onChanged: (text) {
                       setState(() {
                         if (text.isEmpty) {
@@ -129,38 +135,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                     },
                     decoration: InputDecoration(
                         labelText: '',
-                        errorText: _validController2 ? null : "Please enter Your wishes about Organ Donation"
-
-                    ),
-                    style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top:10,left: 15, right: 10),
-                  child: const Text(
-                    "Instructions regarding your Funeral, Memorial Services, Disposition of Remains, etc.",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: TextField(
-                    keyboardType: TextInputType.text,
-                    cursorColor: black,
-                    controller: _controller3,
-                    onChanged: (text) {
-                      setState(() {
-                        if (text.isEmpty) {
-                          _validController3 = false;
-                        } else {
-                          _validController3 = true;
-                        }
-                      });
-                    },
-                    decoration: InputDecoration(
-                        labelText: '',
-                        errorText: _validController3 ? null : "Please enter Instructions regarding your Funeral, Memorial Services, Disposition of Remains, etc."
+                        errorText: _validController2 ? null : "Please upload document"
 
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
@@ -197,13 +172,6 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                             return;
                           });
                         }
-                        else if(_controller3.text.isEmpty)
-                        {
-                          setState(() {
-                            _validController3 = false;
-                            return;
-                          });
-                        }
                         else
                         {
                           if (isInternetConnected) {
@@ -227,6 +195,30 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
     );
   }
 
+  Future<void> pickImagesFromGallery() async
+  {
+    try
+    {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null)
+      {
+        File file = File(result.files.single.path.toString());
+        setState(() {
+          filePath = file.path;
+          var fileName = file.path.split(Platform.pathSeparator).last;
+          _controller2.text = fileName;
+        });
+      }
+      else
+      {
+        showSnackBar("No file is selected.", context);
+      }
+    } on Exception catch (e)
+    {
+      print(e);
+    }
+  }
+
   _getApiData() async {
     setState(() {
       _isLoading = true;
@@ -235,7 +227,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + getMedicalAndFuneralData);
+    final url = Uri.parse(API_URL_VAULT + getWillData);
     Map<String, String> jsonBody = {'user_id': sessionManagerVault.getUserId().trim()};
 
     final response = await http.post(url, body: jsonBody);
@@ -245,28 +237,31 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
 
     if (statusCode == 200 && jsonData['success'] == 1)
     {
-      List<MedicalFuneralData> itemData = [];
-      final parsedJson = jsonData['generally'];
+      List<WillDataResponse> itemData = [];
+      final parsedJson = jsonData['will'];
       parsedJson.forEach((key, value)
       {
         if(key == NavigationService.accountHolder[0].holderId)
         {
-          itemData.add(MedicalFuneralData.fromJson(value));
+          itemData.add(WillDataResponse.fromJson(value));
         }
       });
 
       if(itemData.isNotEmpty)
       {
-        var generally = MedicalFuneralData();
-        generally = itemData[0];
-        generallyId = checkValidString(generally.generallyId);
-        _controller1.text = checkValidString(generally.directionsAboutMedicalAndNursing);
-        _controller2.text = checkValidString(generally.organDonorTransplantationWishes);
-        _controller3.text = checkValidString(generally.instructionsAboutFuneral);
+        var data = WillDataResponse();
+        data = itemData[0];
+        willId = checkValidString(data.willId);
+        _controller1.text = checkValidString(data.originalWillLocated);
+
+        if(checkValidString(data.uploadDocReview).toString().isNotEmpty)
+        {
+          filePath = checkValidString(data.uploadDocReview);
+          var fileName = checkValidString(data.uploadDocReview).split(Platform.pathSeparator).last;
+          _controller2.text = fileName;
+        }
       }
-
     }
-
     setState(() {
       _isLoading = false;
     });
@@ -276,10 +271,16 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
     String jsonData = "";
 
     try {
+
+      Map<String, dynamic> objSelectedValueMain = <String, dynamic>{};
+
       Map<String, dynamic> objSelectedValue = <String, dynamic>{};
-      objSelectedValue[NavigationService.accountHolder[0].holderId.toString()] = makeData();
-      jsonData = jsonEncode(objSelectedValue).toString();
+      objSelectedValue[NavigationService.accountHolder[0].holderId.toString()] =  makeData();
+
+      objSelectedValueMain["items"] = objSelectedValue;
+      jsonData = jsonEncode(objSelectedValueMain).toString();
       print("<><> JSON DATA "+ jsonData + " <><>");
+
     } catch (e) {
       print(e);
     }
@@ -288,13 +289,12 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
 
   Map<String, dynamic> makeData() {
     final map = <String, dynamic>{};
-    if(generallyId.isNotEmpty)
+    if(willId.isNotEmpty)
     {
-      map['generally_id'] = generallyId;
+      map['will_id'] = willId;
     }
-    map['directions_about_medical_and_nursing'] = _controller1.text.toString().trim();
-    map['organ_donor_transplantation_wishes'] = _controller2.text.toString().trim();
-    map['instructions_about_funeral'] = _controller3.text.toString().trim();
+    map['original_will_located'] = _controller1.text.toString().trim();
+    map['upload_doc_review'] = filePath.toString().trim();
     return map;
   }
 
@@ -306,27 +306,36 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + saveMedicalAndFuneralData);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerVault.getUserId().trim(),
-      'items' : data
-    };
+    final url = Uri.parse(API_URL_VAULT + saveWillData);
+    var request = MultipartRequest("POST", url);
+    request.fields['user_id'] = sessionManagerVault.getUserId().trim();
+    request.fields['from_app'] = "true";
+    request.fields['items'] = data;
 
-    final response = await http.post(url, body: jsonBody);
+    if (filePath.isNotEmpty) {
+      if (!filePath.toString().startsWith("https") || !filePath.toString().startsWith("http"))
+      {
+        var holderIdApi = NavigationService.accountHolder[0].holderId.toString();
+        var paramName = "upload_doc[$holderIdApi]";
+        var multipartFile = await MultipartFile.fromPath(paramName, checkValidString(filePath));
+        request.files.add(multipartFile);
+      }
+    }
+
+    var response = await request.send();
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    Map<String, dynamic> productRes = jsonDecode(responseString);
     final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = CommanResponse.fromJson(user);
+    var dataResponse = CommanResponse.fromJson(productRes);
 
-    if (statusCode == 200 && dataResponse.success == 1)
-    {
+    if (statusCode == 200 && dataResponse.success == 1) {
       showSnackBar(dataResponse.message, context);
       Navigator.pop(context);
       setState(() {
         _isLoading = false;
       });
-    }
-    else {
+    } else {
       showSnackBar(dataResponse.message, context);
       setState(() {
         _isLoading = false;
@@ -336,6 +345,6 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
 
   @override
   void castStatefulWidget() {
-    widget is AddMedicalFuneralPage;
+    widget is AddWillPage;
   }
 }
