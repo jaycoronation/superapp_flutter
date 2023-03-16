@@ -43,7 +43,7 @@ class _InsurancePolicyListPageState extends BaseState<InsurancePolicyListPage> {
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName: "Mutual Funds"),
+        title: const MyToolBar(pageName: "Insurance Policies"),
         centerTitle: false,
         elevation: 0,
         backgroundColor: appBg,

@@ -44,7 +44,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName: "Share Bonds"),
+        title: const MyToolBar(pageName: "Mutual Funds"),
         centerTitle: false,
         elevation: 0,
         backgroundColor: appBg,

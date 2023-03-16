@@ -13,11 +13,9 @@ String insurancePolicyResponseToJson(InsurancePolicyResponse data) => json.encod
 class InsurancePolicyResponse {
   InsurancePolicyResponse({
       List<InsurancePoliciesDetails>? insurancePoliciesDetails, 
-      String? totalCount, 
-      num? success, 
+      num? success,
       String? message,}){
     _insurancePoliciesDetails = insurancePoliciesDetails;
-    _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -29,25 +27,20 @@ class InsurancePolicyResponse {
         _insurancePoliciesDetails?.add(InsurancePoliciesDetails.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
   List<InsurancePoliciesDetails>? _insurancePoliciesDetails;
-  String? _totalCount;
   num? _success;
   String? _message;
 InsurancePolicyResponse copyWith({  List<InsurancePoliciesDetails>? insurancePoliciesDetails,
-  String? totalCount,
   num? success,
   String? message,
 }) => InsurancePolicyResponse(  insurancePoliciesDetails: insurancePoliciesDetails ?? _insurancePoliciesDetails,
-  totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<InsurancePoliciesDetails>? get insurancePoliciesDetails => _insurancePoliciesDetails;
-  String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -56,7 +49,6 @@ InsurancePolicyResponse copyWith({  List<InsurancePoliciesDetails>? insurancePol
     if (_insurancePoliciesDetails != null) {
       map['insurance_policies_details'] = _insurancePoliciesDetails?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;

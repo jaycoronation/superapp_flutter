@@ -42,7 +42,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   List<HeaderGetSet> menuList = List<HeaderGetSet>.empty(growable: true);
   List<String> holderList = List<String>.empty(growable: true);
   List<Holders> accountHolder = List<Holders>.empty(growable: true);
-  int headerPosition = 2;
+  int headerPosition = 0;
   ScrollController _scrollController = ScrollController();
 
   @override
