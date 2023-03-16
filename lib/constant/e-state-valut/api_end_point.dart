@@ -3,6 +3,7 @@ const String API_URL_VAULT = "https://vault.alphacapital.in/api/index.php/servic
 const String API_ID = "YzMxYjMyMzY0Y2UxOWNhOGZjZDE1MGE0MTdlY2NlNTg=";
 const String FROM_APP = "true";
 
+//get holder data
 String holders = "holders";
 String accountHolders = "account_holders/list";
 
@@ -55,6 +56,39 @@ String saveBusinessesData = "businesses/save";
 //domestic_employees
 String getDomesticEmployeesData = "domestic_employees/detail";
 String saveDomesticEmployeesData = "domestic_employees/save";
+
+//GovernmentRelated
+String governmentRelatedList = "government_related/list";
+String saveGovernmentRelated = "government_related/save";
+String deleteGovernmentRelated = "government_related/delete";
+
+//employment_related
+String employmentRelatedList = "employment_related/list";
+String saveEmploymentRelated = "employment_related/save";
+String deleteEmploymentRelated = "employment_related/delete";
+
+//insurance_policies/list
+String insurancePoliciesList = "insurance_policies/list";
+String saveInsurancePolicies = "insurance_policies/save";
+String deleteInsurancePolicies = "insurance_policies/delete";
+
+
+//mutual_funds/list
+String mutualFundsList = "mutual_funds/list";
+String saveMutualFunds = "mutual_funds/save";
+String deleteMutualFunds = "mutual_funds/delete";
+
+//mutual_funds/list
+String sharesBondsList = "shares_bonds/list";
+String saveSharesBonds = "shares_bonds/save";
+String deleteSharesBonds = "shares_bonds/delete";
+
+//Other Financial Assets
+String otherFinancialAssetsList = "investment_trust_accounts/list";
+String saveOtherFinancialAssets = "investment_trust_accounts/save";
+String deleteOtherFinancialAssets  = "investment_trust_accounts/delete";
+
+
 
 
 

@@ -129,11 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: appBg,
       statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
       statusBarBrightness: Brightness.dark,
     ));
+
     return Scaffold(
       backgroundColor: appBg,
       extendBodyBehindAppBar: true,

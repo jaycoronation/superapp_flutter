@@ -7,6 +7,7 @@ import 'package:superapp/screen/e-state-valut/advisors_page_list.dart';
 import 'package:superapp/screen/e-state-valut/constitution_value_page_list.dart';
 import 'package:superapp/screen/e-state-valut/death_notification_page_list.dart';
 import 'package:superapp/screen/e-state-valut/safe_deposite_box_page_list.dart';
+import 'package:superapp/screen/e-state-valut/share_bonds_page_list.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -21,8 +22,13 @@ import 'add_dependent_children.dart';
 import 'add_domestic_employee.dart';
 import 'add_medical_funeral.dart';
 import 'add_will_page.dart';
+import 'employment_related_page_list.dart';
+import 'government_related_page_list.dart';
 import 'imp_doc_page_list.dart';
+import 'insurance_policy_page_list.dart';
 import 'key_to_residence_page_list.dart';
+import 'mutual_funds_page_list.dart';
+import 'other_financial_assets_page_list.dart';
 
 class EStateVaultHomePage extends StatefulWidget {
   const EStateVaultHomePage({Key? key}) : super(key: key);
@@ -36,7 +42,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   List<HeaderGetSet> menuList = List<HeaderGetSet>.empty(growable: true);
   List<String> holderList = List<String>.empty(growable: true);
   List<Holders> accountHolder = List<Holders>.empty(growable: true);
-  int headerPosition = 0;
+  int headerPosition = 2;
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -217,6 +223,30 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               else if(menuItems[index].id == 11)
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddDomesticEmployee()));
+              }
+              else if(menuItems[index].id == 12)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GovernmentRelatedListPage()));
+              }
+              else if(menuItems[index].id == 13)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EmploymentRelatedListPage()));
+              }
+              else if(menuItems[index].id == 14)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => InsurancePolicyListPage()));
+              }
+              else if(menuItems[index].id == 15)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MutualFundsListPage()));
+              }
+              else if(menuItems[index].id == 16)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ShareBondsListPage()));
+              }
+              else if(menuItems[index].id == 17)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OtherFinancialAssetsListPage()));
               }
               },
             child: Container(
