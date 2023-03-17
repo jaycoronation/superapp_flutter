@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../constant/colors.dart';
 
 /*show message to user*/
@@ -246,4 +247,21 @@ List<String> getPeriodicity() {
     listData.add("$i");
   }
   return listData;
+}
+
+openFileFromURL(String url,BuildContext? context)
+{
+    try {
+      if(checkValidString(url).toString().isNotEmpty)
+          {
+            launch(url);
+          }
+          else
+            {
+              showSnackBar("File URL not found.", context);
+            }
+    } catch (e) {
+      print(e);
+      showSnackBar("File URL not found.", context);
+    }
 }

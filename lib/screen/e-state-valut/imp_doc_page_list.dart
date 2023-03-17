@@ -113,8 +113,7 @@ class _ImpDocPageListState extends BaseState<ImpDocPageList> {
                         const Spacer(),
                         GestureDetector(
                           onTap: (){
-                            showSnackBar("Download File", context);
-                            //_redirectAdd(listData[index],true);
+                            openFileFromURL(checkValidString(listData[index].softcopy),context);
                           },
                           child: Container(
                             width: 32,

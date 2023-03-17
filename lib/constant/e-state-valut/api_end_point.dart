@@ -89,6 +89,47 @@ String saveOtherFinancialAssets = "investment_trust_accounts/save";
 String deleteOtherFinancialAssets  = "investment_trust_accounts/delete";
 
 
+//bank/list
+String bankList = "financial_institution_accounts/list";
+String saveBank = "financial_institution_accounts/save";
+String deleteBank = "financial_institution_accounts/delete";
 
+//intellectual_property
+String intellectualPropertyList = "intellectual_property/list";
+String saveIntellectualProperty = "intellectual_property/save";
+String deleteIntellectualProperty = "intellectual_property/delete";
 
+//real_property
+String realPropertyList = "real_property/list";
+String saveRealProperty = "real_property/save";
+String deleteRealProperty = "real_property/delete";
 
+//other_assets
+String otherAssetsList = "other_assets/list";
+String saveOtherAssets = "other_assets/save";
+String deleteOtherAssets = "other_assets/delete";
+
+//other_assets
+String creditCardsLoansList = "credit_cards_and_loans/list";
+String saveCreditCardsLoans = "credit_cards_and_loans/save";
+String deleteCreditCardsLoans = "credit_cards_and_loans/delete";
+
+//former_spouse_of_former_marriages
+String formerSpouseList = "former_spouse_of_former_marriages/list";
+String saveFormerSpouse = "former_spouse_of_former_marriages/save";
+String deleteFormerSpouseList = "former_spouse_of_former_marriages/delete";
+
+//former_spouse_of_former_marriages
+String charityRelatedObligationList = "charity_related_obligation/list";
+String saveCharityRelatedObligation = "charity_related_obligation/save";
+String deleteCharityRelatedObligation = "charity_related_obligation/delete";
+
+//fiduciary_obligations
+String fiduciaryObligationsList = "fiduciary_obligations/list";
+String saveFiduciaryObligations = "fiduciary_obligations/save";
+String deleteFiduciaryObligations = "fiduciary_obligations/delete";
+
+//fiduciary_obligations
+String otherDebtsList = "other_debts/list";
+String saveOtherDebts = "other_debts/save";
+String deleteOtherDebts = "other_debts/delete";

@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/screen/e-state-valut/advisors_page_list.dart';
+import 'package:superapp/screen/e-state-valut/bank_page_list.dart';
 import 'package:superapp/screen/e-state-valut/constitution_value_page_list.dart';
 import 'package:superapp/screen/e-state-valut/death_notification_page_list.dart';
+import 'package:superapp/screen/e-state-valut/real_estate_page_list.dart';
 import 'package:superapp/screen/e-state-valut/safe_deposite_box_page_list.dart';
 import 'package:superapp/screen/e-state-valut/share_bonds_page_list.dart';
 import '../../../constant/colors.dart';
@@ -22,12 +24,19 @@ import 'add_dependent_children.dart';
 import 'add_domestic_employee.dart';
 import 'add_medical_funeral.dart';
 import 'add_will_page.dart';
+import 'charity_page_list.dart';
+import 'credit_cards_loans_page_list.dart';
 import 'employment_related_page_list.dart';
+import 'fiduciary_obligations_page_list.dart';
+import 'former_spouse_page_list.dart';
 import 'government_related_page_list.dart';
 import 'imp_doc_page_list.dart';
 import 'insurance_policy_page_list.dart';
+import 'intellectual_property_page_list.dart';
 import 'key_to_residence_page_list.dart';
 import 'mutual_funds_page_list.dart';
+import 'other_asset_page_list.dart';
+import 'other_debts_page_list.dart';
 import 'other_financial_assets_page_list.dart';
 
 class EStateVaultHomePage extends StatefulWidget {
@@ -248,7 +257,44 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => OtherFinancialAssetsListPage()));
               }
-              },
+              else if(menuItems[index].id == 18)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BankListPage()));
+              }
+              else if(menuItems[index].id == 19)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => IntellectualPropertyListPage()));
+              }
+              else if(menuItems[index].id == 20)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RealEstateListPage()));
+              }
+              else if(menuItems[index].id == 21)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OtherAssetListPage()));
+              }
+              else if(menuItems[index].id == 22)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreditCardsLoansListPage()));
+              }
+              else if(menuItems[index].id == 23)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FormerSpouseListPage()));
+              }
+              else if(menuItems[index].id == 24)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CharityRelatedListPage()));
+              }
+              else if(menuItems[index].id == 25)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FiduciaryObligationsListPage()));
+              }
+              else if(menuItems[index].id == 26)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OtherDebtsListPage()));
+              }
+
+          },
             child: Container(
               padding: const EdgeInsets.only(left: 5, right: 5),
               decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -325,8 +371,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
     List<MenuGetSet> temp4 = List<MenuGetSet>.empty(growable: true);
     temp4 = [
       MenuGetSet(idStatic: 22, nameStatic: "Credit Cards and Loans", itemIconStatic: "assets/images/vault_ic_credit_card.png"),
-      MenuGetSet(
-          idStatic: 23, nameStatic: "Former Spouse/ Children from previous marriage", itemIconStatic: "assets/images/vault_ic_former_spouse.png"),
+      MenuGetSet(idStatic: 23, nameStatic: "Former Spouse/ Children from previous marriage", itemIconStatic: "assets/images/vault_ic_former_spouse.png"),
       MenuGetSet(idStatic: 24, nameStatic: "Charity Related", itemIconStatic: "assets/images/vault_ic_charity.png"),
       MenuGetSet(idStatic: 25, nameStatic: "Fiduciary Obligations", itemIconStatic: "assets/images/vault_ic_fiduciary_obligations.png"),
       MenuGetSet(idStatic: 26, nameStatic: "Other Debts", itemIconStatic: "assets/images/vault_ic_debts.png")

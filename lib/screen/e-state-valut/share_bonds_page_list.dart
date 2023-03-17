@@ -113,8 +113,7 @@ class _ShareBondsListPageState extends BaseState<ShareBondsListPage> {
                         const Spacer(),
                         GestureDetector(
                           onTap: (){
-                            showSnackBar("Download File", context);
-                            //_redirectAdd(listData[index],true);
+                            openFileFromURL(checkValidString(listData[index].uploadDoc),context);
                           },
                           child: Container(
                             width: 32,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp/widget/no_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -113,8 +114,8 @@ class _GovernmentRelatedListPageState extends BaseState<GovernmentRelatedListPag
                         const Spacer(),
                         GestureDetector(
                           onTap: (){
-                            showSnackBar("Download File", context);
-                            //_redirectAdd(listData[index],true);
+
+                            openFileFromURL(checkValidString(listData[index].uploadDoc),context);
                           },
                           child: Container(
                             width: 32,

@@ -8,23 +8,22 @@ import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/CommanResponse.dart';
-import '../../model/e-state-vault/MutualFundsResponse.dart';
+import '../../model/e-state-vault/IntellectualPropertiesResponse.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/my_toolbar.dart';
 import '../../widget/loading.dart';
-import 'add_insurance_policy.dart';
-import 'add_mutual_funds.dart';
+import 'add_intellectual_property.dart';
 
-class MutualFundsListPage extends StatefulWidget {
-  const MutualFundsListPage({Key? key}) : super(key: key);
+class IntellectualPropertyListPage extends StatefulWidget {
+  const IntellectualPropertyListPage({Key? key}) : super(key: key);
 
   @override
-  _MutualFundsListPageState createState() => _MutualFundsListPageState();
+  _IntellectualPropertyListPageState createState() => _IntellectualPropertyListPageState();
 }
 
-class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
+class _IntellectualPropertyListPageState extends BaseState<IntellectualPropertyListPage> {
   bool _isLoading = false;
-  List<MutualFunds> listData = List<MutualFunds>.empty(growable: true);
+  List<IntellectualProperties> listData = List<IntellectualProperties>.empty(growable: true);
 
   @override
   void initState() {
@@ -44,7 +43,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName: "Mutual Funds"),
+        title: const MyToolBar(pageName: "Intellectual Property"),
         centerTitle: false,
         elevation: 0,
         backgroundColor: appBg,
@@ -69,7 +68,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                                   child: InkWell(
                                     onTap: ()
                                     {
-                                      _redirectAdd(MutualFunds(),false);
+                                      _redirectAdd(IntellectualProperties(),false);
                                     },
                                     child: Container(
                                     width: 48,
@@ -160,7 +159,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
-                          "Asset Name",
+                          "Lawyer Name",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
                         )),
                         const Text(
@@ -168,7 +167,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                           style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
                         ),
                         Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].assetName),
+                          checkValidString(listData[index].lawyerName),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
                         )),
                       ],
@@ -194,7 +193,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
-                          "Institution",
+                          "Firm",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                         const Text(
@@ -202,7 +201,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                           style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
                         ),
                         Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].institution),
+                          checkValidString(listData[index].firm),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                       ],
@@ -211,7 +210,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
-                          "Account Number",
+                          "Phone",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                         const Text(
@@ -219,7 +218,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                           style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
                         ),
                         Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].accountNumber),
+                          checkValidString(listData[index].phone),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                       ],
@@ -228,7 +227,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
-                          "Amount",
+                          "Created on",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                         const Text(
@@ -236,24 +235,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                           style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
                         ),
                         Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].amount),
-                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
-                        )),
-                      ],
-                    ),
-                    Gap(4),
-                    Row(
-                      children: [
-                        const Expanded(flex: 2, child: Text(
-                          "Contact Person",
-                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
-                        )),
-                        const Text(
-                          " : ",
-                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                        ),
-                        Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].contactPerson),
+                          checkValidString(listData[index].createdOn),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                       ],
@@ -308,7 +290,41 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                       ],
-                    )
+                    ),
+                    Gap(4),
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: Text(
+                          "Address",
+                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                        const Text(
+                          " : ",
+                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(flex: 4, child: Text(
+                          checkValidString(listData[index].address),
+                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                      ],
+                    ),
+                    Gap(4),
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: Text(
+                          "Description",
+                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                        const Text(
+                          " : ",
+                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(flex: 4, child: Text(
+                          checkValidString(listData[index].description),
+                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                      ],
+                    ),
                   ],
                 ),
               )
@@ -317,10 +333,10 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
         )));
   }
 
-  Future<void> _redirectAdd(MutualFunds listData, bool isFor) async {
+  Future<void> _redirectAdd(IntellectualProperties listData, bool isFor) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddMutualFundsPage(listData, isFor)),
+      MaterialPageRoute(builder: (context) => AddIntellectualPropertyPage(listData, isFor)),
     );
     print("result ===== $result");
     if (result == "success") {
@@ -338,20 +354,20 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + mutualFundsList);
+    final url = Uri.parse(API_URL_VAULT + intellectualPropertyList);
     Map<String, String> jsonBody = {'user_id': sessionManagerVault.getUserId().trim()};
 
     final response = await http.post(url, body: jsonBody);
     final statusCode = response.statusCode;
     final body = response.body;
     Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = MutualFundsResponse.fromJson(user);
+    var dataResponse = IntellectualPropertiesResponse.fromJson(user);
 
     if (statusCode == 200 && dataResponse.success == 1)
     {
       try {
-        if (dataResponse.mutualFunds != null) {
-          listData = dataResponse.mutualFunds!;
+        if (dataResponse.intellectualProperties != null) {
+          listData = dataResponse.intellectualProperties!;
           setState(() {
             _isLoading = false;
           });
@@ -374,7 +390,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
     }
   }
 
-  void deleteListData(MutualFunds data, int index) {
+  void deleteListData(IntellectualProperties data, int index) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: white,
@@ -466,10 +482,10 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + deleteMutualFunds);
+    final url = Uri.parse(API_URL_VAULT + deleteIntellectualProperty);
 
     Map<String, String> jsonBody = {
-      'mutual_funds_id': listData[index].mutualFundsId.toString(),
+      'intellectual_property_id': listData[index].intellectualPropertyId.toString(),
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -496,7 +512,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
 
   @override
   void castStatefulWidget() {
-    widget is MutualFundsListPage;
+    widget is IntellectualPropertyListPage;
   }
 
   @override

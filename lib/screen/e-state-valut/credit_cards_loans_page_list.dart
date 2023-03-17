@@ -8,23 +8,22 @@ import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/CommanResponse.dart';
-import '../../model/e-state-vault/MutualFundsResponse.dart';
+import '../../model/e-state-vault/CreditCardsLoansResponse.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/my_toolbar.dart';
 import '../../widget/loading.dart';
-import 'add_insurance_policy.dart';
-import 'add_mutual_funds.dart';
+import 'add_credit_cards_loans.dart';
 
-class MutualFundsListPage extends StatefulWidget {
-  const MutualFundsListPage({Key? key}) : super(key: key);
+class CreditCardsLoansListPage extends StatefulWidget {
+  const CreditCardsLoansListPage({Key? key}) : super(key: key);
 
   @override
-  _MutualFundsListPageState createState() => _MutualFundsListPageState();
+  _CreditCardsLoansListPageState createState() => _CreditCardsLoansListPageState();
 }
 
-class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
+class _CreditCardsLoansListPageState extends BaseState<CreditCardsLoansListPage> {
   bool _isLoading = false;
-  List<MutualFunds> listData = List<MutualFunds>.empty(growable: true);
+  List<CreditCardsAndLoans> listData = List<CreditCardsAndLoans>.empty(growable: true);
 
   @override
   void initState() {
@@ -44,7 +43,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName: "Mutual Funds"),
+        title: const MyToolBar(pageName: "Credit Cards and Loans"),
         centerTitle: false,
         elevation: 0,
         backgroundColor: appBg,
@@ -69,7 +68,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                                   child: InkWell(
                                     onTap: ()
                                     {
-                                      _redirectAdd(MutualFunds(),false);
+                                      _redirectAdd(CreditCardsAndLoans(),false);
                                     },
                                     child: Container(
                                     width: 48,
@@ -160,7 +159,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
-                          "Asset Name",
+                          "Type",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
                         )),
                         const Text(
@@ -168,7 +167,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                           style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
                         ),
                         Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].assetName),
+                          checkValidString(listData[index].type),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
                         )),
                       ],
@@ -194,23 +193,6 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
-                          "Institution",
-                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
-                        )),
-                        const Text(
-                          " : ",
-                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                        ),
-                        Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].institution),
-                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
-                        )),
-                      ],
-                    ),
-                    Gap(4),
-                    Row(
-                      children: [
-                        const Expanded(flex: 2, child: Text(
                           "Account Number",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
@@ -220,6 +202,23 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                         ),
                         Expanded(flex: 4, child: Text(
                           checkValidString(listData[index].accountNumber),
+                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                      ],
+                    ),
+                    Gap(4),
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: Text(
+                          "Institution",
+                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                        const Text(
+                          " : ",
+                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(flex: 4, child: Text(
+                          checkValidString(listData[index].institution),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                       ],
@@ -245,6 +244,23 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                     Row(
                       children: [
                         const Expanded(flex: 2, child: Text(
+                          "Created on",
+                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                        const Text(
+                          " : ",
+                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                        ),
+                        Expanded(flex: 4, child: Text(
+                            universalDateConverter("MM/dd/yyyy", "dd/MM/yyyy", checkValidString(listData[index].createdOn)),
+                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                        )),
+                      ],
+                    ),
+                    Gap(4),
+                    Row(
+                      children: [
+                        const Expanded(flex: 2, child: Text(
                           "Contact Person",
                           style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
@@ -254,23 +270,6 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
                         ),
                         Expanded(flex: 4, child: Text(
                           checkValidString(listData[index].contactPerson),
-                          style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
-                        )),
-                      ],
-                    ),
-                    Gap(4),
-                    Row(
-                      children: [
-                        const Expanded(flex: 2, child: Text(
-                          "Nominee Name",
-                          style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
-                        )),
-                        const Text(
-                          " : ",
-                          style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                        ),
-                        Expanded(flex: 4, child: Text(
-                          checkValidString(listData[index].nomineeName),
                           style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
                         )),
                       ],
@@ -317,10 +316,10 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
         )));
   }
 
-  Future<void> _redirectAdd(MutualFunds listData, bool isFor) async {
+  Future<void> _redirectAdd(CreditCardsAndLoans listData, bool isFor) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddMutualFundsPage(listData, isFor)),
+      MaterialPageRoute(builder: (context) => AddCreditCardsLoansPage(listData, isFor)),
     );
     print("result ===== $result");
     if (result == "success") {
@@ -338,20 +337,20 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + mutualFundsList);
+    final url = Uri.parse(API_URL_VAULT + creditCardsLoansList);
     Map<String, String> jsonBody = {'user_id': sessionManagerVault.getUserId().trim()};
 
     final response = await http.post(url, body: jsonBody);
     final statusCode = response.statusCode;
     final body = response.body;
     Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = MutualFundsResponse.fromJson(user);
+    var dataResponse = CreditCardsLoansResponse.fromJson(user);
 
     if (statusCode == 200 && dataResponse.success == 1)
     {
       try {
-        if (dataResponse.mutualFunds != null) {
-          listData = dataResponse.mutualFunds!;
+        if (dataResponse.creditCardsAndLoans != null) {
+          listData = dataResponse.creditCardsAndLoans!;
           setState(() {
             _isLoading = false;
           });
@@ -374,7 +373,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
     }
   }
 
-  void deleteListData(MutualFunds data, int index) {
+  void deleteListData(CreditCardsAndLoans data, int index) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: white,
@@ -466,10 +465,10 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_VAULT + deleteMutualFunds);
+    final url = Uri.parse(API_URL_VAULT + deleteCreditCardsLoans);
 
     Map<String, String> jsonBody = {
-      'mutual_funds_id': listData[index].mutualFundsId.toString(),
+      'credit_cards_and_loan_id': listData[index].creditCardsAndLoanId.toString(),
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -496,7 +495,7 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
 
   @override
   void castStatefulWidget() {
-    widget is MutualFundsListPage;
+    widget is CreditCardsLoansListPage;
   }
 
   @override
