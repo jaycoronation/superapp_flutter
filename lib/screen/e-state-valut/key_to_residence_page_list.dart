@@ -23,6 +23,7 @@ class KeyToResidencePageList extends StatefulWidget {
 
 class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
   bool _isLoading = false;
+  bool _isLoad = false;
   List<KeysToResidences> listData = List<KeysToResidences>.empty(growable: true);
 
   @override
