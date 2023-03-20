@@ -48,11 +48,12 @@ class _AddCreditCardsLoansPageState extends BaseState<AddCreditCardsLoansPage> {
       itemData.institutionController.text = checkValidString(itemData.institution.toString().trim());
       itemData.amountController.text = checkValidString(itemData.amount.toString().trim());
 
-      String formattedDate = universalDateConverter("MM/dd/yyyy", "dd/MM/yyyy", checkValidString(itemData.createdOn.toString().trim()));
-      setState(() {
-        itemData.createdOnController.text = formattedDate;
-      });
-
+      String formattedDate = "";
+      if(checkValidString(itemData.createdOn).toString().isNotEmpty)
+      {
+        formattedDate = universalDateConverter("MM/dd/yyyy", "dd/MM/yyyy", checkValidString(itemData.createdOn.toString().trim()));
+      }
+      itemData.createdOnController.text = formattedDate;
       itemData.contactPersonController.text = checkValidString(itemData.contactPerson.toString().trim());
       itemData.locationOfDocumentController.text = checkValidString(itemData.locationOfDocument.toString().trim());
       itemData.notesController.text = checkValidString(itemData.notes.toString().trim());
@@ -531,10 +532,12 @@ class _AddCreditCardsLoansPageState extends BaseState<AddCreditCardsLoansPage> {
       data.setAccountNumber = checkValidString(itemData.accountNumber.toString().trim());
       data.setInstitution = checkValidString(itemData.institution.toString().trim());
       data.setAmount = checkValidString(itemData.amount.toString().trim());
-      String formattedDate = universalDateConverter("MM/dd/yyyy", "dd/MM/yyyy", checkValidString(itemData.createdOn.toString().trim()));
-      setState(() {
-        data.setCreatedOn = checkValidString(formattedDate);
-      });
+      String formattedDate = "";
+      if(checkValidString(itemData.createdOn).toString().isNotEmpty)
+      {
+        formattedDate = universalDateConverter("MM/dd/yyyy", "dd/MM/yyyy", checkValidString(itemData.createdOn.toString().trim()));
+      }
+      data.setCreatedOn = checkValidString(formattedDate);
       data.setContactPerson = checkValidString(itemData.contactPerson.toString().trim());
       data.setLocationOfDocument = checkValidString(itemData.locationOfDocument.toString().trim());
       data.setNotes = checkValidString(itemData.notes.toString().trim());

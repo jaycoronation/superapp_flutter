@@ -9,11 +9,9 @@ String accountHolderListResponseToJson(AccountHolderListResponse data) => json.e
 class AccountHolderListResponse {
   AccountHolderListResponse({
       List<Holders>? holders, 
-      String? totalCount, 
-      num? success, 
+      num? success,
       String? message,}){
     _holders = holders;
-    _totalCount = totalCount;
     _success = success;
     _message = message;
 }
@@ -25,25 +23,20 @@ class AccountHolderListResponse {
         _holders?.add(Holders.fromJson(v));
       });
     }
-    _totalCount = json['total_count'];
     _success = json['success'];
     _message = json['message'];
   }
   List<Holders>? _holders;
-  String? _totalCount;
   num? _success;
   String? _message;
 AccountHolderListResponse copyWith({  List<Holders>? holders,
-  String? totalCount,
   num? success,
   String? message,
 }) => AccountHolderListResponse(  holders: holders ?? _holders,
-  totalCount: totalCount ?? _totalCount,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<Holders>? get holders => _holders;
-  String? get totalCount => _totalCount;
   num? get success => _success;
   String? get message => _message;
 
@@ -52,7 +45,6 @@ AccountHolderListResponse copyWith({  List<Holders>? holders,
     if (_holders != null) {
       map['holders'] = _holders?.map((v) => v.toJson()).toList();
     }
-    map['total_count'] = _totalCount;
     map['success'] = _success;
     map['message'] = _message;
     return map;

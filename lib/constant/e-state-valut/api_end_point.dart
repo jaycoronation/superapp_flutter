@@ -3,6 +3,10 @@ const String API_URL_VAULT = "https://vault.alphacapital.in/api/index.php/servic
 const String API_ID = "YzMxYjMyMzY0Y2UxOWNhOGZjZDE1MGE0MTdlY2NlNTg=";
 const String FROM_APP = "true";
 
+
+//share data
+String generatePDF = "generate_pdf";
+
 //get holder data
 String holders = "holders";
 String accountHolders = "account_holders/list";

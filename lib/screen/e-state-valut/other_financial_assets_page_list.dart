@@ -468,7 +468,7 @@ class _OtherFinancialAssetsListPageState extends BaseState<OtherFinancialAssetsL
     final url = Uri.parse(API_URL_VAULT + deleteOtherFinancialAssets);
 
     Map<String, String> jsonBody = {
-      'investment_trust_accounts': listData[index].investmentTrustAccountId.toString(),
+      'investment_trust_account_id': listData[index].investmentTrustAccountId.toString(),
     };
 
     final response = await http.post(url, body: jsonBody);

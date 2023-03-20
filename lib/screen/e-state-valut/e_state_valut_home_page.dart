@@ -10,6 +10,7 @@ import 'package:superapp/screen/e-state-valut/death_notification_page_list.dart'
 import 'package:superapp/screen/e-state-valut/real_estate_page_list.dart';
 import 'package:superapp/screen/e-state-valut/safe_deposite_box_page_list.dart';
 import 'package:superapp/screen/e-state-valut/share_bonds_page_list.dart';
+import 'package:superapp/screen/e-state-valut/share_report_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -89,7 +90,9 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
                 style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
               )),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  ShareReportPage()));
+                },
                 child: Container(
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.only(right: 5),

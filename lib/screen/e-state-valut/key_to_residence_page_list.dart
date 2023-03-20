@@ -8,11 +8,11 @@ import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/CommanResponse.dart';
-import '../../model/e-state-vault/ConstitutionValuesResponse.dart';
+import '../../model/e-state-vault/keysToResidencesResponse.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/my_toolbar.dart';
 import '../../widget/loading.dart';
-import 'add_constitution_value_page.dart';
+import 'add_key_to_residence.dart';
 
 class KeyToResidencePageList extends StatefulWidget {
   const KeyToResidencePageList({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class KeyToResidencePageList extends StatefulWidget {
 
 class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
   bool _isLoading = false;
-  List<Data> listData = List<Data>.empty(growable: true);
+  List<KeysToResidences> listData = List<KeysToResidences>.empty(growable: true);
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
                                   child: InkWell(
                                     onTap: ()
                                     {
-                                      _redirectAdd(Data(),false);
+                                      _redirectAdd(KeysToResidences(),false);
                                     },
                                     child: Container(
                                     width: 48,
@@ -112,7 +112,7 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
                       children: [
                         Expanded(
                             child: Text(
-                          checkValidString(listData[index].notes),
+                          checkValidString(listData[index].location),
                           maxLines: 3,
                           style: const TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
                         )),
@@ -152,10 +152,10 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
             ))));
   }
 
-  Future<void> _redirectAdd(Data listData, bool isFor) async {
+  Future<void> _redirectAdd(KeysToResidences listData, bool isFor) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddConstitutionValuePage(listData, isFor)),
+      MaterialPageRoute(builder: (context) => AddKeyToResidence(listData, isFor)),
     );
     print("result ===== $result");
     if (result == "success") {
@@ -180,13 +180,13 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
     final statusCode = response.statusCode;
     final body = response.body;
     Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = ConstitutionValuesResponse.fromJson(user);
+    var dataResponse = KeysToResidencesResponse.fromJson(user);
 
     if (statusCode == 200 && dataResponse.success == 1)
     {
       try {
-        if (dataResponse.data != null) {
-          listData = dataResponse.data!;
+        if (dataResponse.keysToResidences != null) {
+          listData = dataResponse.keysToResidences!;
           setState(() {
             _isLoading = false;
           });
@@ -209,7 +209,7 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
     }
   }
 
-  void deleteListData(Data data, int index) {
+  void deleteListData(KeysToResidences data, int index) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: white,
@@ -304,7 +304,7 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
     final url = Uri.parse(API_URL_VAULT + deleteKeysToResidences);
 
     Map<String, String> jsonBody = {
-      'keys_to_residences_id': listData[index].id.toString(),
+      'keys_to_residences_id': listData[index].keysToResidencesId.toString(),
     };
 
     final response = await http.post(url, body: jsonBody);
