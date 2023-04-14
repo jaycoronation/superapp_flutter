@@ -12,6 +12,7 @@ import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
+import '../consolidated-portfolio/cp_home_page.dart';
 import 'blogs_page.dart';
 import 'login_screen.dart';
 
@@ -147,21 +148,26 @@ class _HomePageState extends BaseState<HomePage> {
                         )),
                     const Gap(15),
                     Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15, bottom: 20, top: 20, right: 2),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_consolidated.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Consolidated Portfolio",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15, bottom: 20, top: 20, right: 2),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_consolidated.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text(
+                                  "Consolidated Portfolio",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
                         ))
                   ],
