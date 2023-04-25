@@ -23,12 +23,24 @@ const Color grayLight= Color(0xffe0e0e0);
 const Color graySemiDark= Color(0xff9F9F9F);
 const Color grayDark= Color(0xff72716d);
 const Color blue= Color(0xff2042FE);
+const Color divider_color = Color(0xffbec7ff);
 const Color lightBlue= Color(0xffedf1fb);
 const Color semiBlue= Color(0xffE8EFFC);
 
 
 const Color purple= Color(0xffB255E1);
 const Color dashboardBg = Color(0xfff3f6fd);
+
+const Color chart_color1= Color(0xff74ABE2);
+const Color chart_color2= Color(0xffEF8D5D);
+const Color chart_color3= Color(0xff3FB68E);
+const Color chart_color4= Color(0xffF06A93);
+const Color chart_color5= Color(0xffA97DD8);
+const Color chart_color6= Color(0xffBF399E);
+const Color chart_color7= Color(0xff6973F6);
+const Color chart_color8= Color(0xff3AB5C2);
+const Color chart_color9= Color(0xff6C8893);
+const Color chart_color10= Color(0xffF38787);
 
 const LinearGradient loginBgGradient = LinearGradient(
     begin: FractionalOffset.bottomCenter,

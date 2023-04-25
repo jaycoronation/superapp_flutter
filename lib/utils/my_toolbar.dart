@@ -30,7 +30,7 @@ class MyToolBar extends StatelessWidget {
             child: Text(
               pageName,
               textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
             )),
       ],
     );

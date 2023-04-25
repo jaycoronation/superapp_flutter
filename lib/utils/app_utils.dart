@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,14 +51,14 @@ String getPrice(String text) {
     {
       try {
         var formatter = NumberFormat('#,##,###');
-        return "₹ " + formatter.format(double.parse(text));
+        return "₹ ${formatter.format(double.parse(text))}";
       } catch (e) {
-        return "₹ " + text;
+        return "₹ $text";
       }
     }
     else
     {
-      return "₹ " + text;
+      return "₹ $text";
     }
 }
 
@@ -144,9 +143,20 @@ doubleUpto2Digit (double value) {
 convertCommaSeparatedAmount (String value) {
   try {
     var formatter = NumberFormat('#,##,000');
-    return formatter.format(value);
+    return checkValidString(value).toString().isNotEmpty ? "₹ ${formatter.format(double.parse(value))}" : "₹ 0";
   } catch (e) {
     return value;
+  }
+}
+
+final numberFormatter = NumberFormat(
+  "##,##,###",
+  "en_US",     // local US
+);
+
+extension RupeesFormatter on num {
+  String inRupeesFormat() {
+    return numberFormatter.format(this);
   }
 }
 
