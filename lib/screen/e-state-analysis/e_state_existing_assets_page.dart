@@ -118,48 +118,51 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          InkWell(
-                                              onTap:(){
-                                                _redirectToNextPage(context, listData[index], true);
-                                              },
-                                              child: Container(
-                                                width: 36,
-                                                height: 36,
-                                                decoration: BoxDecoration(color: grayLight,
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
-                                                // padding: const EdgeInsets.all(8),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(10.0),
-                                                  child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
-                                                    color: black, ),
-                                                ),
-                                              )
-                                          ),
-                                          Gap(10),
-                                          InkWell(
-                                              onTap:(){
-                                                deleteListData(listData[index], index);
-                                              },
-                                              child: Container(
-                                                width: 36,
-                                                height: 36,
-                                                decoration: BoxDecoration(color: grayLight,
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
-                                                // padding: const EdgeInsets.all(8),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(7.0),
-                                                  child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
-                                                    color: black, ),
-                                                ),
-                                              )
-                                          ),
-                                        ],
+                                      Visibility(
+                                        visible: listData[index].canDelete !=0,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            InkWell(
+                                                onTap:(){
+                                                  _redirectToNextPage(context, listData[index], true);
+                                                },
+                                                child: Container(
+                                                  width: 36,
+                                                  height: 36,
+                                                  decoration: BoxDecoration(color: grayLight,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                  // padding: const EdgeInsets.all(8),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(10.0),
+                                                    child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
+                                                      color: black, ),
+                                                  ),
+                                                )
+                                            ),
+                                            Gap(10),
+                                            InkWell(
+                                                onTap:(){
+                                                  deleteListData(listData[index], index);
+                                                },
+                                                child: Container(
+                                                  width: 36,
+                                                  height: 36,
+                                                  decoration: BoxDecoration(color: grayLight,
+                                                    borderRadius: BorderRadius.circular(20),
+                                                  ),
+                                                  // padding: const EdgeInsets.all(8),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(7.0),
+                                                    child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
+                                                      color: black, ),
+                                                  ),
+                                                )
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       Text(checkValidString(listData[index].investmentType.toString()), textAlign: TextAlign.start,
                                         style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),

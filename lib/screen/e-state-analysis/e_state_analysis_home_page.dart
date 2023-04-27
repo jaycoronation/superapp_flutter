@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:superapp/screen/e-state-analysis/e_state_aspiration_page.dart';
 import 'package:superapp/screen/e-state-analysis/e_state_existing_assets_page.dart';
@@ -16,6 +17,7 @@ import '../../../utils/base_class.dart';
 
 import '../../constant/analysis_api_end_point.dart';
 import '../../model/e-state-analysis/analysis_menu_model.dart';
+import '../../utils/app_utils.dart';
 import '../../widget/loading.dart';
 
 class EStateAnalysisHomePage extends StatefulWidget {
@@ -35,7 +37,11 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
     super.initState();
 
     setMenuData();
-
+    if(isInternetConnected) {
+      getListData();
+    }else{
+      noInterNet(context);
+    }
   }
 
   void setMenuData() {
@@ -66,6 +72,30 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
           nameStatic: sessionManager.getRiskProfile().toString().isEmpty ? "Risk Profile" : "Risk Profile(${sessionManager.getRiskProfile().toString()})",
           itemPostIconStatic: "assets/images/ic_arrow_double_right.png"),
     ];
+  }
+
+  //API call func..
+  void getListData() async {
+    if(isInternetConnected) {
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      final url = Uri.parse(API_URL_ANALYSIS + userProfile);
+
+      Map<String, String> jsonBody = {
+        'user_id': sessionManager.getUserId().toString().trim(),
+      };
+
+      final response = await http.post(url, body: jsonBody);
+      final statusCode = response.statusCode;
+
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+    }else {
+      noInterNet(context);
+    }
   }
 
   @override

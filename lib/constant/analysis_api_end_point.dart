@@ -1,12 +1,15 @@
 
 //Live
-const String API_URL_ANALYSIS = "https://php1.coronation.in/online-financial-planning/api/index.php/services/";
-
+//const String API_URL_ANALYSIS = "https://php1.coronation.in/online-financial-planning/api/index.php/services/";
+const String API_URL_ANALYSIS = "https://analysis.alphacapital.in/api/index.php/services/";
 //=====
 String aspirations = "aspirations";
 String aspirationsFutureExpenseSave = "aspiration_future_expense/save";
 String aspirationTypes = "aspiration_types";
 String aspirationsFutureExpenseDelete = "aspiration_future_expense/delete";
+
+
+String userProfile = "user/userProfile";
 
 //======
 String existingAssetsList = "existing_assets/list";
