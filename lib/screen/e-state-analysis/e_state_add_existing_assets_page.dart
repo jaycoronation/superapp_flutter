@@ -46,6 +46,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
     super.initState();
 
     dataGetSet = (widget as EStateAddExistingAssetsPage).dataGetSet;
+
     if (dataGetSet.existingAssetsId.toString().isNotEmpty) {
       _investmentTypeController.text = checkValidString(dataGetSet.investmentType.toString());
       _assetsTypeController.text = checkValidString(dataGetSet.assetType.toString());

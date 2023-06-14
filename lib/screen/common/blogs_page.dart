@@ -137,7 +137,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
           ? const LoadingWidget()
           : listData.isEmpty
           ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
-          :  _setData()
+          : _setData()
           : const NoInternetWidget()
     );
   }

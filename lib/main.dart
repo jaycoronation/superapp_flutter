@@ -74,7 +74,8 @@ class MyApp extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),
-              hintStyle: const TextStyle(  color: grayDark,
+              hintStyle: const TextStyle(
+                  color: grayDark,
                   fontSize: 15,
                   fontWeight: FontWeight.w600),
             ),

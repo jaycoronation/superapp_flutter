@@ -88,7 +88,7 @@ class _HomePageState extends BaseState<HomePage> {
         body: SafeArea(
           top: false,
           child: _isLoading
-              ? LoadingWidget()
+              ? const LoadingWidget()
               : Column(
                   children: [
                     Expanded(

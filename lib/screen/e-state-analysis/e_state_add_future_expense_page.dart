@@ -528,7 +528,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                         margin: const EdgeInsets.only(top: 12),
                         // padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
                         child: Text("Select $isFor",
-                          style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15),
+                          style: const TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15),
                           textAlign: TextAlign.center,),
                       ),
                         const Gap(10),
