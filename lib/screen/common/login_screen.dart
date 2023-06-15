@@ -232,37 +232,46 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
     final response = await http.get(url);
     final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = InvestWellResponse.fromJson(user);
+
 
     try {
       if (statusCode == 200) {
-            try {
-              if (dataResponse.flag == "Y")
-              {
-                _makeLoginInRequest(checkValidString(dataResponse.uid.toString()));
-              }
-              else
-              {
-                 showSnackBar("Invalid Username or Password.", context);
-                 setState(() {
-                   _isLoading = false;
-                 });
-              }
-            } catch (e) {
-              print(e);
-              setState(() {
-                _isLoading = false;
-              });
-            }
-
-          } else {
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = InvestWellResponse.fromJson(user);
+        try {
+          if (dataResponse.flag == "Y")
+          {
+            _makeLoginInRequest(checkValidString(dataResponse.uid.toString()));
+          }
+          else
+          {
+            showSnackBar("Invalid Username or Password.", context);
             setState(() {
               _isLoading = false;
             });
-            showSnackBar("Failed to login.", context);
           }
+        } catch (e) {
+          print(e);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+
+      }
+      else if (statusCode == 404)
+      {
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar("Wrong password.", context);
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar("Failed to login.", context);
+      }
+
     } catch (e) {
       print(e);
       setState(() {

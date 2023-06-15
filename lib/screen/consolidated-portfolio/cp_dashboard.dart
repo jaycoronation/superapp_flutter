@@ -46,6 +46,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   int touchedIndexAsset = -1;
   int touchedIndexApplicant = -1;
 
+  var strNetWorth = "";
+
   final List<Color> colorsAssetAllocation = <Color>[chart_color1, chart_color2,chart_color3,chart_color4,chart_color5,
     chart_color6,chart_color7,chart_color8,chart_color9,chart_color10];
 
@@ -63,6 +65,28 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Visibility(
+                            visible: strNetWorth.isNotEmpty,
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
+                              decoration: BoxDecoration(
+                                  color: blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border:Border.all(color: blue, width: 1,)),
+                              child: Column(
+                                children: [
+                                  Gap(20),
+                                  const Text('Networth',
+                                      style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
+                                  Gap(20),
+                                  Text(getPrice(strNetWorth),
+                                      style: TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
+                                  Gap(20),
+                                ],
+                              ),
+                            ),
+                          ),
                           Container(
                             margin: const EdgeInsets.only(left: 16,right: 16),
                             child: Row(
@@ -1753,6 +1777,16 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
       try {
         if (dataResponse.result != null) {
           resultData = dataResponse.result!;
+
+          if (resultData.applicantDetails != null) {
+            if(resultData.applicantDetails!.isNotEmpty) {
+              for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
+                if (resultData.applicantDetails![i].applicant == "Total") {
+                  strNetWorth = checkValidString(resultData.applicantDetails![i].currentAmount.toString());
+                }
+              }
+            }
+          }
         }
       } catch (e) {
 

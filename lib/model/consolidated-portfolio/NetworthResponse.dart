@@ -1,7 +1,10 @@
-/// result : {"networth":[{"asset":"Debt","objectives":[{"objective":"Debt: Corporate Bond","amount":3607472,"percentage":21.17,"applicants":[{"applicant":"A V RAMESH","amount":3105618},{"applicant":"APPALLA SUNITA MALLIKA","amount":501854},{"applicant":"Amount Total","amount":3607472},{"applicant":"Percentage","amount":21.17}]}]}],"applicant_details":[{"applicant":"A V RAMESH","amount_invested":10036960,"current_amount":13696716,"gain":3659757,"dividend":0,"absolute_return":36.46,"CAGR":10.64,"weighted_days":0}],"micro_asset_stratagic":[{"asset":"Debt","amount":7708500,"actual":45,"policy":12,"variation":-33}],"micro_asset_tactical":[{"asset":"Debt","amount":7708500,"actual":45,"policy":16.400000000000006,"variation":-28.599999999999994}],"macro_asset_stratagic":[{"asset":"Volatile","amount":8133822,"actual":48,"policy":16,"variation":-32}],"macro_asset_tactical":[{"asset":"Volatile","amount":8133822,"actual":48,"policy":15,"variation":-33}]}
+import 'dart:convert';
+/// result : {"networth":[{"asset":"Hybrid","objectives":[{"objective":"Hybrid: Conservative","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100},{"objective":"Sub Total","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100},{"objective":"Total","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100}]}],"applicant_details":[{"applicant":"Shahista Shakeel Ahmed Sayed","amount_invested":6000,"current_amount":6286,"gain":286,"dividend":0,"absolute_return":4.77,"CAGR":8.92,"weighted_days":0},{"applicant":"Total","amount_invested":6000,"current_amount":6286,"gain":286,"dividend":0,"absolute_return":0,"CAGR":0,"weighted_days":0}],"scheme_allocation":[{"scheme_name":"ICICI Pru Regular Savings Fund (G)","current_value":6270,"category":"Hybrid: Conservative","allocation":100},{"scheme_name":"Total","current_value":6270,"category":"","allocation":100}],"fund_house_allocation":[{"fund_house":"ICICI Prudential Mutual Fund","current_value":6270,"allocation":100},{"fund_house":"Total","current_value":6270,"allocation":100}],"micro_asset_stratagic":[{"asset":"Debt","amount":0,"actual":0,"policy":50,"variation":50},{"asset":"Equity","amount":0,"actual":0,"policy":50,"variation":50},{"asset":"Hybrid","amount":6270,"actual":100,"policy":0,"variation":-100},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Alternate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}],"micro_asset_tactical":[{"asset":"Debt","amount":0,"actual":0,"policy":52.5,"variation":52.5},{"asset":"Equity","amount":0,"actual":0,"policy":47.5,"variation":47.5},{"asset":"Hybrid","amount":6270,"actual":100,"policy":0,"variation":-100},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Alternate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}],"macro_asset_stratagic":[{"asset":"Volatile","amount":4076,"actual":65,"policy":50,"variation":-15},{"asset":"Fixed Income","amount":2195,"actual":35,"policy":50,"variation":15},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}],"macro_asset_tactical":[{"asset":"Volatile","amount":4076,"actual":65,"policy":48,"variation":-17},{"asset":"Fixed Income","amount":2195,"actual":35,"policy":53,"variation":18},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}]}
 /// success : 1
 /// message : ""
 
+NetworthResponse networthResponseFromJson(String str) => NetworthResponse.fromJson(json.decode(str));
+String networthResponseToJson(NetworthResponse data) => json.encode(data.toJson());
 class NetworthResponse {
   NetworthResponse({
       Result? result, 
@@ -43,23 +46,31 @@ NetworthResponse copyWith({  Result? result,
 
 }
 
-/// networth : [{"asset":"Debt","objectives":[{"objective":"Debt: Corporate Bond","amount":3607472,"percentage":21.17,"applicants":[{"applicant":"A V RAMESH","amount":3105618},{"applicant":"APPALLA SUNITA MALLIKA","amount":501854},{"applicant":"Amount Total","amount":3607472},{"applicant":"Percentage","amount":21.17}]}]}]
-/// applicant_details : [{"applicant":"A V RAMESH","amount_invested":10036960,"current_amount":13696716,"gain":3659757,"dividend":0,"absolute_return":36.46,"CAGR":10.64,"weighted_days":0}]
-/// micro_asset_stratagic : [{"asset":"Debt","amount":7708500,"actual":45,"policy":12,"variation":-33}]
-/// micro_asset_tactical : [{"asset":"Debt","amount":7708500,"actual":45,"policy":16.400000000000006,"variation":-28.599999999999994}]
-/// macro_asset_stratagic : [{"asset":"Volatile","amount":8133822,"actual":48,"policy":16,"variation":-32}]
-/// macro_asset_tactical : [{"asset":"Volatile","amount":8133822,"actual":48,"policy":15,"variation":-33}]
+/// networth : [{"asset":"Hybrid","objectives":[{"objective":"Hybrid: Conservative","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100},{"objective":"Sub Total","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100},{"objective":"Total","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100}]}]
+/// applicant_details : [{"applicant":"Shahista Shakeel Ahmed Sayed","amount_invested":6000,"current_amount":6286,"gain":286,"dividend":0,"absolute_return":4.77,"CAGR":8.92,"weighted_days":0},{"applicant":"Total","amount_invested":6000,"current_amount":6286,"gain":286,"dividend":0,"absolute_return":0,"CAGR":0,"weighted_days":0}]
+/// scheme_allocation : [{"scheme_name":"ICICI Pru Regular Savings Fund (G)","current_value":6270,"category":"Hybrid: Conservative","allocation":100},{"scheme_name":"Total","current_value":6270,"category":"","allocation":100}]
+/// fund_house_allocation : [{"fund_house":"ICICI Prudential Mutual Fund","current_value":6270,"allocation":100},{"fund_house":"Total","current_value":6270,"allocation":100}]
+/// micro_asset_stratagic : [{"asset":"Debt","amount":0,"actual":0,"policy":50,"variation":50},{"asset":"Equity","amount":0,"actual":0,"policy":50,"variation":50},{"asset":"Hybrid","amount":6270,"actual":100,"policy":0,"variation":-100},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Alternate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}]
+/// micro_asset_tactical : [{"asset":"Debt","amount":0,"actual":0,"policy":52.5,"variation":52.5},{"asset":"Equity","amount":0,"actual":0,"policy":47.5,"variation":47.5},{"asset":"Hybrid","amount":6270,"actual":100,"policy":0,"variation":-100},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Alternate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}]
+/// macro_asset_stratagic : [{"asset":"Volatile","amount":4076,"actual":65,"policy":50,"variation":-15},{"asset":"Fixed Income","amount":2195,"actual":35,"policy":50,"variation":15},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}]
+/// macro_asset_tactical : [{"asset":"Volatile","amount":4076,"actual":65,"policy":48,"variation":-17},{"asset":"Fixed Income","amount":2195,"actual":35,"policy":53,"variation":18},{"asset":"Real Estate","amount":0,"actual":0,"policy":0,"variation":0},{"asset":"Total","amount":6270,"actual":100,"policy":100,"variation":0}]
 
+Result resultFromJson(String str) => Result.fromJson(json.decode(str));
+String resultToJson(Result data) => json.encode(data.toJson());
 class Result {
   Result({
       List<Networth>? networth, 
       List<ApplicantDetails>? applicantDetails, 
+      List<SchemeAllocation>? schemeAllocation, 
+      List<FundHouseAllocation>? fundHouseAllocation, 
       List<MicroAssetStratagic>? microAssetStratagic, 
       List<MicroAssetTactical>? microAssetTactical, 
       List<MacroAssetStratagic>? macroAssetStratagic, 
       List<MacroAssetTactical>? macroAssetTactical,}){
     _networth = networth;
     _applicantDetails = applicantDetails;
+    _schemeAllocation = schemeAllocation;
+    _fundHouseAllocation = fundHouseAllocation;
     _microAssetStratagic = microAssetStratagic;
     _microAssetTactical = microAssetTactical;
     _macroAssetStratagic = macroAssetStratagic;
@@ -77,6 +88,18 @@ class Result {
       _applicantDetails = [];
       json['applicant_details'].forEach((v) {
         _applicantDetails?.add(ApplicantDetails.fromJson(v));
+      });
+    }
+    if (json['scheme_allocation'] != null) {
+      _schemeAllocation = [];
+      json['scheme_allocation'].forEach((v) {
+        _schemeAllocation?.add(SchemeAllocation.fromJson(v));
+      });
+    }
+    if (json['fund_house_allocation'] != null) {
+      _fundHouseAllocation = [];
+      json['fund_house_allocation'].forEach((v) {
+        _fundHouseAllocation?.add(FundHouseAllocation.fromJson(v));
       });
     }
     if (json['micro_asset_stratagic'] != null) {
@@ -106,18 +129,24 @@ class Result {
   }
   List<Networth>? _networth;
   List<ApplicantDetails>? _applicantDetails;
+  List<SchemeAllocation>? _schemeAllocation;
+  List<FundHouseAllocation>? _fundHouseAllocation;
   List<MicroAssetStratagic>? _microAssetStratagic;
   List<MicroAssetTactical>? _microAssetTactical;
   List<MacroAssetStratagic>? _macroAssetStratagic;
   List<MacroAssetTactical>? _macroAssetTactical;
 Result copyWith({  List<Networth>? networth,
   List<ApplicantDetails>? applicantDetails,
+  List<SchemeAllocation>? schemeAllocation,
+  List<FundHouseAllocation>? fundHouseAllocation,
   List<MicroAssetStratagic>? microAssetStratagic,
   List<MicroAssetTactical>? microAssetTactical,
   List<MacroAssetStratagic>? macroAssetStratagic,
   List<MacroAssetTactical>? macroAssetTactical,
 }) => Result(  networth: networth ?? _networth,
   applicantDetails: applicantDetails ?? _applicantDetails,
+  schemeAllocation: schemeAllocation ?? _schemeAllocation,
+  fundHouseAllocation: fundHouseAllocation ?? _fundHouseAllocation,
   microAssetStratagic: microAssetStratagic ?? _microAssetStratagic,
   microAssetTactical: microAssetTactical ?? _microAssetTactical,
   macroAssetStratagic: macroAssetStratagic ?? _macroAssetStratagic,
@@ -125,6 +154,8 @@ Result copyWith({  List<Networth>? networth,
 );
   List<Networth>? get networth => _networth;
   List<ApplicantDetails>? get applicantDetails => _applicantDetails;
+  List<SchemeAllocation>? get schemeAllocation => _schemeAllocation;
+  List<FundHouseAllocation>? get fundHouseAllocation => _fundHouseAllocation;
   List<MicroAssetStratagic>? get microAssetStratagic => _microAssetStratagic;
   List<MicroAssetTactical>? get microAssetTactical => _microAssetTactical;
   List<MacroAssetStratagic>? get macroAssetStratagic => _macroAssetStratagic;
@@ -137,6 +168,12 @@ Result copyWith({  List<Networth>? networth,
     }
     if (_applicantDetails != null) {
       map['applicant_details'] = _applicantDetails?.map((v) => v.toJson()).toList();
+    }
+    if (_schemeAllocation != null) {
+      map['scheme_allocation'] = _schemeAllocation?.map((v) => v.toJson()).toList();
+    }
+    if (_fundHouseAllocation != null) {
+      map['fund_house_allocation'] = _fundHouseAllocation?.map((v) => v.toJson()).toList();
     }
     if (_microAssetStratagic != null) {
       map['micro_asset_stratagic'] = _microAssetStratagic?.map((v) => v.toJson()).toList();
@@ -156,11 +193,13 @@ Result copyWith({  List<Networth>? networth,
 }
 
 /// asset : "Volatile"
-/// amount : 8133822
-/// actual : 48
-/// policy : 15
-/// variation : -33
+/// amount : 4076
+/// actual : 65
+/// policy : 48
+/// variation : -17
 
+MacroAssetTactical macroAssetTacticalFromJson(String str) => MacroAssetTactical.fromJson(json.decode(str));
+String macroAssetTacticalToJson(MacroAssetTactical data) => json.encode(data.toJson());
 class MacroAssetTactical {
   MacroAssetTactical({
       String? asset, 
@@ -217,11 +256,13 @@ MacroAssetTactical copyWith({  String? asset,
 }
 
 /// asset : "Volatile"
-/// amount : 8133822
-/// actual : 48
-/// policy : 16
-/// variation : -32
+/// amount : 4076
+/// actual : 65
+/// policy : 50
+/// variation : -15
 
+MacroAssetStratagic macroAssetStratagicFromJson(String str) => MacroAssetStratagic.fromJson(json.decode(str));
+String macroAssetStratagicToJson(MacroAssetStratagic data) => json.encode(data.toJson());
 class MacroAssetStratagic {
   MacroAssetStratagic({
       String? asset, 
@@ -278,11 +319,13 @@ MacroAssetStratagic copyWith({  String? asset,
 }
 
 /// asset : "Debt"
-/// amount : 7708500
-/// actual : 45
-/// policy : 16.400000000000006
-/// variation : -28.599999999999994
+/// amount : 0
+/// actual : 0
+/// policy : 52.5
+/// variation : 52.5
 
+MicroAssetTactical microAssetTacticalFromJson(String str) => MicroAssetTactical.fromJson(json.decode(str));
+String microAssetTacticalToJson(MicroAssetTactical data) => json.encode(data.toJson());
 class MicroAssetTactical {
   MicroAssetTactical({
       String? asset, 
@@ -339,11 +382,13 @@ MicroAssetTactical copyWith({  String? asset,
 }
 
 /// asset : "Debt"
-/// amount : 7708500
-/// actual : 45
-/// policy : 12
-/// variation : -33
+/// amount : 0
+/// actual : 0
+/// policy : 50
+/// variation : 50
 
+MicroAssetStratagic microAssetStratagicFromJson(String str) => MicroAssetStratagic.fromJson(json.decode(str));
+String microAssetStratagicToJson(MicroAssetStratagic data) => json.encode(data.toJson());
 class MicroAssetStratagic {
   MicroAssetStratagic({
       String? asset, 
@@ -399,15 +444,116 @@ MicroAssetStratagic copyWith({  String? asset,
 
 }
 
-/// applicant : "A V RAMESH"
-/// amount_invested : 10036960
-/// current_amount : 13696716
-/// gain : 3659757
+/// fund_house : "ICICI Prudential Mutual Fund"
+/// current_value : 6270
+/// allocation : 100
+
+FundHouseAllocation fundHouseAllocationFromJson(String str) => FundHouseAllocation.fromJson(json.decode(str));
+String fundHouseAllocationToJson(FundHouseAllocation data) => json.encode(data.toJson());
+class FundHouseAllocation {
+  FundHouseAllocation({
+      String? fundHouse, 
+      num? currentValue, 
+      num? allocation,}){
+    _fundHouse = fundHouse;
+    _currentValue = currentValue;
+    _allocation = allocation;
+}
+
+  FundHouseAllocation.fromJson(dynamic json) {
+    _fundHouse = json['fund_house'];
+    _currentValue = json['current_value'];
+    _allocation = json['allocation'];
+  }
+  String? _fundHouse;
+  num? _currentValue;
+  num? _allocation;
+FundHouseAllocation copyWith({  String? fundHouse,
+  num? currentValue,
+  num? allocation,
+}) => FundHouseAllocation(  fundHouse: fundHouse ?? _fundHouse,
+  currentValue: currentValue ?? _currentValue,
+  allocation: allocation ?? _allocation,
+);
+  String? get fundHouse => _fundHouse;
+  num? get currentValue => _currentValue;
+  num? get allocation => _allocation;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['fund_house'] = _fundHouse;
+    map['current_value'] = _currentValue;
+    map['allocation'] = _allocation;
+    return map;
+  }
+
+}
+
+/// scheme_name : "ICICI Pru Regular Savings Fund (G)"
+/// current_value : 6270
+/// category : "Hybrid: Conservative"
+/// allocation : 100
+
+SchemeAllocation schemeAllocationFromJson(String str) => SchemeAllocation.fromJson(json.decode(str));
+String schemeAllocationToJson(SchemeAllocation data) => json.encode(data.toJson());
+class SchemeAllocation {
+  SchemeAllocation({
+      String? schemeName, 
+      num? currentValue, 
+      String? category, 
+      num? allocation,}){
+    _schemeName = schemeName;
+    _currentValue = currentValue;
+    _category = category;
+    _allocation = allocation;
+}
+
+  SchemeAllocation.fromJson(dynamic json) {
+    _schemeName = json['scheme_name'];
+    _currentValue = json['current_value'];
+    _category = json['category'];
+    _allocation = json['allocation'];
+  }
+  String? _schemeName;
+  num? _currentValue;
+  String? _category;
+  num? _allocation;
+SchemeAllocation copyWith({  String? schemeName,
+  num? currentValue,
+  String? category,
+  num? allocation,
+}) => SchemeAllocation(  schemeName: schemeName ?? _schemeName,
+  currentValue: currentValue ?? _currentValue,
+  category: category ?? _category,
+  allocation: allocation ?? _allocation,
+);
+  String? get schemeName => _schemeName;
+  num? get currentValue => _currentValue;
+  String? get category => _category;
+  num? get allocation => _allocation;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['scheme_name'] = _schemeName;
+    map['current_value'] = _currentValue;
+    map['category'] = _category;
+    map['allocation'] = _allocation;
+    return map;
+  }
+
+}
+
+/// applicant : "Shahista Shakeel Ahmed Sayed"
+/// amount_invested : 6000
+/// current_amount : 6286
+/// gain : 286
 /// dividend : 0
-/// absolute_return : 36.46
-/// CAGR : 10.64
+/// absolute_return : 4.77
+/// CAGR : 8.92
 /// weighted_days : 0
 
+ApplicantDetails applicantDetailsFromJson(String str) => ApplicantDetails.fromJson(json.decode(str));
+String applicantDetailsToJson(ApplicantDetails data) => json.encode(data.toJson());
 class ApplicantDetails {
   ApplicantDetails({
       String? applicant, 
@@ -487,9 +633,11 @@ ApplicantDetails copyWith({  String? applicant,
 
 }
 
-/// asset : "Debt"
-/// objectives : [{"objective":"Debt: Corporate Bond","amount":3607472,"percentage":21.17,"applicants":[{"applicant":"A V RAMESH","amount":3105618},{"applicant":"APPALLA SUNITA MALLIKA","amount":501854},{"applicant":"Amount Total","amount":3607472},{"applicant":"Percentage","amount":21.17}]}]
+/// asset : "Hybrid"
+/// objectives : [{"objective":"Hybrid: Conservative","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100},{"objective":"Sub Total","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100},{"objective":"Total","applicants":[{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}],"amount":6270,"percentage":100}]
 
+Networth networthFromJson(String str) => Networth.fromJson(json.decode(str));
+String networthToJson(Networth data) => json.encode(data.toJson());
 class Networth {
   Networth({
       String? asset, 
@@ -528,68 +676,72 @@ Networth copyWith({  String? asset,
 
 }
 
-/// objective : "Debt: Corporate Bond"
-/// amount : 3607472
-/// percentage : 21.17
-/// applicants : [{"applicant":"A V RAMESH","amount":3105618},{"applicant":"APPALLA SUNITA MALLIKA","amount":501854},{"applicant":"Amount Total","amount":3607472},{"applicant":"Percentage","amount":21.17}]
+/// objective : "Hybrid: Conservative"
+/// applicants : [{"applicant":"SHAHISTA SHAKEEL AHMED SAYED","amount":6270},{"applicant":"Amount Total","amount":6270},{"applicant":"Percentage","amount":100}]
+/// amount : 6270
+/// percentage : 100
 
+Objectives objectivesFromJson(String str) => Objectives.fromJson(json.decode(str));
+String objectivesToJson(Objectives data) => json.encode(data.toJson());
 class Objectives {
   Objectives({
       String? objective, 
+      List<Applicants>? applicants, 
       num? amount, 
-      num? percentage, 
-      List<Applicants>? applicants,}){
+      num? percentage,}){
     _objective = objective;
+    _applicants = applicants;
     _amount = amount;
     _percentage = percentage;
-    _applicants = applicants;
 }
 
   Objectives.fromJson(dynamic json) {
     _objective = json['objective'];
-    _amount = json['amount'];
-    _percentage = json['percentage'];
     if (json['applicants'] != null) {
       _applicants = [];
       json['applicants'].forEach((v) {
         _applicants?.add(Applicants.fromJson(v));
       });
     }
+    _amount = json['amount'];
+    _percentage = json['percentage'];
   }
   String? _objective;
+  List<Applicants>? _applicants;
   num? _amount;
   num? _percentage;
-  List<Applicants>? _applicants;
 Objectives copyWith({  String? objective,
+  List<Applicants>? applicants,
   num? amount,
   num? percentage,
-  List<Applicants>? applicants,
 }) => Objectives(  objective: objective ?? _objective,
+  applicants: applicants ?? _applicants,
   amount: amount ?? _amount,
   percentage: percentage ?? _percentage,
-  applicants: applicants ?? _applicants,
 );
   String? get objective => _objective;
+  List<Applicants>? get applicants => _applicants;
   num? get amount => _amount;
   num? get percentage => _percentage;
-  List<Applicants>? get applicants => _applicants;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['objective'] = _objective;
-    map['amount'] = _amount;
-    map['percentage'] = _percentage;
     if (_applicants != null) {
       map['applicants'] = _applicants?.map((v) => v.toJson()).toList();
     }
+    map['amount'] = _amount;
+    map['percentage'] = _percentage;
     return map;
   }
 
 }
 
-/// applicant : "A V RAMESH"
-/// amount : 3105618
+/// applicant : "SHAHISTA SHAKEEL AHMED SAYED"
+/// amount : 6270
 
+Applicants applicantsFromJson(String str) => Applicants.fromJson(json.decode(str));
+String applicantsToJson(Applicants data) => json.encode(data.toJson());
 class Applicants {
   Applicants({
       String? applicant, 

@@ -154,7 +154,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                                         Container(
                                           alignment: Alignment.topLeft,
                                           margin: const EdgeInsets.only(right: 8),
-                                          child: Image.asset('assets/images/ic_arrow_right_round_gray.png',height: 26, width: 26, color: black,),
+                                          child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
                                         ),
                                       ],
                                     ),
