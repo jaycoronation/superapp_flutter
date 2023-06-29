@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_web_frame/flutter_web_frame.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:superapp/push_notification/PushNotificationService.dart';
 import 'package:superapp/screen/common/home_page.dart';
@@ -16,13 +17,26 @@ import 'constant/colors.dart';
 import 'constant/global_context.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyCIO9zXDh3SQSbD7sZ-4vyd9dUZmnk2Zac",
+      appId: "1:204998889984:android:31c7b55cb70ea81d0d7ee5",
+      messagingSenderId: "204998889984",
+      projectId: "alpha-capital-super-app", ),
+  );
   //print("Handling a background message: ${message.data.toString()}");
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SessionManagerMethods.init();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyCIO9zXDh3SQSbD7sZ-4vyd9dUZmnk2Zac",
+      appId: "1:204998889984:android:31c7b55cb70ea81d0d7ee5",
+      messagingSenderId: "204998889984",
+      projectId: "alpha-capital-super-app", ),
+  );
   PaintingBinding.instance.imageCache.maximumSizeBytes = 1000 << 40; // for increase the cache memory
   await PushNotificationService().setupInteractedMessage();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -44,7 +58,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return FlutterWebFrame(
+      builder: (context) {
+        return MaterialApp(
         title: 'AlphaCapital Super App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -83,6 +99,8 @@ class MyApp extends StatelessWidget {
         ),
         home: const MyHomePage(),
         navigatorKey: NavigationService.navigatorKey
+        );
+      }, maximumSize: Size(725.0, 812.0),
     );
   }
 }

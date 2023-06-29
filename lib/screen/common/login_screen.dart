@@ -184,8 +184,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                       showSnackBar("Please enter password", context);
                                     } else {
                                       if (isInternetConnected) {
-                                        _makeSignInRequest();
-                                        //_makeLoginInRequest("mukesh58");
+                                        //_makeSignInRequest();
+                                        _makeLoginInRequest("mukesh58");
                                       } else {
                                         noInterNet(context);
                                       }
@@ -242,7 +242,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         try {
           if (dataResponse.flag == "Y")
           {
-            _makeLoginInRequest(checkValidString(dataResponse.uid.toString()));
+            //_makeLoginInRequest(checkValidString(dataResponse.uid.toString()));
           }
           else
           {
@@ -290,10 +290,15 @@ class _LoginScreenState extends BaseState<LoginScreen> {
     ]);
 
     final url = Uri.parse(API_URL+login);
-    Map<String, String> jsonBody = {
+    /*Map<String, String> jsonBody = {
       'username': uId.trim(),
       'email': _emailController.value.text.trim(),
       'password': _pwController.value.text.trim(),
+    };*/
+    Map<String, String> jsonBody = {
+      'username': uId.trim(),
+      'email': 'mukesh58',
+      'password': 'Mykel@3421',
     };
 
     final response = await http.post(url, body: jsonBody);
