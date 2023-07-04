@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:superapp/screen/common/HomePageForWeb.dart';
 import '../../../constant/api_end_point.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
@@ -357,6 +358,13 @@ class _LoginScreenState extends BaseState<LoginScreen> {
   }
 
   void openHomePage() {
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+    if(kIsWeb)
+      {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePageForWeb()), (Route<dynamic> route) => false);
+      }
+    else 
+      {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false);
+      }
   }
 }

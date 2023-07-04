@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_frame/flutter_web_frame.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:superapp/push_notification/PushNotificationService.dart';
+import 'package:superapp/screen/common/HomePageForWeb.dart';
 import 'package:superapp/screen/common/home_page.dart';
 import 'package:superapp/screen/common/login_screen.dart';
 import 'package:superapp/utils/app_utils.dart';
@@ -130,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
       {
         Timer(const Duration(seconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-             const HomePage()), (Route<dynamic> route) => false));
+             kIsWeb ? const HomePageForWeb() : const HomePage()), (Route<dynamic> route) => false));
       }
       else
       {
