@@ -121,7 +121,8 @@ class _VideoPlayerScreenState extends BaseState<VideoPlayerScreen> {
                               alignment: Alignment.topLeft,
                               margin: const EdgeInsets.only(right: 8),
                               child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: white,),
-                            )),
+                            )
+                        ),
                         const Spacer()
                       ],
                     ),

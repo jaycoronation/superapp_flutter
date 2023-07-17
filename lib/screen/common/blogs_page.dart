@@ -209,7 +209,11 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
                                           ),
                                           const Gap(15),
-                                          const Divider(height: 0.5, color: black, thickness: 1,),
+                                          const Divider(
+                                            height: 0.5,
+                                            color: black,
+                                            thickness: 1,
+                                          ),
                                           const Gap(25),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

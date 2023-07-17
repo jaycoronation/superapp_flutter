@@ -60,6 +60,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlutterWebFrame(
+      backgroundColor: chart_color11,
       builder: (context) {
         return MaterialApp(
         title: 'AlphaCapital Super App',
@@ -101,7 +102,8 @@ class MyApp extends StatelessWidget {
         home: const MyHomePage(),
         navigatorKey: NavigationService.navigatorKey
         );
-      }, maximumSize: Size(725.0, 812.0),
+      },
+      maximumSize: Size(1160.0, 812.0),
     );
   }
 }

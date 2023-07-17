@@ -93,23 +93,24 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                          color: dashboardBg, borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            homePageBlocks(),
-                            Container(
-                              alignment: Alignment.center,
-                              child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                              color: dashboardBg, borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                homePageBlocks(),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
                     ))
                   ],
                 ),
@@ -145,7 +146,8 @@ class _HomePageState extends BaseState<HomePage> {
                               )
                             ],
                           ),
-                        )),
+                        )
+                    ),
                     const Gap(15),
                     Expanded(
                         child: InkWell(
@@ -169,7 +171,8 @@ class _HomePageState extends BaseState<HomePage> {
                               ],
                             ),
                           ),
-                        ))
+                        )
+                    )
                   ],
                 )),
             const Gap(15),
@@ -199,7 +202,8 @@ class _HomePageState extends BaseState<HomePage> {
                               ],
                             ),
                           ),
-                        )),
+                        )
+                    ),
                     const Gap(15),
                     Expanded(
                         child: InkWell(
@@ -372,7 +376,7 @@ class _HomePageState extends BaseState<HomePage> {
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text('Logout from AlphaCapital Super App', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
+                      child: const Text('Logout from AlphaCapital Super App', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
                     child: const Text('Are you sure you want to logout from app?',
@@ -398,7 +402,9 @@ class _HomePageState extends BaseState<HomePage> {
                                     Navigator.pop(context);
                                   },
                                   child: const Text("No", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: blue)),
-                                ))),
+                                )
+                            )
+                        ),
                         const Gap(20),
                         Expanded(
                           child: SizedBox(
