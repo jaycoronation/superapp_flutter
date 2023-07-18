@@ -28,74 +28,68 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-
-        child: Scaffold(
-          backgroundColor: chart_color11,
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 22, top: 12),
-                child: SingleChildScrollView(
-                  child: Material(
-                    shape: const RoundedRectangleBorder(
-                        side:  BorderSide(color: grayLight),
-                        borderRadius: BorderRadius.all( Radius.circular(14))
-                    ),
-                    elevation: 15.0,
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                      width: 310,
-                      decoration: BoxDecoration(
-                        border:Border.all(color: Colors.grey, width: 1),
-                         color: white,
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
-                        // boxShadow: const [
-                        //   BoxShadow(
-                        //     color: Colors.grey,
-                        //     blurRadius: 2.0,
-                        //   ),
-                        // ],
-                      ),
+      child: Scaffold(
+        backgroundColor: chart_color11,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: SizedBox(
+                width: 310,
+                height: MediaQuery.of(context).size.height -120,
+                child: Material(
+                  color: white,
+                  shape: const RoundedRectangleBorder(
+                      side:  BorderSide(color: grayLight),
+                      borderRadius: BorderRadius.all( Radius.circular(14))
+                  ),
+                  elevation: 15.0,
+                  child: SingleChildScrollView(
+                    child: Material(
+                      type: MaterialType.transparency,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(height: 22,),
+                          Container(height: 12,),
                           Padding(
                             padding: const EdgeInsets.all(18),
                             child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
                           ),
-                          GestureDetector(
+                          InkWell(
+                            hoverColor: Colors.lightBlue,
+                            mouseCursor: MaterialStateMouseCursor.clickable,
+                            canRequestFocus: true,
                             onTap: (){
                               setState(() {
                                 currentIndex = 0;
                               });
                             },
                             child: Container(
-                             color: currentIndex == 0 ? blue : Colors.white,
-                              padding: const EdgeInsets.all(12),
+                                color: currentIndex == 0 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
                                 child: Row(
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
                                           borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                        border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                        color: chart_color12,
-                                      ),
+                                          border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: chart_color12,
+                                        ),
                                         child: Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35)
                                     ),
                                     Container(width: 18,),
-                                     Text('Alpha Portfolio',
+                                    Text('Alpha Portfolio',
                                       style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ? white : black, fontSize: 20),
                                     )
                                   ],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -120,13 +114,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         ),
                                         child: Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35)
                                     ),
-                                Container(width: 18,),
-                                 Text('Consolidated Portfolio', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 1 ? white : black, fontSize: 20),
-                                )],
+                                    Container(width: 18,),
+                                    Text('Consolidated Portfolio', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 1 ? white : black, fontSize: 20),
+                                    )],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -151,13 +145,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         ),
                                         child: Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35)
                                     ),
-                                Container(width: 18,),
-                                 Text('Estate Analysis', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 2 ? white : black, fontSize: 20),
-                                )],
+                                    Container(width: 18,),
+                                    Text('Estate Analysis', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 2 ? white : black, fontSize: 20),
+                                    )],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -182,13 +176,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         ),
                                         child: Image.asset('assets/images/ic_vault.png', width: 35, height: 35)
                                     ),
-                                  Container(width: 18,),
-                                 Text('Estate Vault', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 3 ? white : black, fontSize: 20),
-                                )],
+                                    Container(width: 18,),
+                                    Text('Estate Vault', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 3 ? white : black, fontSize: 20),
+                                    )],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -214,13 +208,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         child: Image.asset('assets/images/ic_meeting.png', width: 35, height: 35)
                                     ),
                                     Container(width: 18,),
-                                     Text('Fix Meeting', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 4 ? white : black, fontSize: 20),
+                                    Text('Fix Meeting', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 4 ? white : black, fontSize: 20),
                                     )
                                   ],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -246,13 +240,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         child: Image.asset('assets/images/ic_videos.png', width: 35, height: 35)
                                     ),
                                     Container(width: 18,),
-                                     Text('Videos', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 5 ? white : black, fontSize: 20),
+                                    Text('Videos', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 5 ? white : black, fontSize: 20),
                                     )
                                   ],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -278,13 +272,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         child: Image.asset('assets/images/ic_blog.png', width: 35, height: 35)
                                     ),
                                     Container(width: 18,),
-                                     Text('Blogs', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 6 ? white : black, fontSize: 20),
+                                    Text('Blogs', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 6 ? white : black, fontSize: 20),
                                     )
                                   ],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               setState(() {
@@ -310,13 +304,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                         child: Image.asset('assets/images/ic_contact.png', width: 35, height: 35)
                                     ),
                                     Container(width: 18,),
-                                     Text('Contact', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 7 ? white : black, fontSize: 20),
+                                    Text('Contact', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 7 ? white : black, fontSize: 20),
                                     )
                                   ],
                                 )
                             ),
                           ),
-                          Container(height: 18,),
+                          //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
                               logoutFromApp();
@@ -352,22 +346,25 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                   ),
                 ),
               ),
-              Container(width: 22,),
-              Expanded(
-                child: Container(
-                  height: MediaQuery.of(context).size.height -120,
-                  margin: const EdgeInsets.only(top: 12, bottom: 12),
-                  decoration: BoxDecoration(
-                    border:Border.all(color: grayLight, width: 0.5 ),
-                    color: white,
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 2.0,
-                      ),
-                    ],
-                  ),
+            ),
+            Container(width: 22,),
+            Expanded(
+              child: Container(
+                height: MediaQuery.of(context).size.height -120,
+                margin: const EdgeInsets.only(top: 12, bottom: 12),
+                decoration: BoxDecoration(
+                  border:Border.all(color: grayLight, width: 0.5 ),
+                  color: white,
+                  borderRadius: const BorderRadius.all(Radius.circular(12)),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 2.0,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
                   child: currentIndex == 0
                       ? Container()
                       : currentIndex == 1
@@ -387,9 +384,10 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                       : Container(),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
       onWillPop: () {
         SystemNavigator.pop();
         return Future.value(true);
@@ -486,8 +484,6 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
       },
     );
   }
-
-
 
   @override
   void castStatefulWidget() {
