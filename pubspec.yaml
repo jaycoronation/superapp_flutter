@@ -109,6 +109,15 @@ flutter:
 
   assets:
     - assets/images/
+    - fonts/
+
+  fonts:
+      - family: Switzer
+        fonts:
+          - asset: fonts/bold.otf
+          - asset: fonts/medium.otf
+          - asset: fonts/regular.otf
+          - asset: fonts/light.otf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

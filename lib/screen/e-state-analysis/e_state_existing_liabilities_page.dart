@@ -61,7 +61,8 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
                           alignment: Alignment.topLeft,
                           margin: const EdgeInsets.only(right: 8),
                           child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
+                        )
+                    ),
                     const Expanded(child: Text("Existing Liabilities",
                       textAlign: TextAlign.start,
                       style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
@@ -285,12 +286,15 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
                                           borderRadius: BorderRadius.circular(kBorderRadius),
                                         ),
                                       ),
-                                      backgroundColor: MaterialStateProperty.all<Color>(white)),
+                                      backgroundColor: MaterialStateProperty.all<Color>(white)
+                                  ),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
                                   child: const Text("Cancel", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: blue)),
-                                ))),
+                                )
+                            )
+                        ),
                         const Gap(20),
                         Expanded(
                           child: SizedBox(

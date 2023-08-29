@@ -30,6 +30,7 @@ class _VideoPlayerScreenState extends BaseState<VideoPlayerScreen> {
     ]);
     AutoOrientation.portraitAutoMode();
 
+    print( (widget as VideoPlayerScreen).videoUrl.toString());
     _controller = YoutubePlayerController(
       initialVideoId:  (widget as VideoPlayerScreen).videoUrl.toString(),
       flags: const YoutubePlayerFlags(

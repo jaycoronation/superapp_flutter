@@ -97,7 +97,8 @@ class MyApp extends StatelessWidget {
                   fontSize: 15,
                   fontWeight: FontWeight.w600),
             ),
-            textTheme: GoogleFonts.sourceSansProTextTheme(Theme.of(context).textTheme)
+            // textTheme: GoogleFonts.sourceSansProTextTheme(Theme.of(context).textTheme)
+          fontFamily: 'Switzer',
         ),
         home: const MyHomePage(),
         navigatorKey: NavigationService.navigatorKey

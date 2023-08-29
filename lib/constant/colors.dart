@@ -43,6 +43,8 @@ const Color chart_color9= Color(0xff6C8893);
 const Color chart_color10= Color(0xffF38787);
 const Color chart_color11= Color(0xfff1f3f4);
 const Color chart_color12= Color(0xfff1f3f4);
+const Color listActionColor = Color(0xff3366ff);
+const Color lightGrey = Color(0xffacbecc);
 
 const LinearGradient loginBgGradient = LinearGradient(
     begin: FractionalOffset.bottomCenter,

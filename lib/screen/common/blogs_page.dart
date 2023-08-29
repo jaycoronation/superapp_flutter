@@ -5,13 +5,15 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp/model/blogs_filter_response_model.dart';
-import 'package:superapp/model/blogs_response_model.dart';
 import 'package:superapp/screen/common/blog_detail_page.dart';
 import '../../constant/blogs_api_end_point.dart';
 import '../../constant/colors.dart';
+import '../../model/BlogListResponseModel.dart' as blog;
+import '../../model/BlogListResponseModel.dart';
+import '../../model/CategoryList.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
+import '../../utils/responsive.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
 import '../../widget/no_internet.dart';
@@ -24,17 +26,19 @@ class BlogsPage extends StatefulWidget {
 }
 
 class _BlogsPageState extends BaseState<BlogsPage> {
-  List<ItemsBlogs> listData = List<ItemsBlogs>.empty(growable: true);
-  List<Url> listFilterData = List<Url>.empty();
+  List<blog.ItemBlogs> listData = List<blog.ItemBlogs>.empty(growable: true);
+  List<Category> listCategory =[];
+  // List<Url> listFilterData = List<Url>.empty();
 
   bool _isLoading = false;
   ScrollController _scrollViewController = ScrollController();
 
   bool _isLoadingMore = false;
-  int _pageIndex = 1;
+  int _pageIndex = 0;
   final int _pageResult = 10;
   bool _isLastPage = false;
   bool isScrollingDown = false;
+  String selectedCategory = "all";
 
   String selectedFilterText = "";
 
@@ -63,8 +67,9 @@ class _BlogsPageState extends BaseState<BlogsPage> {
     });
 
     if (isInternetConnected) {
-      getFilterData();
-      getList(true);
+      // getFilterData();
+      getCategoryList();
+
     }else {
       noInterNet(context);
     }
@@ -84,61 +89,305 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: white,
-      appBar: AppBar(
-        toolbarHeight: 55,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 0),
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
+    return ResponsiveWidget.isSmallScreen(context)
+        ?  Scaffold(
+        backgroundColor: white,
+        appBar: AppBar(
+          toolbarHeight: 55,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          margin: const EdgeInsets.only(right: 8),
+                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+                        )),
+                    const Expanded(child: Text("Feeds",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                    )),
+                    const Spacer(),
+                    InkWell(
                       onTap: () {
-                        Navigator.pop(context);
+                        _showFilterDialog();
                       },
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        margin: const EdgeInsets.only(right: 8),
-                        child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                      )),
-                  const Expanded(child: Text("Feeds",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                  )),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      _showFilterDialog();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(selectedFilterText.isEmpty ? "All" : selectedFilterText,
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(selectedFilterText.isEmpty ? "All" : selectedFilterText,
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          centerTitle: false,
+          elevation: 0,
+          backgroundColor: white,
+        ),
+        body: isInternetConnected
+            ? _isLoading
+            ? const LoadingWidget()
+            : listData.isEmpty
+            ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
+            : _setData()
+            : const NoInternetWidget()
+    )
+        : Scaffold(
+        backgroundColor: white,
+        appBar: AppBar(
+          toolbarHeight: 55,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 0),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          margin: const EdgeInsets.only(right: 8),
+                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+                        )
+                    ),
+                    Container(width: 8,),
+                    const Expanded(child: Text("Alpha Capital Blog",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
+                    )),
+                    const Spacer(),
+                    // InkWell(
+                    //   onTap: () {
+                    //     _showFilterDialog();
+                    //   },
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Text(selectedFilterText.isEmpty ? "All" : selectedFilterText,
+                    //       textAlign: TextAlign.start,
+                    //       style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                    //     ),
+                    //   ),
+                    // )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          centerTitle: false,
+          elevation: 0,
+          backgroundColor: white,
+        ),
+        body: isInternetConnected
+            ? _isLoading
+            ? const LoadingWidget()
+            : listData.isEmpty
+            ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
+            : _setDataForWeb()
+            : const NoInternetWidget()
+    ) ;
+
+  }
+
+  SafeArea _setDataForWeb() {
+    return SafeArea(
+      child: Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(height: 12,),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  height: 34,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      primary: false,
+                      padding: EdgeInsets.zero,
+                      itemCount: listCategory.length,
+                      itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: const Duration(milliseconds: 375),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                           for(var i = 0; i<listCategory.length ; i++)
+                             {
+                               listCategory[i].isSelected = false;
+                             }
+                           listCategory[index].isSelected = true;
+                           setState(() {
+                             selectedCategory = listCategory[index].category.toString();
+                           });
+                           getList(true);
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only( right: 8),
+                              padding: const EdgeInsets.only(left: 14, right: 14),
+                              decoration: BoxDecoration(
+                                color: listCategory[index].isSelected ?? false ? blue : white,
+                                border: Border.all(
+                                  width: 1,
+                                  color: listCategory[index].isSelected ?? false ? blue : white,
+                                ),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: Center(
+                                  child: Text(listCategory[index].category.toString(),
+                                    style: TextStyle(color: listCategory[index].isSelected ?? false ? white : black, fontSize: 16),
+                                  )
+                              )
+                          ),
+                        ),
+                      )
+                  ),
+                ),
+              ),
+              Container(height: 28,),
+              Expanded(
+                  child:SingleChildScrollView(
+                    controller: _scrollViewController,
+                    child: AnimationLimiter(
+                      child: GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            mainAxisExtent: 332,
+                            crossAxisCount: 2, // number of items in each row
+                            mainAxisSpacing: 22.0, // spacing between rows
+                            crossAxisSpacing: 22.0, // spacing between columns
+                          ),
+                          scrollDirection: Axis.vertical,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          primary: false,
+                          padding: EdgeInsets.zero,
+                          itemCount: listData.length,
+                          itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                            position: index,
+                            duration: const Duration(milliseconds: 375),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        // borderRadius: BorderRadius.circular(10),
+                                        border:Border.all(color: lightGrey, width: 1,)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 160,
+                                            width: MediaQuery.of(context).size.width,
+                                            // color: grayLight,
+                                            child: listData[index].blogImage.toString().isNotEmpty
+                                                ? FadeInImage.assetNetwork(
+                                              image: listData[index].blogImage.toString(),
+                                              fit: BoxFit.cover,
+                                              width: MediaQuery.of(context).size.width,
+                                              height: 160,
+                                              placeholder: 'assets/images/ic_alpha_logo.png',
+                                            ) : Image.asset('assets/images/ic_alpha_logo.png',
+                                                width: 50, height: 50),
+                                          ),
+                                          const Gap(10),
+                                          Container(
+                                            height: 40,
+                                            child: Text(toDisplayCase(listData[index].title.toString()  + "\n"),
+                                              textAlign: TextAlign.start,
+                                              maxLines: 2,
+                                              style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          const Gap(10),
+                                          Text(checkValidString(listData[index].publishedBy!.toString()),
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
+                                          ),
+                                          const Gap(15),
+                                          const Divider(
+                                            height: 0.5,
+                                            color: lightGrey,
+                                            thickness: 1,
+                                          ),
+                                          const Gap(20),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(listData[index].publishedDateView.toString(),
+                                                textAlign: TextAlign.start,
+                                                style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+                                              ),
+                                              Container(
+                                                alignment: Alignment.topLeft,
+                                                margin: const EdgeInsets.only(right: 8),
+                                                child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
+                                              ),
+                                            ],
+                                          ),
+                                          // const Gap(10),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
                       ),
                     ),
                   )
-                ],
+              ),
+              Visibility(
+                visible: _isLoadingMore,
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10,bottom: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 30, height: 30,
+                          child: Lottie.asset('assets/images/loader_new.json',repeat: true, animate: true, frameRate: FrameRate.max)),
+                      const Text(' Loading more...',
+                          style: TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 16)
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
-          ),
-        ),
-        centerTitle: false,
-        elevation: 0,
-        backgroundColor: white,
+          )
       ),
-      body: isInternetConnected
-          ? _isLoading
-          ? const LoadingWidget()
-          : listData.isEmpty
-          ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
-          : _setData()
-          : const NoInternetWidget()
     );
   }
 
@@ -186,9 +435,9 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             height: 160,
                                             width: MediaQuery.of(context).size.width,
                                             // color: grayLight,
-                                            child: listData[index].image.toString().isNotEmpty
+                                            child: listData[index].blogImage.toString().isNotEmpty
                                                 ? FadeInImage.assetNetwork(
-                                              image: listData[index].image.toString(),
+                                              image: listData[index].blogImage.toString(),
                                               fit: BoxFit.cover,
                                               width: MediaQuery.of(context).size.width,
                                               height: 160,
@@ -203,7 +452,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
                                           ),
                                           const Gap(10),
-                                          Text(checkValidString(listData[index].author!.name.toString()),
+                                          Text(checkValidString(listData[index].publishedBy!.toString()),
                                             textAlign: TextAlign.start,
                                             maxLines: 2,
                                             style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
@@ -220,7 +469,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].datePublished.toString()),
+                                              Text(listData[index].publishedDate.toString(),
                                                 textAlign: TextAlign.start,
                                                 style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
                                               ),
@@ -312,9 +561,9 @@ class _BlogsPageState extends BaseState<BlogsPage> {
   void getList(bool isFirstTime) async {
     if (isFirstTime) {
       setState(() {
-        // _isLoading = true;
+         _isLoading = true;
         _isLoadingMore = false;
-        _pageIndex = 1;
+        _pageIndex = 0;
         _isLastPage = false;
       });
     }
@@ -323,16 +572,21 @@ class _BlogsPageState extends BaseState<BlogsPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse("https://alphacapital.in/blog/feed/json?paged=$_pageIndex");
-    // Map<String, String> jsonBody = {
-    //   'paged' : _pageIndex.toString(),
-    // };
+    final url = Uri.parse("https://www.alphacapital.in/api/admin/blogs/list");
+    Map<String, String> jsonBody = {
+      'apiId': "YzMxYjMyMzY0Y2UxOWNhOGZjZDE1MGE0MTdlY2NlNTg=",
+      'category': selectedCategory,
+      'from_app': "true",
+      'limit': "9",
+      'page': _pageIndex.toString(),
+      'status': "active"
+    };
 
-    final response = await http.get(url);//post(url, body: jsonBody);
+    final response = await http.post(url,body: jsonBody);//post(url, body: jsonBody);
     final statusCode = response.statusCode;
     final body = response.body;
     Map<String, dynamic> codes = jsonDecode(body);
-    var dataResponse = BlogsResponseModel.fromJson(codes);
+    var dataResponse = BlogListResponseModel.fromJson(codes);
 
     if (isFirstTime) {
       if (listData.isNotEmpty) {
@@ -341,16 +595,14 @@ class _BlogsPageState extends BaseState<BlogsPage> {
     }
 
     if (statusCode == 200) {
-      if (dataResponse.itemsBlogs != null) {
-        if (isFirstTime) {
-          if (listData.isNotEmpty) {
-            listData = [];
-          }
-        }
+      if (dataResponse.itemBlogs != null) {
 
-        List<ItemsBlogs>? _tempList = [];
-        _tempList = dataResponse.itemsBlogs;
+        List<ItemBlogs>? _tempList = [];
+        _tempList = dataResponse.itemBlogs;
         listData.addAll(_tempList!);
+
+        print(listData.length);
+
 
         if (_tempList.isNotEmpty) {
           _pageIndex += 1;
@@ -374,7 +626,39 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
   }
 
-  void getFilterData() async {
+  void getCategoryList() async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse("https://www.alphacapital.in/api/admin/blogs/category");
+
+    Map<String, String> jsonBody = {
+      'apiId': "YzMxYjMyMzY0Y2UxOWNhOGZjZDE1MGE0MTdlY2NlNTg=",
+      'from_app': "true",
+    };
+
+    final response = await http.post(
+        url, body: jsonBody); //post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> codes = jsonDecode(body);
+    var dataResponse = CategoryList.fromJson(codes);
+
+    if (statusCode == 200) {
+      listCategory = [];
+      listCategory.add(Category(category: "all", isSelected: true));
+
+      List<Category>? dataList = dataResponse!.category;
+      listCategory.addAll(dataList ?? []);
+      print(listCategory.length);
+
+      getList(true);
+    }
+
+  }
+
+/*void getFilterData() async {
     setState(() {
       _isLoading = true;
     });
@@ -505,10 +789,10 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
     final body = response.body;
     Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = BlogsResponseModel.fromJson(user);
+    var dataResponse = blog.BlogListResponseModel.fromJson(user);
 
     if (statusCode == 200) {
-      listData = dataResponse.itemsBlogs!;
+      listData = dataResponse.itemBlogs!;
 
       setState(() {
         _isLoading = false;
@@ -520,7 +804,8 @@ class _BlogsPageState extends BaseState<BlogsPage> {
       });
     }
 
-  }
+  }*/
+
 
 
 }

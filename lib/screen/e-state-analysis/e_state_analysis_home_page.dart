@@ -100,6 +100,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: appBg,
