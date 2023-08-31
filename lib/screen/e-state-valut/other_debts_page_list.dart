@@ -383,7 +383,8 @@ class _OtherDebtsListPageState extends BaseState<OtherDebtsListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(OtherDebtsDetails(), false);
       setState(() {
         _isLoading = false;
       });

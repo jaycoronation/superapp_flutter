@@ -113,13 +113,13 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Container(
+                                child: SizedBox(
                                   width: double.infinity,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Visibility(
-                                        visible: listData[index].canDelete !=0,
+                                        visible: listData[index].canDelete == "0",
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -142,7 +142,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
                                                   ),
                                                 )
                                             ),
-                                            Gap(10),
+                                            const Gap(10),
                                             InkWell(
                                                 onTap:(){
                                                   deleteListData(listData[index], index);
@@ -319,7 +319,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
                       ],
                     ),
                   ),
-                  Gap(30)
+                  const Gap(30)
                 ],
               ),
             ),

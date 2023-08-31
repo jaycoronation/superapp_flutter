@@ -28,9 +28,12 @@ class _OtherFinancialAssetsListPageState extends BaseState<OtherFinancialAssetsL
   @override
   void initState() {
     super.initState();
-    if (isOnline) {
+    if (isOnline)
+    {
       _getApiData();
-    } else {
+    }
+    else
+    {
       noInterNet(context);
     }
   }
@@ -366,7 +369,8 @@ class _OtherFinancialAssetsListPageState extends BaseState<OtherFinancialAssetsL
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(InvestmentTrustAccounts(), false);
       setState(() {
         _isLoading = false;
       });

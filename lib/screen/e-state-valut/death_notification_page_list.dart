@@ -298,7 +298,8 @@ class _DeathNotificationPageState extends BaseState<DeathNotificationPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(Notifications(),false);
       setState(() {
         _isLoading = false;
       });

@@ -30,7 +30,7 @@ class _HomePageState extends BaseState<HomePage> {
   @override
   void initState() {
     super.initState();
-    print("<><> SESS :: " + sessionManager.getUserId() + " <><> " + sessionManagerPMS.getUserId() + " <><> " + sessionManagerVault.getUserId());
+    print("<><> SESS :: ${sessionManager.getUserId()} <><> ${sessionManagerPMS.getUserId()} <><> ${sessionManagerVault.getUserId()}");
   }
 
   @override

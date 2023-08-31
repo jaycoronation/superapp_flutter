@@ -8,7 +8,11 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.CAMERA"/>
 
-   <application
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+
+
+    <application
         android:label="AlphaCapital Super App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -34,6 +38,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <receiver android:name="io.flutter.plugins.androidalarmmanager.AlarmBroadcastReceiver" android:exported="false"/>
+
+        <meta-data android:name="io.flutter.embedding.engine.dartEntryPoints" android:value="AlarmService"/>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

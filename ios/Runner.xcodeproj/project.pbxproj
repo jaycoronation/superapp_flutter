@@ -13,8 +13,8 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		9FAC6A2C2A829870009DE99B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FAC6A2B2A829870009DE99B /* GoogleService-Info.plist */; };
 		CABFBDA7443A801DBE601B17 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E3A032C4E71A2A3E9CD86BB /* Pods_Runner.framework */; };
-		FBC4D8AD2A399B9900049A7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBC4D8AC2A399B9900049A7A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,10 +46,10 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FAC6A2B2A829870009DE99B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D0E0D0BC41313C2142E94D52 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		DC30AC7641CF4960480093A2 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		FBC4D8AB2A39983B00049A7A /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		FBC4D8AC2A399B9900049A7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +115,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				FBC4D8AC2A399B9900049A7A /* GoogleService-Info.plist */,
+				9FAC6A2B2A829870009DE99B /* GoogleService-Info.plist */,
 				FBC4D8AB2A39983B00049A7A /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -194,7 +194,7 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
-				FBC4D8AD2A399B9900049A7A /* GoogleService-Info.plist in Resources */,
+				9FAC6A2C2A829870009DE99B /* GoogleService-Info.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);
@@ -227,6 +227,7 @@
 			files = (
 			);
 			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
 			);
 			name = "Thin Binary";
 			outputPaths = (
@@ -334,11 +335,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Mistry (STA73RPARX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Jay Mistry (STA73RPARX)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = RF28RLM5Z2;
+				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -351,7 +352,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE_SPECIFIER = SuperApp_AppStore;
+				PROVISIONING_PROFILE_SPECIFIER = Alpha_Super_App_Development;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -366,11 +367,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Mistry (STA73RPARX)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = RF28RLM5Z2;
+				DEVELOPMENT_TEAM = MVT4675X39;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = MVT4675X39;
 				ENABLE_BITCODE = NO;
+				EXTRA_FRONT_END_OPTIONS = "--no-sound-null-safety";
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Super App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -379,9 +382,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.alphacapital.superapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.coronation.superapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = SuperApp_AppStore;
+				PROVISIONING_PROFILE_SPECIFIER = Alpha_Super_App_Development;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Alpha_Super_App_Development;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -420,11 +424,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Mistry (STA73RPARX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Jay Mistry (STA73RPARX)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = RF28RLM5Z2;
+				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -444,7 +448,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE_SPECIFIER = SuperApp_AppStore;
+				PROVISIONING_PROFILE_SPECIFIER = Alpha_Super_App_Development;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -478,11 +482,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Mistry (STA73RPARX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Jay Mistry (STA73RPARX)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = RF28RLM5Z2;
+				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -495,7 +499,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE_SPECIFIER = SuperApp_AppStore;
+				PROVISIONING_PROFILE_SPECIFIER = Alpha_Super_App_Development;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -512,11 +516,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Mistry (STA73RPARX)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = RF28RLM5Z2;
+				DEVELOPMENT_TEAM = MVT4675X39;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = MVT4675X39;
 				ENABLE_BITCODE = NO;
+				EXTRA_FRONT_END_OPTIONS = "--no-sound-null-safety";
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Super App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -525,9 +531,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.alphacapital.superapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.coronation.superapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = SuperApp_AppStore;
+				PROVISIONING_PROFILE_SPECIFIER = Alpha_Super_App_Development;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Alpha_Super_App_Development;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -546,11 +553,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Anthony Daskalis (RF28RLM5Z2)";
+				CODE_SIGN_IDENTITY = "Apple Development: Jay Mistry (STA73RPARX)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = RF28RLM5Z2;
+				DEVELOPMENT_TEAM = MVT4675X39;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = MVT4675X39;
 				ENABLE_BITCODE = NO;
+				EXTRA_FRONT_END_OPTIONS = "--no-sound-null-safety";
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Super App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -559,9 +568,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.alphacapital.superapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.coronation.superapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = SuperApp_AppStore;
+				PROVISIONING_PROFILE_SPECIFIER = Alpha_Super_App_Development;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Alpha_Super_App_Development;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

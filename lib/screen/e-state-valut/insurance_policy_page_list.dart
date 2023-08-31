@@ -451,7 +451,8 @@ class _InsurancePolicyListPageState extends BaseState<InsurancePolicyListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(InsurancePoliciesDetails(), false);
       setState(() {
         _isLoading = false;
       });

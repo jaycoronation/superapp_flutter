@@ -77,8 +77,8 @@ class ExistingAssets {
       String? investmentType, 
       String? assetType, 
       String? currentValue, 
-      String? timestamp, 
-      num? canDelete,}){
+      String? timestamp,
+    String? canDelete,}){
     _existingAssetsId = existingAssetsId;
     _userId = userId;
     _investmentType = investmentType;
@@ -95,7 +95,7 @@ class ExistingAssets {
     _assetType = json['asset_type'];
     _currentValue = json['current_value'];
     _timestamp = json['timestamp'];
-    _canDelete = json['can_delete'];
+    _canDelete = json['restrict_delete'];
   }
   String? _existingAssetsId;
   String? _userId;
@@ -103,14 +103,14 @@ class ExistingAssets {
   String? _assetType;
   String? _currentValue;
   String? _timestamp;
-  num? _canDelete;
+  String? _canDelete;
 ExistingAssets copyWith({  String? existingAssetsId,
   String? userId,
   String? investmentType,
   String? assetType,
   String? currentValue,
   String? timestamp,
-  num? canDelete,
+  String? canDelete,
 }) => ExistingAssets(  existingAssetsId: existingAssetsId ?? _existingAssetsId,
   userId: userId ?? _userId,
   investmentType: investmentType ?? _investmentType,
@@ -125,7 +125,7 @@ ExistingAssets copyWith({  String? existingAssetsId,
   String? get assetType => _assetType;
   String? get currentValue => _currentValue;
   String? get timestamp => _timestamp;
-  num? get canDelete => _canDelete;
+  String? get canDelete => _canDelete;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

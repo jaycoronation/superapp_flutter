@@ -123,7 +123,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(selectedFilterText.isEmpty ? "All" : selectedFilterText,
+                        child: Text(toDisplayCase(selectedCategory),
                           textAlign: TextAlign.start,
                           style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
                         ),
@@ -431,19 +431,33 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: 160,
                                             width: MediaQuery.of(context).size.width,
                                             // color: grayLight,
-                                            child: listData[index].blogImage.toString().isNotEmpty
-                                                ? FadeInImage.assetNetwork(
-                                              image: listData[index].blogImage.toString(),
-                                              fit: BoxFit.cover,
-                                              width: MediaQuery.of(context).size.width,
-                                              height: 160,
-                                              placeholder: 'assets/images/ic_alpha_logo.png',
-                                            ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                                width: 50, height: 50),
+                                            child: Stack(
+                                              alignment: Alignment.topRight,
+                                              children: [
+                                                listData[index].blogImage.toString().isNotEmpty
+                                                    ? FadeInImage.assetNetwork(
+                                                  image: listData[index].blogImage.toString(),
+                                                  fit: BoxFit.cover,
+                                                  width: MediaQuery.of(context).size.width,
+                                                  height: 160,
+                                                  placeholder: 'assets/images/ic_alpha_logo.png',
+                                                ) : Image.asset('assets/images/ic_alpha_logo.png',
+                                                    width: 50, height: 50),
+                                                Container(
+                                                  margin: const EdgeInsets.only(top: 12,right: 12),
+                                                  decoration: BoxDecoration(color: blue,borderRadius: BorderRadius.circular(22)),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                                                    child: Text(listData[index].category.toString(),style: const TextStyle(color: white,fontSize: 16,fontWeight: FontWeight.w500)),
+                                                  ),
+                                                )
+
+                                              ],
+                                            ),
                                           ),
                                           const Gap(10),
                                           Text(checkValidString(listData[index].title.toString()),
@@ -527,32 +541,72 @@ class _BlogsPageState extends BaseState<BlogsPage> {
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
         context: context,
         builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter updateSetState) {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12,right: 12,top: 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                            width: 60,
-                            margin: const EdgeInsets.only(top: 5),
-                            child: const Divider(height: 1.5, thickness: 1.5, color: blue)
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 12),
-                          padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
-                          child: const Text("Filter", style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 15)),
-                        ),
-                        Container(height: 6),
-                      ],
-                    ),
-                  ),
-                );
-              });
+          return Wrap(
+            children: [
+              StatefulBuilder(
+                  builder: (BuildContext context, StateSetter updateSetState) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 12,right: 12,top: 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              width: 60,
+                              margin: const EdgeInsets.only(top: 5),
+                              child: const Divider(height: 1.5, thickness: 1.5, color: blue)
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 12),
+                            padding: const EdgeInsets.fromLTRB(14, 8, 14, 8),
+                            child: const Text("Filter", style: TextStyle(color: black, fontWeight: FontWeight.w600, fontSize: 18)),
+                          ),
+                          Container(height: 6),
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: listCategory.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    updateSetState(() {
+                                       selectedCategory = listCategory[index].category.toString();
+
+                                       for (var i = 0; i < listCategory.length; i++)
+                                         {
+                                           if (index == i)
+                                             {
+                                               listCategory[i].isSelected = true;
+                                             }
+                                           else
+                                             {
+                                               listCategory[i].isSelected = false;
+                                             }
+                                         }
+                                     });
+                                    Navigator.pop(context);
+                                    getList(true);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Gap(6),
+                                      Text(toDisplayCase(listCategory[index].category.toString()),style: TextStyle(color: listCategory[index].isSelected ?? false ? blue : black,fontWeight: FontWeight.w400,fontSize: 16),),
+                                      const Gap(6),
+                                      const Divider(height: 0.7,thickness: 0.7,color: gray,)
+                                    ],
+                                  ),
+                                );
+                              },
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+            ],
+          );
         });
 
   }
@@ -649,7 +703,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
       listCategory = [];
       listCategory.add(Category(category: "all", isSelected: true));
 
-      List<Category>? dataList = dataResponse!.category;
+      List<Category>? dataList = dataResponse.category;
       listCategory.addAll(dataList ?? []);
       print(listCategory.length);
 

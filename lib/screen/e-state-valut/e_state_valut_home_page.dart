@@ -95,8 +95,8 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
                 },
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(right: 5),
-                  padding: EdgeInsets.all(3),
+                  margin: const EdgeInsets.only(right: 5),
+                  padding: const EdgeInsets.all(3),
                   width: 32,
                   height: 32,
                   child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
@@ -149,7 +149,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
                   Container(
                     padding: const EdgeInsets.all(15),
                     margin: const EdgeInsets.only(top: 8, bottom: 8),
-                    decoration: BoxDecoration(color: headerPosition == index ? blue : semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                    decoration: BoxDecoration(color: headerPosition == index ? blue : semiBlue, borderRadius: const BorderRadius.all(Radius.circular(10))),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -238,63 +238,63 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               }
               else if(menuItems[index].id == 12)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => GovernmentRelatedListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const GovernmentRelatedListPage()));
               }
               else if(menuItems[index].id == 13)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => EmploymentRelatedListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const EmploymentRelatedListPage()));
               }
               else if(menuItems[index].id == 14)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => InsurancePolicyListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const InsurancePolicyListPage()));
               }
               else if(menuItems[index].id == 15)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MutualFundsListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const MutualFundsListPage()));
               }
               else if(menuItems[index].id == 16)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ShareBondsListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ShareBondsListPage()));
               }
               else if(menuItems[index].id == 17)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OtherFinancialAssetsListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const OtherFinancialAssetsListPage()));
               }
               else if(menuItems[index].id == 18)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BankListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const BankListPage()));
               }
               else if(menuItems[index].id == 19)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => IntellectualPropertyListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const IntellectualPropertyListPage()));
               }
               else if(menuItems[index].id == 20)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RealEstateListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RealEstateListPage()));
               }
               else if(menuItems[index].id == 21)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OtherAssetListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const OtherAssetListPage()));
               }
               else if(menuItems[index].id == 22)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreditCardsLoansListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CreditCardsLoansListPage()));
               }
               else if(menuItems[index].id == 23)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => FormerSpouseListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const FormerSpouseListPage()));
               }
               else if(menuItems[index].id == 24)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CharityRelatedListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharityRelatedListPage()));
               }
               else if(menuItems[index].id == 25)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => FiduciaryObligationsListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const FiduciaryObligationsListPage()));
               }
               else if(menuItems[index].id == 26)
               {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OtherDebtsListPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const OtherDebtsListPage()));
               }
 
           },

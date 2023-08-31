@@ -202,7 +202,8 @@ class _KeyToResidencePageListState extends BaseState<KeyToResidencePageList> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(KeysToResidences(),false);
       setState(() {
         _isLoading = false;
       });

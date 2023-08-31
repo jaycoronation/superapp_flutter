@@ -689,7 +689,7 @@ class _ContactPageState extends BaseState<ContactPage> {
     final url = Uri.parse(API_URL + contactSave);
 
     Map<String, String> jsonBody = {
-      'user_id': sessionManager.getUserId().toString().trim(),
+      'user_id': sessionManagerPMS.getUserId().toString().trim(),
       'name': _nameController.value.text.trim(),
       'email' : _emailController.value.text.trim(),
       'contact' : _contactController.value.text.trim(),

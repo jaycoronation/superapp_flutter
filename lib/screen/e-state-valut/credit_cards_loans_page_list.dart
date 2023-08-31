@@ -366,7 +366,8 @@ class _CreditCardsLoansListPageState extends BaseState<CreditCardsLoansListPage>
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(CreditCardsAndLoans(), false);
       setState(() {
         _isLoading = false;
       });

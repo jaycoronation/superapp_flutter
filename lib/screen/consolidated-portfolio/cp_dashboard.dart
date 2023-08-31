@@ -55,6 +55,15 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     chart_color1,chart_color7,chart_color8,chart_color9,chart_color2];
 
   @override
+  void initState() {
+    super.initState();
+    _getNetworthData();
+    _getSinceInceptionData();
+    _getCurrentYearXIRR();
+    _getPreviousYearXIRR();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
@@ -1748,12 +1757,6 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _getNetworthData();
-  }
-
   _getNetworthData() async {
     setState(() {
       _isLoading = true;
@@ -1834,142 +1837,177 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
         _isLoading = false;
       });
     }
-    _getSinceInceptionData();
+
   }
 
   _getSinceInceptionData() async {
-    setState(() {
-      _isSinceInceptionLoading = true;
-    });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(API_URL_CP + performance);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
+    if (sessionManagerPMS.getPerformanceList().isNotEmpty)
+    {
+      listSinceInception = sessionManagerPMS.getPerformanceList();
+    }
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = SinceInceptionResponse.fromJson(user);
+    print("listSinceInception ==== ${listSinceInception.length}");
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.result != null) {
+    if (listSinceInception.isEmpty)
+      {
+        setState(() {
+          _isSinceInceptionLoading = true;
+        });
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_CP + performance);
+        Map<String, String> jsonBody = {
+          'user_id': sessionManagerPMS.getUserId().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = SinceInceptionResponse.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1) {
+          try {
+            if (dataResponse.result != null) {
+              setState(() {
+                _isSinceInceptionLoading = false;
+              });
+              setState(() {
+                listSinceInception = dataResponse.result!.data!;
+                sessionManagerPMS.savePerformanceList(listSinceInception);
+              });
+            }
+          } catch (e) {
+            setState(() {
+              _isSinceInceptionLoading = false;
+            });
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        } else {
           setState(() {
             _isSinceInceptionLoading = false;
           });
-          setState(() {
-            listSinceInception = dataResponse.result!.data!;
-          });
-        }
-      } catch (e) {
-        setState(() {
-          _isSinceInceptionLoading = false;
-        });
-        if (kDebugMode) {
-          print(e);
         }
       }
-    } else {
-      setState(() {
-        _isSinceInceptionLoading = false;
-      });
-    }
-    _getCurrentYearXIRR();
   }
 
   _getCurrentYearXIRR() async {
-    setState(() {
-      _isCurrentYearXIRRLoading = true;
-    });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(API_URL_CP + xirr);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
+    if (sessionManagerPMS.getNextYearList().isNotEmpty)
+      {
+        listCurrentYearXIRR = sessionManagerPMS.getNextYearList();
+      }
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = SinceInceptionResponse.fromJson(user);
+    print("listCurrentYearXIRR ==== ${listCurrentYearXIRR.length}");
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
+    if (listCurrentYearXIRR.isEmpty)
+      {
         setState(() {
-          _isCurrentYearXIRRLoading = false;
+          _isCurrentYearXIRRLoading = true;
         });
-        if (dataResponse.result != null) {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_CP + xirr);
+        Map<String, String> jsonBody = {
+          'user_id': sessionManagerPMS.getUserId().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = SinceInceptionResponse.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1) {
+          try {
+            setState(() {
+              _isCurrentYearXIRRLoading = false;
+            });
+            if (dataResponse.result != null) {
+              setState(() {
+                listCurrentYearXIRR = dataResponse.result!.data!;
+              });
+              sessionManagerPMS.saveNextYearList(listCurrentYearXIRR);
+            }
+          } catch (e) {
+            setState(() {
+              _isCurrentYearXIRRLoading = false;
+            });
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        } else {
           setState(() {
-            listCurrentYearXIRR = dataResponse.result!.data!;
+            _isCurrentYearXIRRLoading = false;
           });
         }
-      } catch (e) {
-        setState(() {
-          _isCurrentYearXIRRLoading = false;
-        });
-        if (kDebugMode) {
-          print(e);
-        }
       }
-    } else {
-      setState(() {
-        _isCurrentYearXIRRLoading = false;
-      });
-    }
-    _getPreviousYearXIRR();
+
   }
 
   _getPreviousYearXIRR() async {
-    setState(() {
-      _isPreviousYearXIRRLoading = true;
-    });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(API_URL_CP + xirrPrevious);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
+    if (sessionManagerPMS.getPerviousYearList().isNotEmpty)
+      {
+        listPreviousYearXIRR = sessionManagerPMS.getPerviousYearList();
+      }
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = SinceInceptionResponse.fromJson(user);
+    print("listPreviousYearXIRR ==== ${listPreviousYearXIRR.length}");
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.result != null) {
+    if (listPreviousYearXIRR.isEmpty)
+      {
+        setState(() {
+          _isPreviousYearXIRRLoading = true;
+        });
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_CP + xirrPrevious);
+        Map<String, String> jsonBody = {
+          'user_id': sessionManagerPMS.getUserId().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = SinceInceptionResponse.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1) {
+          try {
+            if (dataResponse.result != null) {
+              setState(() {
+                _isPreviousYearXIRRLoading = false;
+              });
+              setState(() {
+                listPreviousYearXIRR = dataResponse.result!.data!;
+              });
+              sessionManagerPMS.savePerviousYearList(listPreviousYearXIRR);
+            }
+          } catch (e) {
+            setState(() {
+              _isPreviousYearXIRRLoading = false;
+            });
+
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        } else {
           setState(() {
             _isPreviousYearXIRRLoading = false;
           });
-          setState(() {
-            listPreviousYearXIRR = dataResponse.result!.data!;
-          });
-        }
-      } catch (e) {
-        setState(() {
-          _isPreviousYearXIRRLoading = false;
-        });
-
-        if (kDebugMode) {
-          print(e);
         }
       }
-    } else {
-      setState(() {
-        _isPreviousYearXIRRLoading = false;
-      });
-    }
   }
 
   @override

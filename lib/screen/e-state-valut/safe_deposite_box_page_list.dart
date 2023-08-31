@@ -298,7 +298,8 @@ class _SafeDepositeBoxPageListState extends BaseState<SafeDepositeBoxPageList> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(SafeDepositBoxes(), false);
       setState(() {
         _isLoading = false;
       });

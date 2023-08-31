@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:cron/cron.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +13,7 @@ import 'package:superapp/push_notification/PushNotificationService.dart';
 import 'package:superapp/screen/common/HomePageForWeb.dart';
 import 'package:superapp/screen/common/home_page.dart';
 import 'package:superapp/screen/common/login_screen.dart';
+import 'package:superapp/service/JobService.dart';
 import 'package:superapp/utils/app_utils.dart';
 import 'package:superapp/utils/session_manager.dart';
 import 'package:superapp/utils/session_manager_methods.dart';
@@ -32,18 +35,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SessionManagerMethods.init();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
+    name: "alpha-capital-super-app",
+    options: FirebaseOptions(
       apiKey: "AIzaSyCIO9zXDh3SQSbD7sZ-4vyd9dUZmnk2Zac",
-      appId: "1:204998889984:android:31c7b55cb70ea81d0d7ee5",
+      appId: Platform.isIOS ? "1:204998889984:ios:708192642bcde9f20d7ee5": "1:204998889984:android:31c7b55cb70ea81d0d7ee5",
       messagingSenderId: "204998889984",
-      projectId: "alpha-capital-super-app", ),
+      projectId: "alpha-capital-super-app",
+    ),
   );
   PaintingBinding.instance.imageCache.maximumSizeBytes = 1000 << 40; // for increase the cache memory
   await PushNotificationService().setupInteractedMessage();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null)
@@ -51,7 +54,9 @@ Future<void> main() async {
     print("@@@@@@@@ Main Dart @@@@@@@@ ${initialMessage.data}");
     NavigationService.notif_type = initialMessage.data['content_type'];
   }
+
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -119,10 +124,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isLoggedIn = false ;
   SessionManager sessionManager = SessionManager();
+  
+  final cron = Cron();
 
   @override
   void initState() {
     super.initState();
+    cron.schedule(Schedule.parse('* 5 * * *'), () {
+      JobService().getSinceInceptionData();
+    },);
     doSomeAsyncStuff();
   }
 

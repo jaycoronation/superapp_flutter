@@ -28,9 +28,12 @@ class _ShareBondsListPageState extends BaseState<ShareBondsListPage> {
   @override
   void initState() {
     super.initState();
-    if (isOnline) {
+    if (isOnline)
+    {
       _getApiData();
-    } else {
+    }
+    else
+    {
       noInterNet(context);
     }
   }
@@ -366,7 +369,8 @@ class _ShareBondsListPageState extends BaseState<ShareBondsListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(SharesBonds(), false);
       setState(() {
         _isLoading = false;
       });

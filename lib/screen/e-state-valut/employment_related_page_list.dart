@@ -317,7 +317,8 @@ class _EmploymentRelatedListPageState extends BaseState<EmploymentRelatedListPag
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(EmploymentRelatedDetails(), false);
       setState(() {
         _isLoading = false;
       });

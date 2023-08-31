@@ -273,7 +273,8 @@ class _ImpDocPageListState extends BaseState<ImpDocPageList> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(Documents(), false);
       setState(() {
         _isLoading = false;
       });

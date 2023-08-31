@@ -300,7 +300,8 @@ class _FormerSpouseListPageState extends BaseState<FormerSpouseListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(FormerSpouseOfFormerMarriages(), false);
       setState(() {
         _isLoading = false;
       });

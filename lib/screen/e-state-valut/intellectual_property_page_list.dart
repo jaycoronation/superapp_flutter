@@ -383,7 +383,8 @@ class _IntellectualPropertyListPageState extends BaseState<IntellectualPropertyL
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(IntellectualProperties(), false);
       setState(() {
         _isLoading = false;
       });

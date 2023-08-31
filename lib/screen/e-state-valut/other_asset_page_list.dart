@@ -301,7 +301,8 @@ class _OtherAssetListPageState extends BaseState<OtherAssetListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(OtherAssets(), false);
       setState(() {
         _isLoading = false;
       });

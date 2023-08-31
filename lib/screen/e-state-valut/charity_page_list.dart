@@ -317,7 +317,8 @@ class _CharityRelatedListPageState extends BaseState<CharityRelatedListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(CharityRelatedObligations(), false);
       setState(() {
         _isLoading = false;
       });

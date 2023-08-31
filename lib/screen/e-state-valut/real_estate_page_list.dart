@@ -417,7 +417,8 @@ class _RealEstateListPageState extends BaseState<RealEstateListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(RealProperties(), false);
       setState(() {
         _isLoading = false;
       });

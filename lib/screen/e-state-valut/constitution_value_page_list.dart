@@ -193,7 +193,8 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
         }
       } catch (e) {
         listData = [];
-        showSnackBar(dataResponse.message, context);
+        //showSnackBar(dataResponse.message, context);
+        _redirectAdd(Data(),false);
         setState(() {
           _isLoading = false;
         });

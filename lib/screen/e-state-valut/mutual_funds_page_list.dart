@@ -29,11 +29,14 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
   @override
   void initState() {
     super.initState();
-    if (isOnline) {
-      _getApiData();
-    } else {
-      noInterNet(context);
-    }
+    if (isOnline)
+      {
+        _getApiData();
+      }
+    else
+      {
+        noInterNet(context);
+      }
   }
 
   @override
@@ -367,7 +370,8 @@ class _MutualFundsListPageState extends BaseState<MutualFundsListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(MutualFunds(), false);
       setState(() {
         _isLoading = false;
       });

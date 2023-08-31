@@ -368,7 +368,8 @@ class _GovernmentRelatedListPageState extends BaseState<GovernmentRelatedListPag
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(GovernmentRelatedDetails(), false);
       setState(() {
         _isLoading = false;
       });

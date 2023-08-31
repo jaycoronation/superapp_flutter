@@ -320,7 +320,8 @@ class _AdvisorsListPageState extends BaseState<AdvisorsListPage> {
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(Advisers(),false);
       setState(() {
         _isLoading = false;
       });

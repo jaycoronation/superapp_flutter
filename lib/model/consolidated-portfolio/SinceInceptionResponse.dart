@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// result : {"data":[{"Asset":"Debt","InvestedAmount":5962513,"CurrentValue":7713183,"Gain":1750670,"XIRR":6.2500762939453}]}
 /// success : 1
 
@@ -72,6 +74,8 @@ ResultData copyWith({  List<Data>? data,
 /// Gain : 1750670
 /// XIRR : 6.2500762939453
 
+Data dataFromJson(String str) => Data.fromJson(json.decode(str));
+String dataToJson(Data data) => json.encode(data.toJson());
 class Data {
   Data({
       String? asset, 
@@ -125,4 +129,8 @@ Data copyWith({  String? asset,
     return map;
   }
 
+  @override
+  String toString() {
+    return 'Data{_asset: $_asset, _investedAmount: $_investedAmount, _currentValue: $_currentValue, _gain: $_gain, _xirr: $_xirr}';
+  }
 }

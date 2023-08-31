@@ -36,7 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  google_fonts: ^3.0.1
+  google_fonts:
   http: ^0.13.4
   http_interceptor: ^1.0.2
   pretty_http_logger:
@@ -56,7 +56,6 @@ dependencies:
   gap: ^2.0.0
   file_picker:
   image_picker:
-  image_cropper: ^3.0.1
   cached_network_image:
   path_provider:
   flutter_absolute_path:
@@ -71,6 +70,7 @@ dependencies:
   youtube_player_flutter: ^8.1.1
   fl_chart: ^0.61.0
   flutter_web_frame: ^0.0.3
+  cron: ^0.5.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0
@@ -85,7 +85,8 @@ flutter_icons:
   min_sdk_android: 21 # android min sdk min:16, default 21
   macos:
     generate: true
-    image_path: "path/to/image.png" #flutter pub run flutter_launcher_icons:main
+    image_path: "path/to/image.png"
+    #flutter pub run flutter_launcher_icons:main
 
 
 

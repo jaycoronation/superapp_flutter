@@ -368,7 +368,8 @@ class _FiduciaryObligationsListPageState extends BaseState<FiduciaryObligationsL
     }
     else {
       listData = [];
-      showSnackBar(dataResponse.message, context);
+      //showSnackBar(dataResponse.message, context);
+      _redirectAdd(FiduciaryObligations(), false);
       setState(() {
         _isLoading = false;
       });
