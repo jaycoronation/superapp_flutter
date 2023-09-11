@@ -1,4 +1,4 @@
-import 'package:superapp/utils/session_manager_methods.dart';
+import 'package:superapp_flutter/utils/session_manager_methods.dart';
 
 class SessionManagerVault {
   final String isLoggedIn = "isLoggedInVault";

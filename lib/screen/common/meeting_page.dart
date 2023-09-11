@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp/model/links_response_model.dart';
+import 'package:superapp_flutter/model/links_response_model.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';

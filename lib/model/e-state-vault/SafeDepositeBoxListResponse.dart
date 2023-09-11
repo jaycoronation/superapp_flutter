@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:superapp/utils/app_utils.dart';
+import 'package:superapp_flutter/utils/app_utils.dart';
 
 /// safe_deposit_boxes : [{"safe_deposit_box_id":"13","user_id":"164","holder_id":"97","box_number":"1234","person_authorized_to_sign":"Ravi","person_with_keys":"Raj","general_inventory":"Test notess","holder":"A","holder_name":"","location":"At Home","timestamp":"1678779411"}]
 /// success : 1

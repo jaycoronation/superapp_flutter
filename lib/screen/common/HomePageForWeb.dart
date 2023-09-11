@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:superapp/screen/common/video_list_page.dart';
+import 'package:superapp_flutter/screen/common/video_list_page.dart';
 
 import '../../constant/colors.dart';
 import '../../utils/base_class.dart';

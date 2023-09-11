@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:superapp/utils/session_manager_methods.dart';
+import 'package:superapp_flutter/utils/session_manager_methods.dart';
 
 import '../model/consolidated-portfolio/SinceInceptionResponse.dart';
 

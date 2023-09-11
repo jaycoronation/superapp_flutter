@@ -2,19 +2,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:superapp/screen/common/contact_page.dart';
-import 'package:superapp/screen/common/meeting_page.dart';
-import 'package:superapp/screen/common/video_list_page.dart';
-import 'package:superapp/screen/e-state-analysis/e_state_analysis_home_page.dart';
-import 'package:superapp/screen/e-state-valut/e_state_valut_home_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
+import '../e-state-analysis/e_state_analysis_home_page.dart';
+import '../e-state-valut/e_state_valut_home_page.dart';
 import 'blogs_page.dart';
+import 'contact_page.dart';
 import 'login_screen.dart';
+import 'meeting_page.dart';
+import 'video_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

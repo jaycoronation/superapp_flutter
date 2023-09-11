@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:superapp/utils/app_utils.dart';
+import 'package:superapp_flutter/utils/app_utils.dart';
 /// notifications : [{"notification_id":"36","user_id":"164","holder_id":"97","name":"Ravi","holder_name":"","phone":"8469940500","email":"ravi@coronation.in","address":"506","holder":"A","timestamp":"1678443307"}]
 /// total_count : "1"
 /// success : 1

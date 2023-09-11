@@ -5,7 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp/screen/common/blog_detail_page.dart';
+import 'package:superapp_flutter/screen/common/blog_detail_page.dart';
 import '../../constant/blogs_api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/BlogListResponseModel.dart' as blog;

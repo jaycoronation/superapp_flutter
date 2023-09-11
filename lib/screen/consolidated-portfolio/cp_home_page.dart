@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_bs_movement.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_capital_gain.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_dashboard.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_fund_house_allocation.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_latest_sip.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_latest_transaction.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_networth.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_portfolio.dart';
-import 'package:superapp/screen/consolidated-portfolio/cp_scheme_allocation.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_movement.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_capital_gain.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_dashboard.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_fund_house_allocation.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_latest_sip.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_latest_transaction.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_networth.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_portfolio.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_scheme_allocation.dart';
 
 import '../../constant/colors.dart';
 import '../../utils/base_class.dart';

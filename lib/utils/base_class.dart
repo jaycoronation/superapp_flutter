@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:superapp/utils/session_manager_pms.dart';
-import 'package:superapp/utils/session_manager_vault.dart';
+import 'package:superapp_flutter/utils/session_manager_pms.dart';
+import 'package:superapp_flutter/utils/session_manager_vault.dart';
 
 import 'session_manager.dart';
 

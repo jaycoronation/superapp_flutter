@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp/screen/common/video_player_page.dart';
+import 'package:superapp_flutter/screen/common/video_player_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../constant/colors.dart';
 import '../../model/video_data_response_model.dart';

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:superapp/screen/common/HomePageForWeb.dart';
+import 'package:superapp_flutter/screen/common/HomePageForWeb.dart';
 import '../../../constant/api_end_point.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';

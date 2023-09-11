@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:superapp/utils/app_utils.dart';
+import 'package:superapp_flutter/utils/app_utils.dart';
 /// data : [{"id":"45","user_id":"164","notes":"test2","timestamp":"1678439178"},{"id":"44","user_id":"164","notes":"test","timestamp":"1678438825"}]
 /// total_count : "2"
 /// success : 1

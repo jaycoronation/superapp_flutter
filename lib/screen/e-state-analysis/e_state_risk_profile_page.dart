@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp/constant/analysis_api_end_point.dart';
-import 'package:superapp/model/e-state-analysis/risk_profile_question_response_model.dart';
-import 'package:superapp/model/e-state-analysis/risk_profile_save_response_model.dart';
+import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
+import 'package:superapp_flutter/model/e-state-analysis/risk_profile_question_response_model.dart';
+import 'package:superapp_flutter/model/e-state-analysis/risk_profile_save_response_model.dart';
 import '../../constant/colors.dart';
 import '../../model/CommanResponse.dart';
 import '../../utils/app_utils.dart';
