@@ -342,7 +342,8 @@ class _AddAdvisersPageState extends BaseState<AddAdvisersPage> {
                 ),
                 Expanded(flex: 1, child: Container()),
               ],
-            ))
+            )
+        )
       ],
     );
   }
