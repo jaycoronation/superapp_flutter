@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 /// master_market_percentage : "5"
 /// success : 1
 
+PercentageResponse percentageFromJson(String str) => PercentageResponse.fromJson(json.decode(str));
+String percentageToJson(PercentageResponse data) => json.encode(data.toJson());
 class PercentageResponse {
   PercentageResponse({
       String? masterMarketPercentage, 

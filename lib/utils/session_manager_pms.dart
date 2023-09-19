@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponse.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/PercentageResponse.dart';
 import 'package:superapp_flutter/utils/session_manager_methods.dart';
 
 import '../model/consolidated-portfolio/SinceInceptionResponse.dart';
@@ -13,6 +15,9 @@ class SessionManagerPMS {
   final String KEY_PERFORMANCE = "KEY_PERFORMANCE";
   final String KEY_NEXTYEAR = "KEY_NEXTYEAR";
   final String KEY_PERVIOUSYEAR = "KEY_PERVIOUSYEAR";
+  final String KEY_NETWORTH = "KEY_NETWORTH";
+  final String KEY_PERCENTAGE = "KEY_PERCENTAGE";
+  final String TOTAL_NETWORTH = "TOTAL_NETWORTH";
 
   //set data into shared preferences...
   Future createLoginSession(String userIdApi,String firstNameApi,String lastNameApi ,String emailApi) async {
@@ -115,6 +120,39 @@ class SessionManagerPMS {
         listJsonData = jsonDataList.map((jsonData) => Data.fromJson(jsonData)).toList();
       }
     return listJsonData;
+  }
+
+  Future<void> saveNetworthData(Result getSet) async {
+    var json = resultToJson(getSet);
+    print("json [== $json");
+    await SessionManagerMethods.setString(KEY_NETWORTH, json);
+  }
+
+  Result getNetworthData() {
+    String jsonString = checkValidString(SessionManagerMethods.getString(KEY_NETWORTH));
+    print("json [== $jsonString");
+    var dataGetSet = resultFromJson(jsonString);
+    return dataGetSet;
+  }
+
+  Future<void> savePercentageData(PercentageResponse getSet) async {
+    var json = jsonEncode(getSet);
+    await SessionManagerMethods.setString(KEY_PERCENTAGE, json);
+  }
+
+  PercentageResponse getPercentageData() {
+    String jsonString = checkValidString(SessionManagerMethods.getString(KEY_PERCENTAGE));
+    var dataGetSet = percentageFromJson(jsonString);
+    return dataGetSet;
+  }
+
+  Future<void> setTotalNetworth(String data)
+  async {
+    await SessionManagerMethods.setString(TOTAL_NETWORTH, data);
+  }
+
+  String getTotalNetworth() {
+    return checkValidString(SessionManagerMethods.getString(TOTAL_NETWORTH));
   }
 
   checkValidString (String? value) {

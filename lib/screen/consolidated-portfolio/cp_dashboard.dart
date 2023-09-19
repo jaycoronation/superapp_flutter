@@ -57,10 +57,19 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   @override
   void initState() {
     super.initState();
+
+    print(jsonEncode(sessionManagerPMS.getNetworthData()));
+
     _getNetworthData();
     _getSinceInceptionData();
     _getCurrentYearXIRR();
     _getPreviousYearXIRR();
+
+    if (sessionManagerPMS.getPercentageData().masterMarketPercentage?.isEmpty ?? false)
+      {
+        percentageResponse = sessionManagerPMS.getPercentageData();
+      }
+
   }
 
   @override
@@ -1758,49 +1767,62 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   }
 
   _getNetworthData() async {
-    setState(() {
-      _isLoading = true;
-    });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(API_URL_CP + networth);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = NetworthResponse.fromJson(user);
+    if (sessionManagerPMS.getNetworthData() != null)
+      {
+        resultData = sessionManagerPMS.getNetworthData();
+        strNetWorth = sessionManagerPMS.getTotalNetworth();
+      }
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.result != null) {
-          resultData = dataResponse.result!;
+    if (resultData.applicantDetails?.isEmpty ?? false)
+      {
+        setState(() {
+          _isLoading = true;
+        });
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
 
-          if (resultData.applicantDetails != null) {
-            if(resultData.applicantDetails!.isNotEmpty) {
-              for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
-                if (resultData.applicantDetails![i].applicant == "Total") {
-                  strNetWorth = checkValidString(resultData.applicantDetails![i].currentAmount.toString());
+        final url = Uri.parse(API_URL_CP + networth);
+        Map<String, String> jsonBody = {
+          'user_id': sessionManagerPMS.getUserId().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = NetworthResponse.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1) {
+          try {
+            if (dataResponse.result != null)
+            {
+              resultData = dataResponse.result!;
+
+              if (resultData.applicantDetails != null) {
+                if(resultData.applicantDetails!.isNotEmpty) {
+                  for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
+                    if (resultData.applicantDetails![i].applicant == "Total") {
+                      strNetWorth = checkValidString(resultData.applicantDetails![i].currentAmount.toString());
+                    }
+                  }
                 }
               }
             }
+          } catch (e) {
+
+            if (kDebugMode) {
+              print(e);
+            }
           }
-        }
-      } catch (e) {
+        } else {
 
-        if (kDebugMode) {
-          print(e);
         }
+        _getPercentageData();
       }
-    } else {
 
-    }
-    _getPercentageData();
   }
 
   _getPercentageData() async {

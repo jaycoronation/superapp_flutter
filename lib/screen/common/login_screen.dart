@@ -12,6 +12,7 @@ import '../../../widget/loading.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../../model/InvestWellResponse.dart';
 import '../../model/LoginResponseModel.dart';
+import '../../service/JobService.dart';
 import '../../utils/responsive.dart';
 import 'home_page.dart';
 
@@ -188,8 +189,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                 showSnackBar("Please enter password", context);
                               } else {
                                 if (isInternetConnected) {
-                                  _makeSignInRequest();
-                                  //_makeLoginInRequest("mukesh58");
+                                  //_makeSignInRequest();
+                                  _makeLoginInRequest("mukesh58");
                                 } else {
                                   noInterNet(context);
                                 }
@@ -544,6 +545,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
           checkValidString(dataResponse.vault!.cityName.toString()),
           checkValidString(dataResponse.vault!.cityId.toString()),
         );
+
+        JobService().getSinceInceptionData();
 
         openHomePage();
       } catch (e) {
