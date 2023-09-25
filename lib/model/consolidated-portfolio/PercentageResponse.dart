@@ -19,9 +19,11 @@ class PercentageResponse {
   }
   String? _masterMarketPercentage;
   num? _success;
-PercentageResponse copyWith({  String? masterMarketPercentage,
+PercentageResponse copyWith({
+  String? masterMarketPercentage,
   num? success,
-}) => PercentageResponse(  masterMarketPercentage: masterMarketPercentage ?? _masterMarketPercentage,
+}) => PercentageResponse(
+  masterMarketPercentage: masterMarketPercentage ?? _masterMarketPercentage,
   success: success ?? _success,
 );
   String? get masterMarketPercentage => _masterMarketPercentage;

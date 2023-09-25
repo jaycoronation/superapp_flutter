@@ -132,7 +132,7 @@ class JobService {
       try {
         if (dataResponse.result != null)
         {
-          var resultData = dataResponse.result!;
+          var resultData = dataResponse.result ?? Result();
 
           sessionManagerPMS.saveNetworthData(resultData);
 

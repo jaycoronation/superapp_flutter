@@ -32,69 +32,64 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
           ? const LoadingWidget()
           : Container(
               margin: const EdgeInsets.only(top: 8),
-            child: Column(
-                children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 6, right: 6),
-                          child: Stack(
-                            children: [
-                              listData.isNotEmpty
-                                  ? Column(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                        decoration: const BoxDecoration(
-                                            color:white,
-                                            borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                        child: Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Fund Name',
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Amount\nInvested',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Current\nValue',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Gain/Loss\nCAGR%',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight.w600))),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: _applicantList(),
-                                      ),
-                                    ])
-                                  : const MyNoDataWidget(msg: "No data found."),
-                            ],
-                          )))
-                ],
-              ),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 6, right: 6),
+                child: Stack(
+                  children: [
+                    listData.isNotEmpty
+                        ? Column(children: [
+                            Container(
+                              padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                              decoration: const BoxDecoration(
+                                  color:white,
+                                  borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                              child: Row(
+                                children: const [
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text('Fund Name',
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                                  FontWeight.w600))),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text('Amount\nInvested',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                                  FontWeight.w600))),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text('Current\nValue',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                                  FontWeight.w600))),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text('Gain/Loss\nCAGR%',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                              FontWeight.w600))),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: _applicantList(),
+                            ),
+                          ])
+                        : const MyNoDataWidget(msg: "No data found."),
+                  ],
+                )),
           ),
     );
   }

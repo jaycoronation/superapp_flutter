@@ -21,7 +21,7 @@ class CPHomePage extends StatefulWidget {
 }
 
 class CPHomePageState extends BaseState<CPHomePage> {
-  final List<Widget> _pages = List<Widget>.empty(growable: true);
+  List<Widget> _pages = [];
   final List<BottomNavigationBarItem> itemsList = List<BottomNavigationBarItem>.empty(growable: true);
   late int _currentIndex = 0;
   late TabController tabController;
@@ -30,9 +30,11 @@ class CPHomePageState extends BaseState<CPHomePage> {
   void initState() {
     super.initState();
     _currentIndex = 0;
-    _pages.add(const CPDashboardPage());
-    _pages.add(const CPNetworthPage());
-    _pages.add(const CPPortfolioPage());
+    _pages = [
+      const CPDashboardPage(),
+      const CPNetworthPage(),
+      const CPPortfolioPage()
+    ];
     itemsList.add(BottomNavigationBarItem(
       icon: Image.asset("assets/images/ic_home_disable.png", width: 24, height: 24),
       activeIcon: Image.asset("assets/images/ic_home_selected.png", width: 24, height: 24),
@@ -53,7 +55,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       backgroundColor: appBg,
       appBar: AppBar(
           toolbarHeight: 60,
@@ -81,17 +82,15 @@ class CPHomePageState extends BaseState<CPHomePage> {
                   )),
             ],
           )),
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-                child: IndexedStack(
-                  index: _currentIndex,
-                  children: _pages,
-                )),
-          ],
-        ),
+      body: IndexedStack(
+        index: _currentIndex,
+        alignment: Alignment.center,
+        sizing: StackFit.expand,
+        children: const [
+          CPDashboardPage(),
+          CPNetworthPage(),
+          CPPortfolioPage()
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 15,
@@ -309,8 +308,4 @@ class CPHomePageState extends BaseState<CPHomePage> {
     widget is CPHomePage;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

@@ -547,6 +547,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         );
 
         JobService().getSinceInceptionData();
+        JobService().getNetworthData();
 
         openHomePage();
       } catch (e) {

@@ -32,60 +32,55 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
           ? const LoadingWidget()
           : listData.isNotEmpty ? Container(
               margin: const EdgeInsets.only(top: 8,bottom: 8),
-              child: Column(
-                children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 6, right: 6),
-                          child: Stack(
-                            children: [
-                              listData.isNotEmpty
-                                  ? Column(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                        decoration: const BoxDecoration(
-                                            color:white,
-                                            borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                        child: Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 2,
-                                                child: Text('Asset Type',
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Amount',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Allocation',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: _itemList(),
-                                      ),
-                                    ])
-                                  : const MyNoDataWidget(msg: "No data found."),
-                            ],
-                          )))
-                ],
-              ),
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 6, right: 6),
+                  child: Stack(
+                    children: [
+                      listData.isNotEmpty
+                          ? Column(children: [
+                              Container(
+                                padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                                decoration: const BoxDecoration(
+                                    color:white,
+                                    borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                child: Row(
+                                  children: const [
+                                    Expanded(
+                                        flex: 2,
+                                        child: Text('Asset Type',
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                    FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Amount',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                    FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Allocation',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                    FontWeight.w600))),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: _itemList(),
+                              ),
+                            ])
+                          : const MyNoDataWidget(msg: "No data found."),
+                    ],
+                  )),
           ) : const MyNoDataWidget(msg: "No data found."),
     );
   }

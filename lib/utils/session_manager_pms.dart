@@ -129,9 +129,13 @@ class SessionManagerPMS {
   }
 
   Result getNetworthData() {
+    Result dataGetSet = Result();
     String jsonString = checkValidString(SessionManagerMethods.getString(KEY_NETWORTH));
     print("json [== $jsonString");
-    var dataGetSet = resultFromJson(jsonString);
+    if (jsonString.isNotEmpty)
+      {
+        dataGetSet = resultFromJson(jsonString);
+      }
     return dataGetSet;
   }
 
@@ -141,8 +145,12 @@ class SessionManagerPMS {
   }
 
   PercentageResponse getPercentageData() {
+    PercentageResponse dataGetSet = PercentageResponse();
     String jsonString = checkValidString(SessionManagerMethods.getString(KEY_PERCENTAGE));
-    var dataGetSet = percentageFromJson(jsonString);
+    if (jsonString.isNotEmpty)
+      {
+        dataGetSet = percentageFromJson(jsonString);
+      }
     return dataGetSet;
   }
 

@@ -58,16 +58,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   void initState() {
     super.initState();
 
-    print(jsonEncode(sessionManagerPMS.getNetworthData()));
-
     _getNetworthData();
     _getSinceInceptionData();
     _getCurrentYearXIRR();
     _getPreviousYearXIRR();
 
-    if (sessionManagerPMS.getPercentageData().masterMarketPercentage?.isEmpty ?? false)
+    if (sessionManagerPMS.getPercentageData() != null)
       {
-        percentageResponse = sessionManagerPMS.getPercentageData();
+        if (sessionManagerPMS.getPercentageData().masterMarketPercentage?.isEmpty ?? false)
+          {
+            percentageResponse = sessionManagerPMS.getPercentageData();
+          }
       }
 
   }
@@ -1768,14 +1769,31 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
   _getNetworthData() async {
 
-
     if (sessionManagerPMS.getNetworthData() != null)
       {
-        resultData = sessionManagerPMS.getNetworthData();
-        strNetWorth = sessionManagerPMS.getTotalNetworth();
+        if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
+          {
+            print("IS IN IF");
+            resultData = sessionManagerPMS.getNetworthData();
+            strNetWorth = sessionManagerPMS.getTotalNetworth();
+          }
+        else
+          {
+            print("IS IN ELSE");
+            print(resultData.applicantDetails?.isEmpty ?? false);
+            print(resultData.applicantDetails?.length);
+            resultData = Result();
+            strNetWorth = "";
+          }
+      }
+    else
+      {
+        print("IS IN ELSE ELSE");
+        resultData = Result();
+        strNetWorth = "";
       }
 
-    if (resultData.applicantDetails?.isEmpty ?? false)
+    if (resultData.applicantDetails == null)
       {
         setState(() {
           _isLoading = true;
@@ -1799,13 +1817,16 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
           try {
             if (dataResponse.result != null)
             {
-              resultData = dataResponse.result!;
+              resultData = dataResponse.result ?? Result();
+
+              sessionManagerPMS.saveNetworthData(resultData);
 
               if (resultData.applicantDetails != null) {
                 if(resultData.applicantDetails!.isNotEmpty) {
                   for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
                     if (resultData.applicantDetails![i].applicant == "Total") {
                       strNetWorth = checkValidString(resultData.applicantDetails![i].currentAmount.toString());
+                      sessionManagerPMS.setTotalNetworth(strNetWorth);
                     }
                   }
                 }
@@ -1845,6 +1866,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
           });
           setState(() {
             percentageResponse = dataResponse;
+            sessionManagerPMS.savePercentageData(percentageResponse);
           });
       } catch (e) {
         setState(() {
