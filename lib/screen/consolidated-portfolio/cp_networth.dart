@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
+import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
@@ -30,7 +30,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
       backgroundColor: const Color(0XffEDEDEE),
       body: _isLoading
           ? const LoadingWidget()
-          : listData.isNotEmpty ? Container(
+          : listData.isNotEmpty
+          ? Container(
               margin: const EdgeInsets.only(top: 8,bottom: 8),
               child: Padding(
                   padding: const EdgeInsets.only(left: 6, right: 6),
@@ -43,8 +44,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                 decoration: const BoxDecoration(
                                     color:white,
                                     borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                child: Row(
-                                  children: const [
+                                child: const Row(
+                                  children: [
                                     Expanded(
                                         flex: 2,
                                         child: Text('Asset Type',
@@ -81,7 +82,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                           : const MyNoDataWidget(msg: "No data found."),
                     ],
                   )),
-          ) : const MyNoDataWidget(msg: "No data found."),
+          )
+          : const MyNoDataWidget(msg: "No data found."),
     );
   }
 
@@ -161,17 +163,18 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                         Expanded(
                             flex: 1,
                             child: Text(convertCommaSeparatedAmount(subListData[index].amount.toString()),textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: subListData[index].objective.toString().toLowerCase() == "sub total" ? FontWeight.w700 : subListData[index].objective.toString().toLowerCase() == "total" ? FontWeight.w700 : FontWeight.w200))),
                         Expanded(
                             flex: 1,
-                            child: Text(subListData[index].percentage.toString(),textAlign: TextAlign.center,
-                                style: const TextStyle(
+                            child: Text("${subListData[index].percentage.toString()} %",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: subListData[index].objective.toString().toLowerCase() == "sub total" ? FontWeight.w700 : subListData[index].objective.toString().toLowerCase() == "total" ? FontWeight.w700 : FontWeight.w200))),
                       ],
                     ),
                   ],
@@ -189,50 +192,80 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
   }
 
   _getNetworthData() async {
-    setState(() {
-      _isLoading = true;
-    });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(API_URL_CP + networth);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
+    if ((sessionManagerPMS.getNetworthData() != null))
+    {
+      print("IS FIRST IF");
+      if (sessionManagerPMS.getNetworthData().networth?.isNotEmpty ?? false)
+      {
+        print("IS IN IF");
+        listData = sessionManagerPMS.getNetworthData().networth ?? [];
+        print((listData.length));
+      }
+      else
+      {
+        print("IS IN ELSE");
+        listData = [];
+      }
+    }
+    else
+    {
+      listData = [];
+    }
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = NetworthResponse.fromJson(user);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.result?.networth != null) {
-          listData = dataResponse.result!.networth!;
-          setState(() {
-            _isLoading = false;
-          });
-        }
-        else{
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
+    if (listData.isEmpty)
+      {
         setState(() {
-          _isLoading = false;
+          _isLoading = true;
         });
-        if (kDebugMode) {
-          print(e);
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_CP + networth);
+        Map<String, String> jsonBody = {
+          'user_id': sessionManagerPMS.getUserId().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = NetworthResponseModel.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1)
+        {
+          try {
+            if (dataResponse.result?.networth != null) {
+              listData = dataResponse.result!.networth!;
+              setState(() {
+                _isLoading = false;
+              });
+            }
+            else{
+              setState(() {
+                _isLoading = false;
+              });
+            }
+          } catch (e) {
+            setState(() {
+              _isLoading = false;
+            });
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
+        else
+        {
+          setState(() {
+            _isLoading = false;
+          });
         }
       }
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+
+
   }
 
   @override

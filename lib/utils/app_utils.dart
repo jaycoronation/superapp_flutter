@@ -24,6 +24,23 @@ showSnackBar(String? message,BuildContext? context) {
   }
 }
 
+String getFinancialYear() {
+  DateTime now = DateTime.now();
+  int currentYear = now.year;
+  int currentMonth = now.month;
+  int financialYearStartMonth = 4; // Assuming the financial year starts in April (4th month)
+
+  int financialYear;
+  if (currentMonth >= financialYearStartMonth) {
+    financialYear = currentYear;
+  } else {
+    financialYear = currentYear - 1;
+  }
+
+  int nextYear = financialYear + 1;
+  return '$financialYear-$nextYear';
+}
+
 hideKeyboard(BuildContext context){
   FocusScopeNode currentFocus = FocusScope.of(context);
   if (!currentFocus.hasPrimaryFocus) {
@@ -236,6 +253,12 @@ String universalDateConverter(String inputDateFormat,String outputDateFormat, St
   var outputDate = outputFormat.format(inputDate);
   print(outputDate); // 12/31/2000 11:59 PM <-- MM/dd 12H format
   return outputDate;
+}
+
+String getDateFromTimeStampNew(int timeStamp){
+  var dt = DateTime.fromMillisecondsSinceEpoch((timeStamp * 1000).toInt());
+  var formatedDate = DateFormat('dd MMM yyyy').format(dt);
+  return formatedDate;
 }
 
 List<String> getYear(int currentYear) {

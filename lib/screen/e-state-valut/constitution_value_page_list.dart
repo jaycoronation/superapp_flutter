@@ -207,6 +207,7 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
       setState(() {
         _isLoading = false;
       });
+      _redirectAdd(Data(), false);
     }
   }
 

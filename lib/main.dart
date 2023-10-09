@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cron/cron.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,16 +10,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_frame/flutter_web_frame.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:superapp_flutter/push_notification/PushNotificationService.dart';
 import 'package:superapp_flutter/screen/common/HomePageForWeb.dart';
 import 'package:superapp_flutter/screen/common/home_page.dart';
 import 'package:superapp_flutter/screen/common/login_screen.dart';
 import 'package:superapp_flutter/service/JobService.dart';
+import 'package:superapp_flutter/service/UpdateData.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/session_manager.dart';
 import 'package:superapp_flutter/utils/session_manager_methods.dart';
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
+import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -33,29 +37,50 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SessionManagerMethods.init();
   await Firebase.initializeApp(
-    name: "alpha-capital-super-app",
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCIO9zXDh3SQSbD7sZ-4vyd9dUZmnk2Zac",
-      appId: Platform.isIOS ? "1:204998889984:ios:708192642bcde9f20d7ee5": "1:204998889984:android:31c7b55cb70ea81d0d7ee5",
-      messagingSenderId: "204998889984",
-      projectId: "alpha-capital-super-app",
-    ),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+  await SessionManagerMethods.init();
   PaintingBinding.instance.imageCache.maximumSizeBytes = 1000 << 40; // for increase the cache memory
-  await PushNotificationService().setupInteractedMessage();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null)
-  {
-    print("@@@@@@@@ Main Dart @@@@@@@@ ${initialMessage.data}");
-    NavigationService.notif_type = initialMessage.data['content_type'];
-  }
 
-  runApp(const MyApp());
+  const fatalError = true;
+  // Non-async exceptions
+  FlutterError.onError = (errorDetails) {
+    if (fatalError) {
+      // If you want to record a "fatal" exception
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      // ignore: dead_code
+    } else {
+      // If you want to record a "non-fatal" exception
+      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    }
+  };
+  // Async exceptions
+  PlatformDispatcher.instance.onError = (error, stack) {
+    if (fatalError) {
+      // If you want to record a "fatal" exception
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      // ignore: dead_code
+    } else {
+      // If you want to record a "non-fatal" exception
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    }
+    return true;
+  };
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UpdateData()),
+        ],
+        child: const MyApp(),
+      )
+  ));
 
 }
 
@@ -109,7 +134,7 @@ class MyApp extends StatelessWidget {
         navigatorKey: NavigationService.navigatorKey
         );
       },
-      maximumSize: Size(1160.0, 812.0),
+      maximumSize: const Size(1160.0, 812.0),
     );
   }
 }
@@ -131,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     cron.schedule(Schedule.parse('* 5 * * *'), () {
-      JobService().getSinceInceptionData();
+      JobService().getCommonXirr();
     },);
     doSomeAsyncStuff();
   }

@@ -73,6 +73,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                   });
 
                   if(_isShowChart){
+                    print("IS IN IF");
                     SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
                   }
                   else{
@@ -87,7 +88,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                 ),
               )
             ],
-          )),
+          )
+      ),
       backgroundColor: white,
       body: _isLoading
           ? const LoadingWidget()
@@ -141,6 +143,14 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           ),
     );
   }
+
+  @override
+  final List<DeviceOrientation> supportedOrientations = [
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+    // Add other supported orientations if needed
+  ];
 
   ListView _itemList() {
     return ListView.builder(

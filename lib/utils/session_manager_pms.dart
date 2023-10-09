@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponse.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/PercentageResponse.dart';
-import 'package:superapp_flutter/utils/session_manager_methods.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/XIRRCommonResponseModel.dart';
 
+import '../model/consolidated-portfolio/NetworthResponseModel.dart';
+import '../model/consolidated-portfolio/PercentageResponse.dart';
 import '../model/consolidated-portfolio/SinceInceptionResponse.dart';
+import 'session_manager_methods.dart';
 
 class SessionManagerPMS {
   final String isLoggedIn = "isLoggedInPMS";
@@ -74,50 +75,50 @@ class SessionManagerPMS {
     await SessionManagerMethods.setString(email, data);
   }
 
-  Future<void> savePerformanceList(List<Data> listItems) async {
+  Future<void> savePerformanceList(List<Xirr> listItems) async {
     var json = jsonEncode(listItems);
     await SessionManagerMethods.setString(KEY_PERFORMANCE, json);
   }
 
-  List<Data> getPerformanceList() {
-    List<Data> listJsonData = [];
+  List<Xirr> getPerformanceList() {
+    List<Xirr> listJsonData = [];
     String jsonString = checkValidString(SessionManagerMethods.getString(KEY_PERFORMANCE));
     if (jsonString.isNotEmpty)
       {
         List<dynamic> jsonDataList = jsonDecode(jsonString);
-        listJsonData = jsonDataList.map((jsonData) => Data.fromJson(jsonData)).toList();
+        listJsonData = jsonDataList.map((jsonData) => Xirr.fromJson(jsonData)).toList();
       }
     return listJsonData;
   }
 
-  Future<void> savePerviousYearList(List<Data> listItems) async {
+  Future<void> savePerviousYearList(List<Xirr> listItems) async {
     var json = jsonEncode(listItems);
     await SessionManagerMethods.setString(KEY_PERVIOUSYEAR, json);
   }
 
-  List<Data> getPerviousYearList() {
-    List<Data> listJsonData = [];
+  List<Xirr> getPerviousYearList() {
+    List<Xirr> listJsonData = [];
     String jsonString = checkValidString(SessionManagerMethods.getString(KEY_PERVIOUSYEAR));
     if (jsonString.isNotEmpty)
       {
         List<dynamic> jsonDataList = jsonDecode(jsonString);
-        listJsonData = jsonDataList.map((jsonData) => Data.fromJson(jsonData)).toList();
+        listJsonData = jsonDataList.map((jsonData) => Xirr.fromJson(jsonData)).toList();
       }
     return listJsonData;
   }
 
-  Future<void> saveNextYearList(List<Data> listItems) async {
+  Future<void> saveNextYearList(List<Xirr> listItems) async {
     var json = jsonEncode(listItems);
     await SessionManagerMethods.setString(KEY_NEXTYEAR, json);
   }
 
-  List<Data> getNextYearList() {
-    List<Data> listJsonData = [];
+  List<Xirr> getNextYearList() {
+    List<Xirr> listJsonData = [];
     String jsonString = checkValidString(SessionManagerMethods.getString(KEY_NEXTYEAR));
     if (jsonString.isNotEmpty)
       {
         List<dynamic> jsonDataList = jsonDecode(jsonString);
-        listJsonData = jsonDataList.map((jsonData) => Data.fromJson(jsonData)).toList();
+        listJsonData = jsonDataList.map((jsonData) => Xirr.fromJson(jsonData)).toList();
       }
     return listJsonData;
   }

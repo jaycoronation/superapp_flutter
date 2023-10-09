@@ -4,13 +4,15 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/PercentageResponse.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/SinceInceptionResponse.dart';
-import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
-import '../../model/consolidated-portfolio/NetworthResponse.dart';
+import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
+import '../../model/consolidated-portfolio/PercentageResponse.dart';
+import '../../model/consolidated-portfolio/SinceInceptionResponse.dart';
+import '../../model/consolidated-portfolio/XIRRCommonResponseModel.dart';
+import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import 'cp_dashboard_loading.dart';
@@ -38,15 +40,21 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   bool _isCurrentYearXIRRLoading = false;
   bool _isPreviousYearXIRRLoading = false;
 
-  List<Data> listSinceInception = List<Data>.empty(growable: true);
+  /*List<Data> listSinceInception = List<Data>.empty(growable: true);
   List<Data> listCurrentYearXIRR = List<Data>.empty(growable: true);
-  List<Data> listPreviousYearXIRR = List<Data>.empty(growable: true);
+  List<Data> listPreviousYearXIRR = List<Data>.empty(growable: true);*/
+
+  List<Xirr> listSinceInceptionNew = [];
+  List<Xirr> listCurrentYearXIRRNew = [];
+  List<Xirr> listPreviousYearXIRRNew = [];
+
   var resultData = Result();
   var percentageResponse = PercentageResponse();
   int touchedIndexAsset = -1;
   int touchedIndexApplicant = -1;
 
   var strNetWorth = "";
+  String asPerDate = "";
 
   final List<Color> colorsAssetAllocation = <Color>[chart_color1, chart_color2,chart_color3,chart_color4,chart_color5,
     chart_color6,chart_color7,chart_color8,chart_color9,chart_color10];
@@ -57,19 +65,12 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   @override
   void initState() {
     super.initState();
-
     _getNetworthData();
-    _getSinceInceptionData();
-    _getCurrentYearXIRR();
-    _getPreviousYearXIRR();
+    getCommonXirr();
 
-    if (sessionManagerPMS.getPercentageData() != null)
-      {
-        if (sessionManagerPMS.getPercentageData().masterMarketPercentage?.isEmpty ?? false)
-          {
-            percentageResponse = sessionManagerPMS.getPercentageData();
-          }
-      }
+    DateTime today = DateTime.now();
+    DateTime twoDaysAgo = today.subtract(const Duration(days: 2));
+    asPerDate = DateFormat("dd MMM,yyyy").format(twoDaysAgo);
 
   }
 
@@ -95,13 +96,22 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                   border:Border.all(color: blue, width: 1,)),
                               child: Column(
                                 children: [
-                                  Gap(20),
+                                  const Gap(20),
                                   const Text('Networth',
                                       style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
-                                  Gap(20),
-                                  Text(getPrice(strNetWorth),
-                                      style: TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
-                                  Gap(20),
+                                  const Gap(20),
+                                  Text((convertCommaSeparatedAmount(strNetWorth)),
+                                      style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
+                                  const Gap(10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                      Gap(12)
+                                    ],
+                                  ),
+                                  const Gap(10),
                                 ],
                               ),
                             ),
@@ -134,7 +144,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                             ),
                           ),
                           const Gap(16),
-                          _isShowTopTable ? setUpAssetAllocationTopTableData() : SizedBox(
+                          _isShowTopTable
+                              ? setUpAssetAllocationTopTableData()
+                              : SizedBox(
                             height: 250,
                             child: PieChart(
                               PieChartData(
@@ -239,7 +251,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: List.generate(resultData.applicantDetails!.length - 1, (i) {
-                              return resultData.applicantDetails![i].absoluteReturn != 0 ? Container(
+                              return resultData.applicantDetails![i].allocation != 0 ? Container(
                                 margin: const EdgeInsets.all(6),
                                 child: Indicator(
                                   color: colorsApplicantAllocation[i],
@@ -265,7 +277,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                           ),
                           const Gap(16),
                           setUpAssetAllocationStrategicTab(),
-                          _isVisibleStrategic ? setUpAssetAllocationStrategicMacroData() : setUpAssetAllocationStrategicMicroData(),
+                          _isVisibleStrategic
+                              ? setUpAssetAllocationStrategicMacroData()
+                              : setUpAssetAllocationStrategicMicroData(),
                           const Gap(16),
                           Container(
                             margin: const EdgeInsets.only(left: 16),
@@ -278,7 +292,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                           ),
                           const Gap(16),
                           setUpAssetAllocationTacticalTab(),
-                          _isVisibleTactical ? setUpAssetAllocationTacticalMacroData() : setUpAssetAllocationTacticalMicroData(),
+                          _isVisibleTactical
+                              ? setUpAssetAllocationTacticalMacroData()
+                              : setUpAssetAllocationTacticalMicroData(),
                           const Gap(16),
                           Container(
                             width: double.infinity,
@@ -345,8 +361,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
       return PieChartSectionData(
         color: colorsApplicantAllocation[i],
-        value: resultData.applicantDetails![i].absoluteReturn!.toDouble(),
-        title: "${resultData.applicantDetails![i].absoluteReturn!}%",
+        value: resultData.applicantDetails![i].allocation?.toDouble(),
+        title: "${resultData.applicantDetails?[i].allocation ?? 0}%",
         radius: radius,
         borderSide: isTouched
             ?  const BorderSide(
@@ -424,7 +440,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
                                 child: Text(resultData.macroAssetStratagic![index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                    style: resultData.macroAssetStratagic![index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -437,7 +453,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(resultData.macroAssetStratagic![index].amount.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetStratagic![index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -451,7 +467,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetStratagic![index].actual.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetStratagic![index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -541,7 +557,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
                                 child: Text(resultData.applicantDetails![index].applicant.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                    style: resultData.applicantDetails![index].applicant.toString().toLowerCase() == "amount total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -553,8 +569,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                  child:Text(convertCommaSeparatedAmount(resultData.applicantDetails![index].currentAmount.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child:Text(convertCommaSeparatedAmount(resultData.applicantDetails![index].amount.toString()),
+                                      style: resultData.applicantDetails![index].applicant.toString().toLowerCase() == "amount total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -567,8 +583,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(resultData.applicantDetails![index].cagr!.toDouble()).toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child: Text(doubleUpto2Digit(resultData.applicantDetails?[index].allocation?.toDouble() ?? 0.0).toString(),
+                                      style: resultData.applicantDetails![index].applicant.toString().toLowerCase() == "amount total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -583,14 +599,15 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   );
                 })
                 : Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(100),
-              child: const Text("No data found",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: black),
-                  textAlign: TextAlign.center),
-            ),
-          ]),
-        )
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(100),
+                    child: const Text("No data found",
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: black),
+                        textAlign: TextAlign.center),
+                  ),
+                ]
+                ),
+              )
     );
   }
 
@@ -716,8 +733,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
-                                child: Text(resultData.macroAssetStratagic![index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                child: Text(resultData.macroAssetStratagic?[index].asset ?? "",
+                                    style: resultData.macroAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -730,7 +747,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(resultData.macroAssetStratagic![index].amount.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -744,7 +761,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetStratagic![index].actual.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -758,7 +775,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetStratagic![index].policy.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -772,7 +789,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetStratagic![index].variation.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style:resultData.macroAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -879,7 +896,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
                                 child: Text(resultData.microAssetStratagic![index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                    style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -892,7 +909,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(resultData.microAssetStratagic![index].amount.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -906,7 +923,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.microAssetStratagic![index].actual.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -920,7 +937,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.microAssetStratagic![index].policy.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -934,7 +951,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.microAssetStratagic![index].variation.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1016,7 +1033,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
           ),
           child: Column(children: <Widget>[
             IntrinsicHeight(
-              child: Row(children: [
+              child: Row(
+                  children: [
                 Flexible(
                   flex: 1,
                   child: Container(
@@ -1066,7 +1084,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     const Text('Variation\n%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
-              ]),
+              ]
+              ),
             ),
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
             resultData.macroAssetTactical!.isNotEmpty
@@ -1087,7 +1106,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
                                 child: Text(resultData.macroAssetTactical![index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                    style: resultData.macroAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -1100,7 +1119,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(resultData.macroAssetTactical![index].amount.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style:resultData.macroAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1114,7 +1133,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetTactical![index].actual.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1128,7 +1147,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetTactical![index].policy.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1142,7 +1161,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.macroAssetTactical![index].variation.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.macroAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1249,7 +1268,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
                                 child: Text(resultData.microAssetTactical![index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                    style: resultData.microAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -1262,7 +1281,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(resultData.microAssetTactical![index].amount.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1276,7 +1295,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.microAssetTactical![index].actual.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1290,7 +1309,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
                                   child: Text(resultData.microAssetTactical![index].policy.toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      style: resultData.microAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1450,12 +1469,12 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ]),
             ),
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
-            listSinceInception.isNotEmpty
+            listSinceInceptionNew.isNotEmpty
                 ? ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: listSinceInception.length,
+                itemCount: listSinceInceptionNew.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
                     children: [
@@ -1467,8 +1486,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
-                                child: Text(listSinceInception[index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                child: Text(listSinceInceptionNew[index].asset.toString(),
+                                    style: listSinceInceptionNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -1480,8 +1499,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                  child:Text(convertCommaSeparatedAmount(listSinceInception[index].gain.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child:Text(convertCommaSeparatedAmount(listSinceInceptionNew[index].gain.toString()),
+                                      style: listSinceInceptionNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1494,8 +1513,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(listSinceInception[index].xirr!.toDouble()).toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child: Text(doubleUpto2Digit(listSinceInceptionNew[index].xirr!.toDouble()).toString(),
+                                      style: listSinceInceptionNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1504,7 +1523,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                         ),
                       ),
                       Visibility(
-                          visible: index != listSinceInception.length - 1,
+                          visible: index != listSinceInceptionNew.length - 1,
                           child: const Divider(height: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0)),
                     ],
                   );
@@ -1567,12 +1586,12 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ]),
             ),
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
-            listCurrentYearXIRR.isNotEmpty
+            listCurrentYearXIRRNew.isNotEmpty
                 ? ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: listCurrentYearXIRR.length,
+                itemCount: listCurrentYearXIRRNew.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
                     children: [
@@ -1584,8 +1603,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
-                                child: Text(listCurrentYearXIRR[index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                child: Text(listCurrentYearXIRRNew[index].asset.toString(),
+                                    style: listCurrentYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -1597,8 +1616,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                  child:Text(convertCommaSeparatedAmount(listCurrentYearXIRR[index].gain.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child:Text(convertCommaSeparatedAmount(listCurrentYearXIRRNew[index].gain.toString()),
+                                      style:listCurrentYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :   const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1611,8 +1630,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(listCurrentYearXIRR[index].xirr!.toDouble()).toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child: Text(doubleUpto2Digit(listCurrentYearXIRRNew[index].xirr!.toDouble()).toString(),
+                                      style: listCurrentYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1621,7 +1640,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                         ),
                       ),
                       Visibility(
-                          visible: index != listCurrentYearXIRR.length - 1,
+                          visible: index != listCurrentYearXIRRNew.length - 1,
                           child: const Divider(height: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0)),
                     ],
                   );
@@ -1684,12 +1703,12 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ]),
             ),
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
-            listPreviousYearXIRR.isNotEmpty
+            listPreviousYearXIRRNew.isNotEmpty
                 ? ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: listPreviousYearXIRR.length,
+                itemCount: listPreviousYearXIRRNew.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
                     children: [
@@ -1701,8 +1720,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
-                                child: Text(listPreviousYearXIRR[index].asset.toString(),
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                child: Text(listPreviousYearXIRRNew[index].asset.toString(),
+                                    style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                     textAlign: TextAlign.center),
                               ),
                             ),
@@ -1714,8 +1733,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                  child:Text(convertCommaSeparatedAmount(listPreviousYearXIRR[index].gain.toString()),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].gain.toString()),
+                                      style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1728,8 +1747,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(listPreviousYearXIRR[index].xirr!.toDouble()).toString(),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child: Text(doubleUpto2Digit(listPreviousYearXIRRNew[index].xirr!.toDouble()).toString(),
+                                      style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1738,7 +1757,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                         ),
                       ),
                       Visibility(
-                          visible: index != listPreviousYearXIRR.length - 1,
+                          visible: index != listPreviousYearXIRRNew.length - 1,
                           child: const Divider(height: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0)),
                     ],
                   );
@@ -1769,13 +1788,14 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
   _getNetworthData() async {
 
-    if (sessionManagerPMS.getNetworthData() != null)
+    if ((sessionManagerPMS.getNetworthData() != null))
       {
+        print("IS FIRST IF");
         if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
           {
             print("IS IN IF");
             resultData = sessionManagerPMS.getNetworthData();
-            strNetWorth = sessionManagerPMS.getTotalNetworth();
+            print(jsonEncode(resultData.macroAssetStratagic?[0]));
           }
         else
           {
@@ -1793,7 +1813,18 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
         strNetWorth = "";
       }
 
-    if (resultData.applicantDetails == null)
+    strNetWorth = sessionManagerPMS.getTotalNetworth();
+
+    if ((sessionManagerPMS.getPercentageData() != null) || (sessionManagerPMS.getPercentageData().masterMarketPercentage?.isNotEmpty ?? false))
+      {
+        percentageResponse = sessionManagerPMS.getPercentageData();
+      }
+    else
+      {
+        _getPercentageData();
+      }
+
+    if ((resultData.applicantDetails == null) || (resultData.applicantDetails?.isEmpty ?? false))
       {
         setState(() {
           _isLoading = true;
@@ -1811,26 +1842,29 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
         final statusCode = response.statusCode;
         final body = response.body;
         Map<String, dynamic> user = jsonDecode(body);
-        var dataResponse = NetworthResponse.fromJson(user);
+        var dataResponse = NetworthResponseModel.fromJson(user);
 
         if (statusCode == 200 && dataResponse.success == 1) {
           try {
             if (dataResponse.result != null)
             {
-              resultData = dataResponse.result ?? Result();
+              setState(() {
+                resultData = dataResponse.result ?? Result();
 
-              sessionManagerPMS.saveNetworthData(resultData);
+                sessionManagerPMS.saveNetworthData(resultData);
 
-              if (resultData.applicantDetails != null) {
-                if(resultData.applicantDetails!.isNotEmpty) {
-                  for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
-                    if (resultData.applicantDetails![i].applicant == "Total") {
-                      strNetWorth = checkValidString(resultData.applicantDetails![i].currentAmount.toString());
-                      sessionManagerPMS.setTotalNetworth(strNetWorth);
+                if (resultData.applicantDetails != null) {
+                  if(resultData.applicantDetails!.isNotEmpty) {
+                    for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
+                      if (resultData.applicantDetails![i].applicant == "Amount Total") {
+                        strNetWorth = checkValidString(resultData.applicantDetails![i].amount.toString());
+                        sessionManagerPMS.setTotalNetworth(strNetWorth);
+                        print("strNetWorth In For Loop === $strNetWorth");
+                      }
                     }
                   }
                 }
-              }
+              });
             }
           } catch (e) {
 
@@ -1884,7 +1918,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
   }
 
-  _getSinceInceptionData() async {
+  /*_getSinceInceptionData() async {
 
     if (sessionManagerPMS.getPerformanceList().isNotEmpty)
     {
@@ -2051,6 +2085,61 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
             _isPreviousYearXIRRLoading = false;
           });
         }
+      }
+  }*/
+
+  void getCommonXirr() async {
+
+    if (sessionManagerPMS.getPerformanceList().isNotEmpty)
+      {
+        listSinceInceptionNew = sessionManagerPMS.getPerformanceList();
+      }
+
+    print("listSinceInceptionNew ==== ${listSinceInceptionNew.length}");
+
+    if (sessionManagerPMS.getNextYearList().isNotEmpty)
+      {
+        listCurrentYearXIRRNew = sessionManagerPMS.getNextYearList();
+      }
+
+    print("listCurrentYearXIRR ==== ${listCurrentYearXIRRNew.length}");
+
+    if (sessionManagerPMS.getPerviousYearList().isNotEmpty)
+      {
+        listPreviousYearXIRRNew = sessionManagerPMS.getPerviousYearList();
+      }
+
+    print("listPreviousYearXIRR ==== ${listPreviousYearXIRRNew.length}");
+
+    if ((listSinceInceptionNew.isEmpty) || (listCurrentYearXIRRNew.isEmpty) || (listPreviousYearXIRRNew.isEmpty))
+      {
+        setState(() {
+          _isSinceInceptionLoading = true;
+        });
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_CP + xirrCommon);
+        Map<String, String> jsonBody = {
+          'user_id': sessionManagerPMS.getUserId().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = XirrCommonResponseModel.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1)
+        {
+          listSinceInceptionNew = dataResponse.performance ?? [];
+          listCurrentYearXIRRNew = dataResponse.xirr ?? [];
+          listPreviousYearXIRRNew = dataResponse.xirrPrevious ?? [];
+        }
+        setState(() {
+          _isSinceInceptionLoading = false;
+        });
       }
   }
 

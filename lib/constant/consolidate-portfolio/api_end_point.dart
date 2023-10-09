@@ -10,7 +10,8 @@ String latestTransaction = "last_30_days_transaction_consolidated_networth";
 String latestSIP = "sip_stp";
 
 //scheme allocation, dashboard
-String networth = "networth";
+String networth = "networth_consolidated";
+//String networth = "networth";
 
 //bs movement
 String bsMovement = "bs_movement";
@@ -19,7 +20,7 @@ String bsMovement = "bs_movement";
 String capitalGain = "capital_gain_summury";
 
 //portfolio
-String portfolio = "portfolio";
+String portfolio = "portfolio_consolidated";
 
 //dashboard : since inception
   String performance = "performance";
@@ -32,4 +33,6 @@ String xirrPrevious = "xirrPrevious";
 
 //dashboard percentage
 String percentage = "settings/get_percentage";
+
+String xirrCommon = "commonXIRR";
 

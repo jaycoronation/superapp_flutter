@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/XIRRCommonResponseModel.dart';
 
 import '../constant/consolidate-portfolio/api_end_point.dart';
-import '../model/consolidated-portfolio/NetworthResponse.dart';
+import '../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../model/consolidated-portfolio/PercentageResponse.dart';
 import '../model/consolidated-portfolio/SinceInceptionResponse.dart';
 import '../utils/app_utils.dart';
@@ -14,9 +15,48 @@ class JobService {
   List<Data> listSinceInception = List<Data>.empty(growable: true);
   List<Data> listCurrentYearXIRR = List<Data>.empty(growable: true);
   List<Data> listPreviousYearXIRR = List<Data>.empty(growable: true);
+
+  List<Xirr> listSinceInceptionNew = [];
+  List<Xirr> listCurrentYearXIRRNew = [];
+  List<Xirr> listPreviousYearXIRRNew = [];
+
   SessionManagerPMS sessionManagerPMS = SessionManagerPMS();
 
-  void getSinceInceptionData() async {
+  void getCommonXirr() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP + xirrCommon);
+    Map<String, String> jsonBody = {
+      'user_id': sessionManagerPMS.getUserId().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = XirrCommonResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1)
+      {
+        listSinceInceptionNew = dataResponse.performance ?? [];
+
+        sessionManagerPMS.savePerformanceList(listSinceInceptionNew);
+
+        listCurrentYearXIRRNew = dataResponse.xirr ?? [];
+
+        sessionManagerPMS.saveNextYearList(listCurrentYearXIRRNew);
+
+        listPreviousYearXIRRNew = dataResponse.xirrPrevious ?? [];
+
+        sessionManagerPMS.savePerviousYearList(listPreviousYearXIRRNew);
+      }
+    getNetworthData();
+  }
+
+  /*void getSinceInceptionData() async {
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
@@ -97,8 +137,8 @@ class JobService {
       try {
         if (dataResponse.result != null)
         {
-          listPreviousYearXIRR = dataResponse.result!.data!;
-          sessionManagerPMS.savePerviousYearList(listPreviousYearXIRR);
+          listPreviousYearXIRRNew = dataResponse.result!.data!;
+          sessionManagerPMS.savePerviousYearList(listPreviousYearXIRRNew);
         }
       }
       catch (e)
@@ -109,8 +149,7 @@ class JobService {
 
     }
     getNetworthData();
-  }
-
+  }*/
 
   getNetworthData() async {
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
@@ -126,7 +165,7 @@ class JobService {
     final statusCode = response.statusCode;
     final body = response.body;
     Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = NetworthResponse.fromJson(user);
+    var dataResponse = NetworthResponseModel.fromJson(user);
 
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
@@ -134,13 +173,16 @@ class JobService {
         {
           var resultData = dataResponse.result ?? Result();
 
+          print("Data === ");
+          print(jsonEncode(resultData.macroAssetStratagic?[0]));
+
           sessionManagerPMS.saveNetworthData(resultData);
 
           if (resultData.applicantDetails != null) {
             if(resultData.applicantDetails!.isNotEmpty) {
               for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
-                if (resultData.applicantDetails![i].applicant == "Total") {
-                  var strNetWorth = checkValidString(resultData.applicantDetails![i].currentAmount.toString());
+                if (resultData.applicantDetails![i].applicant == "Amount Total") {
+                  var strNetWorth = checkValidString(resultData.applicantDetails![i].amount.toString());
                   sessionManagerPMS.setTotalNetworth(strNetWorth);
                 }
               }

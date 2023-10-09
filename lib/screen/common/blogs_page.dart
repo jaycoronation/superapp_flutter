@@ -48,7 +48,6 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
     _scrollViewController = ScrollController();
     _scrollViewController.addListener(() {
-
       if (_scrollViewController.position.userScrollDirection == ScrollDirection.reverse) {
         if (!isScrollingDown) {
           isScrollingDown = true;
@@ -91,61 +90,61 @@ class _BlogsPageState extends BaseState<BlogsPage> {
   Widget build(BuildContext context) {
     return ResponsiveWidget.isSmallScreen(context)
         ?  Scaffold(
-        backgroundColor: white,
-        appBar: AppBar(
-          toolbarHeight: 55,
-          automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+            backgroundColor: white,
+            appBar: AppBar(
+              toolbarHeight: 55,
+              automaticallyImplyLeading: false,
+              title: Padding(
+                padding: const EdgeInsets.only(top: 0),
+                child: Column(
                   children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                    const Expanded(child: Text("Feeds",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                    )),
-                    const Spacer(),
-                    InkWell(
-                      onTap: () {
-                        _showFilterDialog();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(toDisplayCase(selectedCategory),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              alignment: Alignment.topLeft,
+                              margin: const EdgeInsets.only(right: 8),
+                              child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+                            )),
+                        const Expanded(child: Text("Feeds",
                           textAlign: TextAlign.start,
-                          style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    )
+                          style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                        )),
+                        const Spacer(),
+                        InkWell(
+                          onTap: () {
+                            _showFilterDialog();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(toDisplayCase(selectedCategory),
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
-              ],
+              ),
+              centerTitle: false,
+              elevation: 0,
+              backgroundColor: white,
             ),
-          ),
-          centerTitle: false,
-          elevation: 0,
-          backgroundColor: white,
-        ),
-        body: isInternetConnected
-            ? _isLoading
-            ? const LoadingWidget()
-            : listData.isEmpty
-            ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
-            : _setData()
-            : const NoInternetWidget()
-    )
+            body: isInternetConnected
+                ? _isLoading
+                ? const LoadingWidget()
+                : listData.isEmpty
+                ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
+                : _setData()
+                : const NoInternetWidget()
+        )
         : Scaffold(
         backgroundColor: white,
         appBar: AppBar(
@@ -201,7 +200,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
             ? const LoadingWidget()
             : listData.isEmpty
             ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
-            : _setDataForWeb()
+            : _setData()
             : const NoInternetWidget()
     ) ;
 
@@ -221,7 +220,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                   height: 34,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       shrinkWrap: true,
                       primary: false,
                       padding: EdgeInsets.zero,
@@ -254,7 +253,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               child: Center(
-                                  child: Text(listCategory[index].category.toString(),
+                                  child: Text(toDisplayCase(listCategory[index].category.toString()),
                                     style: TextStyle(color: listCategory[index].isSelected ?? false ? white : black, fontSize: 16),
                                   )
                               )
@@ -398,6 +397,57 @@ class _BlogsPageState extends BaseState<BlogsPage> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              Container(height: 12,),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  height: 34,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      primary: false,
+                      padding: EdgeInsets.zero,
+                      itemCount: listCategory.length,
+                      itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: const Duration(milliseconds: 375),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            for(var i = 0; i<listCategory.length ; i++)
+                            {
+                              listCategory[i].isSelected = false;
+                            }
+                            listCategory[index].isSelected = true;
+                            setState(() {
+                              selectedCategory = listCategory[index].category.toString();
+                            });
+                            getList(true);
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only( right: 8),
+                              padding: const EdgeInsets.only(left: 14, right: 14),
+                              decoration: BoxDecoration(
+                                color: listCategory[index].isSelected ?? false ? blue : white,
+                                border: Border.all(
+                                  width: 1,
+                                  color: listCategory[index].isSelected ?? false ? blue : white,
+                                ),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: Center(
+                                  child: Text(toDisplayCase(listCategory[index].category.toString()),
+                                    style: TextStyle(color: listCategory[index].isSelected ?? false ? white : black, fontSize: 16),
+                                  )
+                              )
+                          ),
+                        ),
+                      )
+                  ),
+                ),
+              ),
+              Container(height: 12,),
               Expanded(
                   child:SingleChildScrollView(
                     controller: _scrollViewController,
@@ -466,7 +516,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
                                           ),
                                           const Gap(10),
-                                          Text(checkValidString(listData[index].publishedBy!.toString()),
+                                          Text(checkValidString(listData[index].publishedBy?.toString()),
                                             textAlign: TextAlign.start,
                                             maxLines: 2,
                                             style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
@@ -483,7 +533,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(listData[index].publishedDate.toString(),
+                                              Text(getDateFromTimeStampNew(int.parse(listData[index].publishedDate.toString())),
                                                 textAlign: TextAlign.start,
                                                 style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
                                               ),
@@ -631,12 +681,12 @@ class _BlogsPageState extends BaseState<BlogsPage> {
       'apiId': "YzMxYjMyMzY0Y2UxOWNhOGZjZDE1MGE0MTdlY2NlNTg=",
       'category': selectedCategory,
       'from_app': "true",
-      'limit': "9",
+      'limit': "10",
       'page': _pageIndex.toString(),
       'status': "active"
     };
 
-    final response = await http.post(url,body: jsonBody);//post(url, body: jsonBody);
+    final response = await http.post(url,body: jsonBody);
     final statusCode = response.statusCode;
     final body = response.body;
     Map<String, dynamic> codes = jsonDecode(body);
@@ -681,6 +731,9 @@ class _BlogsPageState extends BaseState<BlogsPage> {
   }
 
   void getCategoryList() async {
+    setState(() {
+      _isLoading = true;
+    });
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
     ]);

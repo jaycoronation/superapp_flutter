@@ -109,24 +109,22 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
           automaticallyImplyLeading: false,
           backgroundColor: appBg,
           elevation: 0,
-          centerTitle: false,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
-                ),
-              ),
-              const Expanded(
-                  child: Text("Estate Analysis",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                  )),
-            ],
-          )),
+          centerTitle: true,
+          leading: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
+            ),
+          ),
+          title: const Text("Estate Analysis",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+          )
+      ),
       body: SafeArea(
         top: false,
         child: _isLoading

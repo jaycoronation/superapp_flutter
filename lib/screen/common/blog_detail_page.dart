@@ -96,7 +96,7 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
                             padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
                             child: HtmlWidget(
                               dataGetSet.discription.toString(),
-                              textStyle: const TextStyle(height: 1.5, color: black,fontSize: 18, fontWeight: FontWeight.w500),
+                              textStyle: const TextStyle(height: 1.5, color: black,fontSize: 10, fontWeight: FontWeight.w500),
                             ),
                           )
                         ],

@@ -179,7 +179,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                                   style: const TextStyle(
                                       color: blue,
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w200))),
+                                      fontWeight: FontWeight.w700))),
                           Expanded(
                               flex: 1,
                               child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCLTotal.toString()),
@@ -187,7 +187,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                                   style: const TextStyle(
                                       color: blue,
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w200))),
+                                      fontWeight: FontWeight.w700))),
                           Expanded(
                               flex: 1,
                               child: Text(
@@ -196,7 +196,9 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                                   style: const TextStyle(
                                       color: blue,
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w700))),
+                                      fontWeight: FontWeight.w700)
+                              )
+                          ),
                         ],
                       ),
                     )
@@ -242,26 +244,26 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                         Expanded(
                             flex: 1,
                             child: Text(convertCommaSeparatedAmount(subListData[index].sTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(subListData[index].sTCLTotal.toString()),textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: subListData[index].categoryKey.toString().toLowerCase() == "total" ? FontWeight.w700 : FontWeight.w200))),
                         Expanded(
                             flex: 1,
                             child: Text(convertCommaSeparatedAmount(subListData[index].lTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(subListData[index].lTCLTotal.toString()),textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: subListData[index].categoryKey.toString().toLowerCase() == "total" ? FontWeight.w700 : FontWeight.w200))),
                         Expanded(
                             flex: 1,
                             child: Text(
                                 convertCommaSeparatedAmount(subListData[index].capitalGain.toString()),
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w700))),
+                                    fontWeight: subListData[index].categoryKey.toString().toLowerCase() == "total" ? FontWeight.w700 : FontWeight.w700))),
                       ],
                     ),
                   ],
@@ -289,7 +291,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
     final url = Uri.parse(API_URL_CP + capitalGain);
     Map<String, String> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
-      'cr_yr': "2022-2023",
+      'cr_yr': getFinancialYear(),
     };
 
     final response = await http.post(url, body: jsonBody);

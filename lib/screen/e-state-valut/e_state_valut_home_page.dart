@@ -72,38 +72,38 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
           automaticallyImplyLeading: false,
           backgroundColor: appBg,
           elevation: 0,
-          centerTitle: false,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
-                ),
-              ),
-              const Expanded(
-                  child: Text(
-                "Estate Vault",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-              )),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  ShareReportPage()));
-                },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 5),
-                  padding: const EdgeInsets.all(3),
-                  width: 32,
-                  height: 32,
-                  child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
-                ),
-              ),
-            ],
-          )),
+          centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(left: 8),
+              child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
+            ),
+          ),
+          title: const Text(
+            "Estate Vault",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+          ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>  ShareReportPage()));
+            },
+            child: Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(right: 5),
+              padding: const EdgeInsets.all(3),
+              width: 32,
+              height: 32,
+              child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         top: false,
         child: _isLoading

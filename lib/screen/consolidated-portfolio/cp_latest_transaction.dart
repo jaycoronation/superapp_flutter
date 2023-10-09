@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestTransactionResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
@@ -60,180 +61,173 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
           ? const LoadingWidget()
           : Container(
               margin: const EdgeInsets.only(top: 8),
-            child: Column(
+        padding: const EdgeInsets.only(left: 6, right: 6),
+            child: listData.isNotEmpty
+                ? Column(
                 children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 6, right: 6),
-                          child: Stack(
-                            children: [
-                              listData.isNotEmpty
-                                  ? Column(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                        decoration: const BoxDecoration(
-                                            color:semiBlue,
-                                            borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                        child: Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 2,
-                                                child: Text('Fund Name',
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Folio No',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Tran Date',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Amount',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        child: _itemList(),
-                                      ),
-                                    ])
-                                  : const MyNoDataWidget(msg: "No data found."),
-                            ],
-                          )))
-                ],
-              ),
+                    Container(
+                      padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                      decoration: const BoxDecoration(
+                          color:semiBlue,
+                          borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                      child: const Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Text('Fund Name',
+                                  style: TextStyle(
+                                      color: blue,
+                                      fontSize: 16,
+                                      fontWeight:
+                                      FontWeight.w600))),
+                          Expanded(
+                              flex: 1,
+                              child: Text('Folio No',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: blue,
+                                      fontSize: 16,
+                                      fontWeight:
+                                      FontWeight.w600))),
+                          Expanded(
+                              flex: 1,
+                              child: Text('Tran Date',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: blue,
+                                      fontSize: 16,
+                                      fontWeight:
+                                      FontWeight.w600))),
+                          Expanded(
+                              flex: 1,
+                              child: Text('Amount',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: blue,
+                                      fontSize: 16,
+                                      fontWeight:
+                                      FontWeight.w600))),
+                        ],
+                      ),
+                    ),
+                    _itemList(),
+                  Gap(22),
+                  ]
+                )
+                : const MyNoDataWidget(msg: "No data found."),
           ),
     );
   }
 
-  ListView _itemList() {
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
-        primary: false,
-        padding: EdgeInsets.zero,
-        itemCount: listData.length,
-        itemBuilder: (ctx, index) => (Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                    decoration: BoxDecoration(
-                        color: index % 2 == 0 ? white : semiBlue,
-                        borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        index == listData.length - 1
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          toDisplayCase(listData[index]
-                                              .schemeName
-                                              .toString()),
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w700))),
-                                  const Expanded(
-                                      flex: 1,
-                                      child: Text("",
-                                          style: TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w200))),
-                                  const Expanded(
-                                      flex: 1,
-                                      child: Text("",
-                                          style: TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w200))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          listData[index].amount.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w700))),
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          toDisplayCase(listData[index]
-                                              .schemeName
-                                              .toString()),
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w700))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          listData[index].folioNo.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w200))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          listData[index].tranDate.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w200))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          listData[index].amount.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w200))),
-                                ],
-                              ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )));
+  Widget _itemList() {
+    return Expanded(
+      child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          physics: const AlwaysScrollableScrollPhysics(),
+          primary: false,
+          padding: EdgeInsets.zero,
+          itemCount: listData.length,
+          itemBuilder: (ctx, index) => (Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                      decoration: BoxDecoration(
+                          color: index % 2 == 0 ? white : semiBlue,
+                          borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          index == listData.length - 1
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                            toDisplayCase(listData[index]
+                                                .schemeName
+                                                .toString()),
+                                            style: const TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700))),
+                                    const Expanded(
+                                        flex: 1,
+                                        child: Text("",
+                                            style: TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w200))),
+                                    const Expanded(
+                                        flex: 1,
+                                        child: Text("",
+                                            style: TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w200))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                            convertCommaSeparatedAmount(listData[index].amount.toString()),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700))),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                            toDisplayCase(listData[index]
+                                                .schemeName
+                                                .toString()),
+                                            style: const TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                            listData[index].folioNo.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w200))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                            listData[index].tranDate.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w200))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                            convertCommaSeparatedAmount(listData[index].amount.toString()),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                color: black,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w200))),
+                                  ],
+                                ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ))),
+    );
   }
 
   @override

@@ -53,10 +53,10 @@ dependencies:
   flutter_local_notifications: ^9.5.3+1
   flutter_staggered_animations: ^1.1.1
   url_launcher:
-  gap: ^2.0.0
+  gap: ^3.0.0
   file_picker:
   image_picker:
-  cached_network_image:
+  cached_network_image: ^3.3.0
   path_provider:
   flutter_absolute_path:
     git:
@@ -71,6 +71,9 @@ dependencies:
   fl_chart: ^0.61.0
   flutter_web_frame: ^0.0.3
   cron: ^0.5.1
+  firebase_crashlytics: ^3.3.6
+  provider: ^6.0.5
+
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0

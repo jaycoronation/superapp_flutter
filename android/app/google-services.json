@@ -37,6 +37,13 @@
             {
               "client_id": "204998889984-bcfdfoke7im11gr710uf4hie7nn2ikra.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "204998889984-4e2mvokokti41okamcqeuk9ljnreuv66.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.coronation.superapp"
+              }
             }
           ]
         }
@@ -74,6 +81,13 @@
             {
               "client_id": "204998889984-bcfdfoke7im11gr710uf4hie7nn2ikra.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "204998889984-4e2mvokokti41okamcqeuk9ljnreuv66.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.coronation.superapp"
+              }
             }
           ]
         }
