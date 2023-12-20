@@ -88,7 +88,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
               onTap: () {
                 if (_currentIndex == 0)
                   {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   }
                 else
                   {
