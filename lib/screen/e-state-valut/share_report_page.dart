@@ -224,10 +224,10 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                     addMoreViews(ShareDataGetSet());
                   }, //set both onPressed and onLongPressed to null to see the disabled properties
                   onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
-                  child: Row(
+                  child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.add, color: blue, size: 16),
                       Text(
                         "Add More",

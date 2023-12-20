@@ -2115,6 +2115,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
       {
         setState(() {
           _isSinceInceptionLoading = true;
+          _isCurrentYearXIRRLoading = true;
+          _isPreviousYearXIRRLoading = true;
         });
         HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
           HttpLogger(logLevel: LogLevel.BODY),
@@ -2134,18 +2136,20 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
         if (statusCode == 200 && dataResponse.success == 1)
         {
           listSinceInceptionNew = dataResponse.performance ?? [];
+          sessionManagerPMS.savePerformanceList(listSinceInceptionNew);
+
           listCurrentYearXIRRNew = dataResponse.xirr ?? [];
+          sessionManagerPMS.saveNextYearList(listCurrentYearXIRRNew);
+
           listPreviousYearXIRRNew = dataResponse.xirrPrevious ?? [];
+          sessionManagerPMS.savePerviousYearList(listPreviousYearXIRRNew);
         }
         setState(() {
           _isSinceInceptionLoading = false;
+          _isCurrentYearXIRRLoading = false;
+          _isPreviousYearXIRRLoading = false;
         });
       }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0,),
+      padding: EdgeInsets.only(bottom: kIsWeb ? 0 : Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0,),
       child: Scaffold(
         backgroundColor: appBg,
         appBar: AppBar(
