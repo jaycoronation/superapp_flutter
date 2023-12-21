@@ -155,7 +155,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                               decoration: const BoxDecoration(
                                   color:white,
                                   borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Expanded(
                                       flex: 1,
@@ -405,7 +405,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                   
                   Column(
                     children: [
-                      const Row(
+                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [

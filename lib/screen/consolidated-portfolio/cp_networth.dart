@@ -44,7 +44,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                 decoration: const BoxDecoration(
                                     color:white,
                                     borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                child: const Row(
+                                child: Row(
                                   children: [
                                     Expanded(
                                         flex: 2,

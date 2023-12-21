@@ -224,7 +224,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                     addMoreViews(ShareDataGetSet());
                   }, //set both onPressed and onLongPressed to null to see the disabled properties
                   onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
-                  child: const Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

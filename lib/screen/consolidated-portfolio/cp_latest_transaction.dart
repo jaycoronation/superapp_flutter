@@ -70,7 +70,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
                       decoration: const BoxDecoration(
                           color:semiBlue,
                           borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                      child: const Row(
+                      child: Row(
                         children: [
                           Expanded(
                               flex: 2,

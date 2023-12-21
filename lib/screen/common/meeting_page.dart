@@ -69,7 +69,8 @@ class _MeetingPageState extends BaseState<MeetingPage> {
                           alignment: Alignment.centerRight,
                           margin: const EdgeInsets.only(right: 8),
                           child: Image.asset('assets/images/ic_refresh.png',height: 30, width: 30, color: black,),
-                        )),
+                        )
+                    ),
                   ],
                 ),
 

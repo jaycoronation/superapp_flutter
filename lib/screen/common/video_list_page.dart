@@ -40,139 +40,144 @@ class _VideoListPageState extends BaseState<VideoListPage> {
 
   @override
   Widget build(BuildContext context) {
-return Scaffold(
-  backgroundColor: white,
-  appBar: AppBar(
-    toolbarHeight: 55,
-    automaticallyImplyLeading: false,
-    title: Padding(
-      padding: const EdgeInsets.only(top: 0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+
+    return ResponsiveWidget.isSmallScreen(context)
+        ?  Scaffold(
+      backgroundColor: white,
+      appBar: AppBar(
+        toolbarHeight: 55,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 0),
+          child: Column(
             children: [
-              InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                  )),
-              const Expanded(child: Text("Videos",
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-              )),
-            ],
-          ),
-        ],
-      ),
-    ),
-    centerTitle: false,
-    elevation: 0,
-    backgroundColor: white,
-  ),
-  body: isInternetConnected
-      ? _isLoading
-      ? const LoadingWidget()
-      : SafeArea(
-    child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-        child: listData.isEmpty
-            ? const Center(
-            child: MyNoDataWidget(msg: 'No videos found!')
-        )
-            : AnimationLimiter(
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              physics: const AlwaysScrollableScrollPhysics(),
-              shrinkWrap: true,
-              primary: false,
-              padding: EdgeInsets.zero,
-              itemCount: listData.length,
-              itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                position: index,
-                duration: const Duration(milliseconds: 375),
-                child: SlideAnimation(
-                  verticalOffset: 50.0,
-                  child: FadeInAnimation(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPlayerScreen(listData[index].id?.videoId ?? '')));
+                        Navigator.pop(context);
                       },
                       child: Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border:Border.all(color: black, width: 1,)
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 160,
-                                width: MediaQuery.of(context).size.width,
-                                // color: grayLight,
-                                child: listData[index].snippet!.thumbnails!.high!.url.toString().isNotEmpty
-                                    ? FadeInImage.assetNetwork(
-                                  image: listData[index].snippet!.thumbnails!.high!.url.toString(),
-                                  fit: BoxFit.cover,
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 160,
-                                  placeholder: 'assets/images/ic_alpha_logo.png',
-                                ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                    width: 50, height: 50),
-                              ),
-                              const Gap(10),
-                              Text(checkValidString(listData[index].snippet!.title.toString()),
-                                // textAlign: TextAlign.start,
-                                maxLines: 4,
-                                overflow: TextOverflow.clip,
-                                style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
-                              ),
-                              const Gap(15),
-                              const Divider(height: 0.5, color: black, thickness: 1,),
-                              const Gap(25),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(right: 8),
+                        child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+                      )),
+                  const Expanded(child: Text("Videos",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                  )),
+                ],
+              ),
+            ],
+          ),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        backgroundColor: white,
+      ),
+      body: isInternetConnected
+          ? _isLoading
+          ? const LoadingWidget()
+          : SafeArea(
+        child: Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            child: listData.isEmpty ?
+            const Center(
+                child: MyNoDataWidget(msg: 'No videos found!')
+            )
+                :AnimationLimiter(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  primary: false,
+                  padding: EdgeInsets.zero,
+                  itemCount: listData.length,
+                  itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        VideoPlayerScreen(listData[index].id!.videoId.toString())));
+
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border:Border.all(color: black, width: 1,)
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].snippet!.publishedAt.toString()),
-                                    textAlign: TextAlign.start,
-                                    style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
-                                  ),
                                   Container(
-                                    alignment: Alignment.topLeft,
-                                    margin: const EdgeInsets.only(right: 8),
-                                    child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
+                                    height: 160,
+                                    width: MediaQuery.of(context).size.width,
+                                    // color: grayLight,
+                                    child: listData[index].snippet!.thumbnails!.high!.url.toString().isNotEmpty
+                                        ? FadeInImage.assetNetwork(
+                                      image: listData[index].snippet!.thumbnails!.high!.url.toString(),
+                                      fit: BoxFit.cover,
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 160,
+                                      placeholder: 'assets/images/ic_alpha_logo.png',
+                                    ) : Image.asset('assets/images/ic_alpha_logo.png',
+                                        width: 50, height: 50),
                                   ),
+                                  const Gap(10),
+                                  Text(checkValidString(listData[index].snippet!.title.toString()),
+                                    // textAlign: TextAlign.start,
+                                    maxLines: 4,
+                                    overflow: TextOverflow.clip,
+                                    style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
+                                  ),
+                                  const Gap(15),
+                                  const Divider(height: 0.5, color: black, thickness: 1,),
+                                  const Gap(25),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].snippet!.publishedAt.toString()),
+                                        textAlign: TextAlign.start,
+                                        style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.topLeft,
+                                        margin: const EdgeInsets.only(right: 8),
+                                        child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
+                                      ),
+                                    ],
+                                  ),
+                                  const Gap(10)
                                 ],
                               ),
-                              const Gap(10)
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              )
-          ),
-        )
-    ),
-  )
-      : const NoInternetWidget(),
-);
-    /*return ResponsiveWidget.isSmallScreen(context)
-        ?
-        : Scaffold(
+                  )
+              ),
+            )
+        ),)
+          : const NoInternetWidget(),
+    )
+        :  Scaffold(
       backgroundColor: white,
       appBar: AppBar(
         toolbarHeight: 55,
@@ -243,19 +248,19 @@ return Scaffold(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
                             if(kIsWeb)
-                              {
-                                launchUrl(Uri.parse("https://www.youtube.com/watch?v=${listData[index].id!.videoId.toString()}"));
-                              }
-                           else
-                             {
-                               Navigator.push(
-                                   context,
-                                   MaterialPageRoute(
-                                       builder: (context) =>
-                                           VideoPlayerScreen(listData[index].id!.videoId.toString())
-                                   )
-                               );
-                             }
+                            {
+                              launchUrl(Uri.parse("https://www.youtube.com/watch?v=${listData[index].id!.videoId.toString()}"));
+                            }
+                            else
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          VideoPlayerScreen(listData[index].id!.videoId.toString())
+                                  )
+                              );
+                            }
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -267,7 +272,7 @@ return Scaffold(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
+                                  Container(
                                     height: 160,
                                     width: MediaQuery.of(context).size.width,
                                     // color: grayLight,
@@ -320,8 +325,9 @@ return Scaffold(
             )
         ),)
           : const NoInternetWidget(),
-    );*/
+    );
   }
+
 
   @override
   void castStatefulWidget() {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:superapp_flutter/screen/common/video_list_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/colors.dart';
 import '../../utils/base_class.dart';
@@ -25,6 +26,7 @@ class HomePageForWeb extends StatefulWidget {
 
 class _HomePageForWebState extends BaseState<HomePageForWeb> {
   int currentIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -440,15 +442,15 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                 child: Row(
                                   children: [
                                     Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: currentIndex == 0 ? listActionColor : chart_color12,
-                                        ),
-                                        child: currentIndex == 0
-                                            ? Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, color: white, )
-                                            : Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, ),
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                        border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                        color: currentIndex == 0 ? listActionColor : chart_color12,
+                                      ),
+                                      child: currentIndex == 0
+                                          ? Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, color: white, )
+                                          : Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, ),
                                     ),
                                     Container(width: 18,),
                                     Text('Alpha Portfolio',
@@ -560,9 +562,13 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                           ),
                           Container(height: 8,),
                           GestureDetector(
-                            onTap: (){
+                            onTap: () async {
+                              final Uri url = Uri.parse('https://alphacapital.coronation.in/calendly/index.html');
+                              if (!await launchUrl(url)) {
+                              throw Exception('Could not launch ');
+                              }
                               setState(() {
-                                currentIndex = 4;
+                                currentIndex = 1;
                               });
                             },
                             child: Container(
@@ -779,7 +785,6 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
         return Future.value(true);
       },
     );
-
   }
 
 
@@ -809,7 +814,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                   Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
                       child: const Text('Logout from AlphaCapital Super App', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
-                  Container(
+                 Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
                     child: const Text('Are you sure you want to logout from app?',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black)),
@@ -825,7 +830,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          side: BorderSide(width: 1, color: blue),
+                                          side: const BorderSide(width: 1, color: blue),
                                           borderRadius: BorderRadius.circular(kBorderRadius),
                                         ),
                                       ),
