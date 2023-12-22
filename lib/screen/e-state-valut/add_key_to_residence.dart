@@ -7,6 +7,7 @@ import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
+import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
 import '../../model/e-state-vault/keysToResidencesResponse.dart';
@@ -326,6 +327,7 @@ class _AddKeyToResidenceState extends BaseState<AddKeyToResidence> {
     if (statusCode == 200 && dataResponse.success == 1)
     {
       showSnackBar(dataResponse.message, context);
+      lastInsertedModule();
       Navigator.pop(context, "success");
       setState(() {
         _isLoading = false;
@@ -338,6 +340,34 @@ class _AddKeyToResidenceState extends BaseState<AddKeyToResidence> {
       });
     }
   }
+
+  void lastInsertedModule() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_ADD + add);
+
+    Map<String, String> jsonBody = {
+      'module':(widget as AddKeyToResidence).isForEdit ? "edit-future_expense" : "add-future_expense",
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
+    }
+  }
+
 
   @override
   void castStatefulWidget() {

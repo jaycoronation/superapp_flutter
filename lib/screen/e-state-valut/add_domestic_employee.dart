@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
+import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
 import '../../model/CommanResponse.dart';
@@ -284,6 +285,7 @@ class _AddDomesticEmployeeState extends BaseState<AddDomesticEmployee> {
     if (statusCode == 200 && dataResponse.success == 1)
     {
       showSnackBar(dataResponse.message, context);
+      lastInsertedModule();
       Navigator.pop(context);
       setState(() {
         _isLoading = false;
@@ -296,6 +298,35 @@ class _AddDomesticEmployeeState extends BaseState<AddDomesticEmployee> {
       });
     }
   }
+
+  void lastInsertedModule() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_ADD + add);
+
+    Map<String, String> jsonBody = {
+      // 'module':(widget as AddDomesticEmployee).isFromList ? "edit-future_expense" : "add-future_expense",
+      'module':"add-future_domestic_employees",
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
+    }
+  }
+
 
   void showSelection() {
     showModalBottomSheet<void>(

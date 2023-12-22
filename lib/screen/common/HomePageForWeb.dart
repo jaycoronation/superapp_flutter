@@ -824,23 +824,24 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                     child: Row(
                       children: [
                         Expanded(
-                            child: SizedBox(
-                                height: kButtonHeight,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          side: const BorderSide(width: 1, color: blue),
-                                          borderRadius: BorderRadius.circular(kBorderRadius),
-                                        ),
-                                      ),
-                                      backgroundColor: MaterialStateProperty.all<Color>(white)),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("No", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: blue)),
-                                )
+                          child: SizedBox(
+                            height: kButtonHeight,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    side: const BorderSide(width: 1, color: blue),
+                                    borderRadius: BorderRadius.circular(kBorderRadius),
+                                  ),
+                                ),
+                                backgroundColor: MaterialStateProperty.all<Color>(white)
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("No", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: blue)),
                             )
+                          )
                         ),
                         const Gap(60),
                         Expanded(

@@ -10,6 +10,7 @@ import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
 import '../../../widget/loading.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import '../../model/CommanResponse.dart';
 import '../../model/InvestWellResponse.dart';
 import '../../model/LoginResponseModel.dart';
 import '../../service/JobService.dart';
@@ -483,6 +484,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         JobService().getNetworthData();
 
         openHomePage();
+        lastInsertedModule();
       } catch (e) {
         print(e);
       }
@@ -495,6 +497,33 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         _isLoading = false;
       });
       showSnackBar(dataResponse.message, context);
+    }
+  }
+
+  void lastInsertedModule() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_ADD + add);
+
+    Map<String, String> jsonBody = {
+      'module':"login",
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
     }
   }
 
