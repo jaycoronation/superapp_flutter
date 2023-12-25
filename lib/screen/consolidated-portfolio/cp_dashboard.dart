@@ -14,6 +14,7 @@ import '../../model/consolidated-portfolio/SinceInceptionResponse.dart';
 import '../../model/consolidated-portfolio/XIRRCommonResponseModel.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
+import '../../utils/responsive.dart';
 import '../../widget/loading.dart';
 import 'cp_dashboard_loading.dart';
 import 'indicator.dart';
@@ -80,248 +81,491 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
       backgroundColor: white,
       body: _isLoading
           ? const LoadingWidget()
-          : SingleChildScrollView(
+          : ResponsiveWidget.isSmallScreen(context)
+          ? SingleChildScrollView(
               child: Padding(padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Visibility(
+                      visible: strNetWorth.isNotEmpty,
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
+                        decoration: BoxDecoration(
+                            color: blue,
+                            borderRadius: BorderRadius.circular(12),
+                            border:Border.all(color: blue, width: 1,)),
+                        child: Column(
+                          children: [
+                            const Gap(20),
+                            const Text('Networth',
+                                style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
+                            const Gap(20),
+                            Text((convertCommaSeparatedAmount(strNetWorth)),
+                                style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
+                            const Gap(10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                Gap(12)
+                              ],
+                            ),
+                            const Gap(10),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,right: 16),
+                      child: Row(
                         children: [
-                          Visibility(
-                            visible: strNetWorth.isNotEmpty,
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
-                              decoration: BoxDecoration(
-                                  color: blue,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border:Border.all(color: blue, width: 1,)),
-                              child: Column(
-                                children: [
-                                  const Gap(20),
-                                  const Text('Networth',
-                                      style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
-                                  const Gap(20),
-                                  Text((convertCommaSeparatedAmount(strNetWorth)),
-                                      style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
-                                  const Gap(10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                                      Gap(12)
-                                    ],
-                                  ),
-                                  const Gap(10),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 16,right: 16),
-                            child: Row(
-                              children: [
-                                const Text('Asset Allocation',
-                                style: TextStyle(
-                                    color: blue,
-                                    fontSize: 16,
-                                    fontWeight:
-                                    FontWeight.w600)),
-                                const Spacer(),
-                                InkWell(
-                                  onTap: (){
-                                    setState(() {
-                                      _isShowTopTable = !_isShowTopTable;
-                                    });
-                                  },
-                                  child: Text(_isShowTopTable ? 'Graph' : 'Table',
-                                      style: const TextStyle(
-                                          color: blue,
-                                          fontSize: 16,
-                                          fontWeight:
-                                          FontWeight.w600)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Gap(16),
-                          _isShowTopTable
-                              ? setUpAssetAllocationTopTableData()
-                              : SizedBox(
-                            height: 250,
-                            child: PieChart(
-                              PieChartData(
-                                pieTouchData: PieTouchData(
-                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                                    setState(() {
-                                      if (!event.isInterestedForInteractions ||
-                                          pieTouchResponse == null ||
-                                          pieTouchResponse.touchedSection == null) {
-                                        touchedIndexAsset = -1;
-                                        return;
-                                      }
-                                      touchedIndexAsset = pieTouchResponse
-                                          .touchedSection!.touchedSectionIndex;
-                                    });
-                                  },
-                                ),
-                                borderData: FlBorderData(
-                                  show: false,
-                                ),
-                                sectionsSpace: 0,
-                                centerSpaceRadius: 60,
-                                sections: generateAssetAllocationChart(),
-                              ),
-                            ),
-                          ),
-                          const Gap(16),
-                          _isShowTopTable ? Container () : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: List.generate(resultData.macroAssetStratagic!.length - 1, (i) {
-                              return resultData.macroAssetStratagic![i].actual != 0 ? Container(
-                                margin: const EdgeInsets.all(6),
-                                child: Indicator(
-                                 color: colorsAssetAllocation[i],
-                                 text: resultData.macroAssetStratagic![i].asset.toString(),
-                                 isSquare: false,
-                                 size: touchedIndexAsset == i ? 18 : 16,
-                                 textColor: touchedIndexAsset == i
-                                     ? Colors.black
-                                     : Colors.black38,
-                             ),
-                              ) : Container();
-                            }),
-                          ),
-                          const Gap(16),
-                          Container(
-                            margin: const EdgeInsets.only(left: 16,right: 16),
-                            child: Row(
-                              children: [
-                                const Text('Applicants Allocation',
-                                    style: TextStyle(
-                                        color: blue,
-                                        fontSize: 16,
-                                        fontWeight:
-                                        FontWeight.w600)),
-                                const Spacer(),
-                                InkWell(
-                                  onTap: (){
-                                    setState(() {
-                                      _isShowTable = !_isShowTable;
-                                    });
-                                  },
-                                  child: Text(_isShowTable ? 'Graph' : 'Table',
-                                      style: const TextStyle(
-                                          color: blue,
-                                          fontSize: 16,
-                                          fontWeight:
-                                          FontWeight.w600)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Gap(16),
-                          _isShowTable ? setUpApplicantsData() : SizedBox(
-                            height: 250,
-                            child: PieChart(
-                              PieChartData(
-                                pieTouchData: PieTouchData(
-                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                                    setState(() {
-                                      if (!event.isInterestedForInteractions ||
-                                          pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
-                                        touchedIndexApplicant = -1;
-                                        return;
-                                      }
-                                      touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                                    });
-                                  },
-                                ),
-                                borderData: FlBorderData(
-                                  show: false,
-                                ),
-                                sectionsSpace: 0,
-                                centerSpaceRadius: 60,
-                                sections: generateApplicantsChart(),
-                              ),
-                            ),
-                          ),
-                          const Gap(16),
-                          _isShowTable ? Container() :Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: List.generate(resultData.applicantDetails!.length - 1, (i) {
-                              return resultData.applicantDetails![i].allocation != 0 ? Container(
-                                margin: const EdgeInsets.all(6),
-                                child: Indicator(
-                                  color: colorsApplicantAllocation[i],
-                                  text: resultData.applicantDetails![i].applicant.toString(),
-                                  isSquare: false,
-                                  size: touchedIndexApplicant == i ? 18 : 16,
-                                  textColor: touchedIndexApplicant == i
-                                      ? Colors.black
-                                      : Colors.black38,
-                                ),
-                              ) : Container();
-                            }),
-                          ),
-                          const Gap(16),
-                          Container(
-                            margin: const EdgeInsets.only(left: 16),
-                            child: const Text('Asset Allocation - Strategic',
-                                style: TextStyle(
-                                    color: blue,
-                                    fontSize: 16,
-                                    fontWeight:
-                                    FontWeight.w600)),
-                          ),
-                          const Gap(16),
-                          setUpAssetAllocationStrategicTab(),
-                          _isVisibleStrategic
-                              ? setUpAssetAllocationStrategicMacroData()
-                              : setUpAssetAllocationStrategicMicroData(),
-                          const Gap(16),
-                          Container(
-                            margin: const EdgeInsets.only(left: 16),
-                            child: const Text('Asset Allocation - Tactical',
-                                style: TextStyle(
-                                    color: blue,
-                                    fontSize: 16,
-                                    fontWeight:
-                                    FontWeight.w600)),
-                          ),
-                          const Gap(16),
-                          setUpAssetAllocationTacticalTab(),
-                          _isVisibleTactical
-                              ? setUpAssetAllocationTacticalMacroData()
-                              : setUpAssetAllocationTacticalMicroData(),
-                          const Gap(16),
-                          Container(
-                            width: double.infinity,
-                            margin: const EdgeInsets.only(left: 16),
-                            child: Text('*Equity market is overvalued by ${percentageResponse.masterMarketPercentage}%',textAlign: TextAlign.center,
+                          const Text('Asset Allocation',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                          const Spacer(),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                _isShowTopTable = !_isShowTopTable;
+                              });
+                            },
+                            child: Text(_isShowTopTable ? 'Graph' : 'Table',
                                 style: const TextStyle(
                                     color: blue,
                                     fontSize: 16,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold)),
+                                    fontWeight:
+                                    FontWeight.w600)),
                           ),
-                          const Gap(16),
-                          Container(
-                            margin: const EdgeInsets.only(left: 16),
-                            child: const Text('Performance',
-                                style: TextStyle(
+                        ],
+                      ),
+                    ),
+                    const Gap(16),
+                    _isShowTopTable
+                        ? setUpAssetAllocationTopTableData()
+                        : SizedBox(
+                      height: 250,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  touchedIndexAsset = -1;
+                                  return;
+                                }
+                                touchedIndexAsset = pieTouchResponse
+                                    .touchedSection!.touchedSectionIndex;
+                              });
+                            },
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 60,
+                          sections: generateAssetAllocationChart(),
+                        ),
+                      ),
+                    ),
+                    const Gap(16),
+                    _isShowTopTable ? Container () : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List.generate(resultData.macroAssetStratagic!.length - 1, (i) {
+                        return resultData.macroAssetStratagic![i].actual != 0 ? Container(
+                          margin: const EdgeInsets.all(6),
+                          child: Indicator(
+                           color: colorsAssetAllocation[i],
+                           text: resultData.macroAssetStratagic![i].asset.toString(),
+                           isSquare: false,
+                           size: touchedIndexAsset == i ? 18 : 16,
+                           textColor: touchedIndexAsset == i
+                               ? Colors.black
+                               : Colors.black38,
+                       ),
+                        ) : Container();
+                      }),
+                    ),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,right: 16),
+                      child: Row(
+                        children: [
+                          const Text('Applicants Allocation',
+                              style: TextStyle(
+                                  color: blue,
+                                  fontSize: 16,
+                                  fontWeight:
+                                  FontWeight.w600)),
+                          const Spacer(),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                _isShowTable = !_isShowTable;
+                              });
+                            },
+                            child: Text(_isShowTable ? 'Graph' : 'Table',
+                                style: const TextStyle(
                                     color: blue,
                                     fontSize: 16,
                                     fontWeight:
                                     FontWeight.w600)),
                           ),
-                          const Gap(16),
-                          setUpPerformanceTab(),
-                          _isSinceInceptionLoading ? const CPDashboardLoadingWidget() : _isVisibleSinceInception ? setUpSinceInceptionData() : _isCurrentYearXIRRLoading ? const CPDashboardLoadingWidget() : _isVisible2023_24 ? setUpCurrentYearXIRRData() : _isPreviousYearXIRRLoading ? const CPDashboardLoadingWidget() : setUpPreviousYearXIRRData(),
-                          const Gap(16)
                         ],
-                      ),))
+                      ),
+                    ),
+                    const Gap(16),
+                    _isShowTable ? setUpApplicantsData() : SizedBox(
+                      height: 250,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                                  touchedIndexApplicant = -1;
+                                  return;
+                                }
+                                touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                              });
+                            },
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 60,
+                          sections: generateApplicantsChart(),
+                        ),
+                      ),
+                    ),
+                    const Gap(16),
+                    _isShowTable ? Container() :Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List.generate(resultData.applicantDetails!.length - 1, (i) {
+                        return resultData.applicantDetails![i].allocation != 0 ? Container(
+                          margin: const EdgeInsets.all(6),
+                          child: Indicator(
+                            color: colorsApplicantAllocation[i],
+                            text: resultData.applicantDetails![i].applicant.toString(),
+                            isSquare: false,
+                            size: touchedIndexApplicant == i ? 18 : 16,
+                            textColor: touchedIndexApplicant == i
+                                ? Colors.black
+                                : Colors.black38,
+                          ),
+                        ) : Container();
+                      }),
+                    ),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: const Text('Asset Allocation - Strategic',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                    ),
+                    const Gap(16),
+                    setUpAssetAllocationStrategicTab(),
+                    _isVisibleStrategic
+                        ? setUpAssetAllocationStrategicMacroData()
+                        : setUpAssetAllocationStrategicMicroData(),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: const Text('Asset Allocation - Tactical',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                    ),
+                    const Gap(16),
+                    setUpAssetAllocationTacticalTab(),
+                    _isVisibleTactical
+                        ? setUpAssetAllocationTacticalMacroData()
+                        : setUpAssetAllocationTacticalMicroData(),
+                    const Gap(16),
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(left: 16),
+                      child: Text('*Equity market is overvalued by ${percentageResponse.masterMarketPercentage}%',textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: const Text('Performance',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                    ),
+                    const Gap(16),
+                    setUpPerformanceTab(),
+                    _isSinceInceptionLoading ? const CPDashboardLoadingWidget() : _isVisibleSinceInception ? setUpSinceInceptionData() : _isCurrentYearXIRRLoading ? const CPDashboardLoadingWidget() : _isVisible2023_24 ? setUpCurrentYearXIRRData() : _isPreviousYearXIRRLoading ? const CPDashboardLoadingWidget() : setUpPreviousYearXIRRData(),
+                    const Gap(16)
+                  ],
+                ),))
+          : SingleChildScrollView(
+          child: Padding(padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Visibility(
+                  visible: strNetWorth.isNotEmpty,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
+                    decoration: BoxDecoration(
+                        color: blue,
+                        borderRadius: BorderRadius.circular(12),
+                        border:Border.all(color: blue, width: 1,)),
+                    child: Column(
+                      children: [
+                        const Gap(20),
+                        const Text('Networth',
+                            style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
+                        const Gap(20),
+                        Text((convertCommaSeparatedAmount(strNetWorth)),
+                            style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
+                        const Gap(10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                            Gap(12)
+                          ],
+                        ),
+                        const Gap(10),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 16,right: 16),
+                  child: Row(
+                    children: [
+                      const Text('Asset Allocation',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                      const Spacer(),
+                      InkWell(
+                        onTap: (){
+                          setState(() {
+                            _isShowTopTable = !_isShowTopTable;
+                          });
+                        },
+                        child: Text(_isShowTopTable ? 'Graph' : 'Table',
+                            style: const TextStyle(
+                                color: blue,
+                                fontSize: 16,
+                                fontWeight:
+                                FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(16),
+                _isShowTopTable
+                    ? setUpAssetAllocationTopTableData()
+                    : SizedBox(
+                  height: 250,
+                  child: PieChart(
+                    PieChartData(
+                      pieTouchData: PieTouchData(
+                        touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                          setState(() {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null ||
+                                pieTouchResponse.touchedSection == null) {
+                              touchedIndexAsset = -1;
+                              return;
+                            }
+                            touchedIndexAsset = pieTouchResponse
+                                .touchedSection!.touchedSectionIndex;
+                          });
+                        },
+                      ),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 60,
+                      sections: generateAssetAllocationChart(),
+                    ),
+                  ),
+                ),
+                const Gap(16),
+                _isShowTopTable ? Container () : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: List.generate(resultData.macroAssetStratagic!.length - 1, (i) {
+                    return resultData.macroAssetStratagic![i].actual != 0 ? Container(
+                      margin: const EdgeInsets.all(6),
+                      child: Indicator(
+                        color: colorsAssetAllocation[i],
+                        text: resultData.macroAssetStratagic![i].asset.toString(),
+                        isSquare: false,
+                        size: touchedIndexAsset == i ? 18 : 16,
+                        textColor: touchedIndexAsset == i
+                            ? Colors.black
+                            : Colors.black38,
+                      ),
+                    ) : Container();
+                  }),
+                ),
+                const Gap(16),
+                Container(
+                  margin: const EdgeInsets.only(left: 16,right: 16),
+                  child: Row(
+                    children: [
+                      const Text('Applicants Allocation',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                      const Spacer(),
+                      InkWell(
+                        onTap: (){
+                          setState(() {
+                            _isShowTable = !_isShowTable;
+                          });
+                        },
+                        child: Text(_isShowTable ? 'Graph' : 'Table',
+                            style: const TextStyle(
+                                color: blue,
+                                fontSize: 16,
+                                fontWeight:
+                                FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(16),
+                _isShowTable ? setUpApplicantsData() : SizedBox(
+                  height: 250,
+                  child: PieChart(
+                    PieChartData(
+                      pieTouchData: PieTouchData(
+                        touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                          setState(() {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                              touchedIndexApplicant = -1;
+                              return;
+                            }
+                            touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                          });
+                        },
+                      ),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 60,
+                      sections: generateApplicantsChart(),
+                    ),
+                  ),
+                ),
+                const Gap(16),
+                _isShowTable ? Container() :Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: List.generate(resultData.applicantDetails!.length - 1, (i) {
+                    return resultData.applicantDetails![i].allocation != 0 ? Container(
+                      margin: const EdgeInsets.all(6),
+                      child: Indicator(
+                        color: colorsApplicantAllocation[i],
+                        text: resultData.applicantDetails![i].applicant.toString(),
+                        isSquare: false,
+                        size: touchedIndexApplicant == i ? 18 : 16,
+                        textColor: touchedIndexApplicant == i
+                            ? Colors.black
+                            : Colors.black38,
+                      ),
+                    ) : Container();
+                  }),
+                ),
+                const Gap(16),
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: const Text('Asset Allocation - Strategic',
+                      style: TextStyle(
+                          color: blue,
+                          fontSize: 16,
+                          fontWeight:
+                          FontWeight.w600)),
+                ),
+                const Gap(16),
+                setUpAssetAllocationStrategicTab(),
+                _isVisibleStrategic
+                    ? setUpAssetAllocationStrategicMacroData()
+                    : setUpAssetAllocationStrategicMicroData(),
+                const Gap(16),
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: const Text('Asset Allocation - Tactical',
+                      style: TextStyle(
+                          color: blue,
+                          fontSize: 16,
+                          fontWeight:
+                          FontWeight.w600)),
+                ),
+                const Gap(16),
+                setUpAssetAllocationTacticalTab(),
+                _isVisibleTactical
+                    ? setUpAssetAllocationTacticalMacroData()
+                    : setUpAssetAllocationTacticalMicroData(),
+                const Gap(16),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Text('*Equity market is overvalued by ${percentageResponse.masterMarketPercentage}%',textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: blue,
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold)),
+                ),
+                const Gap(16),
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: const Text('Performance',
+                      style: TextStyle(
+                          color: blue,
+                          fontSize: 16,
+                          fontWeight:
+                          FontWeight.w600)),
+                ),
+                const Gap(16),
+                setUpPerformanceTab(),
+                _isSinceInceptionLoading ? const CPDashboardLoadingWidget() : _isVisibleSinceInception ? setUpSinceInceptionData() : _isCurrentYearXIRRLoading ? const CPDashboardLoadingWidget() : _isVisible2023_24 ? setUpCurrentYearXIRRData() : _isPreviousYearXIRRLoading ? const CPDashboardLoadingWidget() : setUpPreviousYearXIRRData(),
+                const Gap(16)
+              ],
+            ),))
     );
   }
 
@@ -1373,8 +1617,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     _isVisible2022_23 = false;
                  });
                 },
-                child: _isVisibleSinceInception ? const Text('Since\nInception', style:TextStyle(fontSize: 17, fontWeight: FontWeight.bold,color: blue)) :
-                const Text('Since\nInception', style:TextStyle(fontSize: 17, fontWeight: FontWeight.bold,color: black)),
+                child: _isVisibleSinceInception ? const Text( kIsWeb ? "Since Inception" : 'Since\nInception', style:TextStyle(fontSize: 17, fontWeight: FontWeight.bold,color: blue)) :
+                const Text(kIsWeb ? "Since Inception" : 'Since\nInception', style:TextStyle(fontSize: 17, fontWeight: FontWeight.bold,color: black)),
               ),
             ),
           ),

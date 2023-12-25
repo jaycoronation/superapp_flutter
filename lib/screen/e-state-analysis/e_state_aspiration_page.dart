@@ -7,6 +7,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_add_future_expense_page.dart';
+import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/e-state-analysis/aspiration_response_model.dart';
 import '../../utils/app_utils.dart';
@@ -33,7 +34,9 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
 
     if(isInternetConnected) {
       getListData();
-    }else{
+    }
+    else
+    {
       noInterNet(context);
     }
   }
@@ -316,7 +319,8 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text('Delete?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
+                      child: const Text('Delete?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
                     child: const Text('Are you sure you want to delete this entry?',
@@ -342,23 +346,27 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                                     Navigator.pop(context);
                                   },
                                   child: const Text("Cancel", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: blue)),
-                                ))),
+                                )
+                            )
+                        ),
                         const Gap(20),
                         Expanded(
                           child: SizedBox(
                             height: kButtonHeight,
                             child: TextButton(
                               style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(kBorderRadius),
-                                    ),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(kBorderRadius),
                                   ),
-                                  backgroundColor: MaterialStateProperty.all<Color>(blue)),
+                                ),
+                                backgroundColor: MaterialStateProperty.all<Color>(blue)
+                              ),
                               onPressed: () {
                                 Navigator.pop(context);
                                 setState(() {
                                   deleteData( index);
+                                  deleteModule();
                                 });
                               },
                               child: const Text("Delete", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
@@ -489,7 +497,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
       showSnackBar(dataResponse.message, context);
-
+      deleteModule();
       setState(() {
         listData.removeAt(index);
         _isLoading = false;
@@ -501,5 +509,34 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
       });
     }
   }
+
+  void deleteModule() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_ADD + add);
+
+    Map<String, String> jsonBody = {
+      'module':"delete-future_expense",
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
+    }
+  }
+
+
 
 }

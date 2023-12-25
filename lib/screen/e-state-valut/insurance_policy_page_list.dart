@@ -6,6 +6,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/widget/no_data.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
+import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/CommanResponse.dart';
 import '../../model/e-state-vault/InsurancePolicyResponse.dart';
@@ -527,6 +528,7 @@ class _InsurancePolicyListPageState extends BaseState<InsurancePolicyListPage> {
                                 Navigator.pop(context);
                                 setState(() {
                                   deleteData(index);
+                                  deleteModule();
                                 });
                               },
                               child: const Text("Delete", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
@@ -578,6 +580,34 @@ class _InsurancePolicyListPageState extends BaseState<InsurancePolicyListPage> {
       });
     }
   }
+
+  void deleteModule() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_VAULT + add);
+
+    Map<String, String> jsonBody = {
+      'module':"delete-insurance_policy",
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
+    }
+  }
+
 
   @override
   void castStatefulWidget() {

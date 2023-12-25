@@ -471,7 +471,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':"add-dependend_children",

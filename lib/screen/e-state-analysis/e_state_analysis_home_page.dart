@@ -216,8 +216,8 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                             child: Row(
                               children: [
                                 Container(
-                                    margin: const EdgeInsets.only(right: 10,),
-                                    child: Image.asset("assets/images/ic_final_report_new.png", height: 38, width: 38,)
+                                  margin: const EdgeInsets.only(right: 10,),
+                                  child: Image.asset("assets/images/ic_final_report_new.png", height: 38, width: 38,)
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(right: 10,),
@@ -235,7 +235,8 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                       ],
                     ),
                   ),
-                )),
+                )
+            ),
           ],
         ),
       ),

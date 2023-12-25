@@ -542,7 +542,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
     final url = Uri.parse(API_URL_ADD + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as EStateAddFutureInflowPage).isFromList ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as EStateAddFutureInflowPage).isFromList ? "edit-future_inflow" : "add-future_inflow",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

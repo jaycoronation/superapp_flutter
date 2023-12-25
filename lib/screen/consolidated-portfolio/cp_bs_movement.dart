@@ -95,7 +95,9 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           ? const LoadingWidget()
           : Container(
               margin: const EdgeInsets.only(top: 8,bottom: 50),
-            child: _isShowChart ? SizedBox(height: 300,child: LineChart(generatedLineChart())) : Column(
+            child: _isShowChart
+                ? Container( margin: EdgeInsets.only(top: 32, right: 38),height: kIsWeb ? 800 : 300 , child: LineChart(generatedLineChart()))
+                : Column(
                 children: [
                   Expanded(
                       child: Padding(
@@ -327,11 +329,11 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
         if (dataResponse.sheetData != null) {
-          listSheetData = dataResponse.sheetData!;
+          listSheetData = dataResponse.sheetData!.reversed.toList();
         }
 
         if(dataResponse.graphData != null){
-          listGraphData = dataResponse.graphData!;
+          listGraphData = dataResponse.graphData!.reversed.toList();
 
           for(int i = 0;i<listGraphData.length;i++){
             spotsData.add(FlSpot(i.toDouble(), double.parse(listGraphData[i].total!.toString())));

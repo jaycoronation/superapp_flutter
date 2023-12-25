@@ -451,10 +451,10 @@ class _AddSafeDepositBoxesPageState extends BaseState<AddSafeDepositBoxesPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as AddSafeDepositBoxesPage).isForEdit ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as AddSafeDepositBoxesPage).isForEdit ? "edit-safe_deposite_box" : "add-safe_deposite_box",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

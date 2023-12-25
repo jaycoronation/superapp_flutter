@@ -255,26 +255,32 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
     Map<String, dynamic> user = jsonDecode(body);
     var dataResponse = LatestTransactionResponse.fromJson(user);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.transactionDetails != null) {
-          listData = dataResponse.transactionDetails!;
+    try {
+      if (statusCode == 200 && dataResponse.success == 1) {
+        try {
+          if (dataResponse.transactionDetails != null) {
+            listData = dataResponse.transactionDetails!;
+            setState(() {
+              _isLoading = false;
+            });
+          }
+        } catch (e) {
           setState(() {
             _isLoading = false;
           });
+          if (kDebugMode) {
+            print(e);
+          }
         }
-      } catch (e) {
+      } else {
         setState(() {
           _isLoading = false;
         });
-        if (kDebugMode) {
-          print(e);
-        }
       }
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
+    } on Exception catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
     }
   }
 

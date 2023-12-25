@@ -7,6 +7,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/e-state-analysis/existing_liabilities_response_model.dart';
+import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
@@ -438,6 +439,7 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
 
     if (statusCode == 200 && dataResponse.success == 1) {
       showSnackBar(dataResponse.message, context);
+      deleteModule();
 
       setState(() {
         listData.removeAt(index);
@@ -450,5 +452,34 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
       });
     }
   }
+
+  void deleteModule() async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_ADD + add);
+
+    Map<String, String> jsonBody = {
+      'module':"delete-existing_liabilities",
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
+    }
+  }
+
+
 
 }

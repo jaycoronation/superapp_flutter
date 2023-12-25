@@ -254,6 +254,7 @@ class _AddSharesBondsPageState extends BaseState<AddSharesBondsPage> {
                         margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                         child: TextField(
                           keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           cursorColor: black,
                           controller: listData[index].contactPersonController,
                           onChanged: (text) {
@@ -605,7 +606,7 @@ class _AddSharesBondsPageState extends BaseState<AddSharesBondsPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':(widget as AddSharesBondsPage).isForEdit ? "edit-share_bonds" : "add-share_bonds",

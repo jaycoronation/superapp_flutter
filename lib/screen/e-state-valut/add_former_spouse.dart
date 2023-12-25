@@ -214,7 +214,8 @@ class _AddFormerSpousePageState extends BaseState<AddFormerSpousePage> {
                       Container(
                         margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                         child: TextField(
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           maxLength: 10,
                           cursorColor: black,
                           controller: listData[index].phoneController,
@@ -453,7 +454,7 @@ class _AddFormerSpousePageState extends BaseState<AddFormerSpousePage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':(widget as AddFormerSpousePage).isForEdit ? "edit-former_spouse" : "add-former_spouse",

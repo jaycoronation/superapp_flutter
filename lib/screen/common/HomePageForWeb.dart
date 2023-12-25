@@ -25,16 +25,29 @@ class HomePageForWeb extends StatefulWidget {
 }
 
 class _HomePageForWebState extends BaseState<HomePageForWeb> {
-  int currentIndex = 0;
+  int currentIndex = 1;
 
 
   @override
   Widget build(BuildContext context) {
 
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: appBg,
+      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+      statusBarBrightness: Brightness.dark,
+    ));
+
     return ResponsiveWidget.isSmallScreen(context)
         ? WillPopScope(
       child: Scaffold(
         backgroundColor: chart_color11,
+        appBar: AppBar(
+          backgroundColor: chart_color11,
+          elevation: 0,
+          toolbarHeight: 200,
+          title: Image.asset('assets/images/ic_logo.png',height: 155),
+          centerTitle: false,
+        ),
         body: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,37 +76,37 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                             padding: const EdgeInsets.all(18),
                             child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
                           ),
-                          InkWell(
-                            hoverColor: Colors.lightBlue,
-                            mouseCursor: MaterialStateMouseCursor.clickable,
-                            canRequestFocus: true,
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 0;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 0 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Alpha Portfolio',
-                                      style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
+                          // InkWell(
+                          //   hoverColor: Colors.lightBlue,
+                          //   mouseCursor: MaterialStateMouseCursor.clickable,
+                          //   canRequestFocus: true,
+                          //   onTap: (){
+                          //     setState(() {
+                          //       currentIndex = 0;
+                          //     });
+                          //   },
+                          //   child: Container(
+                          //       color: currentIndex == 0 ? blue : Colors.white,
+                          //       padding: const EdgeInsets.all(12),
+                          //       child: Row(
+                          //         children: [
+                          //           Container(
+                          //               padding: const EdgeInsets.all(4),
+                          //               decoration: BoxDecoration(
+                          //                 borderRadius: const BorderRadius.all(Radius.circular(22)),
+                          //                 border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                          //                 color: chart_color12,
+                          //               ),
+                          //               child: Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35)
+                          //           ),
+                          //           Container(width: 18,),
+                          //           Text('Alpha Portfolio',
+                          //             style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ?white : black, fontSize: 18),
+                          //           )
+                          //         ],
+                          //       )
+                          //   ),
+                          // ),
                           //Container(height: 18,),
                           GestureDetector(
                             onTap: (){
@@ -370,9 +383,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: currentIndex == 0
-                      ? Container()
-                      : currentIndex == 1
+                  child: currentIndex == 1
                       ? const CPHomePage()
                       : currentIndex == 2
                       ? const EStateAnalysisHomePage()
@@ -401,15 +412,57 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
         : WillPopScope(
       child: Scaffold(
         backgroundColor: chart_color11,
+        appBar: AppBar(
+          backgroundColor: chart_color11,
+          elevation: 0,
+          centerTitle: false,
+          toolbarHeight: 66,
+          title: Padding(
+            padding: const EdgeInsets.only( left: 28, right: 32),
+            child: Image.asset('assets/images/ic_logo.png',  height: 40),
+          ),
+          actions: [
+            GestureDetector(
+              onTap: (){
+                logoutFromApp();
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(right: 32),
+                  // decoration: BoxDecoration(
+                  //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                  // ),
+                  child: Row(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(22)),
+                            border: currentIndex == 8 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                            color: chart_color12,
+                          ),
+                          child: Image.asset('assets/images/ic_logout.png', width: 35, height: 35)
+                      ),
+                      Container(width: 18,),
+                      Text('Logout', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 8 ?white : black, fontSize: 18),
+                      )
+                    ],
+                  )
+              ),
+            ),
+          ],
+        ),
         body: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: SizedBox(
+              child: Container(
+                margin: EdgeInsets.only(top: 18, bottom: 32, left: 32, right: 4),
                 width: 310,
-                height: MediaQuery.of(context).size.height -165,
+                height: MediaQuery.of(context).size.height,
                 child: Material(
                   color: white,
                   shadowColor: Colors.grey,
@@ -417,7 +470,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                       side:  BorderSide(color: grayLight),
                       borderRadius: BorderRadius.all( Radius.circular(14))
                   ),
-                  elevation: 15.0,
+                  elevation: 10.0,
                   child: SingleChildScrollView(
                     child: Material(
                       type: MaterialType.transparency,
@@ -425,41 +478,42 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+
                           Container(height: 12,),
                           Padding(
                             padding: const EdgeInsets.only(top: 18, bottom: 18, left: 32),
                             child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 22)),
                           ),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 0;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 0 ? blue : Colors.white,
-                                padding: const EdgeInsets.only(top: 12, bottom: 12, left: 32),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                        border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                        color: currentIndex == 0 ? listActionColor : chart_color12,
-                                      ),
-                                      child: currentIndex == 0
-                                          ? Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, color: white, )
-                                          : Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, ),
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Alpha Portfolio',
-                                      style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: (){
+                          //     setState(() {
+                          //       currentIndex = 0;
+                          //     });
+                          //   },
+                          //   child: Container(
+                          //       color: currentIndex == 0 ? blue : Colors.white,
+                          //       padding: const EdgeInsets.only(top: 12, bottom: 12, left: 32),
+                          //       child: Row(
+                          //         children: [
+                          //           Container(
+                          //             padding: const EdgeInsets.all(4),
+                          //             decoration: BoxDecoration(
+                          //               borderRadius: const BorderRadius.all(Radius.circular(22)),
+                          //               border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                          //               color: currentIndex == 0 ? listActionColor : chart_color12,
+                          //             ),
+                          //             child: currentIndex == 0
+                          //                 ? Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, color: white, )
+                          //                 : Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35, ),
+                          //           ),
+                          //           Container(width: 18,),
+                          //           Text('Alpha Portfolio',
+                          //             style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ?white : black, fontSize: 18),
+                          //           )
+                          //         ],
+                          //       )
+                          //   ),
+                          // ),
                           Container(height: 8,),
                           GestureDetector(
                             onTap: (){
@@ -701,37 +755,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                             ),
                           ),
                           Container(height: 8,),
-                          GestureDetector(
-                            onTap: (){
-                              logoutFromApp();
-                            },
-                            child: Container(
-                                color: currentIndex == 8 ? blue : Colors.white,
-                                padding: const EdgeInsets.only(top: 12, bottom: 12, left: 32),
-                                // decoration: BoxDecoration(
-                                //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 8 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: currentIndex == 8 ? listActionColor : chart_color12,
-                                        ),
-                                        child: currentIndex == 8
-                                            ? Image.asset('assets/images/ic_logout.png', width: 35, height: 35, color: white,)
-                                            : Image.asset('assets/images/ic_logout.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Logout', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 8 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
+
                         ],
                       ),
                     ),
@@ -742,38 +766,41 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
             Container(width: 22,),
             Expanded(
               child: Container(
-                height: MediaQuery.of(context).size.height -168,
-                margin: const EdgeInsets.only(top: 12, bottom: 12),
+                height: MediaQuery.of(context).size.height,
+                margin: EdgeInsets.only(top: 18, bottom: 32, left: 4, right: 32),
                 decoration: BoxDecoration(
                   border:Border.all(color: grayLight, width: 0.5 ),
                   color: white,
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 1.0,
-                    ),
-                  ],
+
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: currentIndex == 0
-                      ? Container()
-                      : currentIndex == 1
-                      ? const CPHomePage()
-                      : currentIndex == 2
-                      ? const EStateAnalysisHomePage()
-                      :currentIndex == 3
-                      ? const EStateVaultHomePage()
-                      :currentIndex == 4
-                      ? const MeetingPage()
-                      :currentIndex == 5
-                      ? const VideoListPage()
-                      :currentIndex == 6
-                      ? const BlogsPage()
-                      :currentIndex == 7
-                      ? const ContactPage()
-                      : Container(),
+                child: Material(
+                  shadowColor: Colors.grey,
+                  shape: const RoundedRectangleBorder(
+                      side:  BorderSide(color: grayLight),
+                      borderRadius: BorderRadius.all( Radius.circular(14))
+                  ),
+                  elevation: 10.0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: currentIndex == 0
+                        ? Container()
+                        : currentIndex == 1
+                        ? const CPHomePage()
+                        : currentIndex == 2
+                        ? const EStateAnalysisHomePage()
+                        :currentIndex == 3
+                        ? const EStateVaultHomePage()
+                        :currentIndex == 4
+                        ? const MeetingPage()
+                        :currentIndex == 5
+                        ? const VideoListPage()
+                        :currentIndex == 6
+                        ? const BlogsPage()
+                        :currentIndex == 7
+                        ? const ContactPage()
+                        : Container(),
+                  ),
                 ),
               ),
             ),

@@ -482,11 +482,11 @@ class _AddBusinessPageState extends BaseState<AddBusinessPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       // 'module':(widget as AddBusinessPage).isFromList ? "edit-future_expense" : "add-future_expense",
-      'module':"add-future_business",
+      'module':"add-business",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

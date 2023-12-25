@@ -441,7 +441,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
     final url = Uri.parse(API_URL_ADD + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as EStateAddExistingAssetsPage).isFromList ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as EStateAddExistingAssetsPage).isFromList ? "edit-existing_assets" : "add-existing_assets",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

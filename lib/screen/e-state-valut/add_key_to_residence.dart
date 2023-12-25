@@ -347,10 +347,10 @@ class _AddKeyToResidenceState extends BaseState<AddKeyToResidence> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as AddKeyToResidence).isForEdit ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as AddKeyToResidence).isForEdit ? "edit-key_to_residence" : "add-key_to_residence",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

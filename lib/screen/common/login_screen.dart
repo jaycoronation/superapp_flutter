@@ -186,7 +186,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                   } else {
                                     if (isInternetConnected) {
                                       //_makeSignInRequest();
-                                      _makeLoginInRequest("Shahista");
+                                      _makeLoginInRequest(_emailController.value.text.trim());
                                     } else {
                                       noInterNet(context);
                                     }
@@ -384,7 +384,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                     } else {
                                       if (isInternetConnected) {
                                         //_makeSignInRequest();
-                                        _makeLoginInRequest("Shahista");
+                                        _makeLoginInRequest(_emailController.value.text.trim());
                                       } else {
                                         noInterNet(context);
                                       }

@@ -254,6 +254,7 @@ class _AddMutualFundsPageState extends BaseState<AddMutualFundsPage> {
                         margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                         child: TextField(
                           keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           cursorColor: black,
                           controller: listData[index].contactPersonController,
                           onChanged: (text) {
@@ -606,7 +607,7 @@ class _AddMutualFundsPageState extends BaseState<AddMutualFundsPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':(widget as AddMutualFundsPage).isForEdit ? "edit-mutual_funds" : "add-mutual_funds",

@@ -440,7 +440,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
     final url = Uri.parse(API_URL_ADD + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as EStateAddExistingLiabilitiesPage).isFromList ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as EStateAddExistingLiabilitiesPage).isFromList ? "edit-existing_liabilities" : "add-existing_liabilities",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

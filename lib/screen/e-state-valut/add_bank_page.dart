@@ -579,7 +579,7 @@ class _AddBankPageState extends BaseState<AddBankPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':(widget as AddBankPage).isForEdit ? "edit-bank_account" : "add-bank_account",

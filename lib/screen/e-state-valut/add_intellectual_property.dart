@@ -233,7 +233,8 @@ class _AddIntellectualPropertyPageState extends BaseState<AddIntellectualPropert
                       Container(
                         margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
                         child: TextField(
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           maxLength: 10,
                           cursorColor: black,
                           controller: listData[index].phoneController,
@@ -667,7 +668,7 @@ class _AddIntellectualPropertyPageState extends BaseState<AddIntellectualPropert
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':(widget as AddIntellectualPropertyPage).isForEdit ? "edit-intellectual_property" : "add-intellectual_property",

@@ -449,10 +449,10 @@ class _AddImpDocPageState extends BaseState<AddImpDocPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as AddImpDocPage).isForEdit ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as AddImpDocPage).isForEdit ? "edit-imp_doc" : "add-imp_doc",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

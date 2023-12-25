@@ -345,10 +345,10 @@ class _AddConstitutionValuePageState extends BaseState<AddConstitutionValuePage>
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_ADD_VALUE + add);
 
     Map<String, String> jsonBody = {
-      'module':(widget as AddConstitutionValuePage).isForEdit ? "edit-future_expense" : "add-future_expense",
+      'module':(widget as AddConstitutionValuePage).isForEdit ? "edit-contitution_and_value" : "add-contitution_and_value",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

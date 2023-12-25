@@ -58,7 +58,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
       activeIcon: Image.asset("assets/images/ic_portfolio_selected.png", width: 24, height: 24),
       label: 'Portfolio',
     ));
-
     itemsList.add(BottomNavigationBarItem(
       icon: Image.asset("assets/images/ic_more_unselected.png", width: 24, height: 24),
       activeIcon: Image.asset("assets/images/ic_more_selected.png", width: 24, height: 24),
@@ -118,7 +117,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
               textAlign: TextAlign.start,
               style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
             ),
-
         ),
         body: IndexedStack(
           index: _currentIndex,

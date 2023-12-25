@@ -305,11 +305,11 @@ class _AddDomesticEmployeeState extends BaseState<AddDomesticEmployee> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD + add);
+    final url = Uri.parse(API_URL_VAULT + add);
 
     Map<String, String> jsonBody = {
       // 'module':(widget as AddDomesticEmployee).isFromList ? "edit-future_expense" : "add-future_expense",
-      'module':"add-future_domestic_employees",
+      'module':"add-domestic_employees",
       'user_id':sessionManagerPMS.getUserId().toString().trim(),
     };
 

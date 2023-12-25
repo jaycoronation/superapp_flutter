@@ -1,7 +1,8 @@
 //Live
 //const String API_URL = "http://alphacapital.coronation.in/api/services/";
 const String API_URL = "https://portfolio.alphacapital.in/api/services/";
-const String API_URL_ADD = "https://vault.alphacapital.in/api/index.php/services/";
+const String API_URL_ADD_VALUE = "https://vault.alphacapital.in/api/index.php/services/";
+const String API_URL_ADD = "https://analysis.alphacapital.in/api/index.php/services/";
 
 String login = "loginForSuperApp";
 
