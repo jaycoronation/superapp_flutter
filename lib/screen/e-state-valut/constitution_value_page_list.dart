@@ -338,7 +338,7 @@ class _ConstitutionValuesPageState extends BaseState<ConstitutionValuesPage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_ADD_VALUE + add);
+    final url = Uri.parse(API_URL_ADD_VAULT + add);
 
     Map<String, String> jsonBody = {
       'module':"delete-contitution_and_value",

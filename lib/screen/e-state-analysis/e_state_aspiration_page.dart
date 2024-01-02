@@ -278,15 +278,13 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
             )
         ),)
           : const NoInternetWidget(),
-      floatingActionButton: //listData.isNotEmpty ?
-      FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: (){
           _redirectToNextPage(context, ListData(), false);
         },
         backgroundColor: blue,
         child: const Icon(Icons.add, color: white,),
       )
-            //: Container(),
     );
   }
 

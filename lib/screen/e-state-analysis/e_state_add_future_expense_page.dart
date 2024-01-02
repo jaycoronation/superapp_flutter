@@ -111,246 +111,247 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
         body: _isLoading
             ? const LoadingWidget()
             : SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-              child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.topLeft,
-                                margin: const EdgeInsets.only(top: 15, left: 12),
-                                child: const Text("Enter Following Data:",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
-                                child: TextField(
-                                  cursorColor: black,
-                                  controller: _aspirationTypeController,
-                                  readOnly: true,
-                                  keyboardType: TextInputType.text,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
-                                  onChanged: (text) {
-                                    setState(() {
-                                      if (text.isEmpty) {
-                                        _validAspirationType = false;
-                                      } else {
-                                        _validAspirationType = true;
-                                      }
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: 'Aspiration Type',
-                                      errorText: _validAspirationType ? null : "Please select aspiration type for future expense"
-                                  ),
-                                  onTap: () {
-                                    _searchAspirationTypeController.clear();
-                                    _tempListAspirationType.clear();
-                                    _showAspirationTypeDialog(context);
-                                  },
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                    child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                              child: IntrinsicHeight(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      margin: const EdgeInsets.only(top: 15, left: 12),
+                                      child: const Text("Enter Following Data:",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    Container(
                                       margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
                                       child: TextField(
                                         cursorColor: black,
-                                        controller: _startYearController,
+                                        controller: _aspirationTypeController,
                                         readOnly: true,
                                         keyboardType: TextInputType.text,
                                         style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
                                         onChanged: (text) {
                                           setState(() {
                                             if (text.isEmpty) {
-                                              _validStartYear = false;
+                                              _validAspirationType = false;
                                             } else {
-                                              _validStartYear = true;
+                                              _validAspirationType = true;
                                             }
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            labelText: 'Start Year',
-                                            errorText: _validStartYear ? null : "Please select start year"
+                                            labelText: 'Aspiration Type',
+                                            errorText: _validAspirationType ? null : "Please select aspiration type for future expense"
                                         ),
                                         onTap: () {
-                                          DateTime nowDate = DateTime.now();
-                                          int currYear = nowDate.year;
-                                          _showStartYearDialog(currYear, "Start year");
+                                          _searchAspirationTypeController.clear();
+                                          _tempListAspirationType.clear();
+                                          _showAspirationTypeDialog(context);
                                         },
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Container(
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                                            child: TextField(
+                                              cursorColor: black,
+                                              controller: _startYearController,
+                                              readOnly: true,
+                                              keyboardType: TextInputType.text,
+                                              style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
+                                              onChanged: (text) {
+                                                setState(() {
+                                                  if (text.isEmpty) {
+                                                    _validStartYear = false;
+                                                  } else {
+                                                    _validStartYear = true;
+                                                  }
+                                                });
+                                              },
+                                              decoration: InputDecoration(
+                                                  labelText: 'Start Year',
+                                                  errorText: _validStartYear ? null : "Please select start year"
+                                              ),
+                                              onTap: () {
+                                                DateTime nowDate = DateTime.now();
+                                                int currYear = nowDate.year;
+                                                _showStartYearDialog(currYear, "Start year");
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                                            child: TextField(
+                                              cursorColor: black,
+                                              controller: _endYearController,
+                                              readOnly: true,
+                                              keyboardType: TextInputType.text,
+                                              style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
+                                              onChanged: (text) {
+                                                setState(() {
+                                                  if (text.isEmpty) {
+                                                    _validEndYear = false;
+                                                  } else {
+                                                    _validEndYear = true;
+                                                  }
+                                                });
+                                              },
+                                              decoration: InputDecoration(
+                                                  labelText: 'End year',
+                                                  errorText: _validEndYear ? null : "Please select end year"
+                                              ),
+                                              onTap: () {
+                                                if (_startYearController.text.isNotEmpty) {
+                                                  _showStartYearDialog(int.parse(_startYearController.value.text.toString().trim()), "End year");
+                                                }else {
+                                                  showSnackBar("Please select start year", context);
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
                                       margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
                                       child: TextField(
                                         cursorColor: black,
-                                        controller: _endYearController,
+                                        controller: _periodicityController,
                                         readOnly: true,
                                         keyboardType: TextInputType.text,
                                         style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
                                         onChanged: (text) {
                                           setState(() {
                                             if (text.isEmpty) {
-                                              _validEndYear = false;
+                                              _validPeriodicity = false;
                                             } else {
-                                              _validEndYear = true;
+                                              _validPeriodicity = true;
                                             }
                                           });
                                         },
                                         decoration: InputDecoration(
-                                            labelText: 'End year',
-                                            errorText: _validEndYear ? null : "Please select end year"
+                                            labelText: 'Periodicity',
+                                            errorText: _validPeriodicity ? null : "Please select periodicity of expense"
                                         ),
                                         onTap: () {
-                                          if (_startYearController.text.isNotEmpty) {
-                                            _showStartYearDialog(int.parse(_startYearController.value.text.toString().trim()), "End year");
-                                          }else {
-                                            showSnackBar("Please select start year", context);
-                                          }
+                                          _showPeriodicityDialog();
                                         },
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
-                                child: TextField(
-                                  cursorColor: black,
-                                  controller: _periodicityController,
-                                  readOnly: true,
-                                  keyboardType: TextInputType.text,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
-                                  onChanged: (text) {
-                                    setState(() {
-                                      if (text.isEmpty) {
-                                        _validPeriodicity = false;
-                                      } else {
-                                        _validPeriodicity = true;
-                                      }
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: 'Periodicity',
-                                      errorText: _validPeriodicity ? null : "Please select periodicity of expense"
-                                  ),
-                                  onTap: () {
-                                    _showPeriodicityDialog();
-                                  },
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
-                                child: TextField(
-                                  cursorColor: black,
-                                  controller: _amountController,
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
-                                  onChanged: (text) {
-                                    setState(() {
-                                      if (text.isEmpty) {
-                                        _validAmount = false;
-                                      } else {
-                                        _validAmount = true;
-                                      }
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: 'Amount',
-                                      errorText: _validAmount ? null : "Please enter expense amount"
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 8, right: 8, top: 12),
+                                      child: TextField(
+                                        cursorColor: black,
+                                        controller: _amountController,
+                                        keyboardType: TextInputType.number,
+                                        style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 15),
+                                        onChanged: (text) {
+                                          setState(() {
+                                            if (text.isEmpty) {
+                                              _validAmount = false;
+                                            } else {
+                                              _validAmount = true;
+                                            }
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            labelText: 'Amount',
+                                            errorText: _validAmount ? null : "Please enter expense amount"
 
-                                  ),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
+                                        ),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: blue,
+                                            onPrimary: blue,
+                                            elevation: 0.0,
+                                            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                            side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kButtonCornerRadius)),
+                                            tapTargetSize: MaterialTapTargetSize.padded,
+                                            animationDuration: const Duration(milliseconds: 100),
+                                            enableFeedback: true,
+                                            alignment: Alignment.center,
+                                          ),
+                                          onPressed: () {
+
+                                            if(_aspirationTypeController.text.isEmpty) {
+                                              setState(() {
+                                                _validAspirationType = false;
+                                                return;
+                                              });
+
+                                            } else if(_startYearController.text.isEmpty) {
+                                              setState(() {
+                                                _validStartYear = false;
+                                                return;
+                                              });
+
+                                            } else if(_endYearController.text.isEmpty) {
+                                              setState(() {
+                                                _validEndYear = false;
+                                                return;
+                                              });
+
+                                            } else if(_periodicityController.text.isEmpty) {
+                                              setState(() {
+                                                _validPeriodicity = false;
+                                                return;
+                                              });
+
+                                            } else if(_amountController.text.isEmpty) {
+                                              setState(() {
+                                                _validAmount = false;
+                                                return;
+                                              });
+
+                                            } else {
+                                              if(isInternetConnected)
+                                              {
+                                                saveAspirationsFutureExpense();
+                                                FocusScope.of(context).unfocus();
+                                              }
+                                              else
+                                              {
+                                                noInterNet(context);
+                                              }
+                                            }
+                                          },
+                                          onLongPress: () => {},
+                                          child: const Text("Submit",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600),
+                                          )
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                              const Spacer(),
-                              Container(
-                                margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: blue,
-                                      onPrimary: blue,
-                                      elevation: 0.0,
-                                      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                                      side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(kButtonCornerRadius)),
-                                      tapTargetSize: MaterialTapTargetSize.padded,
-                                      animationDuration: const Duration(milliseconds: 100),
-                                      enableFeedback: true,
-                                      alignment: Alignment.center,
-                                    ),
-                                    onPressed: () {
-
-                                      if(_aspirationTypeController.text.isEmpty) {
-                                        setState(() {
-                                          _validAspirationType = false;
-                                          return;
-                                        });
-
-                                      } else if(_startYearController.text.isEmpty) {
-                                        setState(() {
-                                          _validStartYear = false;
-                                          return;
-                                        });
-
-                                      } else if(_endYearController.text.isEmpty) {
-                                        setState(() {
-                                          _validEndYear = false;
-                                          return;
-                                        });
-
-                                      } else if(_periodicityController.text.isEmpty) {
-                                        setState(() {
-                                          _validPeriodicity = false;
-                                          return;
-                                        });
-
-                                      } else if(_amountController.text.isEmpty) {
-                                        setState(() {
-                                          _validAmount = false;
-                                          return;
-                                        });
-
-                                      } else {
-                                        if(isInternetConnected)
-                                        {
-                                          saveAspirationsFutureExpense();
-                                          FocusScope.of(context).unfocus();
-                                        }
-                                        else
-                                        {
-                                          noInterNet(context);
-                                        }
-                                      }
-                                    },
-                                    onLongPress: () => {},
-                                    child: const Text("Submit",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600),
-                                    )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-              ),
-          ),)
+                            ),
+                          );
+                        }
+                    ),
+                ),
+              )
     );
   }
 
@@ -494,7 +495,6 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
     }
     return _searchList;
   }
-  
 
   void _showStartYearDialog(int year, String isFor) {
     _searchYearController.clear();

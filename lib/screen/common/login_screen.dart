@@ -211,7 +211,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
             },
           ),
         )
-        :  GestureDetector(
+        : GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
             if (!currentFocus.hasPrimaryFocus) {
@@ -236,15 +236,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                             alignment: Alignment.center,
                             child: Image.asset('assets/images/ic_logo.png', width: 260,  ),
                           ),
-                          // Container(
-                          //   margin: const EdgeInsets.only(left: 15, right: 15),
-                          //   child: const Text("Welcome!", style: TextStyle(fontWeight: FontWeight.w800, color: black, fontSize: 30)),
-                          // ),
-                          // Container(
-                          //   margin: const EdgeInsets.only(top: 8, bottom: 30, left: 15, right: 15),
-                          //   child: const Text("Please sign in with your registered email/username",
-                          //       style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 18)),
-                          // ),
                           Container(height: 12,),
                           Center(
                             child: RichText(
@@ -309,6 +300,22 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                 obscureText: _passwordVisible,
                                 keyboardType: TextInputType.visiblePassword,
                                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+                                onSubmitted: (value) {
+                                  String email = _emailController.text.toString().trim();
+                                  String password = _pwController.text.toString().trim();
+                                  if (email.isEmpty) {
+                                    showSnackBar("Please enter a email/username", context);
+                                  }else if (password.isEmpty) {
+                                    showSnackBar("Please enter password", context);
+                                  } else {
+                                    if (isInternetConnected) {
+                                      //_makeSignInRequest();
+                                      _makeLoginInRequest(_emailController.value.text.trim());
+                                    } else {
+                                      noInterNet(context);
+                                    }
+                                  }
+                                },
                                 decoration: InputDecoration(
                                   hintText: 'Password*',
                                   filled: true,
@@ -356,22 +363,14 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: blue,
                                     backgroundColor: blue,
-                                    //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
                                     elevation: 0.0,
-                                    //buttons Material shadow
                                     padding: const EdgeInsets.only(top: 24.0, bottom: 24.0),
-                                    //specify the button's Padding
                                     side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
-                                    //set border for the button
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38)),
-                                    // set the buttons shape. Make its birders rounded etc
                                     tapTargetSize: MaterialTapTargetSize.padded,
-                                    // set the MaterialTapTarget size. can set to: values, padded and shrinkWrap properties
                                     animationDuration: const Duration(milliseconds: 100),
-                                    //the buttons animations duration
                                     enableFeedback: true,
-                                    //to set the feedback to true or false
-                                    alignment: Alignment.center, //set the button's child Alignment
+                                    alignment: Alignment.center,
                                   ),
                                   onPressed: () async {
                                     FocusScope.of(context).requestFocus(FocusNode());
@@ -403,7 +402,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                       ),
                     ),
                   ),
-                )),
+                )
+            ),
             onWillPop: () {
               SystemNavigator.pop();
               return Future.value(true);
@@ -484,7 +484,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         JobService().getNetworthData();
 
         openHomePage();
-        lastInsertedModule();
       } catch (e) {
         print(e);
       }
@@ -497,33 +496,6 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         _isLoading = false;
       });
       showSnackBar(dataResponse.message, context);
-    }
-  }
-
-  void lastInsertedModule() async {
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL_ADD + add);
-
-    Map<String, String> jsonBody = {
-      'module':"login",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
-    };
-
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = CommanResponse.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-
-    } else {
-
     }
   }
 

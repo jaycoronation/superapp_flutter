@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
+import '../../constant/api_end_point.dart';
+import '../../model/CommanResponse.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
@@ -184,6 +189,7 @@ class _HomePageState extends BaseState<HomePage> {
                         child: InkWell(
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+                            lastInsertedModule("login-estate-analysis");
                           },
                           child: Container(
                             padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
@@ -209,6 +215,7 @@ class _HomePageState extends BaseState<HomePage> {
                         child: InkWell(
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()),);
+                            lastInsertedModule("login-estate-vault");
                           },
                           child: Container(
                             padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
@@ -340,6 +347,33 @@ class _HomePageState extends BaseState<HomePage> {
             const Gap(15),
           ],
         ));
+  }
+
+  void lastInsertedModule(String module) async {
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(module == 'login-estate-vault' ? API_URL_ADD_VAULT + add : API_URL_ADD + add);
+
+    Map<String, String> jsonBody = {
+      'module': module,
+      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+
+    } else {
+
+    }
   }
 
   Future<void> getDeviceToken() async {

@@ -93,46 +93,47 @@ class MyApp extends StatelessWidget {
       backgroundColor: chart_color11,
       builder: (context) {
         return MaterialApp(
-        title: 'AlphaCapital Super App',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            primarySwatch: createMaterialColor(white),
-            platform: TargetPlatform.iOS,
-            inputDecorationTheme: InputDecorationTheme(
-              filled: true,
-              fillColor: lightBlue,
-              contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 18, bottom: 18),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide:  const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
-              errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width: 0, color: Colors.red)),
-              focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width:0, color: Colors.red)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                  borderSide: const BorderSide(width:0, style: BorderStyle.solid, color: lightBlue)),
-              labelStyle: const TextStyle(
-                color: black,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-              hintStyle: const TextStyle(
-                  color: grayDark,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600),
+            title: 'AlphaCapital Super App',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              useMaterial3: false,
+                primarySwatch: createMaterialColor(white),
+                platform: TargetPlatform.iOS,
+                inputDecorationTheme: InputDecorationTheme(
+                  filled: true,
+                  fillColor: lightBlue,
+                  contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 18, bottom: 18),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                      borderSide:  const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                      borderSide: const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                      borderSide: const BorderSide(width: 0, color: Colors.red)),
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                      borderSide: const BorderSide(width:0, color: Colors.red)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                      borderSide: const BorderSide(width:0, style: BorderStyle.solid, color: lightBlue)),
+                  labelStyle: const TextStyle(
+                    color: black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  hintStyle: const TextStyle(
+                      color: grayDark,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600),
+                ),
+                // textTheme: GoogleFonts.sourceSansProTextTheme(Theme.of(context).textTheme)
+              fontFamily: 'Switzer',
             ),
-            // textTheme: GoogleFonts.sourceSansProTextTheme(Theme.of(context).textTheme)
-          fontFamily: 'Switzer',
-        ),
-        home: const MyHomePage(),
-        navigatorKey: NavigationService.navigatorKey
-        );
+            home: const MyHomePage(),
+            navigatorKey: NavigationService.navigatorKey
+          );
       },
       maximumSize: const Size(1160.0, 812.0),
     );
