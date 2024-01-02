@@ -302,7 +302,8 @@ class _AddOtherDebtsPageState extends BaseState<AddOtherDebtsPage> {
                           cursorColor: black,
                           controller: listData[index].addressController,
                           onChanged: (text) {
-                            setState(() {
+                            setState
+                              (() {
                               listData[index].setAddress = text;
                             });
                           },
@@ -516,7 +517,9 @@ class _AddOtherDebtsPageState extends BaseState<AddOtherDebtsPage> {
     if (isSubmitClick) {
       if (checkValidString(listData[index].phone).isEmpty) {
         value = "Phone Number Can\'t Be Empty";
-      } else if (checkValidString(listData[index].phone).toString().length != 10) {
+      }
+      else if
+      (checkValidString(listData[index].phone).toString().length != 10) {
         value = "Enter Valid Phone Number";
       }
     }

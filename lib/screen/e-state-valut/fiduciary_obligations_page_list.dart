@@ -319,7 +319,7 @@ class _FiduciaryObligationsListPageState extends BaseState<FiduciaryObligationsL
         )));
   }
 
-  Future<void> _redirectAdd(FiduciaryObligations listData, bool isFor) async {
+  Future<void> _redirectAdd(FiduciaryObligations listData, bool isFor) async  {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddFiduciaryObligationsPage(listData, isFor)),
@@ -367,7 +367,8 @@ class _FiduciaryObligationsListPageState extends BaseState<FiduciaryObligationsL
         print(e);
       }
     }
-    else {
+    else
+    {
       listData = [];
       //showSnackBar(dataResponse.message, context);
       _redirectAdd(FiduciaryObligations(), false);

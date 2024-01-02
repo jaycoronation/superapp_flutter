@@ -313,20 +313,22 @@ class _AddFiduciaryObligationsPageState extends BaseState<AddFiduciaryObligation
                           readOnly: true,
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: checkValidString(listData[index].createdOn).isNotEmpty ? DateFormat("dd/MM/yyyy").parse(checkValidString(listData[index].createdOn)) : DateTime.now(),
-                                firstDate: DateTime(1901),
-                                lastDate:  DateTime.now().subtract(const Duration(days: 0)),
-                                helpText: 'Created On',
-                                builder: (context, Widget? child) => Theme(
-                                  data: Theme.of(context).copyWith(
-                                      appBarTheme: Theme.of(context)
-                                          .appBarTheme
-                                          .copyWith(backgroundColor: black, iconTheme: Theme.of(context).appBarTheme.iconTheme?.copyWith(color: white)),
-                                      scaffoldBackgroundColor: white,
-                                      colorScheme: const ColorScheme.light(onPrimary: white, primary: black)),
-                                  child: child!,
-                                ));
+                              context: context,
+                              initialDate: checkValidString(listData[index].createdOn).isNotEmpty ? DateFormat("dd/MM/yyyy").parse(checkValidString(listData[index].createdOn)) : DateTime.now(),
+                              firstDate: DateTime(1901),
+                              lastDate:  DateTime.now().subtract(const Duration(days: 0)),
+                              helpText: 'Created On',
+                              builder: (context, Widget? child) => Theme(
+                                data: Theme.of(context).copyWith(
+                                  appBarTheme: Theme.of(context)
+                                      .appBarTheme
+                                      .copyWith(backgroundColor: black, iconTheme: Theme.of(context).appBarTheme.iconTheme?.copyWith(color: white)),
+                                  scaffoldBackgroundColor: white,
+                                  colorScheme: const ColorScheme.light(onPrimary: white, primary: black)
+                                ),
+                                child: child!,
+                              )
+                            );
                             if (pickedDate != null) {
                               String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
                               setState(() {
