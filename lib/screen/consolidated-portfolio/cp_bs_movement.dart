@@ -96,7 +96,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           : Container(
               margin: const EdgeInsets.only(top: 8,bottom: 50),
             child: _isShowChart
-                ? Container( margin: EdgeInsets.only(top: 32, right: 38),height: kIsWeb ? 800 : 300 , child: LineChart(generatedLineChart()))
+                ? Container( margin: const EdgeInsets.only(top: 32, right: 38),height: kIsWeb ? 800 : 300 , child: LineChart(generatedLineChart()))
                 : Column(
                 children: [
                   Expanded(
@@ -111,8 +111,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                                         decoration: const BoxDecoration(
                                             color:semiBlue,
                                             borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Expanded(
                                                 flex: 1,
                                                 child: Text('Month/Date',

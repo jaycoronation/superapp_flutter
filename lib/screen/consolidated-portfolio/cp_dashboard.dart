@@ -223,31 +223,33 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       ),
                     ),
                     const Gap(16),
-                    _isShowTable ? setUpApplicantsData() : SizedBox(
-                      height: 250,
-                      child: PieChart(
-                        PieChartData(
-                          pieTouchData: PieTouchData(
-                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                              setState(() {
-                                if (!event.isInterestedForInteractions ||
-                                    pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
-                                  touchedIndexApplicant = -1;
-                                  return;
-                                }
-                                touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                              });
-                            },
+                    _isShowTable
+                        ? setUpApplicantsData()
+                        : SizedBox(
+                          height: 250,
+                          child: PieChart(
+                            PieChartData(
+                              pieTouchData: PieTouchData(
+                                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                  setState(() {
+                                    if (!event.isInterestedForInteractions ||
+                                        pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                                      touchedIndexApplicant = -1;
+                                      return;
+                                    }
+                                    touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                                  });
+                                },
+                              ),
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 60,
+                              sections: generateApplicantsChart(),
+                            ),
                           ),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 60,
-                          sections: generateApplicantsChart(),
                         ),
-                      ),
-                    ),
                     const Gap(16),
                     _isShowTable ? Container() :Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -22,8 +22,13 @@ class CPLatestTransactionPage extends StatefulWidget {
 
 class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
   bool _isLoading = false;
-  List<TransactionDetails> listData =
-      List<TransactionDetails>.empty(growable: true);
+  List<TransactionDetails> listData = List<TransactionDetails>.empty(growable: true);
+
+  @override
+  void initState() {
+    super.initState();
+    _getLatestTransactionData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
                       decoration: const BoxDecoration(
                           color:semiBlue,
                           borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                      child: Row(
+                      child: const Row(
                         children: [
                           Expanded(
                               flex: 2,
@@ -111,7 +116,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
                       ),
                     ),
                     _itemList(),
-                  Gap(22),
+                  const Gap(22),
                   ]
                 )
                 : const MyNoDataWidget(msg: "No data found."),
@@ -230,12 +235,6 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _getLatestTransactionData();
-  }
-
   _getLatestTransactionData() async {
     setState(() {
       _isLoading = true;
@@ -259,7 +258,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
       if (statusCode == 200 && dataResponse.success == 1) {
         try {
           if (dataResponse.transactionDetails != null) {
-            listData = dataResponse.transactionDetails!;
+            listData = dataResponse.transactionDetails ?? [];
             setState(() {
               _isLoading = false;
             });
@@ -282,11 +281,6 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
           _isLoading = false;
         });
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

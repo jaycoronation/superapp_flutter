@@ -127,87 +127,89 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
     );
   }
 
-  ListView _itemList() {
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
-        primary: false,
-        padding: EdgeInsets.zero,
-        itemCount: listData.length,
-        itemBuilder: (ctx, index) => (Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: index % 2 == 0 ? white : semiBlue,
-                    borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.all(12),
-                        width: double.infinity,
-                        color: lightBlue,
-                        child: Text(
-                            toDisplayCase(listData[index]
-                                .applicant
-                                .toString()),
-                            style: const TextStyle(
-                                color: blue,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900))),
-                    Container(child: _subItemList(listData[index].value!,index)),
-                    Container(
-                      margin: const EdgeInsets.only(left: 8,right: 8,top: 12,bottom: 12),
-                      child: Row(
-                        children: [
-                          const Expanded(
-                              flex: 2,
-                              child: Text("Total",
-                                  style: TextStyle(
-                                      color: blue,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700))),
-                          Expanded(
-                              flex: 1,
-                              child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCLTotal.toString()),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: blue,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700))),
-                          Expanded(
-                              flex: 1,
-                              child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCLTotal.toString()),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: blue,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700))),
-                          Expanded(
-                              flex: 1,
-                              child: Text(
-                                  convertCommaSeparatedAmount(listData[index].schemeTotal!.capitalGainTotal.toString()),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: blue,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700)
-                              )
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        )));
+  Widget _itemList() {
+    return Expanded(
+      child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          physics: const AlwaysScrollableScrollPhysics(),
+          primary: false,
+          padding: EdgeInsets.zero,
+          itemCount: listData.length,
+          itemBuilder: (ctx, index) => (Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: index % 2 == 0 ? white : semiBlue,
+                      borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(12),
+                          width: double.infinity,
+                          color: lightBlue,
+                          child: Text(
+                              toDisplayCase(listData[index]
+                                  .applicant
+                                  .toString()),
+                              style: const TextStyle(
+                                  color: blue,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900))),
+                      Container(child: _subItemList(listData[index].value ?? [],index)),
+                      Container(
+                        margin: const EdgeInsets.only(left: 8,right: 8,top: 12,bottom: 12),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                                flex: 2,
+                                child: Text("Total",
+                                    style: TextStyle(
+                                        color: blue,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700))),
+                            Expanded(
+                                flex: 1,
+                                child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCLTotal.toString()),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: blue,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700))),
+                            Expanded(
+                                flex: 1,
+                                child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCLTotal.toString()),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: blue,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700))),
+                            Expanded(
+                                flex: 1,
+                                child: Text(
+                                    convertCommaSeparatedAmount(listData[index].schemeTotal!.capitalGainTotal.toString()),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: blue,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700)
+                                )
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ))),
+    );
   }
 
   ListView _subItemList(List<Value> subListData,int topPos) {
