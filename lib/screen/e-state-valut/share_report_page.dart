@@ -42,7 +42,9 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
           elevation: 0,
           backgroundColor: appBg,
         ),
-        body: _isLoading ? const LoadingWidget() : setData());
+        body: _isLoading
+            ? const LoadingWidget()
+            : setData());
   }
 
   SafeArea setData() {
@@ -72,8 +74,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: blue,
-                        onPrimary: blue,
+                        foregroundColor: blue, backgroundColor: blue,
                         elevation: 0.0,
                         padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                         side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
@@ -126,7 +127,8 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
             primary: false,
             padding: EdgeInsets.zero,
             itemCount: listData.length,
-            itemBuilder: (ctx, index) => (GestureDetector(
+            itemBuilder: (ctx, index) => (
+              GestureDetector(
                 onTap: () async {},
                 child: Container(
                   alignment: Alignment.topLeft,
@@ -156,21 +158,19 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                       index == 0
                           ? Container()
                           : Container(
-                          alignment: Alignment.centerRight,
-                          margin: const EdgeInsets.only(top: 12, right: 10),
-                          height: 32,
-                          child: ElevatedButton(
+                            alignment: Alignment.centerRight,
+                            margin: const EdgeInsets.only(top: 12, right: 10),
+                            height: 32,
+                            child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: white,
-                                //button's fill color
-                                onPrimary: white,
+                                foregroundColor: white, backgroundColor: white,
                                 //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
                                 elevation: 0.0,
                                 //buttons Material shadow
                                 //specify the button's text TextStyle
                                 side: const BorderSide(color: blue, width: 0.7, style: BorderStyle.solid),
                                 padding: const EdgeInsets.only(left: 22.0, right: 22.0),
-                                //set border for the button
+                                //set border for the button                                      l̥
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                                 // set the buttons shape. Make its birders rounded etc
                                 tapTargetSize: MaterialTapTargetSize.padded,
@@ -191,20 +191,28 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                                 "Remove",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w600),
-                              ))),
+                              )
+                          )
+                      ),
                     ],
                   ),
-                )))),
+                )
+              )
+            )
+        ),
         Row(
           children: [
-            Expanded(flex: 1, child: Container()),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
             Container(
               margin: const EdgeInsets.only(top: 12),
               height: 36,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: white,
-                    onPrimary: white,
+                    foregroundColor: white,
+                    backgroundColor: white,
                     //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
                     elevation: 0.0,
                     side: const BorderSide(color: blue, width: 0.7, style: BorderStyle.solid),
@@ -224,7 +232,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                     addMoreViews(ShareDataGetSet());
                   }, //set both onPressed and onLongPressed to null to see the disabled properties
                   onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
-                  child: Row(
+                  child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -235,9 +243,13 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                         style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w600),
                       )
                     ],
-                  )),
+                  )
+              ),
             ),
-            Expanded(flex: 1, child: Container()),
+            Expanded(
+              flex: 1,
+              child: Container()
+            ),
           ],
         )
       ],
@@ -281,7 +293,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
       }
       else
       {
-          continue;
+        continue;
       }
     }
     return isValid;

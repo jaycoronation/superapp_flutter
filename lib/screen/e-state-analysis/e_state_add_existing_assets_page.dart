@@ -193,8 +193,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                 width: double.infinity,
                                 child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      primary: blue,
-                                      onPrimary: blue,
+                                      foregroundColor: blue, backgroundColor: blue,
                                       elevation: 0.0,
                                       padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                                       side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),

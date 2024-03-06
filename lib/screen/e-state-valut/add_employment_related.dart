@@ -82,8 +82,7 @@ class _AddEmploymentRelatedPageState extends BaseState<AddEmploymentRelatedPage>
                   width: double.infinity,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: blue,
-                        onPrimary: blue,
+                        foregroundColor: blue, backgroundColor: blue,
                         elevation: 0.0,
                         padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                         side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
@@ -289,9 +288,7 @@ class _AddEmploymentRelatedPageState extends BaseState<AddEmploymentRelatedPage>
                                 height: 32,
                                 child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      primary: white,
-                                      //button's fill color
-                                      onPrimary: white,
+                                      foregroundColor: white, backgroundColor: white,
                                       //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
                                       elevation: 0.0,
                                       //buttons Material shadow
@@ -334,8 +331,7 @@ class _AddEmploymentRelatedPageState extends BaseState<AddEmploymentRelatedPage>
                   height: 36,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: white,
-                        onPrimary: white,
+                        foregroundColor: white, backgroundColor: white,
                         //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
                         elevation: 0.0,
                         side: const BorderSide(color: blue, width: 0.7, style: BorderStyle.solid),
