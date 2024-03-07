@@ -83,26 +83,29 @@ class CPHomePageState extends BaseState<CPHomePage> {
             automaticallyImplyLeading: false,
             backgroundColor: appBg,
             elevation: 0,
-            leading: GestureDetector(
-              onTap: () {
-                if (_currentIndex == 0)
-                  {
-                    Navigator.pop(context);
-                  }
-                else
-                  {
-                    final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
-                    bar.onTap!(0);
-                  }
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(left: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
+            leading: Visibility(
+              visible: kIsWeb == false,
+              child: GestureDetector(
+                onTap: () {
+                  if (_currentIndex == 0)
+                    {
+                      Navigator.pop(context);
+                    }
+                  else
+                    {
+                      final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
+                      bar.onTap!(0);
+                    }
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(left: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
+                  ),
                 ),
               ),
             ),
@@ -159,6 +162,9 @@ class CPHomePageState extends BaseState<CPHomePage> {
 
   void openDocumentShareSheet() {
     showModalBottomSheet(
+        constraints: BoxConstraints(
+          maxWidth: 600,
+        ),
         isScrollControlled: true,
         backgroundColor: white,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
@@ -166,177 +172,173 @@ class CPHomePageState extends BaseState<CPHomePage> {
         builder: (context) {
           return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
             return Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 60),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 25),
               child: Wrap(
                 children: <Widget>[
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPBsMovementPage()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/portfolio_ic_bs_movement.png', width: 24, height: 24,color: blue),
-                                Container(width: 12),
-                                const Text(
-                                  "BS Movement",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                )
-                              ],
+                  Container(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPBsMovementPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_bs_movement.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "BS Movement",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(12),
-                        const Divider(
-                          height: 0.5,
-                          thickness: 0.5,
-                          color: divider_color,
-                        ),
-                        const Gap(12),
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestTransactionPage()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/portfolio_ic_transaction.png', width: 24, height: 24,color: blue),
-                                Container(width: 12),
-                                const Text(
-                                  "Latest Transactions",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                )
-                              ],
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestTransactionPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_transaction.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Latest Transactions",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(12),
-                        const Divider(
-                          height: 0.5,
-                          thickness: 0.5,
-                          color: divider_color,
-                        ),
-                        const Gap(12),
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestSIPPage()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/portfolio_ic_sip_stp.png', width: 24, height: 24,color: blue),
-                                Container(width: 12),
-                                const Text(
-                                  "Latest SIP",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                )
-                              ],
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestSIPPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_sip_stp.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Latest SIP",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(12),
-                        const Divider(
-                          height: 0.5,
-                          thickness: 0.5,
-                          color: divider_color,
-                        ),
-                        const Gap(12),
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPSchemeAllocationPage()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/portfolio_ic_scheme_name.png', width: 24, height: 24,color: blue),
-                                Container(width: 12),
-                                const Text(
-                                  "Scheme Allocation",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                )
-                              ],
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPSchemeAllocationPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_scheme_name.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Scheme Allocation",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(12),
-                        const Divider(
-                          height: 0.5,
-                          thickness: 0.5,
-                          color: divider_color,
-                        ),
-                        const Gap(12),
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPFundHouseAllocationPage()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
-                                Container(width: 12),
-                                const Text(
-                                  "Fund House Allocation",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                )
-                              ],
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPFundHouseAllocationPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Fund House Allocation",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(12),
-                        const Divider(
-                          height: 0.5,
-                          thickness: 0.5,
-                          color: divider_color,
-                        ),
-                        const Gap(12),
-                        InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPCapitalGainPage()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
-                                Container(width: 12),
-                                const Text(
-                                  "Capital Gain",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                )
-                              ],
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPCapitalGainPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Capital Gain",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(12),
-                        const Divider(
-                          height: 0.5,
-                          thickness: 0.5,
-                          color: divider_color,
-                        ),
-                        const Gap(18),
-                        Row(
-                          children: [
-                            Expanded(flex: 1,child: Container()),
-                            Expanded(flex:2,child: Image.asset('assets/images/portfolio_icon_logo_header_blue.png',fit: BoxFit.contain,color: blue),),
-                            Expanded(flex:1,child: Container())
-                          ],
-                        ),
-                        const Gap(18),
-                      ],
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+
+                          Image.asset('assets/images/portfolio_icon_logo_header_blue.png',fit: BoxFit.contain,color: blue, width: 250,height: 100,),
+
+                        ],
+                      ),
                     ),
                   ),
                 ],

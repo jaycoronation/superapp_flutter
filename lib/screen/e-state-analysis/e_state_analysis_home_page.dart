@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -110,14 +111,17 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
           backgroundColor: appBg,
           elevation: 0,
           centerTitle: true,
-          leading: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
+          leading: Visibility(
+            visible: kIsWeb == false,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
+              ),
             ),
           ),
           title: const Text("Estate Analysis",

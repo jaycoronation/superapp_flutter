@@ -1,7 +1,7 @@
 //Live
-const String API_DOMAIN_CP = "https://portfolio.saltpixels.in/"; //for live
+const String API_DOMAIN_CP = "https://portfolio.alphacapital.in/"; //for live
 
-const String API_URL_CP = "${API_DOMAIN_CP}api/Mint_services_v2/";
+const String API_URL_CP = "${API_DOMAIN_CP}api/services/";
 
 //latest transaction
 String latestTransaction = "last_30_days_transaction_consolidated_networth";

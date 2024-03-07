@@ -158,16 +158,6 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )
-                    ),
                     Container(width: 8,),
                     const Expanded(child: Text("Alpha Capital Blog",
                       textAlign: TextAlign.start,

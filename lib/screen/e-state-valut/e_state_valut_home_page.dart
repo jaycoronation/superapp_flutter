@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -73,14 +74,17 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
           backgroundColor: appBg,
           elevation: 0,
           centerTitle: true,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 8),
-              child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
+          leading: Visibility(
+            visible: kIsWeb == false,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(left: 8),
+                child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
+              ),
             ),
           ),
           title: const Text(

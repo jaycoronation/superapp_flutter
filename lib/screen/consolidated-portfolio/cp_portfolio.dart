@@ -74,19 +74,22 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         automaticallyImplyLeading: false,
         backgroundColor: appBg,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () {
-            final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
-            bar.onTap!(0);
-          },
-          child: Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.only(left: 8),
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
+        leading: Visibility(
+          visible: kIsWeb == false,
+          child: GestureDetector(
+            onTap: () {
+              final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
+              bar.onTap!(0);
+            },
+            child: Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(left: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
+              ),
             ),
           ),
         ),

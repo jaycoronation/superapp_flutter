@@ -276,15 +276,7 @@ class _ContactPageState extends BaseState<ContactPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
+
                     const Expanded(child: Text("Contact",
                       textAlign: TextAlign.start,
                       style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
@@ -602,6 +594,7 @@ class _ContactPageState extends BaseState<ContactPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
+                                    shape: StadiumBorder(),
                                     foregroundColor: blue, backgroundColor: blue,
                                     elevation: 0.0,
                                     padding: const EdgeInsets.only(top: 22.0, bottom: 22.0),

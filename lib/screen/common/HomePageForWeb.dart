@@ -31,166 +31,17 @@ class HomePageForWeb extends StatefulWidget {
 }
 
 class _HomePageForWebState extends BaseState<HomePageForWeb> {
-  int currentIndex = 1;
+  int currentIndex = 0;
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
-  List<SideMenuItem> sideMenuItem = [];
-
 
   @override
   void initState() {
-    sideMenuItem = [
-      SideMenuItem(
-        title: 'Consolidated Portfolio',
-        onTap: (index, controller) {
-          print("INDEX === $index");
-          print("currentPage ${controller.currentPage}");
-          setState(() {
-            sideMenu.changePage(0);
-          });
-        },
-        iconWidget: Container(
-          height: 50,
-          width: 50,
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(22)),
-            border: sideMenu.currentPage == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-            color: sideMenu.currentPage == 0 ? listActionColor : chart_color12,
-          ),
-          child: sideMenu.currentPage == 0
-              ? Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35, color: white,)
-              : Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35),
-        ),
-      ),
-      SideMenuItem(
-        title: 'Estate Analysis',
-        onTap: (index, controller) {
-          print("INDEX === $index");
-          print("currentPage ${controller.currentPage}");
-          setState(() {
-            sideMenu.changePage(1);
-          });
-        },
-        iconWidget: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(22)),
-              border: sideMenu.currentPage == 1 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-              color: sideMenu.currentPage == 1 ? listActionColor : chart_color12,
-            ),
-            child: sideMenu.currentPage == 1
-                ? Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35, color: white,)
-                : Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35)
-        ),
-      ),
-      SideMenuItem(
-        title: 'Estate Vault',
-        onTap: (index, controller) {
-          print("INDEX === $index");
-          print("currentPage ${controller.currentPage}");
-          setState(() {
-            sideMenu.changePage(2);
-          });
-        },
-        iconWidget: Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(22)),
-            border: sideMenu.currentPage == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-            color: sideMenu.currentPage == 2 ? listActionColor : chart_color12,
-          ),
-          child: sideMenu.currentPage == 2
-              ? Image.asset('assets/images/ic_vault.png', width: 35, height: 35, color: white,)
-              : Image.asset('assets/images/ic_vault.png', width: 35, height: 35),
-        ),
-      ),
-      SideMenuItem(
-        title: 'Fix Meeting',
-        onTap: (index, _) async {
-          final Uri url = Uri.parse('https://alphacapital.coronation.in/calendly/index.html');
-          if (!await launchUrl(url))
-          {
-            throw Exception('Could not launch ');
-          }
-          setState(() {
-            sideMenu.changePage(0);
-          });
-        },
-        iconWidget: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(22)),
-              border: sideMenu.currentPage == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-              color: sideMenu.currentPage == 3 ? listActionColor : chart_color12,
-            ),
-            child: sideMenu.currentPage == 3
-                ? Image.asset('assets/images/ic_meeting.png', width: 35, height: 35, color: white,)
-                : Image.asset('assets/images/ic_meeting.png', width: 35, height: 35)
-        ),
-      ),
-      SideMenuItem(
-        title: 'Videos',
-        onTap: (index, _) {
-          setState(() {
-            sideMenu.changePage(4);
-          });
-        },
-        iconWidget:  Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(22)),
-              border: sideMenu.currentPage == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-              color: sideMenu.currentPage == 4 ? listActionColor : chart_color12,
-            ),
-            child: sideMenu.currentPage == 4
-                ? Image.asset('assets/images/ic_videos.png', width: 35, height: 35, color: white,)
-                : Image.asset('assets/images/ic_videos.png', width: 35, height: 35)
-        ),
-      ),
-      SideMenuItem(
-        title: 'Blogs',
-        onTap: (index, _) {
-          setState(() {
-            sideMenu.changePage(5);
-          });
-        },
-        iconWidget: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(22)),
-              border: sideMenu.currentPage == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-              color: sideMenu.currentPage == 5 ? listActionColor : chart_color12,
-            ),
-            child: sideMenu.currentPage == 5
-                ? Image.asset('assets/images/ic_blog.png', width: 35, height: 35, color: white,)
-                : Image.asset('assets/images/ic_blog.png', width: 35, height: 35)
-        ),
-      ),
-      SideMenuItem(
-        title: 'Contact',
-        onTap: (index, _) {
-          setState(() {
-            sideMenu.changePage(6);
-          });
-        },
-        iconWidget: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(22)),
-              border: sideMenu.currentPage == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-              color: sideMenu.currentPage == 6 ? listActionColor : chart_color12,
-            ),
-            child: sideMenu.currentPage == 6
-                ? Image.asset('assets/images/ic_contact.png', width: 35, height: 35, color: white,)
-                : Image.asset('assets/images/ic_contact.png', width: 35, height: 35)
-        ),
-      ),
-    ];
+    sideMenu.addListener((index) {
+      print("index === $index");
+    });
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -201,386 +52,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
       statusBarBrightness: Brightness.dark,
     ));
 
-    return ResponsiveWidget.isSmallScreen(context)
-        ? WillPopScope(
-      child: Scaffold(
-        backgroundColor: chart_color11,
-        appBar: AppBar(
-          backgroundColor: chart_color11,
-          elevation: 0,
-          toolbarHeight: 200,
-          title: Image.asset('assets/images/ic_logo.png',height: 155),
-          centerTitle: false,
-        ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: SizedBox(
-                width: 310,
-                height: MediaQuery.of(context).size.height -120,
-                child: Material(
-                  color: white,
-                  shape: const RoundedRectangleBorder(
-                      side:  BorderSide(color: grayLight),
-                      borderRadius: BorderRadius.all( Radius.circular(14))
-                  ),
-                  elevation: 15.0,
-                  child: SingleChildScrollView(
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(height: 12,),
-                          Padding(
-                            padding: const EdgeInsets.all(18),
-                            child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
-                          ),
-                          // InkWell(
-                          //   hoverColor: Colors.lightBlue,
-                          //   mouseCursor: MaterialStateMouseCursor.clickable,
-                          //   canRequestFocus: true,
-                          //   onTap: (){
-                          //     setState(() {
-                          //       currentIndex = 0;
-                          //     });
-                          //   },
-                          //   child: Container(
-                          //       color: currentIndex == 0 ? blue : Colors.white,
-                          //       padding: const EdgeInsets.all(12),
-                          //       child: Row(
-                          //         children: [
-                          //           Container(
-                          //               padding: const EdgeInsets.all(4),
-                          //               decoration: BoxDecoration(
-                          //                 borderRadius: const BorderRadius.all(Radius.circular(22)),
-                          //                 border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                          //                 color: chart_color12,
-                          //               ),
-                          //               child: Image.asset('assets/images/ic_portfolio.png', width: 35, height: 35)
-                          //           ),
-                          //           Container(width: 18,),
-                          //           Text('Alpha Portfolio',
-                          //             style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ?white : black, fontSize: 18),
-                          //           )
-                          //         ],
-                          //       )
-                          //   ),
-                          // ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 1;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 1 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration:  BoxDecoration(
-                                //     border: currentIndex == 1 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 1 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Consolidated Portfolio', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 1 ?white : black, fontSize: 18),
-                                    )],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 2;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 2 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration:  BoxDecoration(
-                                //     border: currentIndex == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Estate Analysis', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 2 ?white : black, fontSize: 18),
-                                    )],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 3;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 3 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration: BoxDecoration(
-                                //     border: currentIndex == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_vault.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Estate Vault', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 3 ?white : black, fontSize: 18),
-                                    )],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: () async {
-                              final Uri url = Uri.parse('https://alphacapital.coronation.in/calendly/index.html');
-                              if (!await launchUrl(url)) {
-                                  throw Exception('Could not launch ');
-                                }
-                              setState(() {
-                              currentIndex = 1;
-                              });
-                              setState(() {
-                                currentIndex = 0;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 4 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration:  BoxDecoration(
-                                //     border: currentIndex == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_meeting.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Fix Meeting', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 4 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 5;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 5 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration: BoxDecoration(
-                                //     border: currentIndex == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_videos.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Videos', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 5 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 6;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 6 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration: BoxDecoration(
-                                //     border: currentIndex == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_blog.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Blogs', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 6 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                currentIndex = 7;
-                              });
-                            },
-                            child: Container(
-                                color: currentIndex == 7 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration: BoxDecoration(
-                                //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_contact.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Contact', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 7 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
-                          //Container(height: 18,),
-                          GestureDetector(
-                            onTap: (){
-                              logoutFromApp();
-                            },
-                            child: Container(
-                                color: currentIndex == 8 ? blue : Colors.white,
-                                padding: const EdgeInsets.all(12),
-                                // decoration: BoxDecoration(
-                                //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
-                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
-                                // ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                          border: currentIndex == 8 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                          color: chart_color12,
-                                        ),
-                                        child: Image.asset('assets/images/ic_logout.png', width: 35, height: 35)
-                                    ),
-                                    Container(width: 18,),
-                                    Text('Logout', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 8 ?white : black, fontSize: 18),
-                                    )
-                                  ],
-                                )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Container(width: 22,),
-            Expanded(
-              child: Container(
-                height: MediaQuery.of(context).size.height -120,
-                margin: const EdgeInsets.only(top: 12, bottom: 12),
-                decoration: BoxDecoration(
-                  border:Border.all(color: grayLight, width: 0.5 ),
-                  color: white,
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 2.0,
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: currentIndex == 1
-                      ? const CPHomePage()
-                      : currentIndex == 2
-                      ? const EStateAnalysisHomePage()
-                      :currentIndex == 3
-                      ? const EStateVaultHomePage()
-                      :currentIndex == 4
-                      ? const MeetingPage()
-                      :currentIndex == 5
-                      ? const VideoListPage()
-                      :currentIndex == 6
-                      ? const BlogsPage()
-                      :currentIndex == 7
-                      ? const ContactPage()
-                      : Container(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      onWillPop: () {
-        SystemNavigator.pop();
-        return Future.value(true);
-      },
-    )
-        : WillPopScope(
+    return  WillPopScope(
           child: Scaffold(
             backgroundColor: chart_color11,
             appBar: AppBar(
@@ -642,169 +114,256 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                     elevation: 10.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: SideMenu(
-                        controller: sideMenu,
-                        style: SideMenuStyle(
-                          itemHeight: 75,
-                          displayMode: SideMenuDisplayMode.auto,
-                          hoverColor: blue.withOpacity(0.2),
-                          selectedHoverColor: blue.withOpacity(0.6),
-                          selectedColor: blue,
-                          backgroundColor: white,
-                          selectedTitleTextStyle: const TextStyle(fontWeight: FontWeight.w500, color: white, fontSize: 18),
-                          unselectedTitleTextStyle: const TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 18),
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(top: 18, bottom: 18, left: 32),
-                          child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black, fontSize: 22)),
-                        ),
-                        items: [
-                          SideMenuItem(
-                            title: 'Consolidated Portfolio',
-                            onTap: (index, controller) {
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(height: 12,),
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
+                          ),
+                          GestureDetector(
+                            onTap: (){
                               setState(() {
-                                sideMenu.changePage(0);
+                                currentIndex = 0;
                               });
                             },
-                            iconWidget: Container(
-                              height: 50,
-                              width: 50,
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                border: sideMenu.currentPage == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                color: sideMenu.currentPage == 0 ? listActionColor : chart_color12,
-                              ),
-                              child: sideMenu.currentPage == 0
-                                  ? Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35, color: white,)
-                                  : Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35),
+                            child: Container(
+                                color: currentIndex == 0 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 0 ? listActionColor : chart_color12,
+
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          // border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          // color: chart_color12,
+                                        ),
+                                      child: currentIndex == 0
+                                          ? Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35, color: white,)
+                                          : Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35, ) ,
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Consolidated Portfolio', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ? white : black, fontSize: 18),
+                                    )],
+                                )
                             ),
                           ),
-                          SideMenuItem(
-                            title: 'Estate Analysis',
-                            onTap: (index, controller) {
-                              print("INDEX === $index");
-                              print("currentPage ${controller.currentPage}");
+                          //Container(height: 18,),
+                          GestureDetector(
+                            onTap: (){
                               setState(() {
-                                sideMenu.changePage(1);
+                                currentIndex = 1;
                               });
                             },
-                            iconWidget: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                  border: sideMenu.currentPage == 1 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                  color: sideMenu.currentPage == 1 ? listActionColor : chart_color12,
-                                ),
-                                child: sideMenu.currentPage == 1
-                                    ? Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35, color: white,)
-                                    : Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35)
+                            child: Container(
+                                color: currentIndex == 1 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                // decoration:  BoxDecoration(
+                                //     border: currentIndex == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                // ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          border: currentIndex == 1 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 1 ? listActionColor : chart_color12,
+                                        ),
+                                        child: currentIndex == 1
+                                          ? Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35, color: white,)
+                                          : Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35)
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Estate Analysis', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 1 ?white : black, fontSize: 18),
+                                    )],
+                                )
                             ),
                           ),
-                          SideMenuItem(
-                            title: 'Estate Vault',
-                            onTap: (index, controller) {
-                              print("INDEX === $index");
-                              print("currentPage ${controller.currentPage}");
+                          //Container(height: 18,),
+                          GestureDetector(
+                            onTap: (){
                               setState(() {
-                                sideMenu.changePage(2);
+                                currentIndex = 2;
                               });
                             },
-                            iconWidget: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                border: sideMenu.currentPage == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                color: sideMenu.currentPage == 2 ? listActionColor : chart_color12,
-                              ),
-                              child: sideMenu.currentPage == 2
-                                  ? Image.asset('assets/images/ic_vault.png', width: 35, height: 35, color: white,)
-                                  : Image.asset('assets/images/ic_vault.png', width: 35, height: 35),
+                            child: Container(
+                                color: currentIndex == 2 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                // decoration: BoxDecoration(
+                                //     border: currentIndex == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                // ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          border: currentIndex == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 2 ? listActionColor : chart_color12,
+                                        ),
+                                        child: currentIndex == 2
+                                            ? Image.asset('assets/images/ic_vault.png', width: 35, height: 35, color: white,)
+                                            : Image.asset('assets/images/ic_vault.png', width: 35, height: 35)
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Estate Vault', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 2 ? white : black, fontSize: 18),
+                                    )],
+                                )
                             ),
                           ),
-                          SideMenuItem(
-                            title: 'Fix Meeting',
-                            onTap: (index, _) async {
+                          //Container(height: 18,),
+                          GestureDetector(
+                            onTap: () async {
                               final Uri url = Uri.parse('https://alphacapital.coronation.in/calendly/index.html');
-                              if (!await launchUrl(url))
-                              {
+                              if (!await launchUrl(url)) {
                                 throw Exception('Could not launch ');
                               }
                               setState(() {
-                                sideMenu.changePage(0);
+                                currentIndex = 0;
                               });
                             },
-                            iconWidget: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                  border: sideMenu.currentPage == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                  color: sideMenu.currentPage == 3 ? listActionColor : chart_color12,
-                                ),
-                                child: sideMenu.currentPage == 3
-                                    ? Image.asset('assets/images/ic_meeting.png', width: 35, height: 35, color: white,)
-                                    : Image.asset('assets/images/ic_meeting.png', width: 35, height: 35)
+                            child: Container(
+                                color: currentIndex == 3 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                // decoration:  BoxDecoration(
+                                //     border: currentIndex == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                // ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          border: currentIndex == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 3 ? listActionColor : chart_color12,
+                                        ),
+                                        child:   currentIndex == 3
+                                        ? Image.asset('assets/images/ic_meeting.png', width: 35, height: 35, color: white,)
+                                        : Image.asset('assets/images/ic_meeting.png', width: 35, height: 35)
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Fix Meeting', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 3 ? white : black, fontSize: 18),
+                                    )
+                                  ],
+                                )
                             ),
                           ),
-                          SideMenuItem(
-                            title: 'Videos',
-                            onTap: (index, _) {
+                          //Container(height: 18,),
+                          GestureDetector(
+                            onTap: (){
                               setState(() {
-                                sideMenu.changePage(4);
+                                currentIndex = 4;
                               });
                             },
-                            iconWidget:  Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                  border: sideMenu.currentPage == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                  color: sideMenu.currentPage == 4 ? listActionColor : chart_color12,
-                                ),
-                                child: sideMenu.currentPage == 4
-                                    ? Image.asset('assets/images/ic_videos.png', width: 35, height: 35, color: white,)
-                                    : Image.asset('assets/images/ic_videos.png', width: 35, height: 35)
+                            child: Container(
+                                color: currentIndex == 4 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                // decoration: BoxDecoration(
+                                //     border: currentIndex == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                // ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          border: currentIndex == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 4 ? listActionColor : chart_color12,
+                                        ),
+                                        child:  currentIndex == 4
+                                            ? Image.asset('assets/images/ic_videos.png', width: 35, height: 35, color: white,)
+                                            : Image.asset('assets/images/ic_videos.png', width: 35, height: 35)
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Videos', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 4 ?white : black, fontSize: 18),
+                                    )
+                                  ],
+                                )
                             ),
                           ),
-                          SideMenuItem(
-                            title: 'Blogs',
-                            onTap: (index, _) {
+                          //Container(height: 18,),
+                          GestureDetector(
+                            onTap: (){
                               setState(() {
-                                sideMenu.changePage(5);
+                                currentIndex = 5;
                               });
                             },
-                            iconWidget: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                  border: sideMenu.currentPage == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                  color: sideMenu.currentPage == 5 ? listActionColor : chart_color12,
-                                ),
-                                child: sideMenu.currentPage == 5
-                                    ? Image.asset('assets/images/ic_blog.png', width: 35, height: 35, color: white,)
-                                    : Image.asset('assets/images/ic_blog.png', width: 35, height: 35)
+                            child: Container(
+                                color: currentIndex == 5 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                // decoration: BoxDecoration(
+                                //     border: currentIndex == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                // ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          border: currentIndex == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 5 ? listActionColor : chart_color12,
+                                        ),
+                                        child: currentIndex == 5
+                                            ? Image.asset('assets/images/ic_blog.png', width: 35, height: 35,color: white,)
+                                            : Image.asset('assets/images/ic_blog.png', width: 35, height: 35)
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Blogs', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 5 ?white : black, fontSize: 18),
+                                    )
+                                  ],
+                                )
                             ),
                           ),
-                          SideMenuItem(
-                            title: 'Contact',
-                            onTap: (index, _) {
+                          //Container(height: 18,),
+                          GestureDetector(
+                            onTap: (){
                               setState(() {
-                                sideMenu.changePage(6);
+                                currentIndex = 6;
                               });
                             },
-                            iconWidget: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(22)),
-                                  border: sideMenu.currentPage == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
-                                  color: sideMenu.currentPage == 6 ? listActionColor : chart_color12,
-                                ),
-                                child: sideMenu.currentPage == 6
-                                    ? Image.asset('assets/images/ic_contact.png', width: 35, height: 35, color: white,)
-                                    : Image.asset('assets/images/ic_contact.png', width: 35, height: 35)
+                            child: Container(
+                                color: currentIndex == 6 ? blue : Colors.white,
+                                padding: const EdgeInsets.all(12),
+                                // decoration: BoxDecoration(
+                                //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                // ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          border: currentIndex == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 6 ? listActionColor : chart_color12,
+                                        ),
+                                        child: currentIndex == 6
+                                              ? Image.asset('assets/images/ic_contact.png', width: 35, height: 35, color: white,)
+                                              : Image.asset('assets/images/ic_contact.png', width: 35, height: 35)
+                                    ),
+                                    Container(width: 18,),
+                                    Text('Contact', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 6 ?white : black, fontSize: 18),
+                                    )
+                                  ],
+                                )
                             ),
                           ),
-                        ]
-                      ),
+                          //Container(height: 18,),
+
+                        ],
+                      )
                     ),
                   ),
                 ),
@@ -828,7 +387,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: IndexedStack(
-                          index: sideMenu.currentPage,
+                          index: currentIndex,
                           children: const [
                             CPHomePage(),
                             EStateAnalysisHomePage(),
@@ -882,6 +441,9 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
 
   void logoutFromApp() {
     showModalBottomSheet<void>(
+      constraints: BoxConstraints(
+        maxWidth: 600,
+      ),
       context: context,
       backgroundColor: white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
