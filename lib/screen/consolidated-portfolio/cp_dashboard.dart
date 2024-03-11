@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -105,13 +107,16 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                             Text((convertCommaSeparatedAmount(strNetWorth)),
                                 style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
                             const Gap(10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                                Gap(12)
-                              ],
+                            Visibility(
+                              visible: false,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                  Gap(12)
+                                ],
+                              ),
                             ),
                             const Gap(10),
                           ],
@@ -349,13 +354,16 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                         Text((convertCommaSeparatedAmount(strNetWorth)),
                             style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
                         const Gap(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                            Gap(12)
-                          ],
+                        Visibility(
+                          visible: false,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                              Gap(12)
+                            ],
+                          ),
                         ),
                         const Gap(10),
                       ],

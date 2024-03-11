@@ -127,8 +127,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
             primary: false,
             padding: EdgeInsets.zero,
             itemCount: listData.length,
-            itemBuilder: (ctx, index) => (
-              GestureDetector(
+            itemBuilder: (ctx, index) => (GestureDetector(
                 onTap: () async {},
                 child: Container(
                   alignment: Alignment.topLeft,
@@ -158,10 +157,10 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                       index == 0
                           ? Container()
                           : Container(
-                            alignment: Alignment.centerRight,
-                            margin: const EdgeInsets.only(top: 12, right: 10),
-                            height: 32,
-                            child: ElevatedButton(
+                          alignment: Alignment.centerRight,
+                          margin: const EdgeInsets.only(top: 12, right: 10),
+                          height: 32,
+                          child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: white, backgroundColor: white,
                                 //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
@@ -170,7 +169,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                                 //specify the button's text TextStyle
                                 side: const BorderSide(color: blue, width: 0.7, style: BorderStyle.solid),
                                 padding: const EdgeInsets.only(left: 22.0, right: 22.0),
-                                //set border for the button                                      l̥
+                                //set border for the button
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                                 // set the buttons shape. Make its birders rounded etc
                                 tapTargetSize: MaterialTapTargetSize.padded,
@@ -191,21 +190,13 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                                 "Remove",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w600),
-                              )
-                          )
-                      ),
+                              ))),
                     ],
                   ),
-                )
-              )
-            )
-        ),
+                )))),
         Row(
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(),
-            ),
+            Expanded(flex: 1, child: Container()),
             Container(
               margin: const EdgeInsets.only(top: 12),
               height: 36,
@@ -232,7 +223,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                     addMoreViews(ShareDataGetSet());
                   }, //set both onPressed and onLongPressed to null to see the disabled properties
                   onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
-                  child: const Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -243,13 +234,9 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                         style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w600),
                       )
                     ],
-                  )
-              ),
+                  )),
             ),
-            Expanded(
-              flex: 1,
-              child: Container()
-            ),
+            Expanded(flex: 1, child: Container()),
           ],
         )
       ],
@@ -293,7 +280,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
       }
       else
       {
-        continue;
+          continue;
       }
     }
     return isValid;

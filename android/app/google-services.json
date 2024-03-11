@@ -92,6 +92,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204998889984:android:3910b2faebf1d7620d7ee5",
+        "android_client_info": {
+          "package_name": "tvs.mob.excelnet.alpha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204998889984-bcfdfoke7im11gr710uf4hie7nn2ikra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIO9zXDh3SQSbD7sZ-4vyd9dUZmnk2Zac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204998889984-bcfdfoke7im11gr710uf4hie7nn2ikra.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "204998889984-4e2mvokokti41okamcqeuk9ljnreuv66.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.coronation.superapp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

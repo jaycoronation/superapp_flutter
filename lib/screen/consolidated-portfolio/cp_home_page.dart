@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/GenerateReportResponseModel.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_movement.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_capital_gain.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_dashboard.dart';
@@ -14,8 +18,10 @@ import 'package:superapp_flutter/screen/consolidated-portfolio/cp_networth.dart'
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_portfolio.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_scheme_allocation.dart';
 import 'package:superapp_flutter/service/UpdateData.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/colors.dart';
+import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../../utils/base_class.dart';
 
@@ -33,6 +39,8 @@ class CPHomePageState extends BaseState<CPHomePage> {
   late TabController tabController;
   List<ApplicantDetails> listApplicants = [];
   String selectedApplicant = '';
+  bool isLoading = false;
+
 
   @override
   void initState() {
@@ -120,6 +128,26 @@ class CPHomePageState extends BaseState<CPHomePage> {
               textAlign: TextAlign.start,
               style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
             ),
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  generateReport();
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(right: 5),
+                  padding: const EdgeInsets.all(3),
+                  width: isLoading ? 50 : 32,
+                  height: isLoading ? 50 : 32,
+                  child: isLoading
+                      ? const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: CircularProgressIndicator(color: blue,strokeWidth: 3,),
+                      )
+                      : Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
+                ),
+              ),
+            ]
         ),
         body: IndexedStack(
           index: _currentIndex,
@@ -162,7 +190,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
 
   void openDocumentShareSheet() {
     showModalBottomSheet(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxWidth: 600,
         ),
         isScrollControlled: true,
@@ -390,6 +418,57 @@ class CPHomePageState extends BaseState<CPHomePage> {
           });
         }
     );
+  }
+
+  generateReport() async {
+    setState(() {
+      isLoading = true;
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP + generatePortfolioReport);
+
+    Map<String, String> jsonBody = {
+      'logged_in_id' : sessionManagerPMS.getUserId(),
+      'send_mail' : "",
+      'user_id' : sessionManagerPMS.getUserId()
+    };
+
+    final response = await http.post(url,body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = GenerateReportResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try {
+        setState(() async {
+          isLoading = false;
+          var reportURL = "${API_DOMAIN_CP}assets/saved_pdf/${dataResponse.pdfFileName}?ver=${DateTime.now().millisecondsSinceEpoch}";
+
+          Uri reportUrl = Uri.parse(reportURL);
+
+          if (await canLaunchUrl(reportUrl))
+            {
+              launchUrl(reportUrl,mode: LaunchMode.externalApplication);
+            }
+        });
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+
   }
 
   @override

@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/screen/common/webview_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
@@ -31,6 +34,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends BaseState<HomePage> {
   DateTime preBackPressTime = DateTime.now();
   final bool _isLoading = false;
+  final InAppReview inAppReview = InAppReview.instance;
+
 
   @override
   void initState() {
@@ -94,37 +99,34 @@ class _HomePageState extends BaseState<HomePage> {
           top: false,
           child: _isLoading
               ? const LoadingWidget()
-              : Column(
-                  children: [
-                    Expanded(
-                        child: Container(
+              : SingleChildScrollView(
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                      color: dashboardBg, borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        homePageBlocks(),
+                        Container(
                           alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                              color: dashboardBg, borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))
-                          ),
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              children: [
-                                homePageBlocks(),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
-                                ),
-                              ],
-                            ),
-                          ),
-                    ))
-                  ],
+                          child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+              ),
         ),
       ),
     );
   }
 
-  Expanded homePageBlocks() {
+  Widget homePageBlocks() {
     return Expanded(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -156,8 +158,11 @@ class _HomePageState extends BaseState<HomePage> {
                     const Gap(15),
                     Expanded(
                         child: InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
+                          onTap: () async {
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
+                            if (await inAppReview.isAvailable()) {
+                              inAppReview.requestReview();
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.only(left: 15, bottom: 20, top: 20, right: 2),
@@ -179,7 +184,8 @@ class _HomePageState extends BaseState<HomePage> {
                         )
                     )
                   ],
-                )),
+                )
+            ),
             const Gap(15),
             Expanded(
                 flex: 1,
@@ -237,7 +243,62 @@ class _HomePageState extends BaseState<HomePage> {
                         )
                     )
                   ],
-                )),
+                )
+            ),
+            const Gap(15),
+            Expanded(
+                flex: 1,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewPage('https://www.alphacapital.in/investor_charter/')),);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_blog.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text("RIA Charter",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                    ),
+                    const Gap(15),
+                    Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            //Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()),);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_videos.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text("My Task",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                          ),
+                        ))
+                  ],
+                )
+            ),
             const Gap(15),
             Expanded(
                 flex: 1,
@@ -291,7 +352,8 @@ class _HomePageState extends BaseState<HomePage> {
                           ),
                         ))
                   ],
-                )),
+                )
+            ),
             const Gap(15),
             Expanded(
                 flex: 1,
@@ -318,7 +380,8 @@ class _HomePageState extends BaseState<HomePage> {
                               ],
                             ),
                           ),
-                        )),
+                        )
+                    ),
                     const Gap(15),
                     Expanded(
                         child: InkWell(
@@ -343,10 +406,12 @@ class _HomePageState extends BaseState<HomePage> {
                           ),
                         ))
                   ],
-                )),
+                )
+            ),
             const Gap(15),
           ],
-        ));
+        )
+    );
   }
 
   void lastInsertedModule(String module) async {
@@ -359,7 +424,7 @@ class _HomePageState extends BaseState<HomePage> {
 
     Map<String, String> jsonBody = {
       'module': module,
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id': sessionManagerPMS.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

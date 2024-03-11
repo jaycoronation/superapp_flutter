@@ -37,3 +37,5 @@ String percentage = "settings/get_percentage";
 
 String xirrCommon = "commonXIRR";
 
+String generatePortfolioReport = 'generateReportEntrytoTable';
+

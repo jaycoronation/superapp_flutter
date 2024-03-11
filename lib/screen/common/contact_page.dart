@@ -268,24 +268,20 @@ class _ContactPageState extends BaseState<ContactPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                    const Expanded(child: Text("Contact",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
-                    )),
-                  ],
-                ),
-              ],
-            ),
+          leading:  InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(left: 8),
+                child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+              )),
+          title: const Text("Contact",
+            textAlign: TextAlign.start,
+            style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
           ),
+          titleSpacing: 0,
           centerTitle: false,
           elevation: 0,
           backgroundColor: white,
@@ -594,7 +590,7 @@ class _ContactPageState extends BaseState<ContactPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    shape: StadiumBorder(),
+                                    shape: const StadiumBorder(),
                                     foregroundColor: blue, backgroundColor: blue,
                                     elevation: 0.0,
                                     padding: const EdgeInsets.only(top: 22.0, bottom: 22.0),

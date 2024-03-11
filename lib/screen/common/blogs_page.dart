@@ -89,50 +89,40 @@ class _BlogsPageState extends BaseState<BlogsPage> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget.isSmallScreen(context)
-        ?  Scaffold(
+        ? Scaffold(
             backgroundColor: white,
             appBar: AppBar(
               toolbarHeight: 55,
               automaticallyImplyLeading: false,
-              title: Padding(
-                padding: const EdgeInsets.only(top: 0),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(right: 8),
-                              child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                            )),
-                        const Expanded(child: Text("Feeds",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                        )),
-                        const Spacer(),
-                        InkWell(
-                          onTap: () {
-                            _showFilterDialog();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(toDisplayCase(selectedCategory),
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+              leading: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  margin: const EdgeInsets.only(right: 8),
+                  child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+                )
               ),
+              title: const Text("Feeds",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+              ),
+              actions: [
+                InkWell(
+                  onTap: () {
+                    _showFilterDialog();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(toDisplayCase(selectedCategory),
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                )
+              ],
               centerTitle: false,
               elevation: 0,
               backgroundColor: white,
@@ -149,37 +139,21 @@ class _BlogsPageState extends BaseState<BlogsPage> {
         backgroundColor: white,
         appBar: AppBar(
           toolbarHeight: 55,
+          leading: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(left: 8),
+                child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+              )
+          ),
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(width: 8,),
-                    const Expanded(child: Text("Alpha Capital Blog",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
-                    )),
-                    const Spacer(),
-                    // InkWell(
-                    //   onTap: () {
-                    //     _showFilterDialog();
-                    //   },
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(8.0),
-                    //     child: Text(selectedFilterText.isEmpty ? "All" : selectedFilterText,
-                    //       textAlign: TextAlign.start,
-                    //       style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
-                    //     ),
-                    //   ),
-                    // )
-                  ],
-                ),
-              ],
-            ),
+          title: Text("Alpha Capital Blog",
+            textAlign: TextAlign.start,
+            style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
           ),
           centerTitle: false,
           elevation: 0,
