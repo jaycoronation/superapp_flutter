@@ -424,7 +424,7 @@ class _HomePageState extends BaseState<HomePage> {
 
     Map<String, String> jsonBody = {
       'module': module,
-      'user_id': sessionManagerPMS.getUserId().toString().trim(),
+      'user_id': module == 'login-estate-vault' ? sessionManagerVault.getUserId().toString().trim() : sessionManager.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

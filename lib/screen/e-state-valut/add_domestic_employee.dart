@@ -309,7 +309,7 @@ class _AddDomesticEmployeeState extends BaseState<AddDomesticEmployee> {
     Map<String, String> jsonBody = {
       // 'module':(widget as AddDomesticEmployee).isFromList ? "edit-future_expense" : "add-future_expense",
       'module':"add-domestic_employees",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

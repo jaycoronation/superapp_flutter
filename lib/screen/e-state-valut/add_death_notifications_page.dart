@@ -447,7 +447,7 @@ class _AddDeathNotificationPageState extends BaseState<AddDeathNotificationPage>
 
     Map<String, String> jsonBody = {
       'module':(widget as AddDeathNotificationPage).isForEdit ? "edit-death_notification" : "add-death_notification",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

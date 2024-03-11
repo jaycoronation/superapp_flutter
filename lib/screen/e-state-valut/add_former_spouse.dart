@@ -454,7 +454,7 @@ class _AddFormerSpousePageState extends BaseState<AddFormerSpousePage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddFormerSpousePage).isForEdit ? "edit-former_spouse" : "add-former_spouse",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

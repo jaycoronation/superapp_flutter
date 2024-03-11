@@ -440,7 +440,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
 
     Map<String, String> jsonBody = {
       'module':(widget as EStateAddExistingLiabilitiesPage).isFromList ? "edit-existing_liabilities" : "add-existing_liabilities",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManager.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

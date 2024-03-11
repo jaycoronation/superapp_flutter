@@ -670,7 +670,7 @@ class _AddOtherDebtsPageState extends BaseState<AddOtherDebtsPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddOtherDebtsPage).isForEdit ? "edit-other_debts" : "add-other_debts",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

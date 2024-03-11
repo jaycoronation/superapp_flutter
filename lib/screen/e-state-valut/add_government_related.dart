@@ -598,7 +598,7 @@ class _AddGovernmentRelatedPageState extends BaseState<AddGovernmentRelatedPage>
 
     Map<String, String> jsonBody = {
       'module':(widget as AddGovernmentRelatedPage).isForEdit ? "edit-gov_related" : "add-gov_related",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

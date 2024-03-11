@@ -606,7 +606,7 @@ class _AddOtherFinancialAssetsPageState extends BaseState<AddOtherFinancialAsset
 
     Map<String, String> jsonBody = {
       'module':(widget as AddOtherFinancialAssetsPage).isForEdit ? "edit-other_finance_assets" : "add-other_finance_assets",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

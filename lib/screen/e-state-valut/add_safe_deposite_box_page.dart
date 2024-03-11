@@ -451,7 +451,7 @@ class _AddSafeDepositBoxesPageState extends BaseState<AddSafeDepositBoxesPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddSafeDepositBoxesPage).isForEdit ? "edit-safe_deposite_box" : "add-safe_deposite_box",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

@@ -651,7 +651,7 @@ class _AddCreditCardsLoansPageState extends BaseState<AddCreditCardsLoansPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddCreditCardsLoansPage).isForEdit ? "edit-credit_cards_loans" : "add-credit_cards_loans",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

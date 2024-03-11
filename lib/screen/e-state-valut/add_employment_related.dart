@@ -480,7 +480,7 @@ class _AddEmploymentRelatedPageState extends BaseState<AddEmploymentRelatedPage>
 
     Map<String, String> jsonBody = {
       'module':(widget as AddEmploymentRelatedPage).isForEdit ? "edit-emp_related" : "add-emp_related",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

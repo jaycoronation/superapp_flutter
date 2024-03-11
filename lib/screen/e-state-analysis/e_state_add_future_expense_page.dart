@@ -821,7 +821,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
 
     Map<String, String> jsonBody = {
       'module':(widget as EStateAddFutureExpensePage).isFromList ? "edit-future_expense" : "add-future_expense",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManager.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

@@ -441,7 +441,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
 
     Map<String, String> jsonBody = {
       'module':(widget as EStateAddExistingAssetsPage).isFromList ? "edit-existing_assets" : "add-existing_assets",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManager.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

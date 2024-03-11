@@ -486,7 +486,7 @@ class _AddBusinessPageState extends BaseState<AddBusinessPage> {
     Map<String, String> jsonBody = {
       // 'module':(widget as AddBusinessPage).isFromList ? "edit-future_expense" : "add-future_expense",
       'module':"add-business",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

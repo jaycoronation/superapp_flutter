@@ -607,7 +607,7 @@ class _AddMutualFundsPageState extends BaseState<AddMutualFundsPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddMutualFundsPage).isForEdit ? "edit-mutual_funds" : "add-mutual_funds",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

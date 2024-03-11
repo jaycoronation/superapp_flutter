@@ -606,7 +606,7 @@ class _AddSharesBondsPageState extends BaseState<AddSharesBondsPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddSharesBondsPage).isForEdit ? "edit-share_bonds" : "add-share_bonds",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

@@ -345,7 +345,7 @@ class _AddConstitutionValuePageState extends BaseState<AddConstitutionValuePage>
 
     Map<String, String> jsonBody = {
       'module':(widget as AddConstitutionValuePage).isForEdit ? "edit-contitution_and_value" : "add-contitution_and_value",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

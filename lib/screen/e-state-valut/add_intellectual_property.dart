@@ -668,7 +668,7 @@ class _AddIntellectualPropertyPageState extends BaseState<AddIntellectualPropert
 
     Map<String, String> jsonBody = {
       'module':(widget as AddIntellectualPropertyPage).isForEdit ? "edit-intellectual_property" : "add-intellectual_property",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

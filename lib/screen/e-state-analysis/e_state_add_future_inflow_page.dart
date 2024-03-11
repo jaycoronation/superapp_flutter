@@ -542,7 +542,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
 
     Map<String, String> jsonBody = {
       'module':(widget as EStateAddFutureInflowPage).isFromList ? "edit-future_inflow" : "add-future_inflow",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManager.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

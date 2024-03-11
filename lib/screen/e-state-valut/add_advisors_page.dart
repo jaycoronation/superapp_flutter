@@ -459,7 +459,7 @@ class _AddAdvisersPageState extends BaseState<AddAdvisersPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddAdvisersPage).isForEdit ? "edit-advisors" : "add-advisors",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

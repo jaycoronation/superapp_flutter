@@ -479,7 +479,7 @@ class _AddCharityRelatedPageState extends BaseState<AddCharityRelatedPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddCharityRelatedPage).isForEdit ? "edit-charity_related" : "add-charity_related",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

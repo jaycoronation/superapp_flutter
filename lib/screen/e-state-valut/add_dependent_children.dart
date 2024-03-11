@@ -474,7 +474,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
 
     Map<String, String> jsonBody = {
       'module':"add-dependend_children",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

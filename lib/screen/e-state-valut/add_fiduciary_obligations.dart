@@ -585,7 +585,7 @@ class _AddFiduciaryObligationsPageState extends BaseState<AddFiduciaryObligation
 
     Map<String, String> jsonBody = {
       'module':(widget as AddFiduciaryObligationsPage).isForEdit ? "edit-fiduciary_obligations" : "add-fiduciary_obligations",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);

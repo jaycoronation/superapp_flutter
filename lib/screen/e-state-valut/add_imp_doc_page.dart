@@ -449,7 +449,7 @@ class _AddImpDocPageState extends BaseState<AddImpDocPage> {
 
     Map<String, String> jsonBody = {
       'module':(widget as AddImpDocPage).isForEdit ? "edit-imp_doc" : "add-imp_doc",
-      'user_id':sessionManagerPMS.getUserId().toString().trim(),
+      'user_id':sessionManagerVault.getUserId().toString().trim(),
     };
 
     final response = await http.post(url, body: jsonBody);
