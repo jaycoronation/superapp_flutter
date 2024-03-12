@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/colors.dart';
@@ -29,17 +30,10 @@ class _ProfilePageState extends BaseState<ProfilePage> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 8),
-              child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-            )
+            child: getBackArrow(),
         ),
-        title: const Text("Profile",
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: false,
+        title: getTitle("Profile",),
+        centerTitle: true,
         elevation: 0,
         backgroundColor: white,
       ),

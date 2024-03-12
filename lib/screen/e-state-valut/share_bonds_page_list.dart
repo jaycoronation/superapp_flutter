@@ -6,6 +6,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/widget/no_data.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/CommanResponse.dart';
@@ -47,8 +48,14 @@ class _ShareBondsListPageState extends BaseState<ShareBondsListPage> {
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName: "Share Bonds"),
-        centerTitle: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: getBackArrow(),
+        ),
+        title: getTitle( "Share Bonds"),
+        centerTitle: true,
         elevation: 0,
         backgroundColor: appBg,
       ),

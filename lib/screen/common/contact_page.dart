@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/CommanResponse.dart';
@@ -61,33 +62,17 @@ class _ContactPageState extends BaseState<ContactPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
           title: Padding(
             padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                    const Expanded(child: Text("Contact",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                    )),
-                  ],
-                ),
-              ],
-            ),
+            child: getTitle("Contact",),
           ),
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0,
           backgroundColor: white,
         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/screen/common/video_player_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../constant/colors.dart';
@@ -52,17 +53,10 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 8),
-                  child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                )
+                child: getBackArrow(),
             ),
-            title: const Text("Videos",
-              textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-            ),
-            centerTitle: false,
+            title: getTitle("Videos",),
+            centerTitle: true,
             elevation: 0,
             backgroundColor: white,
           ),

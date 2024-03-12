@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
@@ -42,23 +43,19 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           automaticallyImplyLeading: false,
           backgroundColor: appBg,
           elevation: 0,
-          centerTitle: false,
+          centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              if(_isShowChart){
+                SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+              }
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+
           title: Row(
             children: [
-              GestureDetector(
-                onTap: () {
-                  if(_isShowChart){
-                    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-                  }
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: Image.asset('assets/images/ic_back_arrow.png',
-                      width: 30, height: 30),
-                ),
-              ),
               const Expanded(
                   child: Text(
                 "BS Movement",

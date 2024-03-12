@@ -20,6 +20,7 @@ import 'package:superapp_flutter/screen/consolidated-portfolio/cp_scheme_allocat
 import 'package:superapp_flutter/service/UpdateData.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
@@ -105,28 +106,17 @@ class CPHomePageState extends BaseState<CPHomePage> {
                       bar.onTap!(0);
                     }
                 },
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(left: 8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
-                  ),
-                ),
+                child: getBackArrow(),
               ),
             ),
-            centerTitle: false,
+            centerTitle: true,
             titleSpacing: 0,
-            title: Text(
+            title: getTitle(
               _currentIndex == 0
                   ? "Dashboard"
                   : _currentIndex == 1
                   ? "Networth"
                   : "Portfolio",
-              textAlign: TextAlign.start,
-              style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
             ),
             actions: [
               GestureDetector(

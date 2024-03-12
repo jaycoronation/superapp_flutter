@@ -5,6 +5,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
 import 'package:superapp_flutter/model/e-state-analysis/risk_profile_question_response_model.dart';
 import 'package:superapp_flutter/model/e-state-analysis/risk_profile_save_response_model.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../model/CommanResponse.dart';
 import '../../utils/app_utils.dart';
@@ -96,8 +97,8 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
     }
 
     final pages = List.generate(
-        listData.length,
-            (index) => Column(
+      listData.length,
+        (index) => Column(
           children: <Widget>[
             Container(
               alignment: Alignment.topLeft,
@@ -118,8 +119,8 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
               ),
             ),
             _answersOptions(index)
-          ],
-        )
+        ],
+      )
     );
 
     return Scaffold(
@@ -127,33 +128,14 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                    const Expanded(child: Text("Find Risk Profile",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                    )),
-                  ],
-                ),
-              ],
-            ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
           ),
-          centerTitle: false,
+          title: getTitle("Find Risk Profile",),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: white,
         ),
@@ -161,31 +143,32 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
             ? _isLoading
             ? const LoadingWidget()
             :  SafeArea(
-          child: Column(
-            children: [
-              Flexible(
-                flex: 1,
-                child: Container(
-                  margin: const EdgeInsets.only(top: 10, right: 14, left: 14),
-                  padding: const EdgeInsets.all(10),
-                  child: PageView.builder(
-                    controller: controller,
-                    itemCount: listData.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentPageIndex = index;
-                      });
-                    },
-                    itemBuilder: (_, index) {
-                      return pages[index % pages.length];
-                    },
-                  ),
+                child: Column(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10, right: 14, left: 14),
+                        padding: const EdgeInsets.all(10),
+                        child: PageView.builder(
+                          controller: controller,
+                          itemCount: listData.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          onPageChanged: (index) {
+                            setState(() {
+                              _currentPageIndex = index;
+                            });
+                          },
+                          itemBuilder: (_, index) {
+                            return pages[index % pages.length];
+                          },
+                        ),
+                      ),
+                    ),
+                    setUpButton()
+                  ],
                 ),
-              ),
-              setUpButton()
-            ],
-          ),)
+              )
             : const NoInternetWidget(),
     );
   }
@@ -223,7 +206,6 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
           alignment: Alignment.bottomLeft,
           child: InkWell(
             onTap: () {
-
               if (checkIsAnyAnswerSelected(_currentPageIndex)) {
                 if (_currentPageIndex == listData.length - 1) {
                   try {
@@ -259,8 +241,10 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
                   color: kLightPurple,
                   borderRadius:
                   BorderRadius.circular(20.0)) :*/
-              BoxDecoration(color: blue,
-                  borderRadius: BorderRadius.circular(12.0)),
+              BoxDecoration(
+                color: blue,
+                borderRadius: BorderRadius.circular(12.0)
+              ),
               padding: const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
               height: 42,
               child: Text(_currentPageIndex + 1 == listData.length ? "Calculate Risk Profile" : "Next",

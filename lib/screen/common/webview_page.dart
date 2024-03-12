@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/model/links_response_model.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
@@ -45,11 +46,7 @@ class _WebviewPageState extends BaseState<WebviewPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(left: 8),
-                child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-              )
+              child: getBackArrow(),
           ),
           centerTitle: false,
           elevation: 0,

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
@@ -49,8 +50,14 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: "Medical & Funeral"),
-          centerTitle: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle("Medical & Funeral"),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: appBg,
         ),

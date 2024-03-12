@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_aspiration_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_existing_assets_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_existing_liabilities_page.dart';
@@ -118,16 +119,10 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.center,
-                child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
-              ),
+              child: getBackArrow(),
             ),
           ),
-          title: const Text("Estate Analysis",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-          )
+          title: getTitle("Estate Analysis",)
       ),
       body: SafeArea(
         top: false,

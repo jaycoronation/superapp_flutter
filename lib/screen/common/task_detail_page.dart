@@ -13,6 +13,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/widget/no_data.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -97,18 +98,10 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 8),
-                child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-              )
+              child: getBackArrow(),
           ),
-          title: const Text(
-            "Task Details",
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 17, color: black, fontWeight: FontWeight.w600),
-          ),
-          centerTitle: false,
+          title: getTitle("Task Details",),
+          centerTitle: true,
           elevation: 0,
           titleSpacing: 12,
           backgroundColor: white,

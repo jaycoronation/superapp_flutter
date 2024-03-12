@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
 import '../../constant/api_end_point.dart';
@@ -48,7 +49,13 @@ class _AddDomesticEmployeeState extends BaseState<AddDomesticEmployee> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: "Domestic Employees"),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle("Domestic Employees"),
           centerTitle: false,
           elevation: 0,
           backgroundColor: appBg,

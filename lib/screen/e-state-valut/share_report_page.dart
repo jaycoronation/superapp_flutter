@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
@@ -37,8 +38,14 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: const MyToolBar(pageName: "Share Data"),
-          centerTitle: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle("Share Data"),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: appBg,
         ),

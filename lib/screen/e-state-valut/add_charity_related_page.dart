@@ -7,6 +7,7 @@ import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
@@ -59,7 +60,13 @@ class _AddCharityRelatedPageState extends BaseState<AddCharityRelatedPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: isForEdit ? "Update Charity Related" : "Add Charity Related"),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle(isForEdit ? "Update Charity Related" : "Add Charity Related"),
           centerTitle: false,
           elevation: 0,
           backgroundColor: appBg,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../utils/base_class.dart';
 
@@ -106,31 +107,14 @@ class _VideoPlayerScreenState extends BaseState<VideoPlayerScreen> {
             appBar :AppBar(
               toolbarHeight: 55,
               automaticallyImplyLeading: false,
-              title: Padding(
-                padding: const EdgeInsets.only(top: 0),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              alignment: Alignment.topLeft,
-                              margin: const EdgeInsets.only(right: 8),
-                              child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: white,),
-                            )
-                        ),
-                        const Spacer()
-                      ],
-                    ),
-                  ],
-                ),
+              leading: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: getBackArrow(),
               ),
-              centerTitle: false,
+              centerTitle: true,
               elevation: 0,
               backgroundColor: black,
             ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestSIPResponse.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
@@ -31,26 +32,15 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
           automaticallyImplyLeading: false,
           backgroundColor: appBg,
           elevation: 0,
-          centerTitle: false,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: Image.asset('assets/images/ic_back_arrow.png', width: 30, height: 30),
-                ),
-              ),
-              const Expanded(
-                  child: Text(
-                    "Latest SIP - Last 30 Days",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                  )),
-            ],
+          centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle(
+            "Latest SIP - Last 30 Days",
           )),
       backgroundColor: const Color(0XffEDEDEE),
       body: SafeArea(

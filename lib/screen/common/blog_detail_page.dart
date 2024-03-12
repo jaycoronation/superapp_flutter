@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../model/BlogListResponseModel.dart';
@@ -33,36 +34,11 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                     Container(width: 8,),
-                     // Expanded(
-                     //   child: Text(checkValidString(dataGetSet.title.toString()),
-                     //    textAlign: TextAlign.start,
-                     //    overflow: TextOverflow.clip,
-                     //    style: TextStyle(fontSize: 24, color: black, fontWeight: FontWeight.w800),
-                     //   ),
-                     // ),
-                    // Spacer()
-                  ],
-                ),
-              ],
-            ),
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child:  getBackArrow(),
           ),
           centerTitle: false,
           elevation: 0,

@@ -9,6 +9,7 @@ import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/e-state-analysis/aspiration_types_response_model.dart';
 import 'package:superapp_flutter/model/e-state-analysis/existing_assets_response_model.dart';
 import 'package:superapp_flutter/model/e-state-analysis/investment_type_response_model.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/e-state-analysis/aspiration_response_model.dart';
@@ -69,33 +70,14 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                     Expanded(child: Text((widget as EStateAddExistingAssetsPage).isFromList ? "Update Existing Assets" : "Add Existing Assets",
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                    )),
-                  ],
-                ),
-              ],
-            ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
           ),
-          centerTitle: false,
+          title: getTitle((widget as EStateAddExistingAssetsPage).isFromList ? "Update Existing Assets" : "Add Existing Assets",),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: white,
         ),

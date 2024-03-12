@@ -9,6 +9,7 @@ import 'package:superapp_flutter/screen/common/task_detail_page.dart';
 import 'package:superapp_flutter/widget/loading.dart';
 import 'package:superapp_flutter/widget/no_data.dart';
 
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';
@@ -47,18 +48,11 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 8),
-                  child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                )
+                child: getBackArrow(),
             ),
             automaticallyImplyLeading: false,
-            title: const Text("My Tasks",
-              textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
-            ),
-            centerTitle: false,
+            title: getTitle("My Tasks",),
+            centerTitle: true,
             elevation: 0,
             backgroundColor: white,
           ),

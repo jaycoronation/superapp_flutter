@@ -7,6 +7,7 @@ import 'package:superapp_flutter/widget/no_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/CommanResponse.dart';
@@ -45,8 +46,14 @@ class _GovernmentRelatedListPageState extends BaseState<GovernmentRelatedListPag
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
-        title: const MyToolBar(pageName: "Government Related"),
-        centerTitle: false,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: getBackArrow(),
+        ),
+        title: getTitle("Government Related"),
+        centerTitle: true,
         elevation: 0,
         backgroundColor: appBg,
       ),

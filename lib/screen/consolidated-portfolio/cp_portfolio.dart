@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponseModel.dart' as networth;
 import 'package:superapp_flutter/model/consolidated-portfolio/PortfolioResponse.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/TempResponse.dart';
@@ -81,25 +82,12 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
               final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
               bar.onTap!(0);
             },
-            child: Container(
-              width: 40,
-              height: 40,
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.only(left: 8),
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Image.asset('assets/images/ic_back_arrow.png', width: 32, height: 32),
-              ),
-            ),
+            child: getBackArrow(),
           ),
         ),
         centerTitle: false,
         titleSpacing: 0,
-        title: const Text("Portfolio",
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-        ),
-
+        title: getTitle("Portfolio",),
       ),
       body: _isLoading
           ? const LoadingWidget()

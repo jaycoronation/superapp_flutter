@@ -11,6 +11,7 @@ import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
@@ -78,8 +79,14 @@ class _AddInsurancePolicyPageState extends BaseState<AddInsurancePolicyPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: isForEdit ? "Update Insurance Policy" : "Add Insurance Policy"),
-          centerTitle: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle(isForEdit ? "Update Insurance Policy" : "Add Insurance Policy"),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: appBg,
         ),

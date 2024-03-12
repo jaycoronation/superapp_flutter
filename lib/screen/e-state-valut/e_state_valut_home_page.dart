@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/screen/e-state-valut/advisors_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/bank_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/constitution_value_page_list.dart';
@@ -80,18 +81,10 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 8),
-                child: Image.asset('assets/images/ic_back_arrow.png', width: 22, height: 22),
-              ),
+              child:  getBackArrow(),
             ),
           ),
-          title: const Text(
-            "Estate Vault",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-          ),
+          title: getTitle("Estate Vault",),
         actions: [
           GestureDetector(
             onTap: () {

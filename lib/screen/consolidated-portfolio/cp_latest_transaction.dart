@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestTransactionResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../utils/base_class.dart';
@@ -38,29 +39,15 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
           automaticallyImplyLeading: false,
           backgroundColor: appBg,
           elevation: 0,
-          centerTitle: false,
-          title: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: Image.asset('assets/images/ic_back_arrow.png',
-                      width: 30, height: 30),
-                ),
-              ),
-              const Expanded(
-                  child: Text(
-                "Latest Transactions - Last 30 Days",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-              )),
-            ],
-          )),
+          centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: Text("Latest Transactions - Last 30 Days",)
+      ),
       backgroundColor: const Color(0XffEDEDEE),
       body: _isLoading
           ? const LoadingWidget()

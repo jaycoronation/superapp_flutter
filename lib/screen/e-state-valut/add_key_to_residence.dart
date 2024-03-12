@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
@@ -51,8 +52,14 @@ class _AddKeyToResidenceState extends BaseState<AddKeyToResidence> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: isForEdit ? "Update Key to Residence" : "Add Key to Residence"),
-          centerTitle: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle(isForEdit ? "Update Key to Residence" : "Add Key to Residence"),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: appBg,
         ),

@@ -11,6 +11,7 @@ import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/my_toolbar.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../constant/global_context.dart';
@@ -74,8 +75,14 @@ class _AddIntellectualPropertyPageState extends BaseState<AddIntellectualPropert
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: MyToolBar(pageName: isForEdit ? "Update Intellectual Property" : "Add Intellectual Property"),
-          centerTitle: false,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle(isForEdit ? "Update Intellectual Property" : "Add Intellectual Property"),
+          centerTitle: true,
           elevation: 0,
           backgroundColor: appBg,
         ),

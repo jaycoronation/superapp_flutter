@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/e-state-analysis/aspiration_types_response_model.dart';
@@ -70,32 +71,13 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                     Expanded(child: Text((widget as EStateAddFutureInflowPage).isFromList ? "Update Future Inflow" : "Add Future Inflow",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-                    )),
-                  ],
-                ),
-              ],
-            ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
           ),
+          title: getTitle((widget as EStateAddFutureInflowPage).isFromList ? "Update Future Inflow" : "Add Future Inflow",),
           centerTitle: false,
           elevation: 0,
           backgroundColor: white,

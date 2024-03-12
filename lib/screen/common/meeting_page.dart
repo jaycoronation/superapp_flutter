@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/links_response_model.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';
@@ -40,43 +41,27 @@ class _MeetingPageState extends BaseState<MeetingPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.only(left: 8),
-                          child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                        )),
-                    const Spacer(),
-                    InkWell(
-                        onTap: () {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          webViewController.reload();
-                        },
-                        child: Container(
-                          alignment: Alignment.centerRight,
-                          margin: const EdgeInsets.only(right: 8),
-                          child: Image.asset('assets/images/ic_refresh.png',height: 30, width: 30, color: black,),
-                        )
-                    ),
-                  ],
-                ),
-
-              ],
-            ),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: getBackArrow(),
           ),
+          actions: [
+            InkWell(
+                onTap: () {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  webViewController.reload();
+                },
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.only(right: 8),
+                  child: Image.asset('assets/images/ic_refresh.png',height: 30, width: 30, color: black,),
+                )
+            ),
+          ],
           centerTitle: false,
           elevation: 0,
           backgroundColor: white,

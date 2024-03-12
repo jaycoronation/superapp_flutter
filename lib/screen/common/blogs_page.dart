@@ -6,6 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/screen/common/blog_detail_page.dart';
 import '../../constant/blogs_api_end_point.dart';
 import '../../constant/colors.dart';
@@ -104,16 +105,9 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(left: 8),
-                    child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                  )
+                  child: getBackArrow(),
               ),
-              title: const Text("Feeds",
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-              ),
+              title: getTitle("Feeds",),
               actions: [
                 Visibility(
                   visible: false,
@@ -131,7 +125,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                   ),
                 )
               ],
-              centerTitle: false,
+              centerTitle: true,
               elevation: 0,
               backgroundColor: white,
             ),
@@ -152,11 +146,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 8),
-                child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-              )
+              child: getBackArrow(),
           ),
           automaticallyImplyLeading: false,
           title: Text("Alpha Capital Blog",
