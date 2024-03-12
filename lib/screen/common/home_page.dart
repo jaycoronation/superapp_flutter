@@ -8,6 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/screen/common/client_task_list.dart';
+import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/webview_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
@@ -71,7 +72,9 @@ class _HomePageState extends BaseState<HomePage> {
             title: Row(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    startActivity(context, const ProfilePage());
+                  },
                   child: Container(
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.only(right: 8),
@@ -262,7 +265,7 @@ class _HomePageState extends BaseState<HomePage> {
                     Expanded(
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewPage('https://www.alphacapital.in/investor_charter/')),);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const WebviewPage('https://www.alphacapital.in/investor_charter/')),);
                           },
                           child: Container(
                             padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
@@ -470,7 +473,7 @@ class _HomePageState extends BaseState<HomePage> {
             Container(
               margin: const EdgeInsets.all(15),
               decoration:
-                  BoxDecoration(borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+                  const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -501,7 +504,7 @@ class _HomePageState extends BaseState<HomePage> {
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
-                                          side: BorderSide(width: 1, color: blue),
+                                          side: const BorderSide(width: 1, color: blue),
                                           borderRadius: BorderRadius.circular(kBorderRadius),
                                         ),
                                       ),
@@ -538,7 +541,7 @@ class _HomePageState extends BaseState<HomePage> {
                       ],
                     ),
                   ),
-                  Gap(30)
+                  const Gap(30)
                 ],
               ),
             ),

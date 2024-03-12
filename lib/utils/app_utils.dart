@@ -99,6 +99,10 @@ setTaskName(TaskList allTaskList) {
   return taskFullText;
 }
 
+startActivity(BuildContext context,Widget screen){
+  Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+}
+
 String getSortName(String text)
 {
   String sortname = "";

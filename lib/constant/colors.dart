@@ -26,7 +26,7 @@ const Color blue= Color(0xff2042FE);
 const Color divider_color = Color(0xffbec7ff);
 const Color lightBlue= Color(0xffedf1fb);
 const Color semiBlue= Color(0xffE8EFFC);
-
+const Color lightgrey = Color(0xfff3f2f2);
 
 const Color purple= Color(0xffB255E1);
 const Color dashboardBg = Color(0xfff3f6fd);
