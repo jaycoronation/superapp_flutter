@@ -41,22 +41,23 @@ class _VideoListPageState extends BaseState<VideoListPage> {
   @override
   Widget build(BuildContext context) {
 
-    return ResponsiveWidget.isSmallScreen(context)
+    return ResponsiveWidget.isMediumScreen(context)
         ?  Scaffold(
           backgroundColor: white,
           appBar: AppBar(
             toolbarHeight: 55,
             automaticallyImplyLeading: false,
             leading: GestureDetector(
-              behavior: HitTestBehavior.opaque,
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   Navigator.pop(context);
                 },
                 child: Container(
-                  alignment: Alignment.topLeft,
-                  margin: const EdgeInsets.only(right: 8),
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(left: 8),
                   child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                )),
+                )
+            ),
             title: const Text("Videos",
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),

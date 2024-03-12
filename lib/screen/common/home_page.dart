@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/screen/common/client_task_list.dart';
 import 'package:superapp_flutter/screen/common/webview_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
@@ -79,10 +80,11 @@ class _HomePageState extends BaseState<HomePage> {
                 ),
                 Expanded(
                     child: Text(
-                  "Hi,${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                )),
+                    "Hi,${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                  )
+                ),
                 GestureDetector(
                   onTap: () {
                     logoutFromApp();
@@ -138,7 +140,7 @@ class _HomePageState extends BaseState<HomePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                          padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                           decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,12 +162,19 @@ class _HomePageState extends BaseState<HomePage> {
                         child: InkWell(
                           onTap: () async {
                             await Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
-                            if (await inAppReview.isAvailable()) {
-                              inAppReview.requestReview();
-                            }
+                            if (await inAppReview.isAvailable())
+                              {
+                                print("IS Available");
+                                inAppReview.requestReview();
+                              }
+                            else
+                              {
+                                //inAppReview.openStoreListing();
+                                print("IS NOT Available");
+                              }
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15, bottom: 20, top: 20, right: 2),
+                            padding: const EdgeInsets.only(left: 15, bottom: 16, top: 16, right: 2),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,7 +207,7 @@ class _HomePageState extends BaseState<HomePage> {
                             lastInsertedModule("login-estate-analysis");
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +233,7 @@ class _HomePageState extends BaseState<HomePage> {
                             lastInsertedModule("login-estate-vault");
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +265,7 @@ class _HomePageState extends BaseState<HomePage> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewPage('https://www.alphacapital.in/investor_charter/')),);
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,10 +286,10 @@ class _HomePageState extends BaseState<HomePage> {
                     Expanded(
                         child: InkWell(
                           onTap: () {
-                            //Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()),);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ClientTaskListScreen()),);
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,7 +319,7 @@ class _HomePageState extends BaseState<HomePage> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const MeetingPage()),);
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +343,7 @@ class _HomePageState extends BaseState<HomePage> {
                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactPage()),);
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,7 +374,7 @@ class _HomePageState extends BaseState<HomePage> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()),);
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,7 +398,7 @@ class _HomePageState extends BaseState<HomePage> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()),);
                           },
                           child: Container(
-                            padding: const EdgeInsets.only(left: 15,right: 15,top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
                             decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,11 +484,11 @@ class _HomePageState extends BaseState<HomePage> {
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: const Text('Logout from AlphaCapital Super App', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))),
+                      child: const Text('Logout from Alpha Capital Super App', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: black))),
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
                     child: const Text('Are you sure you want to logout from app?',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: black)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 15, right: 15, bottom: 12, top: 20),

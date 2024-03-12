@@ -463,7 +463,9 @@ class _LoginScreenState extends BaseState<LoginScreen> {
             checkValidString(dataResponse.portfolio!.userId.toString()),
             checkValidString(dataResponse.portfolio!.firstName.toString()),
             checkValidString(dataResponse.portfolio!.lastName.toString()),
-            checkValidString(dataResponse.portfolio!.email.toString()));
+            checkValidString(dataResponse.portfolio!.email.toString()),
+            checkValidString(dataResponse.portfolio!.panNo.toString())
+        );
 
         sessionManagerVault.setIsLoggedIn(true);
         await sessionManagerVault.createLoginSession(

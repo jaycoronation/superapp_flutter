@@ -27,6 +27,7 @@ class MyNoDataWidget extends StatelessWidget {
               visible: msg.isNotEmpty,
               child: Text(
                 msg,
+                textAlign: TextAlign.center,
                 style: const TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
               ),
             )

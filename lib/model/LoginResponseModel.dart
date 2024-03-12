@@ -346,7 +346,7 @@ class Portfolio {
 }
 
   Portfolio.fromJson(dynamic json) {
-    _userId = json['user_id'];
+    _userId = json['user_id'] is int ? json['user_id'].toString() : json['user_id'];
     _firstName = json['first_name'];
     _lastName = json['last_name'];
     _email = json['email'];

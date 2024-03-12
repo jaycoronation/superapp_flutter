@@ -71,6 +71,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     _getNetworthData();
     getCommonXirr();
 
+    print("Financial Year === ${getFinancialYearFormated()}");
+    print("Previous Financial Year === ${getPerviousFinancialYearFormated()}");
+
     DateTime today = DateTime.now();
     DateTime twoDaysAgo = today.subtract(const Duration(days: 2));
     asPerDate = DateFormat("dd MMM,yyyy").format(twoDaysAgo);
@@ -83,7 +86,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
       backgroundColor: white,
       body: _isLoading
           ? const LoadingWidget()
-          : ResponsiveWidget.isSmallScreen(context)
+          : ResponsiveWidget.isMediumScreen(context)
           ? SingleChildScrollView(
               child: Padding(padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
                 child: Column(
@@ -113,8 +116,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                                  Gap(12)
+                                  Text("*As On $asPerDate",style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                  const Gap(12)
                                 ],
                               ),
                             ),
@@ -327,7 +330,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     ),
                     const Gap(16),
                     setUpPerformanceTab(),
-                    _isSinceInceptionLoading ? const CPDashboardLoadingWidget() : _isVisibleSinceInception ? setUpSinceInceptionData() : _isCurrentYearXIRRLoading ? const CPDashboardLoadingWidget() : _isVisible2023_24 ? setUpCurrentYearXIRRData() : _isPreviousYearXIRRLoading ? const CPDashboardLoadingWidget() : setUpPreviousYearXIRRData(),
+                    _isSinceInceptionLoading
+                        ? const CPDashboardLoadingWidget()
+                        : _isVisibleSinceInception
+                        ? setUpSinceInceptionData()
+                        : _isCurrentYearXIRRLoading
+                        ? const CPDashboardLoadingWidget()
+                        : _isVisible2023_24
+                        ? setUpCurrentYearXIRRData()
+                        : _isPreviousYearXIRRLoading
+                        ? const CPDashboardLoadingWidget()
+                        : setUpPreviousYearXIRRData(),
                     const Gap(16)
                   ],
                 ),))
@@ -360,8 +373,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text("*As On $asPerDate",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                              Gap(12)
+                              Text("*As On $asPerDate",style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                              const Gap(12)
                             ],
                           ),
                         ),
@@ -572,7 +585,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                 ),
                 const Gap(16),
                 setUpPerformanceTab(),
-                _isSinceInceptionLoading ? const CPDashboardLoadingWidget() : _isVisibleSinceInception ? setUpSinceInceptionData() : _isCurrentYearXIRRLoading ? const CPDashboardLoadingWidget() : _isVisible2023_24 ? setUpCurrentYearXIRRData() : _isPreviousYearXIRRLoading ? const CPDashboardLoadingWidget() : setUpPreviousYearXIRRData(),
+                _isSinceInceptionLoading
+                    ? const CPDashboardLoadingWidget()
+                    : _isVisibleSinceInception
+                    ? setUpSinceInceptionData()
+                    : _isCurrentYearXIRRLoading
+                    ? const CPDashboardLoadingWidget()
+                    : _isVisible2023_24
+                    ? setUpCurrentYearXIRRData()
+                    : _isPreviousYearXIRRLoading
+                    ? const CPDashboardLoadingWidget()
+                    : setUpPreviousYearXIRRData(),
                 const Gap(16)
               ],
             ),))
@@ -963,8 +986,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   child: Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(3),
-                    child:
-                    const Text('Variation\n%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    child: const Text('Variance', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
               ]),
@@ -1042,7 +1064,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
-                                  child: Text(resultData.macroAssetStratagic![index].variation.toString(),
+                                  child: Text("${resultData.macroAssetStratagic![index].variation.toString()}%",
                                       style:resultData.macroAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
@@ -1125,8 +1147,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   child: Container(
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(3),
-                    child:
-                    const Text('Variation\n%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    child: const Text('Variance', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
               ]),
@@ -1204,8 +1225,10 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
-                                  child: Text(resultData.microAssetStratagic![index].variation.toString(),
-                                      style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                  child: Text("${resultData.microAssetStratagic![index].variation.toString()}%",
+                                      style: resultData.microAssetStratagic?[index].asset.toString().toLowerCase() == "total"
+                                          ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black)
+                                          : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
@@ -1335,7 +1358,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(3),
                     child:
-                    const Text('Variation\n%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    const Text('Variance', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
               ]
@@ -1414,7 +1437,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
-                                  child: Text(resultData.macroAssetTactical![index].variation.toString(),
+                                  child: Text("${resultData.macroAssetTactical![index].variation.toString()}%",
                                       style: resultData.macroAssetTactical?[index].asset.toString().toLowerCase() == "total" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
@@ -1498,7 +1521,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(3),
                     child:
-                    const Text('Variation\n%', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    const Text('Variance', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
               ]),
@@ -1576,7 +1599,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left:8, right:8, top: 8, bottom: 8),
-                                  child: Text(resultData.microAssetTactical![index].variation.toString(),
+                                  child: Text("${resultData.microAssetTactical![index].variation.toString()}%",
                                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
@@ -1647,8 +1670,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     _isVisible2022_23 = false;
                   });
                 },
-                child: _isVisible2023_24 ? const Text('2023-24',style:TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue)) :
-                const Text('2023-24',style:TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
+                child: _isVisible2023_24
+                    ? Text(getFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue))
+                    : Text(getFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
               ),
             ),
           ),
@@ -1667,8 +1691,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     _isVisible2022_23 = true;
                   });
                 },
-                child: _isVisible2022_23 ? const Text('2022-23',style:TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue)) :
-                const Text('2022-23',style:TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
+                child: _isVisible2022_23
+                    ? Text(getPerviousFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue))
+                    : Text(getPerviousFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
               ),
             ),
           ),
@@ -1696,6 +1721,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     padding: const EdgeInsets.all(6),
                     child:
                     const Text('Asset', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  ),
+                ),
+                const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(6),
+                    child:
+                    const Text('Current\nValue', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
                 const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
@@ -1751,6 +1787,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                               child: Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(3),
+                                child: Text(convertCommaSeparatedAmount(listSinceInceptionNew[index].currentValue.toString()),
+                                    style: listSinceInceptionNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                    textAlign: TextAlign.center),
+                              ),
+                            ),
+                            const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                            Flexible(
+                              flex: 2,
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(listSinceInceptionNew[index].gain.toString()),
@@ -1767,7 +1814,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(listSinceInceptionNew[index].xirr!.toDouble()).toString(),
+                                  child: Text("${doubleUpto2Digit(listSinceInceptionNew[index].xirr!.toDouble()).toString()}%",
                                       style: listSinceInceptionNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) : const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
@@ -1813,6 +1860,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     padding: const EdgeInsets.all(6),
                     child:
                     const Text('Asset', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  ),
+                ),
+                const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(6),
+                    child:
+                    const Text('Current\nValue', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
                 const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
@@ -1870,6 +1928,20 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                                  child:Text(convertCommaSeparatedAmount(listCurrentYearXIRRNew[index].currentValue.toString()),
+                                      style:listCurrentYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :   const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                      textAlign: TextAlign.center),
+                                ),
+                              ),
+                            ),
+                            const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                            Flexible(
+                              flex: 2,
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(3),
+                                child: Container(
+                                  margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
                                   child:Text(convertCommaSeparatedAmount(listCurrentYearXIRRNew[index].gain.toString()),
                                       style:listCurrentYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :   const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
@@ -1884,7 +1956,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 padding: const EdgeInsets.all(3),
                                 child: Container(
                                   margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(listCurrentYearXIRRNew[index].xirr!.toDouble()).toString(),
+                                  child: Text("${doubleUpto2Digit(listCurrentYearXIRRNew[index].xirr!.toDouble()).toString()}%",
                                       style: listCurrentYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
@@ -1940,6 +2012,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     margin: const EdgeInsets.all(3),
                     padding: const EdgeInsets.all(6),
                     child:
+                    const Text('Current\nValue', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  ),
+                ),
+                const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(6),
+                    child:
                     const Text('Gain', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   ),
                 ),
@@ -1959,63 +2042,78 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
             listPreviousYearXIRRNew.isNotEmpty
                 ? ListView.builder(
-                shrinkWrap: true,
-                physics: const ScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemCount: listPreviousYearXIRRNew.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(3),
-                                child: Text(listPreviousYearXIRRNew[index].asset.toString(),
-                                    style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ),
-                            const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
-                            Flexible(
-                              flex: 2,
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(3),
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: listPreviousYearXIRRNew.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 1,
                                 child: Container(
-                                  margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                  child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].gain.toString()),
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(3),
+                                  child: Text(listPreviousYearXIRRNew[index].asset.toString(),
                                       style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                       textAlign: TextAlign.center),
                                 ),
                               ),
-                            ),
-                            const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
-                            Flexible(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(3),
+                              const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                              Flexible(
+                                flex: 2,
                                 child: Container(
-                                  margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
-                                  child: Text(doubleUpto2Digit(listPreviousYearXIRRNew[index].xirr!.toDouble()).toString(),
-                                      style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
-                                      textAlign: TextAlign.center),
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(3),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                                    child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].gain.toString()),
+                                        style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                        textAlign: TextAlign.center),
+                                  ),
                                 ),
                               ),
-                            )
-                          ],
+                              const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                              Flexible(
+                                flex: 2,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(3),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+                                    child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].currentValue.toString()),
+                                        style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                        textAlign: TextAlign.center),
+                                  ),
+                                ),
+                              ),
+                              const VerticalDivider(width: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0),
+                              Flexible(
+                                flex: 1,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(3),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 8, right:8, top: 8, bottom: 8),
+                                    child: Text("${doubleUpto2Digit(listPreviousYearXIRRNew[index].xirr!.toDouble()).toString()}%",
+                                        style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
+                                        textAlign: TextAlign.center),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      Visibility(
-                          visible: index != listPreviousYearXIRRNew.length - 1,
-                          child: const Divider(height: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0)),
-                    ],
-                  );
-                })
+                        Visibility(
+                            visible: index != listPreviousYearXIRRNew.length - 1,
+                            child: const Divider(height: 1.0, thickness: 1.0, color: blue, indent: 0.0, endIndent: 0.0)),
+                      ],
+                    );
+                  }
+                )
                 : Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(100),

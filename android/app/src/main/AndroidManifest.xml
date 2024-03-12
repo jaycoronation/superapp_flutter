@@ -7,10 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.CAMERA"/>
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
-
 
     <application
         android:label="AlphaCapital Super App"

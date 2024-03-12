@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constant/colors.dart';
+import '../model/TaskListResponseModel.dart';
 
 /*show message to user*/
 showSnackBar(String? message,BuildContext? context) {
@@ -24,6 +25,146 @@ showSnackBar(String? message,BuildContext? context) {
   }
 }
 
+setTaskName(TaskList allTaskList) {
+  String taskFullText = "";
+  String taskMsg = checkValidString(allTaskList.taskMessage);
+  String clientName = "";
+  String dueDate = "";
+
+  if(allTaskList.lstclient != null)
+  {
+    if (allTaskList.lstclient!.isNotEmpty)
+    {
+      for (int i = 0; i < allTaskList.lstclient!.length; i++) {
+        if (clientName.isEmpty)
+        {
+          clientName = checkValidString(allTaskList.lstclient![i].clientName);
+        }
+        else
+        {
+          clientName ="$clientName," + checkValidString(allTaskList.lstclient![i].clientName);
+        }
+      }
+    }
+  }
+
+  if(allTaskList.dueDate != null)
+  {
+    if (checkValidString(allTaskList.dueDate).isNotEmpty)
+    {
+      dueDate = universalDateConverter("MM/dd/yyyy HH:mm:ss a", "dd MMM,yyyy", checkValidString(allTaskList.dueDate));
+
+      DateTime today = DateTime.now();
+
+      DateTime givenDate = DateFormat("dd MMM,yyyy").parse(dueDate);
+
+      int differenceInDays = givenDate.difference(today).inDays;
+
+      if (differenceInDays > 7)
+      {
+        dueDate = "is due on ${universalDateConverter("MM/dd/yyyy HH:mm:ss a", "dd MMM,yyyy", checkValidString(allTaskList.dueDate))}";
+      }
+      else
+      {
+        dueDate = "is due in $differenceInDays day(s)";
+      }
+
+
+    }
+  }
+
+  if (clientName.isNotEmpty)
+  {
+    if (dueDate.isNotEmpty)
+    {
+      taskFullText = "$taskMsg for $clientName $dueDate";
+    }
+    else
+    {
+      taskFullText = "$taskMsg for $clientName";
+    }
+  }
+  else
+  {
+    if (dueDate.isNotEmpty)
+    {
+      taskFullText = "$taskMsg $dueDate";
+    }
+    else
+    {
+      taskFullText = taskMsg;
+    }
+  }
+
+  return taskFullText;
+}
+
+String getSortName(String text)
+{
+  String sortname = "";
+
+  if(checkValidString(text).toString().isNotEmpty)
+  {
+    var splited = text.split(" ");
+    if (splited.isNotEmpty)
+    {
+      if (splited.length == 1)
+      {
+        var temp = splited[0].toString();
+        sortname = temp[0];
+      }
+      else
+      {
+        var temp1 = splited[0].toString();
+        var temp2 = splited[1].toString();
+        sortname = temp1[0] + temp2[0];
+      }
+    }
+  }
+  return sortname.toUpperCase();
+}
+
+String getFirstName(String text)
+{
+  String sortname = "";
+
+  if(checkValidString(text).toString().isNotEmpty)
+  {
+    var splited = text.split(" ");
+    if (splited.isNotEmpty)
+    {
+      sortname = splited[0];
+    }
+  }
+
+  return sortname;
+}
+
+String getExtension(String fileName)
+{
+  String ext = "";
+  ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.toString().length);
+  return ext;
+}
+
+String convertToAgo(String dateTime) {
+  DateTime input =
+  DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(dateTime, false);
+  Duration diff = DateTime.now().difference(input);
+
+  if (diff.inDays >= 1) {
+    return universalDateConverter("yyyy-MM-ddTHH:mm:ss.SSS", "dd MMM yyyy", dateTime);
+  } else if (diff.inHours >= 1) {
+    return '${diff.inHours} hour${diff.inHours == 1 ? '' : 's'} ago';
+  } else if (diff.inMinutes >= 1) {
+    return '${diff.inMinutes} minute${diff.inMinutes == 1 ? '' : 's'} ago';
+  } else if (diff.inSeconds >= 1) {
+    return '${diff.inSeconds} second${diff.inSeconds == 1 ? '' : 's'} ago';
+  } else {
+    return 'just now';
+  }
+}
+
 String getFinancialYear() {
   DateTime now = DateTime.now();
   int currentYear = now.year;
@@ -38,6 +179,47 @@ String getFinancialYear() {
   }
 
   int nextYear = financialYear + 1;
+  return '$financialYear-$nextYear';
+}
+
+String getFinancialYearFormated() {
+  DateTime now = DateTime.now();
+  int currentYear = now.year;
+  int currentMonth = now.month;
+  int financialYearStartMonth = 4; // Assuming the financial year starts in April (4th month)
+
+  int financialYear;
+  if (currentMonth >= financialYearStartMonth) {
+    financialYear = currentYear;
+  } else {
+    financialYear = currentYear - 1;
+  }
+
+  int nextYearTemp = financialYear + 1;
+
+  String nextYear = universalDateConverter("yyyy", "yy", nextYearTemp.toString());
+
+  return '$financialYear-$nextYear';
+}
+
+String getPerviousFinancialYearFormated() {
+  DateTime now = DateTime.now();
+  int currentYear = now.year;
+  int currentMonth = now.month;
+  int financialYearStartMonth = 4; // Assuming the financial year starts in April (4th month)
+
+  int financialYear;
+  if (currentMonth >= financialYearStartMonth) {
+    financialYear = currentYear;
+  } else {
+    financialYear = currentYear - 2;
+  }
+
+
+  int nextYearTemp = financialYear + 1;
+
+  String nextYear = universalDateConverter("yyyy", "yy", nextYearTemp.toString());
+
   return '$financialYear-$nextYear';
 }
 

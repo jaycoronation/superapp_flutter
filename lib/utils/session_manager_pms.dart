@@ -13,6 +13,7 @@ class SessionManagerPMS {
   final String firstName = "firstNamePMS";
   final String lastName = "lastNamePMS";
   final String email = "emailPMS";
+  final String pan = "panPMS";
   final String KEY_PERFORMANCE = "KEY_PERFORMANCE";
   final String KEY_NEXTYEAR = "KEY_NEXTYEAR";
   final String KEY_PERVIOUSYEAR = "KEY_PERVIOUSYEAR";
@@ -21,13 +22,14 @@ class SessionManagerPMS {
   final String TOTAL_NETWORTH = "TOTAL_NETWORTH";
 
   //set data into shared preferences...
-  Future createLoginSession(String userIdApi,String firstNameApi,String lastNameApi ,String emailApi) async {
+  Future createLoginSession(String userIdApi,String firstNameApi,String lastNameApi ,String emailApi,String panApi) async {
 
     await SessionManagerMethods.setBool(isLoggedIn, true);
     await SessionManagerMethods.setString(userId,userIdApi);
     await SessionManagerMethods.setString(firstName,firstNameApi);
     await SessionManagerMethods.setString(lastName, lastNameApi);
     await SessionManagerMethods.setString(email,emailApi);
+    await SessionManagerMethods.setString(pan,panApi);
   }
 
   bool? checkIsLoggedIn() {
@@ -38,6 +40,16 @@ class SessionManagerPMS {
   async {
     await SessionManagerMethods.setBool(isLoggedIn, isLogin);
   }
+
+  String getPanCard() {
+    return checkValidString(SessionManagerMethods.getString(pan));
+  }
+
+  Future<void> setPanCard(String data)
+  async {
+    await SessionManagerMethods.setString(pan, data);
+  }
+
 
   String getUserId() {
     return checkValidString(SessionManagerMethods.getString(userId));

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -88,37 +89,44 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWidget.isSmallScreen(context)
+
+    print("IS SMALL === ${ResponsiveWidget.isMediumScreen(context)}");
+    print("IS WIDTH === ${MediaQuery.of(context).size.width}");
+
+    return ResponsiveWidget.isMediumScreen(context)
         ? Scaffold(
             backgroundColor: white,
             appBar: AppBar(
               toolbarHeight: 55,
               automaticallyImplyLeading: false,
               leading: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  alignment: Alignment.topLeft,
-                  margin: const EdgeInsets.only(right: 8),
-                  child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-                )
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 8),
+                    child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
+                  )
               ),
               title: const Text("Feeds",
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
               ),
               actions: [
-                InkWell(
-                  onTap: () {
-                    _showFilterDialog();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(toDisplayCase(selectedCategory),
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                Visibility(
+                  visible: false,
+                  child: InkWell(
+                    onTap: () {
+                      _showFilterDialog();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(toDisplayCase(selectedCategory),
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 )
