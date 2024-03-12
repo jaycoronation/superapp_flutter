@@ -99,30 +99,30 @@ class _HomePageState extends BaseState<HomePage> {
                   ),
                 )
               ],
-            )),
+            )
+        ),
         body: SafeArea(
           top: false,
           child: _isLoading
               ? const LoadingWidget()
-              : SingleChildScrollView(
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                      color: dashboardBg, borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        homePageBlocks(),
-                        Container(
-                          alignment: Alignment.center,
-                          child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
-                        ),
-                      ],
-                    ),
+              : Container(
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    color: dashboardBg,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      homePageBlocks(),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 80, color: blue),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -258,7 +258,7 @@ class _HomePageState extends BaseState<HomePage> {
                 )
             ),
             const Gap(15),
-            Expanded(
+            /*Expanded(
                 flex: 1,
                 child: Row(
                   children: [
@@ -311,7 +311,7 @@ class _HomePageState extends BaseState<HomePage> {
                   ],
                 )
             ),
-            const Gap(15),
+            const Gap(15),*/
             Expanded(
                 flex: 1,
                 child: Row(

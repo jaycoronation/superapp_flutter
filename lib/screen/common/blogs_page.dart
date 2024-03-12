@@ -178,7 +178,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
               Container(height: 12,),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Container(
+                child: SizedBox(
                   height: 34,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -264,7 +264,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             height: 160,
                                             width: MediaQuery.of(context).size.width,
                                             // color: grayLight,
@@ -279,7 +279,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                                 width: 50, height: 50),
                                           ),
                                           const Gap(10),
-                                          Container(
+                                          SizedBox(
                                             height: 40,
                                             child: Text(toDisplayCase(listData[index].title.toString()  + "\n"),
                                               textAlign: TextAlign.start,
@@ -362,7 +362,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
               Container(height: 12,),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Container(
+                child: SizedBox(
                   height: 34,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -435,8 +435,8 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 20),
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border:Border.all(color: black, width: 1,)
+                                        borderRadius: BorderRadius.circular(12),
+                                        border:Border.all(color: Colors.black, width: 0.7,)
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
@@ -450,21 +450,24 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                             child: Stack(
                                               alignment: Alignment.topRight,
                                               children: [
-                                                listData[index].blogImage.toString().isNotEmpty
-                                                    ? FadeInImage.assetNetwork(
-                                                  image: listData[index].blogImage.toString(),
-                                                  fit: BoxFit.cover,
-                                                  width: MediaQuery.of(context).size.width,
-                                                  height: 160,
-                                                  placeholder: 'assets/images/ic_alpha_logo.png',
-                                                ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                                    width: 50, height: 50),
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  child: listData[index].blogImage.toString().isNotEmpty
+                                                      ? FadeInImage.assetNetwork(
+                                                    image: listData[index].blogImage.toString(),
+                                                    fit: BoxFit.cover,
+                                                    width: MediaQuery.of(context).size.width,
+                                                    height: 160,
+                                                    placeholder: 'assets/images/ic_alpha_logo.png',
+                                                  ) : Image.asset('assets/images/ic_alpha_logo.png',
+                                                      width: 50, height: 50),
+                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(top: 12,right: 12),
                                                   decoration: BoxDecoration(color: blue,borderRadius: BorderRadius.circular(22)),
                                                   child: Padding(
                                                     padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                                                    child: Text(listData[index].category.toString(),style: const TextStyle(color: white,fontSize: 16,fontWeight: FontWeight.w500)),
+                                                    child: Text(listData[index].category.toString(),style: const TextStyle(color: white,fontSize: 14,fontWeight: FontWeight.w400)),
                                                   ),
                                                 )
 
@@ -487,20 +490,20 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                           const Divider(
                                             height: 0.5,
                                             color: black,
-                                            thickness: 1,
+                                            thickness: 0.5,
                                           ),
-                                          const Gap(25),
+                                          const Gap(15),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Text(getDateFromTimeStampNew(int.parse(listData[index].publishedDate.toString())),
                                                 textAlign: TextAlign.start,
-                                                style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+                                                style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w500),
                                               ),
                                               Container(
-                                                alignment: Alignment.topLeft,
+                                                alignment: Alignment.center,
                                                 margin: const EdgeInsets.only(right: 8),
                                                 child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
                                               ),

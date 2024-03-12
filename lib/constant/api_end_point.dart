@@ -10,7 +10,7 @@ const String GET_ALL_TASK_ATTACHMENT = '${BASE_URL}Task/GetAllTaskAttachemntByTa
 const String SaveTaskAttachment = '${BASE_URL}Task/SaveTaskAttachment';
 const String TASK_DETAILS = "${BASE_URL}Task/GetTaskDetailById";
 const String TASK_MESSAGE = "${BASE_URL}Task/GetAllTaskMessageByTaskId";
-const String TASK_MESSAGE_SAVE = "${BASE_URL}Task/SaveTaskMessage";
+const String TASK_MESSAGE_SAVE = "${BASE_URL}Task/SaveTaskMessageByClient";
 String authHeader = "Basic QWxwaGFjYXBpdGFsOkFwcC00U1RTQTY0TzYyV1FXWlIwUVNJSw==";
 
 String login = "loginForSuperApp";

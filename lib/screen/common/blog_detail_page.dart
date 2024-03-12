@@ -1,5 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
@@ -13,7 +17,7 @@ class BlogsDetailPage extends StatefulWidget {
   const BlogsDetailPage(this.getSet, {Key? key}) : super(key: key);
 
   @override
-  _BlogsDetailPageState createState() => _BlogsDetailPageState();
+  BaseState<BlogsDetailPage> createState() => _BlogsDetailPageState();
 }
 
 class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
@@ -43,6 +47,23 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
           centerTitle: false,
           elevation: 0,
           backgroundColor: white,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                var shareText = "Hey There,\n\nSharing Alpha Capital's latest article, '${dataGetSet.title},' which is now available on there website. For the insightful read, click the below link \n\n https://www.alphacapital.in/blog/${dataGetSet.slug?.toString()}\n\nhope you find it engaging and valuable.";
+                Share.share(shareText);
+              },
+              child: Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(right: 5),
+                padding: const EdgeInsets.all(3),
+                width: 32,
+                height: 32,
+                child: Image.asset('assets/images/ic_share.png', width: 32, height: 32, color: black),
+              ),
+
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(
@@ -54,25 +75,67 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: Column(
                         children: [
-                          Container(height: 18,),
+                          const Gap(18),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(checkValidString(dataGetSet.title.toString()),
-                             textAlign: TextAlign.start,
-                             overflow: TextOverflow.clip,
-                             style: const TextStyle(fontSize: 24, color: black, fontWeight: FontWeight.w800),
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
                             ),
                           ),
-                          Container(height: 18,),
+                          const Gap(6),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(checkValidString(dataGetSet.publishedDateView.toString()),
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.clip,
+                              style: const TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          const Gap(12),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                                imageUrl: dataGetSet.blogImage ?? '',
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                                height: 220,
+                                errorWidget: (context, url, error) => Container(
+                                  color: gray,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 280,
+                                ),
+                                placeholder: (context, url) => Container(
+                                  color: gray,
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 280 ,
+                                )
+                            ),
+                          ),
+                          const Gap(22),
+
                           Container(
                             decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(0),
+                              color: lightgrey,
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-                            child: HtmlWidget(
-                              dataGetSet.discription.toString(),
-                              textStyle: const TextStyle(height: 1.5, color: black,fontSize: 10, fontWeight: FontWeight.w500),
+                            child: Column(
+                              children: [
+                                HtmlWidget(
+                                  checkValidString(dataGetSet.discription).replaceAll("\r\n\r\n", "").replaceAll("\r\n\t", "").replaceAll("\r\n", ""),
+                                  textStyle: const TextStyle(fontSize: 10),
+                                  customStylesBuilder: (element) {
+                                    if (element.styles.contains('font-size')) {
+                                      return {'font-size': '10px'};
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const Gap(12),
+
+                              ],
                             ),
                           )
                         ],

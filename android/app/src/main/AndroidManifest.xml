@@ -36,6 +36,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <receiver android:name="io.flutter.plugins.androidalarmmanager.AlarmBroadcastReceiver" android:exported="false"/>
 
         <meta-data android:name="io.flutter.embedding.engine.dartEntryPoints" android:value="AlarmService"/>

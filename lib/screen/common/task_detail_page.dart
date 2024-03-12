@@ -990,7 +990,7 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
 
       final url = Uri.parse(TASK_MESSAGE_SAVE);
       Map<String, String> jsonBody = {
-        "employee_id": sessionManager.getUserId().toString(),
+        "client_id": sessionManager.getUserId().toString(),
         "task_id": taskIdParam.toString(),
         "msg_txt": msg,
         "is_image": isImg.toString(),
