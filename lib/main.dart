@@ -176,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
       isLoggedIn = sessionManager.checkIsLoggedIn() ?? false;
       if(isLoggedIn)
       {
+        JobService().getCommonXirr();
         Timer(const Duration(seconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
              kIsWeb ? const HomePageForWeb() : const HomePage()), (Route<dynamic> route) => false));

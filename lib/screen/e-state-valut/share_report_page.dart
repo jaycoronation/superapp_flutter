@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
@@ -12,6 +14,12 @@ import '../../model/e-state-vault/ShareDataReportResponse.dart';
 import '../../model/e-state-vault/share_data_model.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
+
+import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 
 class ShareReportPage extends StatefulWidget {
   ShareReportPage({Key? key}) : super(key: key);
@@ -51,7 +59,8 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
         ),
         body: _isLoading
             ? const LoadingWidget()
-            : setData());
+            : setData()
+    );
   }
 
   SafeArea setData() {
@@ -109,10 +118,9 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                             noInterNet(context);
                           }
                         }
-                      }, //set both onPressed and onLongPressed to null to see the disabled properties
-                      onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
+                      },
                       child: const Text(
-                        "Share",
+                        "Share & Download",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600),
                       )),
@@ -293,7 +301,6 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
     return isValid;
   }
 
-
    String _makeJsonData()  {
     String jsonData = "";
     for (int i = 0; i < listData.length; i++)
@@ -340,9 +347,8 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
       showSnackBar(dataResponse.message, context);
       if(checkValidString(dataResponse.urlData).toString().isNotEmpty)
       {
-        openFileFromURL(dataResponse.urlData.toString(), context);
+        _getDownloadDirectory(context,dataResponse.urlData.toString());
       }
-      Navigator.pop(context);
     }
     else {
       showSnackBar(dataResponse.message, context);
@@ -351,6 +357,61 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
       });
     }
   }
+
+  Future<String> _getDownloadDirectory(BuildContext context, String fileUrlServer) async {
+    String? directory;
+    try {
+      directory = await FilePicker.platform.getDirectoryPath();
+      _downloadFile(directory ?? '',fileUrlServer);
+    } catch (e) {
+      print("Error while picking directory: $e");
+    }
+    if (directory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("No directory selected!")),
+      );
+      return "";
+    }
+    return directory;
+  }
+
+  void _downloadFile(String downloadPath, String fileUrlServer) {
+    // Example using `http` package
+    String fileUrl = fileUrlServer;
+    String fileName = '${sessionManagerPMS.getFristName()}_${sessionManagerPMS.getLastName()}_${DateTime.now().millisecondsSinceEpoch / 1000}.pdf';
+
+    HttpClient().getUrl(Uri.parse(fileUrl))
+        .then((HttpClientRequest request) => request.close())
+        .then((HttpClientResponse response) async {
+      File file = File('$downloadPath/$fileName');
+
+      await response.pipe(file.openWrite());
+
+      print('File Path ==== ${file.path}');
+
+      if (Platform.isAndroid)
+        {
+          if (await Permission.manageExternalStorage.request().isGranted) {
+            final result = await OpenFile.open(file.path);
+            setState(() {
+              var openResult = "type=${result.type}  message=${result.message}";
+              print("openResult === $openResult");
+            });
+            Navigator.pop(context);
+
+          }
+
+        }
+      else
+        {
+          final result = await OpenFile.open(file.path);
+          var openResult = "type=${result.type}  message=${result.message}";
+          print("openResult === $openResult");
+        }
+    });
+  }
+
+
 
   @override
   void castStatefulWidget() {

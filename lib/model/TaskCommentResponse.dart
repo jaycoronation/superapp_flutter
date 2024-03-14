@@ -87,7 +87,7 @@ class TaskCommentData {
 
   TaskCommentData.fromJson(dynamic json) {
     _id = json['id'];
-    _employeeId = json['employee_id'];
+    _employeeId = json['client_id'];
     _taskId = json['task_id'];
     _msgTxt = json['msg_txt'];
     _imgUrl = json['img_url'];

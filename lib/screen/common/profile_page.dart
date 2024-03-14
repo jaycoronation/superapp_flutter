@@ -7,6 +7,7 @@ import 'package:superapp_flutter/screen/common/about_app.dart';
 import 'package:superapp_flutter/screen/common/client_task_list.dart';
 import 'package:superapp_flutter/screen/common/edit_profile_page.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
+import 'package:superapp_flutter/screen/common/locate_us.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/colors.dart';
@@ -51,91 +52,54 @@ class _ProfilePageState extends BaseState<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfilePage()));
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Gap(22),
-                      Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          //set border radius more than 50% of height and width to make circle
-                        ),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: const BoxDecoration(color: white, shape: BoxShape.circle),
-                          padding: EdgeInsets.zero,
-                          child: Image.asset('assets/images/vault_img_placeholder.png', fit: BoxFit.fill),
-                        ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Gap(22),
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        //set border radius more than 50% of height and width to make circle
                       ),
-                      const Gap(12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                toDisplayCase("${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}"),
-                                textAlign: TextAlign.start,
-                                style: const TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 22, fontFamily: 'Colfax'),
-                              ),
-                              const Gap(12),
-                              InkWell(
-                                customBorder: const CircleBorder(),
-                                onTap: () async {
-                                  final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfilePage()));
-                                  if (result == "success") {
-                                    if (isOnline) {
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: const BoxDecoration(color: white, shape: BoxShape.circle),
+                        padding: EdgeInsets.zero,
+                        child: Image.asset('assets/images/vault_img_placeholder.png', fit: BoxFit.fill),
+                      ),
+                    ),
+                    const Gap(12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          toDisplayCase("${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}"),
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 22, fontFamily: 'Colfax'),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.fromLTRB(6, 3, 6, 3),
+                          margin: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            sessionManagerPMS.getEmail(),
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 14, fontFamily: 'Colfax'),
+                          ),
+                        ),
 
-                                    } else {
-                                      noInterNet(context);
-                                    }
-                                  } else {
-                                    setState(() {});
-                                  }
-                                },
-                                child: Container(
-                                  width: 34,
-                                  height: 34,
-                                  decoration: const BoxDecoration(color: grayLight, shape: BoxShape.circle),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Image.asset('assets/images/ic_edit_pencil.png', width: 28, height: 28, color: black),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Container(
-                            decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(8)),
-                            padding: const EdgeInsets.fromLTRB(6, 3, 6, 3),
-                            margin: const EdgeInsets.only(top: 8),
-                            child: Text(
-                              sessionManagerPMS.getEmail(),
-                              textAlign: TextAlign.start,
-                              style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 14, fontFamily: 'Colfax'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-
               Container(
                 margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15,top: 22),
                 decoration: BoxDecoration(
@@ -177,18 +141,6 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-                decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                ),
-                child: Column(
-                  children: [
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () async {
@@ -226,6 +178,18 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                ),
+                child: Column(
+                  children: [
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () async {
@@ -287,6 +251,39 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                                 ),
                               ),
                               const Text("About Us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                              const Spacer(),
+                              Image.asset(
+                                'assets/images/ic_arrow_right.png',
+                                width: 16,
+                                height: 16,
+                              ),
+                              const Gap(12)
+                            ],
+                          ),
+                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        startActivity(context, const LocateUsPage());
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 48,
+                                height: 48,
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                ),
+                              ),
+                              const Text("Locate us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
                               const Spacer(),
                               Image.asset(
                                 'assets/images/ic_arrow_right.png',

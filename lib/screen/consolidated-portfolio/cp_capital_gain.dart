@@ -40,7 +40,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
             },
             child: getBackArrow(),
           ),
-          title: Text("Capital Gain",)),
+          title: getTitle("Capital Gain",)),
       backgroundColor: const Color(0XffEDEDEE),
       body: _isLoading
           ? const LoadingWidget()

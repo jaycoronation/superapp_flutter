@@ -78,14 +78,14 @@ class ExistingAssets {
       String? assetType, 
       String? currentValue, 
       String? timestamp,
-    String? canDelete,}){
+    String? restrictDelete,}){
     _existingAssetsId = existingAssetsId;
     _userId = userId;
     _investmentType = investmentType;
     _assetType = assetType;
     _currentValue = currentValue;
     _timestamp = timestamp;
-    _canDelete = canDelete;
+    _restrictDelete = restrictDelete;
 }
 
   ExistingAssets.fromJson(dynamic json) {
@@ -95,7 +95,7 @@ class ExistingAssets {
     _assetType = json['asset_type'];
     _currentValue = json['current_value'];
     _timestamp = json['timestamp'];
-    _canDelete = json['restrict_delete'];
+    _restrictDelete = json['restrict_delete'];
   }
   String? _existingAssetsId;
   String? _userId;
@@ -103,21 +103,21 @@ class ExistingAssets {
   String? _assetType;
   String? _currentValue;
   String? _timestamp;
-  String? _canDelete;
+  String? _restrictDelete;
 ExistingAssets copyWith({  String? existingAssetsId,
   String? userId,
   String? investmentType,
   String? assetType,
   String? currentValue,
   String? timestamp,
-  String? canDelete,
+  String? restrictDelete,
 }) => ExistingAssets(  existingAssetsId: existingAssetsId ?? _existingAssetsId,
   userId: userId ?? _userId,
   investmentType: investmentType ?? _investmentType,
   assetType: assetType ?? _assetType,
   currentValue: currentValue ?? _currentValue,
   timestamp: timestamp ?? _timestamp,
-  canDelete: canDelete ?? _canDelete,
+  restrictDelete: restrictDelete ?? _restrictDelete,
 );
   String? get existingAssetsId => _existingAssetsId;
   String? get userId => _userId;
@@ -125,7 +125,7 @@ ExistingAssets copyWith({  String? existingAssetsId,
   String? get assetType => _assetType;
   String? get currentValue => _currentValue;
   String? get timestamp => _timestamp;
-  String? get canDelete => _canDelete;
+  String? get restrictDelete => _restrictDelete;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -135,7 +135,7 @@ ExistingAssets copyWith({  String? existingAssetsId,
     map['asset_type'] = _assetType;
     map['current_value'] = _currentValue;
     map['timestamp'] = _timestamp;
-    map['can_delete'] = _canDelete;
+    map['can_delete'] = _restrictDelete;
     return map;
   }
 

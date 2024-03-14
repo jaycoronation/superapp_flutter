@@ -128,7 +128,10 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
                                   textStyle: const TextStyle(fontSize: 10),
                                   customStylesBuilder: (element) {
                                     if (element.styles.contains('font-size')) {
-                                      return {'font-size': '10px'};
+                                      return {
+                                        'font-size': '10px',
+                                        'background': "transparent"
+                                      };
                                     }
                                     return null;
                                   },

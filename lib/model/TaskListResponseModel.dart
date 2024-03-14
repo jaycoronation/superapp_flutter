@@ -193,7 +193,7 @@ class TaskList {
     _createdDate = json['created_date'];
     _formatedCreatedDate = json['formated_created_date'];
     _taskAddedBy = json['task_added_by'];
-    _taskStatus = json['task_status'];
+    _taskStatus = json['task_status'] ;
     _allEmployeeIds = json['all_employee_ids'];
     _allEmployeeName = json['all_employee_name'];
     _allEmployeeIdsSupervisor = json['all_employee_ids_supervisor'];

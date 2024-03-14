@@ -62,13 +62,17 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
               onTap: () {
                 _redirectToNextPage(context, true);
               },
-              child: const Text("Add/Edit",
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w400),
+              child: Container(
+                alignment: Alignment.center,
+                child: const Text("Add/Edit",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w400),
+                ),
               ),
-            )
+            ),
+            Gap(12)
           ],
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0,
           backgroundColor: white,
         ),
@@ -498,21 +502,15 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
         }
 
         if(listData.isEmpty) {
-          // _addBank(context, Bank());
-
-          Timer(const Duration(seconds: 2), () =>
-              setState(() {
-                _isLoading = false;
-                // _isNoDataVisible = false;
-              })
-          );
+          setState(() {
+            _isLoading = false;
+            // _isNoDataVisible = false;
+          });
         }else {
-          Timer(const Duration(seconds: 2), () =>
-            setState(() {
-              _isLoading = false;
-              // _isNoDataVisible = true;
-            })
-          );
+          setState(() {
+            _isLoading = false;
+            // _isNoDataVisible = false;
+          });
         }
 
         setState(() {

@@ -112,7 +112,7 @@ class _VideoPlayerScreenState extends BaseState<VideoPlayerScreen> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: getBackArrow(),
+                child: getBackArrow(colorData: white),
               ),
               centerTitle: true,
               elevation: 0,

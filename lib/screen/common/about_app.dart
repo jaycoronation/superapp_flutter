@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 
 import '../../utils/base_class.dart';
@@ -37,17 +38,10 @@ class _AboutAppPageState extends BaseState<AboutAppPage> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 8),
-              child: Image.asset('assets/images/fin_plan_ic_back_arrow.png',height: 30, width: 30, color: black,),
-            )
+            child: getBackArrow()
         ),
-        title: const Text("About the app",
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: false,
+        title: getTitle("About the app",),
+        centerTitle: true,
         elevation: 0,
         backgroundColor: white,
       ),

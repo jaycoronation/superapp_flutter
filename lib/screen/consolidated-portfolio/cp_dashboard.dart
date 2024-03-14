@@ -110,16 +110,13 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                             Text((convertCommaSeparatedAmount(strNetWorth)),
                                 style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
                             const Gap(10),
-                            Visibility(
-                              visible: false,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("*As On $asPerDate",style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                                  const Gap(12)
-                                ],
-                              ),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("*Some time lag in updation",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                Gap(12)
+                              ],
                             ),
                             const Gap(10),
                           ],
@@ -133,9 +130,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                           const Text('Asset Allocation',
                           style: TextStyle(
                               color: blue,
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight:
-                              FontWeight.w600)),
+                              FontWeight.bold)),
                           const Spacer(),
                           InkWell(
                             onTap: (){
@@ -210,9 +207,10 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                           const Text('Applicants Allocation',
                               style: TextStyle(
                                   color: blue,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight:
-                                  FontWeight.w600)),
+                                  FontWeight.bold)
+                          ),
                           const Spacer(),
                           InkWell(
                             onTap: (){
@@ -283,9 +281,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       child: const Text('Asset Allocation - Strategic',
                           style: TextStyle(
                               color: blue,
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight:
-                              FontWeight.w600)),
+                              FontWeight.bold)),
                     ),
                     const Gap(16),
                     setUpAssetAllocationStrategicTab(),
@@ -298,9 +296,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       child: const Text('Asset Allocation - Tactical',
                           style: TextStyle(
                               color: blue,
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight:
-                              FontWeight.w600)),
+                              FontWeight.bold)),
                     ),
                     const Gap(16),
                     setUpAssetAllocationTacticalTab(),
@@ -324,9 +322,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       child: const Text('Performance',
                           style: TextStyle(
                               color: blue,
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight:
-                              FontWeight.w600)),
+                              FontWeight.bold)),
                     ),
                     const Gap(16),
                     setUpPerformanceTab(),

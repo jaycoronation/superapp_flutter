@@ -418,23 +418,22 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
           }
         }
 
-        if(listData.isEmpty) {
-          // _addBank(context, Bank());
+        if(listData.isEmpty)
+          {
+            // _addBank(context, Bank());
 
-          Timer(const Duration(seconds: 2), () =>
-              setState(() {
-                _isLoading = false;
-                // _isNoDataVisible = false;
-              })
-          );
-        }else {
-          Timer(const Duration(seconds: 2), () =>
-              setState(() {
-                _isLoading = false;
-                // _isNoDataVisible = true;
-              })
-          );
-        }
+            setState(() {
+              _isLoading = false;
+              // _isNoDataVisible = false;
+            });
+          }
+        else
+          {
+            setState(() {
+              _isLoading = false;
+              // _isNoDataVisible = true;
+            });
+          }
 
         // print("listData.length 2==>" + listData.length.toString());
 

@@ -98,8 +98,8 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 20),
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border:Border.all(color: black, width: 1,)
+                                    borderRadius: BorderRadius.circular(12),
+                                    border:Border.all(color: Colors.black, width: 0.7,)
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),

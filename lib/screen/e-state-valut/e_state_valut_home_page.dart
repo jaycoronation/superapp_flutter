@@ -70,7 +70,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: appBg,
       appBar: AppBar(
-          toolbarHeight: 60,
+          toolbarHeight: kToolbarHeight,
           automaticallyImplyLeading: false,
           backgroundColor: appBg,
           elevation: 0,
@@ -105,19 +105,25 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
         top: false,
         child: _isLoading
             ? const LoadingWidget()
-            : Column(
-                children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            child: Container(
-                              child: _headerList(),
+            : Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 6,bottom: 6),
+                            child: const Text("Please enter data to store important information related to Succession Planning",
+                              style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
                             ),
-                          )))
-                ],
-              ),
+                          ),
+                          _headerList(),
+                        ],
+                      ),
+                    ))),
       ),
     );
   }

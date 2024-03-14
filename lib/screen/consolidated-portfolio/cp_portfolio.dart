@@ -1,19 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:provider/provider.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponseModel.dart' as networth;
-import 'package:superapp_flutter/model/consolidated-portfolio/PortfolioResponse.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/TempResponse.dart';
-import 'package:superapp_flutter/service/UpdateData.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
-import '../../model/consolidated-portfolio/temp_model.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
@@ -63,7 +60,6 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
 
     _getPortfolioDataNew();
-    //Provider.of<UpdateData>(context, listen: false);
   }
 
   @override
@@ -85,7 +81,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
             child: getBackArrow(),
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
         titleSpacing: 0,
         title: getTitle("Portfolio",),
       ),
@@ -99,98 +95,142 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                   children: [
                     listData.isNotEmpty
                         ? Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Visibility(
-                            visible: listApplicants.length > 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 12,bottom: 12),
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      borderRadius: BorderRadius.circular(12)
-                                  ),
-                                  child: Wrap(
-                                    children: [
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          openApplicantSelection();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
-                                              const Icon(Icons.keyboard_arrow_down_outlined),
-                                            ],
-                                          ),
-                                        ),
+                          mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Visibility(
+                                visible: listApplicants.length > 1,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 12,bottom: 12),
+                                      decoration: BoxDecoration(
+                                          color: white,
+                                          borderRadius: BorderRadius.circular(12)
                                       ),
+                                      child: Wrap(
+                                        children: [
+                                          GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            onTap: () {
+                                              openApplicantSelection();
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                                                  const Icon(Icons.keyboard_arrow_down_outlined),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                                Container(
+                                  padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                                  decoration: const BoxDecoration(
+                                      color:white,
+                                      borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text('Fund Name',
+                                              style: TextStyle(
+                                                  color: blue,
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                      FontWeight.w600))),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text('Amount\nInvested',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: blue,
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                      FontWeight.w600))),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text('Current\nValue',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: blue,
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                      FontWeight.w600))),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Text('Gain/Loss\nCAGR%',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: blue,
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                  FontWeight.w600))),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                            Container(
-                              padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                              decoration: const BoxDecoration(
-                                  color:white,
-                                  borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                Expanded(
+                                  child: _assetList(),
+                                ),
+                              ]
+                        )
+                        : Column(
+                          children: [
+                            Visibility(
+                              visible: listApplicants.length > 1,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text('Fund Name',
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight:
-                                                  FontWeight.w600))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text('Amount\nInvested',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight:
-                                                  FontWeight.w600))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text('Current\nValue',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight:
-                                                  FontWeight.w600))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text('Gain/Loss\nCAGR%',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.w600))),
+                                  const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 12,bottom: 12),
+                                    decoration: BoxDecoration(
+                                        color: white,
+                                        borderRadius: BorderRadius.circular(12)
+                                    ),
+                                    child: Wrap(
+                                      children: [
+                                        GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () {
+                                            openApplicantSelection();
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                                                const Icon(Icons.keyboard_arrow_down_outlined),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            Expanded(
-                              child: _assetList(),
-                            ),
-                          ])
-                        : const MyNoDataWidget(msg: "No data found."),
+                            Expanded(child: const MyNoDataWidget(msg: "No data found.")),
+                          ],
+                        ),
                   ],
                 )),
           ),

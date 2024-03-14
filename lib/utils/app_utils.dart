@@ -469,11 +469,14 @@ List<String> getPeriodicity() {
 }
 
 openFileFromURL(String url,BuildContext? context)
-{
+async {
     try {
       if(checkValidString(url).toString().isNotEmpty)
           {
-            launch(url);
+            if (await canLaunchUrl(Uri.parse(url)))
+              {
+                launchUrl(Uri.parse(url),mode: LaunchMode.externalApplication);
+              }
           }
           else
             {

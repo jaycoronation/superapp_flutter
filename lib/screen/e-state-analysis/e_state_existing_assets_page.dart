@@ -26,6 +26,8 @@ class EStateExistingAssetsPage extends StatefulWidget {
 
 class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage> {
   List<ExistingAssets> listData = List<ExistingAssets>.empty();
+  List<ExistingAssets> listDataFromPortfolio = [];
+  List<ExistingAssets> listDataFromManual = [];
 
   bool _isLoading = false;
 
@@ -62,152 +64,297 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
             ? _isLoading
             ? const LoadingWidget()
             : SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-              child: listData.isEmpty ?
-              const Center(
-                  child: MyNoDataWidget(msg: 'No existing assets found!')
-              )
-                  :AnimationLimiter(
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    primary: false,
-                    padding: EdgeInsets.zero,
-                    itemCount: listData.length,
-                    itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: const Duration(milliseconds: 375),
-                      child: SlideAnimation(
-                        verticalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            /*decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border:Border.all(color: grayLight, width: 1,)
-                          ),*/
-                            child: Card(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              elevation: 1,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Visibility(
-                                        visible: listData[index].canDelete == "0",
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            InkWell(
-                                                onTap:(){
-                                                  _redirectToNextPage(context, listData[index], true);
-                                                },
-                                                child: Container(
-                                                  width: 36,
-                                                  height: 36,
-                                                  decoration: BoxDecoration(color: grayLight,
-                                                    borderRadius: BorderRadius.circular(20),
-                                                  ),
-                                                  // padding: const EdgeInsets.all(8),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(10.0),
-                                                    child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
-                                                      color: black, ),
-                                                  ),
-                                                )
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                  child: listData.isEmpty
+                      ? const Center(
+                          child: MyNoDataWidget(msg: 'No existing assets found!')
+                      )
+                      : SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Details coming directly from portfolio",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: black),),
+                            AnimationLimiter(
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  primary: false,
+                                  padding: EdgeInsets.zero,
+                                  itemCount: listDataFromPortfolio.length,
+                                  itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 375),
+                                    child: SlideAnimation(
+                                      verticalOffset: 50.0,
+                                      child: FadeInAnimation(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(top: 5),
+                                          /*decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border:Border.all(color: grayLight, width: 1,)
+                                        ),*/
+                                          child: Card(
+                                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                                            elevation: 1,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
                                             ),
-                                            const Gap(10),
-                                            InkWell(
-                                                onTap:(){
-                                                  deleteListData(listData[index], index);
-                                                },
-                                                child: Container(
-                                                  width: 36,
-                                                  height: 36,
-                                                  decoration: BoxDecoration(color: grayLight,
-                                                    borderRadius: BorderRadius.circular(20),
-                                                  ),
-                                                  // padding: const EdgeInsets.all(8),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(7.0),
-                                                    child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
-                                                      color: black, ),
-                                                  ),
-                                                )
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10.0),
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Visibility(
+                                                      visible: listDataFromPortfolio[index].restrictDelete == "0",
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          InkWell(
+                                                              onTap:(){
+                                                                _redirectToNextPage(context, listDataFromPortfolio[index], true);
+                                                              },
+                                                              child: Container(
+                                                                width: 36,
+                                                                height: 36,
+                                                                decoration: BoxDecoration(color: grayLight,
+                                                                  borderRadius: BorderRadius.circular(20),
+                                                                ),
+                                                                // padding: const EdgeInsets.all(8),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(10.0),
+                                                                  child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
+                                                                    color: black, ),
+                                                                ),
+                                                              )
+                                                          ),
+                                                          const Gap(10),
+                                                          InkWell(
+                                                              onTap:(){
+                                                                deleteListData(listDataFromPortfolio[index], index);
+                                                              },
+                                                              child: Container(
+                                                                width: 36,
+                                                                height: 36,
+                                                                decoration: BoxDecoration(color: grayLight,
+                                                                  borderRadius: BorderRadius.circular(20),
+                                                                ),
+                                                                // padding: const EdgeInsets.all(8),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(7.0),
+                                                                  child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
+                                                                    color: black, ),
+                                                                ),
+                                                              )
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text(checkValidString(listDataFromPortfolio[index].investmentType.toString()), textAlign: TextAlign.start,
+                                                      style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    const Gap(6),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        const Expanded(
+                                                          flex:4,
+                                                          child: Text("Current Value", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ),
+                                                        const Text("  :  ", textAlign: TextAlign.start,
+                                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                        ),
+                                                        Expanded(
+                                                          flex:6,
+                                                          child: Text(checkValidString(getPrice(listDataFromPortfolio[index].currentValue.toString())), textAlign: TextAlign.start,
+                                                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const Gap(8),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        const Expanded(
+                                                          flex:4,
+                                                          child: Text("Assets Type", textAlign: TextAlign.start,
+                                                            style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ),
+                                                        const Text("  :  ", textAlign: TextAlign.start,
+                                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                        ),
+                                                        Expanded(
+                                                          flex:6,
+                                                          child: Text(checkValidString(listDataFromPortfolio[index].assetType), textAlign: TextAlign.start,
+                                                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                      Text(checkValidString(listData[index].investmentType.toString()), textAlign: TextAlign.start,
-                                        style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
-                                      ),
-                                      const Gap(6),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Expanded(
-                                            flex:4,
-                                            child: Text("Current Value", textAlign: TextAlign.start,
-                                              style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                          const Text("  :  ", textAlign: TextAlign.start,
-                                            style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                          ),
-                                          Expanded(
-                                            flex:6,
-                                            child: Text(checkValidString(getPrice(listData[index].currentValue.toString())), textAlign: TextAlign.start,
-                                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Gap(8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Expanded(
-                                            flex:4,
-                                            child: Text("Assets Type", textAlign: TextAlign.start,
-                                              style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                          const Text("  :  ", textAlign: TextAlign.start,
-                                            style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                          ),
-                                          Expanded(
-                                            flex:6,
-                                            child: Text(checkValidString(listData[index].assetType), textAlign: TextAlign.start,
-                                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  )
                               ),
                             ),
-                          ),
+                            Container(
+                              margin: EdgeInsets.only(top: 22),
+                                child: const Text("Manually entered details",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: black),)
+                            ),
+                            AnimationLimiter(
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  primary: false,
+                                  padding: EdgeInsets.zero,
+                                  itemCount: listDataFromManual.length,
+                                  itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 375),
+                                    child: SlideAnimation(
+                                      verticalOffset: 50.0,
+                                      child: FadeInAnimation(
+                                        child: Card(
+                                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                                          elevation: 1,
+                                          margin: const EdgeInsets.only(top: 5),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Visibility(
+                                                  visible: listDataFromManual[index].restrictDelete == "0",
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: [
+                                                      InkWell(
+                                                          onTap:(){
+                                                            _redirectToNextPage(context, listDataFromManual[index], true);
+                                                          },
+                                                          child: Container(
+                                                            width: 36,
+                                                            height: 36,
+                                                            decoration: BoxDecoration(color: grayLight,
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(10.0),
+                                                              child: Image.asset(
+                                                                'assets/images/fin_plan_ic_edit_gray.png',
+                                                                color: black,
+                                                              ),
+                                                            ),
+                                                          )
+                                                      ),
+                                                      const Gap(10),
+                                                      InkWell(
+                                                          onTap:(){
+                                                            deleteListData(listDataFromManual[index], index);
+                                                          },
+                                                          child: Container(
+                                                            width: 36,
+                                                            height: 36,
+                                                            decoration: BoxDecoration(color: grayLight,
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            // padding: const EdgeInsets.all(8),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(7.0),
+                                                              child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
+                                                                color: black, ),
+                                                            ),
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text(checkValidString(listDataFromManual[index].investmentType.toString()), textAlign: TextAlign.start,
+                                                  style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
+                                                ),
+                                                const Gap(6),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Expanded(
+                                                      flex:4,
+                                                      child: Text("Current Value", textAlign: TextAlign.start,
+                                                        style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                      ),
+                                                    ),
+                                                    const Text("  :  ", textAlign: TextAlign.start,
+                                                      style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                    ),
+                                                    Expanded(
+                                                      flex:6,
+                                                      child: Text(checkValidString(getPrice(listDataFromManual[index].currentValue.toString())), textAlign: TextAlign.start,
+                                                        style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Gap(8),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Expanded(
+                                                      flex:4,
+                                                      child: Text("Assets Type", textAlign: TextAlign.start,
+                                                        style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                      ),
+                                                    ),
+                                                    const Text("  :  ", textAlign: TextAlign.start,
+                                                      style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                    ),
+                                                    Expanded(
+                                                      flex:6,
+                                                      child: Text(checkValidString(listDataFromManual[index].assetType), textAlign: TextAlign.start,
+                                                        style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    )
-                ),
-              )
-          ),)
+                      )
+              ),
+            )
             : const NoInternetWidget(),
         floatingActionButton: //listData.isNotEmpty ?
         FloatingActionButton(
@@ -361,26 +508,38 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
         if(dataResponse.existingAssets != null) {
           if(dataResponse.existingAssets!.isNotEmpty) {
 
-            listData = dataResponse.existingAssets!;
+            listData = dataResponse.existingAssets ?? [];
+
+            listDataFromPortfolio = [];
+            listDataFromManual = [];
+
+            for (var i=0; i < listData.length; i++)
+              {
+                if (listData[i].restrictDelete == '1')
+                  {
+                    listDataFromPortfolio.add(listData[i]);
+                  }
+                else if (listData[i].restrictDelete == '0')
+                  {
+                    listDataFromManual.add(listData[i]);
+                  }
+              }
+
           }
         }
 
         if(listData.isEmpty) {
           // _addBank(context, Bank());
 
-          Timer(const Duration(seconds: 2), () =>
-              setState(() {
-                _isLoading = false;
-                // _isNoDataVisible = false;
-              })
-          );
+          setState(() {
+            _isLoading = false;
+            // _isNoDataVisible = false;
+          });
         }else {
-          Timer(const Duration(seconds: 2), () =>
-              setState(() {
-                _isLoading = false;
-                // _isNoDataVisible = true;
-              })
-          );
+          setState(() {
+            _isLoading = false;
+            // _isNoDataVisible = true;
+          });
         }
 
         // print("listData.length 2==>" + listData.length.toString());

@@ -122,7 +122,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
               child: getBackArrow(),
             ),
           ),
-          title: getTitle("Estate Analysis",)
+          title: getTitle("Financial Planning",)
       ),
       body: SafeArea(
         top: false,
@@ -133,7 +133,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
             Container(
               alignment: Alignment.topLeft,
               margin: const EdgeInsets.only(top: 15, left: 12),
-              child: const Text("Enter Following Data:",
+              child: const Text("Please fill data to generate your Financial Plan presentation online.",
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
               ),

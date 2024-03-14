@@ -5,11 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/screen/common/client_task_list.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
-import 'package:superapp_flutter/screen/common/webview_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
@@ -36,7 +34,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends BaseState<HomePage> {
   DateTime preBackPressTime = DateTime.now();
   final bool _isLoading = false;
-  final InAppReview inAppReview = InAppReview.instance;
 
 
   @override
@@ -127,6 +124,19 @@ class _HomePageState extends BaseState<HomePage> {
                 ),
               ),
         ),
+        floatingActionButton: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () async {
+            Uri url = Uri.parse('https://api.whatsapp.com/send/?phone=%2B917400066608&text&type=phone_number');
+            if (await canLaunchUrl(url))
+              {
+                launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
+              }
+          },
+          child: Container(
+            child: Image.asset('assets/images/ic_whatsapp.png',width: 50,height: 50,),
+          ),
+        ),
       ),
     );
   }
@@ -164,17 +174,7 @@ class _HomePageState extends BaseState<HomePage> {
                     Expanded(
                         child: InkWell(
                           onTap: () async {
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
-                            if (await inAppReview.isAvailable())
-                              {
-                                print("IS Available");
-                                inAppReview.requestReview();
-                              }
-                            else
-                              {
-                                //inAppReview.openStoreListing();
-                                print("IS NOT Available");
-                              }
+                             Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
                           },
                           child: Container(
                             padding: const EdgeInsets.only(left: 15, bottom: 16, top: 16, right: 2),
@@ -219,7 +219,7 @@ class _HomePageState extends BaseState<HomePage> {
                                 Image.asset('assets/images/ic_estate_a.png', width: 40, height: 40),
                                 const Spacer(),
                                 const Text(
-                                  "Estate Analysis",
+                                  "Financial Planning",
                                   maxLines: 2,
                                   style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
                                 )

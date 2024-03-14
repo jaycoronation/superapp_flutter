@@ -54,38 +54,34 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
             child: getBackArrow(),
           ),
 
-          title: Row(
-            children: [
-              const Expanded(
-                  child: Text(
-                "BS Movement",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-              )),
-              InkWell(
-                onTap: (){
-                  setState(() {
-                    _isShowChart = !_isShowChart;
-                  });
+          title: getTitle('BS Movement'),
+        actions: [
+          InkWell(
+            onTap: (){
+              setState(() {
+                _isShowChart = !_isShowChart;
+              });
 
-                  if(_isShowChart){
-                    print("IS IN IF");
-                    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-                  }
-                  else{
-                    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-                  }
-                },
-                child: Text(
-                  _isShowChart ? "Table" : "Graph",
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                      fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                ),
-              )
-            ],
+              if(_isShowChart){
+                print("IS IN IF");
+                SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+              }
+              else{
+                SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+              }
+            },
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                _isShowChart ? "Table" : "Graph",
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                    fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+              ),
+            ),
           )
+        ],
       ),
       backgroundColor: white,
       body: _isLoading

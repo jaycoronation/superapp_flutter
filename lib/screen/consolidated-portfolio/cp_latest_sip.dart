@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestSIPResponse.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
+import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
@@ -21,8 +23,43 @@ class CPLatestSIPPage extends StatefulWidget {
 
 class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
   bool _isLoading = false;
-  List<SipStpDetails> listData =
-  List<SipStpDetails>.empty(growable: true);
+  List<SipStpDetails> listData = [];
+  List<SipStpDetails> listDataMainHoldingData = [];
+
+  List<ApplicantDetails> listApplicants = [];
+  String selectedApplicant = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _getLatestSIPData();
+
+    if ((sessionManagerPMS.getNetworthData() != null))
+    {
+      if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
+      {
+        listApplicants = [];
+        listApplicants.add(ApplicantDetails(applicant: "All",));
+        listApplicants.addAll(sessionManagerPMS.getNetworthData().applicantDetails ?? []);
+        listApplicants.removeAt(listApplicants.length-1);
+
+        if (listApplicants.isNotEmpty)
+        {
+          selectedApplicant = listApplicants[0].applicant ?? '';
+        }
+
+        print((listApplicants.length));
+      }
+      else
+      {
+        listApplicants = [];
+      }
+    }
+    else
+    {
+      listApplicants = [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +85,49 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
         child:  _isLoading
             ? const LoadingWidget()
             : Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Column(
-            children: [
-              Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 6, right: 6),
+              margin: const EdgeInsets.only(top: 8,left: 15, right: 15),
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: listApplicants.length > 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                        Container(
+                          margin: const EdgeInsets.only(top: 12,bottom: 12),
+                          decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Wrap(
+                            children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  openApplicantSelection();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                                      const Icon(Icons.keyboard_arrow_down_outlined),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
                       child: Stack(
                         children: [
                           listData.isNotEmpty
@@ -63,8 +137,8 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                               decoration: const BoxDecoration(
                                   color:semiBlue,
                                   borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                              child: Row(
-                                children: const [
+                              child: const Row(
+                                children: [
                                   Expanded(
                                       flex: 2,
                                       child: Text('Fund Name',
@@ -75,7 +149,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                                               FontWeight.w600))),
                                   Expanded(
                                       flex: 1,
-                                      child: Text('Folio No',
+                                      child: Text('Type',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: blue,
@@ -109,18 +183,12 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                           ])
                               : const MyNoDataWidget(msg: "No data found."),
                         ],
-                      )))
-            ],
-          ),
-        ),
+                      ))
+                ],
+              ),
+            ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getLatestSIPData();
   }
 
   ListView _itemList() {
@@ -194,16 +262,22 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                                 style: const TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w700))),
+                                    fontWeight: FontWeight.w700
+                                )
+                            )
+                        ),
                         Expanded(
                             flex: 1,
                             child: Text(
-                                listData[index].folioNo.toString(),
+                                listData[index].type.toString(),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: FontWeight.w200
+                                )
+                            )
+                        ),
                         Expanded(
                             flex: 1,
                             child: Text(
@@ -212,16 +286,21 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                                 style: const TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: FontWeight.w200
+                                )
+                            )
+                        ),
                         Expanded(
                             flex: 1,
                             child: Text(
-                                listData[index].amount.toString(),
+                                convertCommaSeparatedAmount(listData[index].amount.toString()),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     color: black,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w200))),
+                                    fontWeight: FontWeight.w200)
+                            )
+                        ),
                       ],
                     ),
                   ],
@@ -254,7 +333,31 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
         if(dataResponse.sipStpDetails != null){
-          listData = dataResponse.sipStpDetails!;
+          listDataMainHoldingData = dataResponse.sipStpDetails ?? [];
+
+          if (selectedApplicant == "All")
+          {
+            listData = listDataMainHoldingData;
+          }
+          else
+          {
+            num totalAmount = 0;
+            for (var i=0; i < listDataMainHoldingData.length; i++)
+            {
+              if (listDataMainHoldingData[i].applicant == selectedApplicant)
+              {
+
+                print("AMOUNT ==== ${listDataMainHoldingData[i].amount ?? 0}");
+
+                totalAmount += listDataMainHoldingData[i].amount ?? 0;
+                listData.add(listDataMainHoldingData[i]);
+              }
+            }
+
+            listData.add(SipStpDetails(schemeName: 'Total',amount: totalAmount,type: '',nav: 0,tranDate: ''));
+
+          }
+
           setState(() {
             _isLoading = false;
           });
@@ -275,9 +378,90 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void openApplicantSelection() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+              child: Wrap(
+                children: <Widget>[
+
+                  Column(
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Select Holder",style: TextStyle(color: blue,fontSize: 18,fontWeight: FontWeight.w600),)
+                        ],
+                      ),
+                      const Gap(22),
+                      ListView.builder(
+                        itemCount: listApplicants.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              Navigator.pop(context);
+                              setState(() {
+                                selectedApplicant = listApplicants[index].applicant ?? '';
+
+                                listData = [];
+
+                                print(selectedApplicant);
+
+                                if (selectedApplicant == "All")
+                                  {
+                                    listData = listDataMainHoldingData;
+                                  }
+                                else
+                                  {
+                                    num totalAmount = 0;
+                                    for (var i=0; i < listDataMainHoldingData.length; i++)
+                                    {
+                                      if (listDataMainHoldingData[i].applicant == selectedApplicant)
+                                      {
+
+                                        print("AMOUNT ==== ${listDataMainHoldingData[i].amount ?? 0}");
+
+                                        totalAmount += listDataMainHoldingData[i].amount ?? 0;
+                                        listData.add(listDataMainHoldingData[i]);
+                                      }
+                                    }
+                                    listData.add(SipStpDetails(schemeName: 'Total',amount: totalAmount,type: '',nav: 0,tranDate: ''));
+                                  }
+
+                              });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
+                                ),
+                                const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
+        }
+    );
   }
 
   @override
