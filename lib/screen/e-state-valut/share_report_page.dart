@@ -1,23 +1,19 @@
 import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
-import 'package:superapp_flutter/utils/my_toolbar.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
 import '../../model/e-state-vault/ShareDataReportResponse.dart';
 import '../../model/e-state-vault/share_data_model.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 
@@ -378,7 +374,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
   void _downloadFile(String downloadPath, String fileUrlServer) {
     // Example using `http` package
     String fileUrl = fileUrlServer;
-    String fileName = '${sessionManagerPMS.getFristName()}_${sessionManagerPMS.getLastName()}_${DateTime.now().millisecondsSinceEpoch / 1000}.pdf';
+    String fileName = '${sessionManagerPMS.getFirstName()}_${sessionManagerPMS.getLastName()}_${DateTime.now().millisecondsSinceEpoch / 1000}.pdf';
 
     HttpClient().getUrl(Uri.parse(fileUrl))
         .then((HttpClientRequest request) => request.close())
@@ -410,8 +406,6 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
         }
     });
   }
-
-
 
   @override
   void castStatefulWidget() {

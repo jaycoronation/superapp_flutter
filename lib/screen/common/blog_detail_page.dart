@@ -38,7 +38,8 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
         appBar: AppBar(
           toolbarHeight: 55,
           automaticallyImplyLeading: false,
-          leading: InkWell(
+          leading: GestureDetector(
+            behavior: HitTestBehavior.opaque,
               onTap: () {
                 Navigator.pop(context);
               },
@@ -125,7 +126,8 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
                               children: [
                                 HtmlWidget(
                                   checkValidString(dataGetSet.discription).replaceAll("\r\n\r\n", "").replaceAll("\r\n\t", "").replaceAll("\r\n", ""),
-                                  textStyle: const TextStyle(fontSize: 10),
+                                  textStyle: const TextStyle(fontSize: 14,letterSpacing: 0,fontWeight: FontWeight.w400,color: black),
+                                  enableCaching: true,
                                   customStylesBuilder: (element) {
                                     if (element.styles.contains('font-size')) {
                                       return {

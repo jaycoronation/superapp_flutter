@@ -345,7 +345,7 @@ doubleUpto2Digit (double value) {
 
 convertCommaSeparatedAmount (String value) {
   try {
-    var formatter = NumberFormat('#,##,000');
+    var formatter = NumberFormat('#,##,###');
     return checkValidString(value).toString().isNotEmpty ? "₹ ${formatter.format(double.parse(value))}" : "₹ 0";
   } catch (e) {
     return value;

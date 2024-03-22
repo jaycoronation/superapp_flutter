@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestTransactionResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../common_widget/common_widget.dart';
@@ -27,7 +28,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
   bool _isLoading = false;
   List<TransactionDetails> listDataMainHoldingData = [];
   List<TransactionDetails> listData = [];
-  List<ApplicantDetails> listApplicants = [];
+  List<ApplicantsOnly> listApplicants = [];
   String selectedApplicant = "";
 
   @override
@@ -36,14 +37,12 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
     _getLatestTransactionData();
 
 
-    if ((sessionManagerPMS.getNetworthData() != null))
+    if ((sessionManagerPMS.getApplicantsList() != null))
     {
-      if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
+      if (sessionManagerPMS.getApplicantsList().isNotEmpty ?? false)
       {
         listApplicants = [];
-        listApplicants.add(ApplicantDetails(applicant: "All",));
-        listApplicants.addAll(sessionManagerPMS.getNetworthData().applicantDetails ?? []);
-        listApplicants.removeAt(listApplicants.length-1);
+        listApplicants.addAll(sessionManagerPMS.getApplicantsList() ?? []);
 
         if (listApplicants.isNotEmpty)
         {
@@ -80,113 +79,116 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
             child: getBackArrow(),
           ),
           titleSpacing: 0,
-          title: getTitle("Latest Transactions - Last Month Transactions",)
+          title: getTitle("Last Month Transactions",)
       ),
       backgroundColor: const Color(0XffEDEDEE),
-      body: _isLoading
-          ? const LoadingWidget()
-          : Container(
-              margin: const EdgeInsets.only(top: 8),
-        padding: const EdgeInsets.only(left: 6, right: 6),
-            child: Column(
-              children: [
-                Visibility(
-                  visible: listApplicants.length > 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
-                      Container(
-                        margin: const EdgeInsets.only(top: 12,bottom: 12),
-                        decoration: BoxDecoration(
-                            color: white,
-                            borderRadius: BorderRadius.circular(12)
+      body: SafeArea(
+        bottom: false,
+        child: _isLoading
+            ? const LoadingWidget()
+            : Container(
+                margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(left: 6, right: 6),
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: listApplicants.length > 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                        Container(
+                          margin: const EdgeInsets.only(top: 12,bottom: 12),
+                          decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Wrap(
+                            children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  openApplicantSelection();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                                      const Icon(Icons.keyboard_arrow_down_outlined),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Wrap(
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: listData.isNotEmpty
+                        ? Column(
                           children: [
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                openApplicantSelection();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
+                              Container(
+                                padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                                decoration: const BoxDecoration(
+                                    color:semiBlue,
+                                    borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                child: const Row(
                                   children: [
-                                    Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
-                                    const Icon(Icons.keyboard_arrow_down_outlined),
+                                    Expanded(
+                                        flex: 2,
+                                        child: Text('Fund Name',
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Type',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Tran Date',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Amount',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                              _itemList(),
+                            const Gap(22),
+                            ]
+                          )
+                        : const MyNoDataWidget(msg: "No data found."),
                   ),
-                ),
-                Expanded(
-                  child: listData.isNotEmpty
-                      ? Column(
-                      children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                            decoration: const BoxDecoration(
-                                color:semiBlue,
-                                borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                            child: const Row(
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Text('Fund Name',
-                                        style: TextStyle(
-                                            color: blue,
-                                            fontSize: 16,
-                                            fontWeight:
-                                            FontWeight.w600))),
-                                Expanded(
-                                    flex: 1,
-                                    child: Text('Type',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: blue,
-                                            fontSize: 16,
-                                            fontWeight:
-                                            FontWeight.w600))),
-                                Expanded(
-                                    flex: 1,
-                                    child: Text('Tran Date',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: blue,
-                                            fontSize: 16,
-                                            fontWeight:
-                                            FontWeight.w600))),
-                                Expanded(
-                                    flex: 1,
-                                    child: Text('Amount',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: blue,
-                                            fontSize: 16,
-                                            fontWeight:
-                                            FontWeight.w600))),
-                              ],
-                            ),
-                          ),
-                          _itemList(),
-                        const Gap(22),
-                        ]
-                      )
-                      : const MyNoDataWidget(msg: "No data found."),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+      ),
     );
   }
 
@@ -326,7 +328,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
           if (dataResponse.transactionDetails != null) {
             listDataMainHoldingData = dataResponse.transactionDetails ?? [];
             listData = [];
-            if (selectedApplicant == "All")
+            if (selectedApplicant.toLowerCase() == "all")
               {
                 listData = listDataMainHoldingData;
               }
@@ -411,7 +413,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
 
                                 print(selectedApplicant);
 
-                                if (selectedApplicant == "All")
+                                if (selectedApplicant.toLowerCase() == "all")
                                 {
                                   listData = listDataMainHoldingData;
                                 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestSIPResponse.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
@@ -26,7 +27,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
   List<SipStpDetails> listData = [];
   List<SipStpDetails> listDataMainHoldingData = [];
 
-  List<ApplicantDetails> listApplicants = [];
+  List<ApplicantsOnly> listApplicants = [];
   String selectedApplicant = "";
 
   @override
@@ -34,14 +35,12 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
     super.initState();
     _getLatestSIPData();
 
-    if ((sessionManagerPMS.getNetworthData() != null))
+    if ((sessionManagerPMS.getApplicantsList() != null))
     {
-      if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
+      if (sessionManagerPMS.getApplicantsList().isNotEmpty ?? false)
       {
         listApplicants = [];
-        listApplicants.add(ApplicantDetails(applicant: "All",));
-        listApplicants.addAll(sessionManagerPMS.getNetworthData().applicantDetails ?? []);
-        listApplicants.removeAt(listApplicants.length-1);
+        listApplicants.addAll(sessionManagerPMS.getApplicantsList() ?? []);
 
         if (listApplicants.isNotEmpty)
         {
@@ -77,7 +76,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
             child: getBackArrow(),
           ),
           title: getTitle(
-            "Latest SIP - Last 30 Days",
+            "Last Month SIP",
           )),
       backgroundColor: const Color(0XffEDEDEE),
       body: SafeArea(
@@ -243,7 +242,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                         Expanded(
                             flex: 1,
                             child: Text(
-                                listData[index].amount.toString(),
+                                convertCommaSeparatedAmount(listData[index].amount.toString()),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     color: black,
@@ -335,7 +334,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
         if(dataResponse.sipStpDetails != null){
           listDataMainHoldingData = dataResponse.sipStpDetails ?? [];
 
-          if (selectedApplicant == "All")
+          if (selectedApplicant.toLowerCase() == "all")
           {
             listData = listDataMainHoldingData;
           }
@@ -417,7 +416,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
 
                                 print(selectedApplicant);
 
-                                if (selectedApplicant == "All")
+                                if (selectedApplicant.toLowerCase() == "all")
                                   {
                                     listData = listDataMainHoldingData;
                                   }

@@ -1,10 +1,16 @@
 //Live
 const String API_DOMAIN_CP = "https://portfolio.alphacapital.in/"; //for live
 
-const String API_URL_CP = "${API_DOMAIN_CP}api/services/";
+const String API_URL_CP = "${API_DOMAIN_CP}api/servicesv2/";
 
 //latest transaction
 String latestTransaction = "last_30_days_transaction_consolidated_networth";
+
+//list of applicants
+String applicantsList = 'get_applicants/list_for_app';
+
+//Sync Data Form Mint
+String updateLatestData = "sync_mint_data_user_wise";
 
 //latest SIP
 String latestSIP = "sip_stp";
@@ -14,7 +20,7 @@ String networth = "networth_consolidated";
 //String networth = "networth";
 
 //bs movement
-String bsMovement = "bs_movement";
+String bsMovement = "bs_movement_consolidate";
 
 //capital gain
 String capitalGain = "capital_gain_summury";

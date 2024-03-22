@@ -37,8 +37,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
   final List<BottomNavigationBarItem> itemsList = List<BottomNavigationBarItem>.empty(growable: true);
   late int _currentIndex = 0;
   late TabController tabController;
-  List<ApplicantDetails> listApplicants = [];
-  String selectedApplicant = '';
   bool isLoading = false;
 
 
@@ -71,13 +69,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
       activeIcon: Image.asset("assets/images/ic_more_selected.png", width: 24, height: 24),
       label: 'More',
     ));
-
-    listApplicants = sessionManagerPMS.getNetworthData().applicantDetails ?? [];
-    if (listApplicants.isNotEmpty)
-      {
-        selectedApplicant = listApplicants[0].applicant ?? '';
-      }
-
   }
 
   @override
@@ -87,7 +78,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
       child: Scaffold(
         backgroundColor: appBg,
         appBar: AppBar(
-            toolbarHeight: _currentIndex == 2 ? 0 : 60,
+            toolbarHeight: _currentIndex == 2 ? 60 : 60,
             automaticallyImplyLeading: false,
             backgroundColor: appBg,
             elevation: 0,
@@ -233,7 +224,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                                   Image.asset('assets/images/portfolio_ic_transaction.png', width: 24, height: 24,color: blue),
                                   Container(width: 12),
                                   const Text(
-                                    "Latest Transactions",
+                                    "Last Month Transactions",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                                   )
@@ -259,7 +250,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                                   Image.asset('assets/images/portfolio_ic_sip_stp.png', width: 24, height: 24,color: blue),
                                   Container(width: 12),
                                   const Text(
-                                    "Latest SIP",
+                                    "Last Month SIP",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                                   )
@@ -358,49 +349,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            );
-          });
-        }
-    );
-  }
-
-  void openApplicantSelection() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: white,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 60),
-              child: Wrap(
-                children: <Widget>[
-                  ListView.builder(
-                    itemCount: listApplicants.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            Navigator.pop(context);
-                            context.read<UpdateData>().setSelectedApplicant(listApplicants[index].applicant ?? '');
-                              print(context.read<UpdateData>().selectedApplicant);
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
-                              const Divider(color: black,thickness: 0.6,height: 0.6,)
-                            ],
-                          ),
-                        );
-                      },
-                  )
                 ],
               ),
             );

@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:superapp_flutter/model/consolidated-portfolio/XIRRCommonResponseModel.dart';
 
 import '../model/consolidated-portfolio/NetworthResponseModel.dart';
+import '../model/consolidated-portfolio/ApplicantResponseModel.dart';
 import '../model/consolidated-portfolio/PercentageResponse.dart';
-import '../model/consolidated-portfolio/SinceInceptionResponse.dart';
 import 'session_manager_methods.dart';
 
 class SessionManagerPMS {
@@ -14,12 +14,19 @@ class SessionManagerPMS {
   final String lastName = "lastNamePMS";
   final String email = "emailPMS";
   final String pan = "panPMS";
+
+
+  final String KEY_REPORT_DATE = "KEY_REPORT_DATE";
   final String KEY_PERFORMANCE = "KEY_PERFORMANCE";
   final String KEY_NEXTYEAR = "KEY_NEXTYEAR";
   final String KEY_PERVIOUSYEAR = "KEY_PERVIOUSYEAR";
   final String KEY_NETWORTH = "KEY_NETWORTH";
   final String KEY_PERCENTAGE = "KEY_PERCENTAGE";
   final String TOTAL_NETWORTH = "TOTAL_NETWORTH";
+
+  final String LAST_SYNC_DATE = "LAST_SYNC_DATE";
+
+  final String KEY_APPLICANTS_LIST = "KEY_APPLICANTS_LIST";
 
   //set data into shared preferences...
   Future createLoginSession(String userIdApi,String firstNameApi,String lastNameApi ,String emailApi,String panApi) async {
@@ -60,11 +67,11 @@ class SessionManagerPMS {
     await SessionManagerMethods.setString(userId, data);
   }
 
-  String getFristName() {
+  String getFirstName() {
     return checkValidString(SessionManagerMethods.getString(firstName));
   }
 
-  Future<void> setFristName(String data)
+  Future<void> setFirstName(String data)
   async {
     await SessionManagerMethods.setString(firstName, data);
   }
@@ -85,6 +92,22 @@ class SessionManagerPMS {
   Future<void> setEmail(String data)
   async {
     await SessionManagerMethods.setString(email, data);
+  }
+
+  Future<void> saveApplicantsList(List<ApplicantsOnly> listItems) async {
+    var json = jsonEncode(listItems);
+    await SessionManagerMethods.setString(KEY_APPLICANTS_LIST, json);
+  }
+
+  List<ApplicantsOnly> getApplicantsList() {
+    List<ApplicantsOnly> listJsonData = [];
+    String jsonString = checkValidString(SessionManagerMethods.getString(KEY_APPLICANTS_LIST));
+    if (jsonString.isNotEmpty)
+    {
+      List<dynamic> jsonDataList = jsonDecode(jsonString);
+      listJsonData = jsonDataList.map((jsonData) => ApplicantsOnly.fromJson(jsonData)).toList();
+    }
+    return listJsonData;
   }
 
   Future<void> savePerformanceList(List<Xirr> listItems) async {
@@ -175,6 +198,25 @@ class SessionManagerPMS {
   String getTotalNetworth() {
     return checkValidString(SessionManagerMethods.getString(TOTAL_NETWORTH));
   }
+
+  String getReportDate() {
+    return checkValidString(SessionManagerMethods.getString(KEY_REPORT_DATE));
+  }
+
+  Future<void> setReportDate(String data)
+  async {
+    await SessionManagerMethods.setString(KEY_REPORT_DATE, data);
+  }
+
+  String getLastSyncDate() {
+    return checkValidString(SessionManagerMethods.getString(LAST_SYNC_DATE));
+  }
+
+  Future<void> setLastSyncDate(String data)
+  async {
+    await SessionManagerMethods.setString(LAST_SYNC_DATE, data);
+  }
+
 
   checkValidString (String? value) {
     if (value == null || value == "null" || value == "<null>")

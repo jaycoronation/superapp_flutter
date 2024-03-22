@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponseModel.dart' as networth;
 import 'package:superapp_flutter/model/consolidated-portfolio/TempResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
@@ -25,7 +26,7 @@ class CPPortfolioPage extends StatefulWidget {
 class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   bool _isLoading = false;
   List<TempResponse> listData = [];
-  List<networth.ApplicantDetails> listApplicants = [];
+  List<ApplicantsOnly> listApplicants = [];
   String selectedApplicant = "";
   Map<String, dynamic> userData = {};
 
@@ -34,17 +35,17 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     super.initState();
     //selectedApplicant = context.watch<UpdateData>().selectedApplicant.toString();
 
-    if ((sessionManagerPMS.getNetworthData() != null))
+    if ((sessionManagerPMS.getApplicantsList() != null))
     {
-      if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
+      if (sessionManagerPMS.getApplicantsList().isNotEmpty ?? false)
       {
-        listApplicants = sessionManagerPMS.getNetworthData().applicantDetails ?? [];
-        listApplicants.removeAt(listApplicants.length-1);
+        listApplicants = [];
+        listApplicants.addAll(sessionManagerPMS.getApplicantsList() ?? []);
 
         if (listApplicants.isNotEmpty)
-          {
-            selectedApplicant = listApplicants[0].applicant ?? '';
-          }
+        {
+          selectedApplicant = listApplicants[0].applicant ?? '';
+        }
 
         print((listApplicants.length));
       }
@@ -66,7 +67,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0XffEDEDEE),
-      appBar: AppBar(
+      /*appBar: AppBar(
         toolbarHeight: 60,
         automaticallyImplyLeading: false,
         backgroundColor: appBg,
@@ -84,7 +85,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         centerTitle: true,
         titleSpacing: 0,
         title: getTitle("Portfolio",),
-      ),
+      ),*/
       body: _isLoading
           ? const LoadingWidget()
           : Container(
@@ -142,7 +143,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                   decoration: const BoxDecoration(
                                       color:white,
                                       borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                  child: Row(
+                                  child: const Row(
                                     children: [
                                       Expanded(
                                           flex: 1,
@@ -228,7 +229,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                 ],
                               ),
                             ),
-                            Expanded(child: const MyNoDataWidget(msg: "No data found.")),
+                            const Expanded(child: MyNoDataWidget(msg: "No data found.")),
                           ],
                         ),
                   ],
@@ -436,7 +437,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                   
                   Column(
                     children: [
-                       Row(
+                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -471,7 +472,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                   Map<String,dynamic> valueData = value;
 
                                   valueData.forEach((key, value) {
-                                    print("USER DATA ADDING IN IF == ${key} === ${value}");
+                                    print("USER DATA ADDING IN IF == $key === $value");
                                     if(key == (selectedApplicant))
                                     {
                                       var tpp = List<TempResponse>.empty(growable: true);
@@ -593,7 +594,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         Map<String,dynamic> valueData = value;
 
         valueData.forEach((key, value) {
-          print("USER DATA ADDING IN IF == ${key} === ${value}");
+          print("USER DATA ADDING IN IF == $key === $value");
           if(key == (selectedApplicant))
           {
             var tpp = List<TempResponse>.empty(growable: true);
@@ -609,12 +610,11 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         });
       });
 
-
       print("listData SIZE === ${listData.length}");
     }
     else
     {
-      print("USER DATA FIled  ELSE == $userData");
+      print("USER DATA Filed  ELSE == $userData");
     }
     setState(() {
       _isLoading = false;

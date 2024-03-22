@@ -39,7 +39,7 @@ class _ContactPageState extends BaseState<ContactPage> {
     super.initState();
 
     if (sessionManager.getFullName().toString().isNotEmpty) {
-      _nameController.text = checkValidString(sessionManagerPMS.getFristName().toString().trim()) + " " + checkValidString(sessionManagerPMS.getLastName().toString().trim()) ;
+      _nameController.text = checkValidString(sessionManagerPMS.getFirstName().toString().trim()) + " " + checkValidString(sessionManagerPMS.getLastName().toString().trim()) ;
     }
 
     if (sessionManager.getEmail().toString().isNotEmpty) {

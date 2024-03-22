@@ -94,33 +94,53 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   children: [
                     Visibility(
                       visible: strNetWorth.isNotEmpty,
-                      child: Container(
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
-                        decoration: BoxDecoration(
-                            color: blue,
-                            borderRadius: BorderRadius.circular(12),
-                            border:Border.all(color: blue, width: 1,)),
-                        child: Column(
-                          children: [
-                            const Gap(20),
-                            const Text('Networth',
-                                style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
-                            const Gap(20),
-                            Text((convertCommaSeparatedAmount(strNetWorth)),
-                                style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
-                            const Gap(10),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
+                            decoration: BoxDecoration(
+                                color: blue,
+                                borderRadius: BorderRadius.circular(12),
+                                border:Border.all(color: blue, width: 1,)),
+                            child: Column(
                               children: [
-                                Text("*Some time lag in updation",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                                Gap(12)
+                                const Gap(20),
+                                const Text('Networth',
+                                    style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
+                                const Gap(20),
+                                Text((convertCommaSeparatedAmount(strNetWorth)),
+                                    style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
+                                const Gap(10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("*As per $asPerDate",style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                    const Gap(12)
+                                  ],
+                                ),
+                                const Gap(10),
                               ],
                             ),
-                            const Gap(10),
-                          ],
-                        ),
+                          ),
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              getCommonXirr();
+                              _getNetworthData();
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(right: 16),
+                              padding: const EdgeInsets.all(12.0),
+                              child: Image.asset('assets/images/ic_refresh.png',width: 22,height: 22,color: white,),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Container(
@@ -2068,7 +2088,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                   padding: const EdgeInsets.all(3),
                                   child: Container(
                                     margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                    child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].gain.toString()),
+                                    child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].currentValue.toString()),
                                         style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                         textAlign: TextAlign.center),
                                   ),
@@ -2082,7 +2102,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                   padding: const EdgeInsets.all(3),
                                   child: Container(
                                     margin: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-                                    child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].currentValue.toString()),
+                                    child:Text(convertCommaSeparatedAmount(listPreviousYearXIRRNew[index].gain.toString()),
                                         style: listPreviousYearXIRRNew[index].asset.toString().toLowerCase() == "overall" ? const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: black) :  const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: black),
                                         textAlign: TextAlign.center),
                                   ),
@@ -2179,54 +2199,62 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
         setState(() {
           _isLoading = true;
         });
-        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-          HttpLogger(logLevel: LogLevel.BODY),
-        ]);
 
-        final url = Uri.parse(API_URL_CP + networth);
-        Map<String, String> jsonBody = {
-          'user_id': sessionManagerPMS.getUserId().trim(),
-        };
 
-        final response = await http.post(url, body: jsonBody);
-        final statusCode = response.statusCode;
-        final body = response.body;
-        Map<String, dynamic> user = jsonDecode(body);
-        var dataResponse = NetworthResponseModel.fromJson(user);
+      }
 
-        if (statusCode == 200 && dataResponse.success == 1) {
-          try {
-            if (dataResponse.result != null)
-            {
-              setState(() {
-                resultData = dataResponse.result ?? Result();
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
 
-                sessionManagerPMS.saveNetworthData(resultData);
+    final url = Uri.parse(API_URL_CP + networth);
+    Map<String, String> jsonBody = {
+      'user_id': sessionManagerPMS.getUserId().trim(),
+    };
 
-                if (resultData.applicantDetails != null) {
-                  if(resultData.applicantDetails!.isNotEmpty) {
-                    for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
-                      if (resultData.applicantDetails![i].applicant == "Amount Total") {
-                        strNetWorth = checkValidString(resultData.applicantDetails![i].amount.toString());
-                        sessionManagerPMS.setTotalNetworth(strNetWorth);
-                        print("strNetWorth In For Loop === $strNetWorth");
-                      }
-                    }
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = NetworthResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1)
+    {
+      try {
+        if (dataResponse.result != null)
+        {
+          setState(() {
+            resultData = dataResponse.result ?? Result();
+
+            sessionManagerPMS.saveNetworthData(resultData);
+
+            if (resultData.applicantDetails != null) {
+              if(resultData.applicantDetails!.isNotEmpty) {
+                for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
+                  if (resultData.applicantDetails![i].applicant == "Amount Total") {
+                    strNetWorth = checkValidString(resultData.applicantDetails![i].amount.toString());
+                    sessionManagerPMS.setTotalNetworth(strNetWorth);
+                    print("strNetWorth In For Loop === $strNetWorth");
                   }
                 }
-              });
+              }
             }
-          } catch (e) {
-
-            if (kDebugMode) {
-              print(e);
-            }
-          }
-        } else {
-
+          });
         }
-        _getPercentageData();
+      } catch (e) {
+
+        if (kDebugMode) {
+          print(e);
+        }
       }
+    }
+    else
+    {
+
+    }
+
+
+    _getPercentageData();
 
   }
 
@@ -2461,6 +2489,11 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
     print("listPreviousYearXIRR ==== ${listPreviousYearXIRRNew.length}");
 
+    if (sessionManagerPMS.getReportDate().isNotEmpty)
+      {
+        asPerDate = sessionManagerPMS.getReportDate();
+      }
+
     if ((listSinceInceptionNew.isEmpty) || (listCurrentYearXIRRNew.isEmpty) || (listPreviousYearXIRRNew.isEmpty))
       {
         setState(() {
@@ -2468,38 +2501,43 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
           _isCurrentYearXIRRLoading = true;
           _isPreviousYearXIRRLoading = true;
         });
-        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-          HttpLogger(logLevel: LogLevel.BODY),
-        ]);
-
-        final url = Uri.parse(API_URL_CP + xirrCommon);
-        Map<String, String> jsonBody = {
-          'user_id': sessionManagerPMS.getUserId().trim(),
-        };
-
-        final response = await http.post(url, body: jsonBody);
-        final statusCode = response.statusCode;
-        final body = response.body;
-        Map<String, dynamic> user = jsonDecode(body);
-        var dataResponse = XirrCommonResponseModel.fromJson(user);
-
-        if (statusCode == 200 && dataResponse.success == 1)
-        {
-          listSinceInceptionNew = dataResponse.performance ?? [];
-          sessionManagerPMS.savePerformanceList(listSinceInceptionNew);
-
-          listCurrentYearXIRRNew = dataResponse.xirr ?? [];
-          sessionManagerPMS.saveNextYearList(listCurrentYearXIRRNew);
-
-          listPreviousYearXIRRNew = dataResponse.xirrPrevious ?? [];
-          sessionManagerPMS.savePerviousYearList(listPreviousYearXIRRNew);
-        }
-        setState(() {
-          _isSinceInceptionLoading = false;
-          _isCurrentYearXIRRLoading = false;
-          _isPreviousYearXIRRLoading = false;
-        });
       }
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP + xirrCommon);
+    Map<String, String> jsonBody = {
+      'user_id': sessionManagerPMS.getUserId().trim(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = XirrCommonResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1)
+    {
+      listSinceInceptionNew = dataResponse.performance ?? [];
+      sessionManagerPMS.savePerformanceList(listSinceInceptionNew);
+
+      listCurrentYearXIRRNew = dataResponse.xirr ?? [];
+      sessionManagerPMS.saveNextYearList(listCurrentYearXIRRNew);
+
+      listPreviousYearXIRRNew = dataResponse.xirrPrevious ?? [];
+      sessionManagerPMS.savePerviousYearList(listPreviousYearXIRRNew);
+
+      asPerDate = universalDateConverter("dd-MM-yyyy", 'dd MMM,yyyy', dataResponse.reportDate ?? '');
+      sessionManagerPMS.setReportDate(asPerDate);
+    }
+    setState(() {
+      _isSinceInceptionLoading = false;
+      _isCurrentYearXIRRLoading = false;
+      _isPreviousYearXIRRLoading = false;
+    });
+
   }
 
   @override

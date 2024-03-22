@@ -121,7 +121,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                           Container(height: 12,),
                           Padding(
                             padding: const EdgeInsets.all(18),
-                            child: Text('Hello, ${sessionManagerPMS.getFristName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
+                            child: Text('Hello, ${sessionManagerPMS.getFirstName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
                           ),
                           GestureDetector(
                             onTap: (){

@@ -12,11 +12,15 @@ class XirrCommonResponseModel {
       List<Xirr>? performance,
       List<Xirr>? xirr, 
       List<Xirr>? xirrPrevious,
-      num? success, 
+      String? reportDate,
+      String? reportDateTimestamp,
+      num? success,
       String? message,}){
     _performance = performance;
     _xirr = xirr;
     _xirrPrevious = xirrPrevious;
+    _reportDate = reportDate;
+    _reportDateTimestamp = reportDateTimestamp;
     _success = success;
     _message = message;
 }
@@ -40,28 +44,38 @@ class XirrCommonResponseModel {
         _xirrPrevious?.add(Xirr.fromJson(v));
       });
     }
+    _reportDateTimestamp = json['report_date_timestamp'];
+    _reportDate = json['report_date'];
     _success = json['success'];
     _message = json['message'];
   }
   List<Xirr>? _performance;
   List<Xirr>? _xirr;
   List<Xirr>? _xirrPrevious;
+  String? _reportDate;
+  String? _reportDateTimestamp;
   num? _success;
   String? _message;
 XirrCommonResponseModel copyWith({  List<Xirr>? performance,
   List<Xirr>? xirr,
   List<Xirr>? xirrPrevious,
+  String? reportDate,
+  String? reportDateTimestamp,
   num? success,
   String? message,
 }) => XirrCommonResponseModel(  performance: performance ?? _performance,
   xirr: xirr ?? _xirr,
   xirrPrevious: xirrPrevious ?? _xirrPrevious,
+  reportDate: reportDate ?? _reportDate,
+  reportDateTimestamp: reportDateTimestamp ?? _reportDateTimestamp,
   success: success ?? _success,
   message: message ?? _message,
 );
   List<Xirr>? get performance => _performance;
   List<Xirr>? get xirr => _xirr;
   List<Xirr>? get xirrPrevious => _xirrPrevious;
+  String? get reportDate => _reportDate;
+  String? get reportDateTimestamp => _reportDateTimestamp;
   num? get success => _success;
   String? get message => _message;
 
@@ -76,6 +90,8 @@ XirrCommonResponseModel copyWith({  List<Xirr>? performance,
     if (_xirrPrevious != null) {
       map['xirr_previous'] = _xirrPrevious?.map((v) => v.toJson()).toList();
     }
+    map['report_date'] = _reportDate;
+    map['report_date_timestamp'] = _reportDateTimestamp;
     map['success'] = _success;
     map['message'] = _message;
     return map;

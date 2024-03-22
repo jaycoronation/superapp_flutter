@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
@@ -25,7 +26,7 @@ class CPNetworthPage extends StatefulWidget {
 class CPNetworthPageState extends BaseState<CPNetworthPage> {
   bool _isLoading = false;
   List<Networth> listData = [];
-  List<ApplicantDetails> listApplicants = [];
+  List<ApplicantsOnly> listApplicants = [];
   String selectedApplicant = "";
 
   @override
@@ -33,12 +34,12 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     super.initState();
     _getNetworthData();
 
-    if ((sessionManagerPMS.getNetworthData() != null))
+    if ((sessionManagerPMS.getApplicantsList() != null))
     {
-      if (sessionManagerPMS.getNetworthData().applicantDetails?.isNotEmpty ?? false)
+      if (sessionManagerPMS.getApplicantsList().isNotEmpty ?? false)
       {
-        listApplicants = sessionManagerPMS.getNetworthData().applicantDetails ?? [];
-        listApplicants.removeAt(listApplicants.length-1);
+        listApplicants = [];
+        listApplicants.addAll(sessionManagerPMS.getApplicantsList() ?? []);
 
         if (listApplicants.isNotEmpty)
         {
@@ -64,109 +65,107 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
       backgroundColor: const Color(0XffEDEDEE),
       body: _isLoading
           ? const LoadingWidget()
-          : listData.isNotEmpty
-          ? Container(
-              margin: const EdgeInsets.only(top: 8,bottom: 8),
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 6, right: 6),
-                  child: Column(
+          : Container(
+        margin: const EdgeInsets.only(top: 8,bottom: 8),
+        child: Padding(
+            padding: const EdgeInsets.only(left: 6, right: 6),
+            child: Column(
+              children: [
+                Visibility(
+                  visible: listApplicants.length > 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Visibility(
-                        visible: listApplicants.length > 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                      Container(
+                        margin: const EdgeInsets.only(top: 12,bottom: 12),
+                        decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(12)
+                        ),
+                        child: Wrap(
                           children: [
-                            const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
-                            Container(
-                              margin: const EdgeInsets.only(top: 12,bottom: 12),
-                              decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Wrap(
-                                children: [
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      openApplicantSelection();
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
-                                          const Icon(Icons.keyboard_arrow_down_outlined),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                openApplicantSelection();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                                    const Icon(Icons.keyboard_arrow_down_outlined),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            listData.isNotEmpty
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                        Container(
-                                          padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                          decoration: const BoxDecoration(
-                                              color:white,
-                                              borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                          child: const Row(
-                                            children: [
-                                              Expanded(
-                                                  flex: 2,
-                                                  child: Text('Asset Type',
-                                                      style: TextStyle(
-                                                          color: blue,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600))),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text('Amount',
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: blue,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600))),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text('Allocation',
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: blue,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600))),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: _itemList(),
-                                        ),
-                                      ]
-                                )
-                                : const MyNoDataWidget(msg: "No data found."),
-                          ],
-                        ),
-                      ),
                     ],
-                  )),
-          )
-          : const MyNoDataWidget(msg: "No data found."),
+                  ),
+                ),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      listData.isNotEmpty
+                          ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                              decoration: const BoxDecoration(
+                                  color:white,
+                                  borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                              child: const Row(
+                                children: [
+                                  Expanded(
+                                      flex: 2,
+                                      child: Text('Asset Type',
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                              FontWeight.w600))),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text('Amount',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                              FontWeight.w600))),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Text('Allocation',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: blue,
+                                              fontSize: 16,
+                                              fontWeight:
+                                              FontWeight.w600))),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: _itemList(),
+                            ),
+                          ]
+                      )
+                          : const MyNoDataWidget(msg: "No data found."),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+      ),
     );
   }
 
@@ -301,7 +300,6 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
               padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
               child: Wrap(
                 children: <Widget>[
-
                   Column(
                     children: [
                       const Row(
@@ -324,7 +322,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                               setState(() {
                                 selectedApplicant = listApplicants[index].applicant ?? '';
 
-                                listData = [];
+                                _getNetworthData();
 
                                 print(selectedApplicant);
 
@@ -376,57 +374,59 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
       listData = [];
     }
 
-
     if (listData.isEmpty)
       {
         setState(() {
           _isLoading = true;
         });
-        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-          HttpLogger(logLevel: LogLevel.BODY),
-        ]);
+      }
 
-        final url = Uri.parse(API_URL_CP + networth);
-        Map<String, String> jsonBody = {
-          'user_id': sessionManagerPMS.getUserId().trim(),
-        };
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
 
-        final response = await http.post(url, body: jsonBody);
-        final statusCode = response.statusCode;
-        final body = response.body;
-        Map<String, dynamic> user = jsonDecode(body);
-        var dataResponse = NetworthResponseModel.fromJson(user);
+    final url = Uri.parse(API_URL_CP + networth);
+    Map<String, String> jsonBody = {
+      'user_id': sessionManagerPMS.getUserId().trim(),
+      'applicant' : selectedApplicant
+    };
 
-        if (statusCode == 200 && dataResponse.success == 1)
-        {
-          try {
-            if (dataResponse.result?.networth != null) {
-              listData = dataResponse.result!.networth!;
-              setState(() {
-                _isLoading = false;
-              });
-            }
-            else{
-              setState(() {
-                _isLoading = false;
-              });
-            }
-          } catch (e) {
-            setState(() {
-              _isLoading = false;
-            });
-            if (kDebugMode) {
-              print(e);
-            }
-          }
-        }
-        else
-        {
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = NetworthResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1)
+    {
+      try {
+        if (dataResponse.result?.networth != null) {
+          listData = dataResponse.result!.networth!;
           setState(() {
             _isLoading = false;
           });
         }
+        else{
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        if (kDebugMode) {
+          print(e);
+        }
       }
+    }
+    else
+    {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+
   }
 
   @override

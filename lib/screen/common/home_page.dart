@@ -80,7 +80,7 @@ class _HomePageState extends BaseState<HomePage> {
                 ),
                 Expanded(
                     child: Text(
-                    "Hi,${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}",
+                    "Hi,${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                   )

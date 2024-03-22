@@ -80,7 +80,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          toDisplayCase("${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}"),
+                          toDisplayCase("${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}"),
                           textAlign: TextAlign.start,
                           style: const TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 22, fontFamily: 'Colfax'),
                         ),
@@ -115,27 +115,33 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       },
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Text("My Tasks",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic_arrow_right.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const Gap(12)
-                            ],
+                                const Text("My Tasks",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
                           ),
                           const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
                         ],
@@ -152,27 +158,33 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       },
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Text("RIA Charter",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic_arrow_right.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const Gap(12)
-                            ],
+                                const Text("RIA Charter",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
                           ),
                           const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
                         ],
@@ -201,27 +213,33 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       },
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Text("Privacy Policy",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic_arrow_right.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const Gap(12)
-                            ],
+                                const Text("Privacy Policy",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
                           ),
                           const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
                         ],
@@ -238,27 +256,33 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       },
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Text("About Us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic_arrow_right.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const Gap(12)
-                            ],
+                                const Text("About Us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
                           ),
                           const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
                         ],
@@ -271,27 +295,33 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       },
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Text("Locate us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic_arrow_right.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const Gap(12)
-                            ],
+                                const Text("Locate us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
                           ),
                           const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
                         ],
@@ -304,27 +334,33 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       },
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                  child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Text("About the app",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic_arrow_right.png',
-                                width: 16,
-                                height: 16,
-                              ),
-                              const Gap(12)
-                            ],
+                                const Text("About the app",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
                           ),
                           const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
                         ],

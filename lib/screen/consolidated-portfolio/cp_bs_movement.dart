@@ -89,7 +89,11 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           : Container(
               margin: const EdgeInsets.only(top: 8,bottom: 50),
             child: _isShowChart
-                ? Container( margin: const EdgeInsets.only(top: 32, right: 38),height: kIsWeb ? 800 : 300 , child: LineChart(generatedLineChart()))
+                ? Container(
+                    margin: const EdgeInsets.only(top: 32, right: 22,),
+                    height: kIsWeb ? 800 : 300 ,
+                    child: LineChart(generatedLineChart())
+                )
                 : Column(
                 children: [
                   Expanded(
@@ -218,6 +222,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
             ],
           ),
         ),
+        isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         gradient: const LinearGradient(
           colors: [
@@ -254,9 +259,10 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
               return LineTooltipItem(
                 convertCommaSeparatedAmount(lineBarSpot.y.toString()),
                 const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.start,
               );
             }).toList();
           },
@@ -271,7 +277,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
             getTitlesWidget: (double value, TitleMeta meta) {
               return SideTitleWidget(
                 axisSide: meta.axisSide,
-                child: Text(listGraphData[value.toInt()].timestamp.toString()),
+                space: 4,
+                child: Text(universalDateConverter('dd.MM.yyyy', 'dd MM,yy', listGraphData[value.toInt()].timestamp.toString())),
               );
             },
             interval: 2,

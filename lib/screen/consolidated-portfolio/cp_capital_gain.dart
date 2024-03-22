@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -16,14 +17,19 @@ class CPCapitalGainPage extends StatefulWidget {
   const CPCapitalGainPage({Key? key}) : super(key: key);
 
   @override
-  BaseState<CPCapitalGainPage> createState() =>
-      CPCapitalGainPageState();
+  BaseState<CPCapitalGainPage> createState() => CPCapitalGainPageState();
 }
 
 class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
   bool _isLoading = false;
-  List<SaleValues> listData =
-      List<SaleValues>.empty(growable: true);
+  List<SaleValues> listData = [];
+  GrandTotal grandTotal = GrandTotal();
+
+  @override
+  void initState() {
+    super.initState();
+    _getLatestTransactionData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,56 +60,58 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                           child: Stack(
                             children: [
                               listData.isNotEmpty
-                                  ? Column(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                        decoration: const BoxDecoration(
-                                            color:white,
-                                            borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                        child: Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 2,
-                                                child: Text('Asset Type',
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('STCG\nSTCL',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('LTCG\nLTCL',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Total',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        child: _itemList(),
-                                      ),
-                                    ])
+                                  ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                          Container(
+                                            padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                                            decoration: const BoxDecoration(
+                                                color:white,
+                                                borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                            child: const Row(
+                                              children: [
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text('Asset Type',
+                                                        style: TextStyle(
+                                                            color: blue,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600))),
+                                                Expanded(
+                                                    flex: 1,
+                                                    child: Text('STCG\nSTCL',
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: blue,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600))),
+                                                Expanded(
+                                                    flex: 1,
+                                                    child: Text('LTCG\nLTCL',
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: blue,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600))),
+                                                Expanded(
+                                                    flex: 1,
+                                                    child: Text('Total',
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: blue,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600))),
+                                              ],
+                                            ),
+                                          ),
+                                          _itemList(),
+                                        ]
+                                  )
                                   : const MyNoDataWidget(msg: "No data found."),
                             ],
                           )))
@@ -122,79 +130,126 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
           primary: false,
           padding: EdgeInsets.zero,
           itemCount: listData.length,
-          itemBuilder: (ctx, index) => (Container(
-            alignment: Alignment.center,
-            width: double.infinity,
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: index % 2 == 0 ? white : semiBlue,
-                      borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.all(12),
-                          width: double.infinity,
-                          color: lightBlue,
-                          child: Text(
-                              toDisplayCase(listData[index]
-                                  .applicant
-                                  .toString()),
-                              style: const TextStyle(
-                                  color: blue,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900))),
-                      Container(child: _subItemList(listData[index].value ?? [],index)),
-                      Container(
-                        margin: const EdgeInsets.only(left: 8,right: 8,top: 12,bottom: 12),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                                flex: 2,
-                                child: Text("Total",
-                                    style: TextStyle(
-                                        color: blue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700))),
-                            Expanded(
-                                flex: 1,
-                                child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCLTotal.toString()),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color: blue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700))),
-                            Expanded(
-                                flex: 1,
-                                child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCLTotal.toString()),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color: blue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700))),
-                            Expanded(
-                                flex: 1,
-                                child: Text(
-                                    convertCommaSeparatedAmount(listData[index].schemeTotal!.capitalGainTotal.toString()),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color: blue,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700)
-                                )
-                            ),
-                          ],
+          itemBuilder: (context, index) {
+            return Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: index % 2 == 0 ? white : semiBlue,
+                        borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            padding: const EdgeInsets.all(12),
+                            width: double.infinity,
+                            color: lightBlue,
+                            child: Text(
+                                toDisplayCase(listData[index]
+                                    .applicant
+                                    .toString()),
+                                style: const TextStyle(
+                                    color: blue,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900))),
+                        Container(child: _subItemList(listData[index].value ?? [],index)),
+                        Container(
+                          margin: const EdgeInsets.only(left: 8,right: 8,top: 12,bottom: 12),
+                          child: Row(
+                            children: [
+                              const Expanded(
+                                  flex: 2,
+                                  child: Text("Total",
+                                      style: TextStyle(
+                                          color: blue,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700))),
+                              Expanded(
+                                  flex: 1,
+                                  child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.sTCLTotal.toString()),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: blue,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700))),
+                              Expanded(
+                                  flex: 1,
+                                  child: Text(convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCGTotal.toString()) + "\n" + convertCommaSeparatedAmount(listData[index].schemeTotal!.lTCLTotal.toString()),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: blue,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700))),
+                              Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                      convertCommaSeparatedAmount(listData[index].schemeTotal!.capitalGainTotal.toString()),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: blue,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700)
+                                  )
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ))),
+                        Visibility(
+                          visible: index == listData.length - 1,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 8,right: 8,top: 12,bottom: 12),
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                    flex: 2,
+                                    child: Text("Grand Total",
+                                        style: TextStyle(
+                                            color: blue,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700))),
+                                Expanded(
+                                    flex: 1,
+                                    child: Text(convertCommaSeparatedAmount(grandTotal.sTCGGrandTotal.toString()) + "\n" + convertCommaSeparatedAmount(grandTotal.sTCLGrandTotal.toString()),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: blue,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700))),
+                                Expanded(
+                                    flex: 1,
+                                    child: Text(convertCommaSeparatedAmount(grandTotal.lTCGGrandTotal.toString()) + "\n" + convertCommaSeparatedAmount(grandTotal.lTCLGrandTotal.toString()),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: blue,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700))),
+                                Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                        convertCommaSeparatedAmount(grandTotal.capitalGainGrandTotal.toString()),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: blue,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700)
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+      ),
     );
   }
 
@@ -262,12 +317,6 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
         )));
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _getLatestTransactionData();
-  }
-
   _getLatestTransactionData() async {
     setState(() {
       _isLoading = true;
@@ -291,7 +340,10 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
         if (dataResponse.saleValues != null) {
-          listData = dataResponse.saleValues!;
+          listData = dataResponse.saleValues ?? [];
+
+          grandTotal = dataResponse.grandTotal ?? GrandTotal();
+
           setState(() {
             _isLoading = false;
           });
