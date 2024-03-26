@@ -1,4 +1,5 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -132,105 +133,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                                     ),
                                   ),
                                 ),
-                                const Text("My Tasks",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        Uri urlData = Uri.parse('https://www.alphacapital.in/investor_charter/');
-                        if (await canLaunchUrl(urlData))
-                        {
-                          launchUrl(urlData,mode: LaunchMode.externalApplication);
-                        }
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("RIA Charter",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
-                decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                ),
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        Uri urlData = Uri.parse('https://www.alphacapital.in/privacy/');
-                        if (await canLaunchUrl(urlData))
-                        {
-                          launchUrl(urlData,mode: LaunchMode.externalApplication);
-                        }
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Privacy Policy",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Text("Open Tasks – Status",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
                                 const Spacer(),
                                 Image.asset(
                                   'assets/images/ic_arrow_right.png',
@@ -291,6 +194,92 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () async {
+                        Uri urlData = Uri.parse('https://www.alphacapital.in/investor_charter/');
+                        if (await canLaunchUrl(urlData))
+                        {
+                          launchUrl(urlData,mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
+                                ),
+                                const Text("RIA Charter",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
+                          ),
+                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        Uri urlData = Uri.parse('https://www.alphacapital.in/privacy/');
+                        if (await canLaunchUrl(urlData))
+                        {
+                          launchUrl(urlData,mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
+                                ),
+                                const Text("Privacy Policy",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
+                          ),
+                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
                         startActivity(context, const LocateUsPage());
                       },
                       child: Column(
@@ -327,46 +316,65 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        startActivity(context, const AboutAppPage());
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("About the app",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
-                    ),
                   ],
+                ),
+              ),
+
+              Visibility(
+                visible: false,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
+                  decoration: BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.circular(kEditTextCornerRadius),
+                  ),
+                  child: Column(
+                    children: [
+
+                      Visibility(
+                        visible: false,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () async {
+                            startActivity(context, const AboutAppPage());
+                          },
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Visibility(
+                                      visible: false,
+                                      child: SizedBox(
+                                        width: 48,
+                                        height: 48,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                          child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                        ),
+                                      ),
+                                    ),
+                                    const Text("About the app",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                    const Spacer(),
+                                    Image.asset(
+                                      'assets/images/ic_arrow_right.png',
+                                      width: 16,
+                                      height: 16,
+                                    ),
+                                    const Gap(12)
+                                  ],
+                                ),
+                              ),
+                              const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 

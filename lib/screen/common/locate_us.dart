@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/colors.dart';
+import 'package:superapp_flutter/widget/loading.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/consolidate-portfolio/api_end_point.dart';
@@ -50,7 +51,9 @@ class _LocateUsPageState extends BaseState<LocateUsPage> {
         elevation: 0,
         backgroundColor: white,
       ),
-      body: Padding(
+      body: isLoading
+          ? const LoadingWidget()
+          : Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         child: ListView.builder(
             shrinkWrap: true,
@@ -97,9 +100,10 @@ class _LocateUsPageState extends BaseState<LocateUsPage> {
                       onTap: () async {
                         Uri url = Uri.parse(getSet.mapLink ?? '');
 
+                        print('URL ==== $url');
                         if (await canLaunchUrl(url))
                           {
-                            launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
+                            launchUrl(url,mode: LaunchMode.externalApplication);
                           }
 
                       },

@@ -53,157 +53,157 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                 body: _isLoading
                     ? const LoadingWidget()
                     : Center(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 150, color: blue),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 15, right: 15),
-                            child: const Text("Welcome!", style: TextStyle(fontWeight: FontWeight.w800, color: black, fontSize: 30)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 8, bottom: 30, left: 15, right: 15),
-                            child: const Text("Please sign in with your registered email/username",
-                                style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 18)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 8, right: 8),
-                            child: TextField(
-                              cursorColor: black,
-                              controller: _emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
-                              decoration: const InputDecoration(
-                                hintText: 'Email/Username',
-                                filled: true,
-                                fillColor: lightBlue,
-                                contentPadding: EdgeInsets.only(left: 12, right: 12, top: 22, bottom: 22),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: lightBlue),
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: lightBlue),
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                ),
-                                labelStyle: TextStyle(
-                                  color: graySemiDark,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                hintStyle: TextStyle(
-                                  color: graySemiDark,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                child: Image.asset('assets/images/ic_login_logo.png', width: 200, height: 150, color: blue),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20, left: 8, right: 8),
-                            child: TextField(
-                              cursorColor: black,
-                              controller: _pwController,
-                              obscureText: _passwordVisible,
-                              keyboardType: TextInputType.visiblePassword,
-                              style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                                filled: true,
-                                fillColor: lightBlue,
-                                contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 22, bottom: 22),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: lightBlue),
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                ),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: lightBlue),
-                                  borderRadius: BorderRadius.all(Radius.zero),
-                                ),
-                                labelStyle: const TextStyle(
-                                  color: graySemiDark,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: graySemiDark,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
-                                  },
-                                  child: Icon(
-                                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                    color: grayDark,
+                              Container(
+                                margin: const EdgeInsets.only(left: 15, right: 15),
+                                child: const Text("Welcome!", style: TextStyle(fontWeight: FontWeight.w800, color: black, fontSize: 30)),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 8, bottom: 30, left: 15, right: 15),
+                                child: const Text("Please sign in with your registered email/username",
+                                    style: TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 18)),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 8, right: 8),
+                                child: TextField(
+                                  cursorColor: black,
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+                                  decoration: const InputDecoration(
+                                    hintText: 'Email/Username',
+                                    filled: true,
+                                    fillColor: lightBlue,
+                                    contentPadding: EdgeInsets.only(left: 12, right: 12, top: 22, bottom: 22),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: lightBlue),
+                                      borderRadius: BorderRadius.all(Radius.zero),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: lightBlue),
+                                      borderRadius: BorderRadius.all(Radius.zero),
+                                    ),
+                                    labelStyle: TextStyle(
+                                      color: graySemiDark,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    hintStyle: TextStyle(
+                                      color: graySemiDark,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 35),
-                            width: double.infinity,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: blue,
-                                  backgroundColor: blue,
-                                  //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
-                                  elevation: 0.0,
-                                  //buttons Material shadow
-                                  padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                                  //specify the button's Padding
-                                  side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
-                                  //set border for the button
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                                  // set the buttons shape. Make its birders rounded etc
-                                  tapTargetSize: MaterialTapTargetSize.padded,
-                                  // set the MaterialTapTarget size. can set to: values, padded and shrinkWrap properties
-                                  animationDuration: const Duration(milliseconds: 100),
-                                  //the buttons animations duration
-                                  enableFeedback: true,
-                                  //to set the feedback to true or false
-                                  alignment: Alignment.center, //set the button's child Alignment
+                              Container(
+                                margin: const EdgeInsets.only(top: 20, left: 8, right: 8),
+                                child: TextField(
+                                  cursorColor: black,
+                                  controller: _pwController,
+                                  obscureText: _passwordVisible,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+                                  decoration: InputDecoration(
+                                    hintText: 'Password',
+                                    filled: true,
+                                    fillColor: lightBlue,
+                                    contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 22, bottom: 22),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide(color: lightBlue),
+                                      borderRadius: BorderRadius.all(Radius.zero),
+                                    ),
+                                    enabledBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide(color: lightBlue),
+                                      borderRadius: BorderRadius.all(Radius.zero),
+                                    ),
+                                    labelStyle: const TextStyle(
+                                      color: graySemiDark,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    hintStyle: const TextStyle(
+                                      color: graySemiDark,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    suffixIcon: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      },
+                                      child: Icon(
+                                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                        color: grayDark,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                onPressed: () async {
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                  String email = _emailController.text.toString().trim();
-                                  String password = _pwController.text.toString().trim();
-                                  if (email.isEmpty) {
-                                    showSnackBar("Please enter a email/username", context);
-                                  }else if (password.isEmpty) {
-                                    showSnackBar("Please enter password", context);
-                                  } else {
-                                    if (isInternetConnected) {
-                                      //_makeSignInRequest();
-                                      _makeLoginInRequest(_emailController.value.text.trim());
-                                    } else {
-                                      noInterNet(context);
-                                    }
-                                  }
-                                }, //set both onPressed and onLongPressed to null to see the disabled properties
-                                onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
-                                child: const Text(
-                                  "SIGN IN",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600),
-                                )),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 35),
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: blue,
+                                      backgroundColor: blue,
+                                      //specify the color of the button's text and icons as well as the overlay colors used to indicate the hover, focus, and pressed states
+                                      elevation: 0.0,
+                                      //buttons Material shadow
+                                      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                      //specify the button's Padding
+                                      side: const BorderSide(color: blue, width: 1.0, style: BorderStyle.solid),
+                                      //set border for the button
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                                      // set the buttons shape. Make its birders rounded etc
+                                      tapTargetSize: MaterialTapTargetSize.padded,
+                                      // set the MaterialTapTarget size. can set to: values, padded and shrinkWrap properties
+                                      animationDuration: const Duration(milliseconds: 100),
+                                      //the buttons animations duration
+                                      enableFeedback: true,
+                                      //to set the feedback to true or false
+                                      alignment: Alignment.center, //set the button's child Alignment
+                                    ),
+                                    onPressed: () async {
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      String email = _emailController.text.toString().trim();
+                                      String password = _pwController.text.toString().trim();
+                                      if (email.isEmpty) {
+                                        showSnackBar("Please enter a email/username", context);
+                                      }else if (password.isEmpty) {
+                                        showSnackBar("Please enter password", context);
+                                      } else {
+                                        if (isInternetConnected) {
+                                          //_makeSignInRequest();
+                                          _makeLoginInRequest(_emailController.value.text.trim());
+                                        } else {
+                                          noInterNet(context);
+                                        }
+                                      }
+                                    }, //set both onPressed and onLongPressed to null to see the disabled properties
+                                    onLongPress: () => {}, //set both onPressed and onLongPressed to null to see the disabled properties
+                                    child: const Text(
+                                      "SIGN IN",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600),
+                                    )),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                )
+                    )
             ),
             onWillPop: () {
               SystemNavigator.pop();

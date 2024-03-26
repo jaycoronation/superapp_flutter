@@ -132,10 +132,10 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
           children: [
             Container(
               alignment: Alignment.topLeft,
-              margin: const EdgeInsets.only(top: 15, left: 12),
-              child: const Text("Please fill data to generate your Financial Plan presentation online.",
+              margin: const EdgeInsets.only(left: 12,right: 12),
+              child: const Text("Please fill data to generate your Financial Plan presentation online :",
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 16,color: black,fontWeight: FontWeight.w600,)
               ),
             ),
             Expanded(
@@ -162,7 +162,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                                   }else if (menuList[index].id == 3) {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateExistingLiabilitiesPage()));
                                   }else if (menuList[index].id == 4) {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateFutureInflowMainPage()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateFutureInflowPage(true)));
                                   }else if (menuList[index].id == 5) {
                                     _redirectToNextPage(context);
                                     // Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateRiskProfilePage()));

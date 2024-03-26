@@ -92,7 +92,11 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                 ? Container(
                     margin: const EdgeInsets.only(top: 32, right: 22,),
                     height: kIsWeb ? 800 : 300 ,
-                    child: LineChart(generatedLineChart())
+                    child: LineChart(
+                        generatedLineChart(),
+                      swapAnimationDuration: Duration(milliseconds: 150), // Optional
+                      swapAnimationCurve: Curves.linear,
+                    )
                 )
                 : Column(
                 children: [
@@ -217,8 +221,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           show: true,
           gradient: LinearGradient(
             colors: [
-              blue.withOpacity(0.4),
               divider_color.withOpacity(0.4),
+              blue.withOpacity(0.4),
             ],
           ),
         ),
@@ -259,7 +263,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
               return LineTooltipItem(
                 convertCommaSeparatedAmount(lineBarSpot.y.toString()),
                 const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.start,
@@ -273,22 +277,30 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: 40,
             getTitlesWidget: (double value, TitleMeta meta) {
               return SideTitleWidget(
                 axisSide: meta.axisSide,
                 space: 4,
-                child: Text(universalDateConverter('dd.MM.yyyy', 'dd MM,yy', listGraphData[value.toInt()].timestamp.toString())),
+                child: Text(universalDateConverter('dd.MM.yyyy', 'dd.MM.\nyyyy', listGraphData[value.toInt()].timestamp.toString())),
               );
             },
             interval: 2,
           ),
         ),
         topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          sideTitles: SideTitles(
+              showTitles: false,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 60,
+          ),
         ),
         rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          sideTitles: SideTitles(showTitles: false,),
         ),
       ),
       borderData: FlBorderData(
@@ -333,7 +345,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
         }
 
         if(dataResponse.graphData != null){
-          listGraphData = dataResponse.graphData!.reversed.toList();
+          listGraphData = dataResponse.graphData ?? [];
 
           for(int i = 0;i<listGraphData.length;i++){
             spotsData.add(FlSpot(i.toDouble(), double.parse(listGraphData[i].total!.toString())));

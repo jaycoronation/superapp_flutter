@@ -369,7 +369,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_BITCODE = NO;
 				EXTRA_FRONT_END_OPTIONS = "--no-sound-null-safety";
@@ -516,7 +516,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_BITCODE = NO;
 				EXTRA_FRONT_END_OPTIONS = "--no-sound-null-safety";
@@ -551,7 +551,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_BITCODE = NO;
 				EXTRA_FRONT_END_OPTIONS = "--no-sound-null-safety";

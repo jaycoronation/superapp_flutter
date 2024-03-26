@@ -88,7 +88,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
           ? const LoadingWidget()
           : ResponsiveWidget.isMediumScreen(context)
           ? SingleChildScrollView(
-              child: Padding(padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -106,40 +107,57 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 border:Border.all(color: blue, width: 1,)),
                             child: Column(
                               children: [
-                                const Gap(20),
-                                const Text('Networth',
-                                    style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
-                                const Gap(20),
-                                Text((convertCommaSeparatedAmount(strNetWorth)),
-                                    style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
-                                const Gap(10),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 12),
+                                      child: const Text('Networth',
+                                          style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        setState(() {
+                                          _isLoading = true;
+                                        });
+                                        getCommonXirr();
+                                        _getNetworthData();
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(right: 12,top: 6),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: black.withOpacity(0.2)
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Image.asset('assets/images/ic_refresh.png',width: 18,height: 18,color: white,),
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                                Text((convertCommaSeparatedAmount(strNetWorth)),
+                                    style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900,letterSpacing: 1.6)),
+                                const Gap(18),
+                                const Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text("*As per $asPerDate",style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
-                                    const Gap(12)
+                                    //Text("*As per $asPerDate",style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                    Text("*Some time lag",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: white),),
+                                    Gap(12)
                                   ],
                                 ),
                                 const Gap(10),
                               ],
                             ),
                           ),
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              getCommonXirr();
-                              _getNetworthData();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(right: 16),
-                              padding: const EdgeInsets.all(12.0),
-                              child: Image.asset('assets/images/ic_refresh.png',width: 22,height: 22,color: white,),
-                            ),
-                          ),
+
                         ],
                       ),
                     ),
@@ -147,7 +165,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       margin: const EdgeInsets.only(left: 16,right: 16),
                       child: Row(
                         children: [
-                          const Text('Asset Allocation',
+                          const Text('Asset Allocation :',
                           style: TextStyle(
                               color: blue,
                               fontSize: 18,
@@ -224,7 +242,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                       margin: const EdgeInsets.only(left: 16,right: 16),
                       child: Row(
                         children: [
-                          const Text('Applicants Allocation',
+                          const Text('Applicants Allocation : ',
                               style: TextStyle(
                                   color: blue,
                                   fontSize: 18,
@@ -298,7 +316,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     const Gap(16),
                     Container(
                       margin: const EdgeInsets.only(left: 16),
-                      child: const Text('Asset Allocation - Strategic',
+                      child: const Text('Asset Allocation - Strategic : ',
                           style: TextStyle(
                               color: blue,
                               fontSize: 18,
@@ -313,7 +331,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     const Gap(16),
                     Container(
                       margin: const EdgeInsets.only(left: 16),
-                      child: const Text('Asset Allocation - Tactical',
+                      child: const Text('Asset Allocation - Tactical : ',
                           style: TextStyle(
                               color: blue,
                               fontSize: 18,
@@ -339,7 +357,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     const Gap(16),
                     Container(
                       margin: const EdgeInsets.only(left: 16),
-                      child: const Text('Performance',
+                      child: const Text('Performance : ',
                           style: TextStyle(
                               color: blue,
                               fontSize: 18,
@@ -361,7 +379,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                         : setUpPreviousYearXIRRData(),
                     const Gap(16)
                   ],
-                ),))
+                ),
+              )
+          )
           : SingleChildScrollView(
           child: Padding(padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
             child: Column(
@@ -482,7 +502,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   margin: const EdgeInsets.only(left: 16,right: 16),
                   child: Row(
                     children: [
-                      const Text('Applicants Allocation',
+                      const Text('Applicants Allocation : ',
                           style: TextStyle(
                               color: blue,
                               fontSize: 16,
@@ -553,7 +573,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                 const Gap(16),
                 Container(
                   margin: const EdgeInsets.only(left: 16),
-                  child: const Text('Asset Allocation - Strategic',
+                  child: const Text('Asset Allocation - Strategic : ',
                       style: TextStyle(
                           color: blue,
                           fontSize: 16,
@@ -568,7 +588,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                 const Gap(16),
                 Container(
                   margin: const EdgeInsets.only(left: 16),
-                  child: const Text('Asset Allocation - Tactical',
+                  child: const Text('Asset Allocation - Tactical : ',
                       style: TextStyle(
                           color: blue,
                           fontSize: 16,
@@ -594,7 +614,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                 const Gap(16),
                 Container(
                   margin: const EdgeInsets.only(left: 16),
-                  child: const Text('Performance',
+                  child: const Text('Performance : ',
                       style: TextStyle(
                           color: blue,
                           fontSize: 16,

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
@@ -108,6 +110,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                   ? "Networth"
                   : "Portfolio",
             ),
+
             actions: [
               GestureDetector(
                 onTap: () {
@@ -117,26 +120,28 @@ class CPHomePageState extends BaseState<CPHomePage> {
                   alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(right: 5),
                   padding: const EdgeInsets.all(3),
-                  width: isLoading ? 50 : 32,
-                  height: isLoading ? 50 : 32,
-                  child: isLoading
-                      ? const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: CircularProgressIndicator(color: blue,strokeWidth: 3,),
-                      )
-                      : Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
+                  width: 32,
+                  height:  32,
+                  child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
                 ),
               ),
             ]
         ),
-        body: IndexedStack(
-          index: _currentIndex,
-          alignment: Alignment.center,
-          sizing: StackFit.expand,
-          children: const [
-            CPDashboardPage(),
-            CPNetworthPage(),
-            CPPortfolioPage()
+        body: Column(
+          children: [
+            Visibility(visible: isLoading,child: LinearProgressIndicator(color: blue,backgroundColor: blue.withOpacity(0.3),)),
+            Expanded(
+              child: IndexedStack(
+                index: _currentIndex,
+                alignment: Alignment.center,
+                sizing: StackFit.expand,
+                children: const [
+                  CPDashboardPage(),
+                  CPNetworthPage(),
+                  CPPortfolioPage()
+                ],
+              ),
+            ),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -383,14 +388,8 @@ class CPHomePageState extends BaseState<CPHomePage> {
       try {
         setState(() async {
           isLoading = false;
-          var reportURL = "${API_DOMAIN_CP}assets/saved_pdf/${dataResponse.pdfFileName}?ver=${DateTime.now().millisecondsSinceEpoch}";
 
-          Uri reportUrl = Uri.parse(reportURL);
-
-          if (await canLaunchUrl(reportUrl))
-            {
-              launchUrl(reportUrl,mode: LaunchMode.externalApplication);
-            }
+          _showAlertDialog(context,dataResponse);
         });
       } catch (e) {
         setState(() {
@@ -406,6 +405,40 @@ class CPHomePageState extends BaseState<CPHomePage> {
       });
     }
 
+  }
+
+  void _showAlertDialog(BuildContext context, GenerateReportResponseModel dataResponse) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text('Portfolio Report',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600,color: black),),
+        content: const Text('Your report is downloaded successfully please enter your PAN Number in capital as Password',style: TextStyle(color: black,fontWeight: FontWeight.w500,fontSize: 14),),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Dismiss',style: TextStyle(color: Colors.red,fontWeight: FontWeight.w600,fontSize: 16),),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () async {
+              Navigator.pop(context);
+              var reportURL = "${API_DOMAIN_CP}assets/saved_pdf/${dataResponse.pdfFileName}?ver=${DateTime.now().millisecondsSinceEpoch}";
+
+              Uri reportUrl = Uri.parse(reportURL);
+
+              if (await canLaunchUrl(reportUrl))
+                {
+                  launchUrl(reportUrl,mode: LaunchMode.externalApplication);
+                }
+            },
+            child: const Text('Open',style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 16),),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

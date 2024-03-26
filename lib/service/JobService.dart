@@ -56,17 +56,6 @@ class JobService {
   }
 
   void getCommonXirr() async {
-
-    String dateTimeString = sessionManagerPMS.getLastSyncDate();
-    DateTime parsedDateTime = dateTimeString.isNotEmpty ? DateTime.parse(dateTimeString) : DateTime.now().subtract(Duration(hours: 3));
-
-    print("dateTimeString ==== $dateTimeString");
-    print("isTwoHoursPassed ==== ${isTwoHoursPassed(parsedDateTime)}");
-    if (isTwoHoursPassed(parsedDateTime))
-      {
-        getLatestDataFromMint();
-      }
-
     getListApplicants();
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
@@ -255,15 +244,19 @@ class JobService {
 
           sessionManagerPMS.saveNetworthData(resultData);
 
-          if (resultData.applicantDetails != null) {
-            if(resultData.applicantDetails!.isNotEmpty) {
-              for (int i = 0; i < resultData.applicantDetails!.length ; i++) {
-                if (resultData.applicantDetails![i].applicant == "Amount Total") {
-                  var strNetWorth = checkValidString(resultData.applicantDetails![i].amount.toString());
-                  sessionManagerPMS.setTotalNetworth(strNetWorth);
-                }
+          if (resultData.applicantDetails != null)
+          {
+            if(resultData.applicantDetails!.isNotEmpty)
+              {
+                for (int i = 0; i < resultData.applicantDetails!.length ; i++)
+                  {
+                    if (resultData.applicantDetails![i].applicant == "Amount Total")
+                      {
+                        var strNetWorth = checkValidString(resultData.applicantDetails![i].amount.toString());
+                        sessionManagerPMS.setTotalNetworth(strNetWorth);
+                      }
+                  }
               }
-            }
           }
 
           print(jsonEncode(sessionManagerPMS.getNetworthData()));
@@ -300,6 +293,16 @@ class JobService {
       }
     } else {
 
+    }
+
+    String dateTimeString = sessionManagerPMS.getLastSyncDate();
+    DateTime parsedDateTime = dateTimeString.isNotEmpty ? DateTime.parse(dateTimeString) : DateTime.now().subtract(Duration(hours: 3));
+
+    print("dateTimeString ==== $dateTimeString");
+    print("isTwoHoursPassed ==== ${isTwoHoursPassed(parsedDateTime)}");
+    if (isTwoHoursPassed(parsedDateTime))
+    {
+      getLatestDataFromMint();
     }
 
   }

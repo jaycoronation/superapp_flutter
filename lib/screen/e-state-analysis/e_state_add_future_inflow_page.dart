@@ -78,7 +78,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
             child: getBackArrow(),
           ),
           title: getTitle((widget as EStateAddFutureInflowPage).isFromList ? "Update Future Inflow" : "Add Future Inflow",),
-          centerTitle: false,
+          centerTitle: true,
           elevation: 0,
           backgroundColor: white,
         ),

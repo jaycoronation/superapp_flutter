@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
@@ -58,15 +59,18 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
           ),
           title: getTitle("Future Inflow",),
           actions: [
-            InkWell(
-              onTap: () {
-                _redirectToNextPage(context, true);
-              },
-              child: Container(
-                alignment: Alignment.center,
-                child: const Text("Add/Edit",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w400),
+            Visibility(
+              visible: false,
+              child: InkWell(
+                onTap: () {
+                  _redirectToNextPage(context, true);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: const Text("Add/Edit",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w400),
+                  ),
                 ),
               ),
             ),
@@ -360,6 +364,13 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
             ),
           ),)
             : const NoInternetWidget(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            _redirectToNextPage(context, true);
+          },
+          backgroundColor: blue,
+          child: const Icon(Icons.add, color: white,),
+        )
     );
   }
 

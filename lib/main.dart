@@ -7,8 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_frame/flutter_web_frame.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:superapp_flutter/screen/common/HomePageForWeb.dart';
+import 'package:superapp_flutter/screen/common/LoginScreen.dart';
 import 'package:superapp_flutter/screen/common/home_page.dart';
 import 'package:superapp_flutter/screen/common/login_screen.dart';
 import 'package:superapp_flutter/service/JobService.dart';
@@ -78,13 +80,14 @@ Future<void> main() async {
   ]);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) => runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => UpdateData()),
-        ],
-        child: const MyApp(),
-      )
-  ));
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => UpdateData()),
+          ],
+          child: const MyApp(),
+        )
+    )
+  );
 
 }
 
@@ -109,30 +112,32 @@ class MyApp extends StatelessWidget {
                   contentPadding: const EdgeInsets.only(left: 12, right: 12, top: 18, bottom: 18),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                      borderSide:  const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
+                      borderSide:  const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)
+                  ),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                      borderSide: const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)),
+                      borderSide: const BorderSide(width: 0, style: BorderStyle.solid, color: lightBlue)
+                  ),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                      borderSide: const BorderSide(width: 0, color: Colors.red)),
+                      borderSide: const BorderSide(width: 0, color: Colors.red)
+                  ),
                   focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                      borderSide: const BorderSide(width:0, color: Colors.red)),
+                      borderSide: const BorderSide(width:0, color: Colors.red)
+                  ),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(kEditTextCornerRadius),
-                      borderSide: const BorderSide(width:0, style: BorderStyle.solid, color: lightBlue)),
+                      borderSide: const BorderSide(width:0, style: BorderStyle.solid, color: lightBlue)
+                  ),
                   labelStyle: const TextStyle(
-                    color: black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    color: black, fontSize: 15, fontWeight: FontWeight.w500,
                   ),
                   hintStyle: const TextStyle(
-                      color: grayDark,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600),
+                      color: grayDark, fontSize: 15, fontWeight: FontWeight.w500
+                  ),
                 ),
-                // textTheme: GoogleFonts.sourceSansProTextTheme(Theme.of(context).textTheme)
+              // textTheme: GoogleFonts.sourceSansProTextTheme(Theme.of(context).textTheme)
               fontFamily: 'Switzer',
             ),
             home: const MyHomePage(),
@@ -182,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Timer(
             const Duration(seconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-            const LoginScreen()), (Route<dynamic> route) => false));
+            const LoginScreenNew()), (Route<dynamic> route) => false));
       }
     } catch (e) {
       if (kDebugMode) {

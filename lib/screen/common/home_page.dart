@@ -18,6 +18,7 @@ import '../../widget/loading.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
 import '../e-state-analysis/e_state_analysis_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
+import 'LoginScreen.dart';
 import 'blogs_page.dart';
 import 'contact_page.dart';
 import 'login_screen.dart';
@@ -80,7 +81,7 @@ class _HomePageState extends BaseState<HomePage> {
                 ),
                 Expanded(
                     child: Text(
-                    "Hi,${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+                    "Hi ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                   )
@@ -124,19 +125,25 @@ class _HomePageState extends BaseState<HomePage> {
                 ),
               ),
         ),
-        floatingActionButton: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () async {
-            Uri url = Uri.parse('https://api.whatsapp.com/send/?phone=%2B917400066608&text&type=phone_number');
-            if (await canLaunchUrl(url))
-              {
-                launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
-              }
-          },
-          child: Container(
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(bottom: 22),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              Uri url = Uri.parse('https://api.whatsapp.com/send/?phone=%2B917400066608&text&type=phone_number');
+              if (await canLaunchUrl(url))
+                {
+                  launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
+                }
+              else
+                {
+                  print("NOT LAUCHING");
+                }
+            },
             child: Image.asset('assets/images/ic_whatsapp.png',width: 50,height: 50,),
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
@@ -532,7 +539,7 @@ class _HomePageState extends BaseState<HomePage> {
                                 Navigator.pop(context);
                                 SessionManagerMethods.clear();
                                 Navigator.pushAndRemoveUntil(
-                                    context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
+                                    context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
                               },
                               child: const Text("Yes", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
                             ),

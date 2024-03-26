@@ -48,7 +48,7 @@ class _MeetingPageState extends BaseState<MeetingPage> {
             child: getBackArrow(),
           ),
           actions: [
-            InkWell(
+            /*InkWell(
                 onTap: () {
                   setState(() {
                     _isLoading = true;
@@ -60,7 +60,7 @@ class _MeetingPageState extends BaseState<MeetingPage> {
                   margin: const EdgeInsets.only(right: 8),
                   child: Image.asset('assets/images/ic_refresh.png',height: 30, width: 30, color: black,),
                 )
-            ),
+            ),*/
           ],
           centerTitle: false,
           elevation: 0,

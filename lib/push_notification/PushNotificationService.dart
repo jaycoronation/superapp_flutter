@@ -75,8 +75,8 @@ class PushNotificationService {
         }
       });
 
-      print('<><> onMessageOpenedApp id--->' + id);
-      print('<><> onMessageOpenedApp contentType--->' + contentType);
+      print('<><> onMessageOpenedApp id--->$id');
+      print('<><> onMessageOpenedApp contentType--->$contentType');
 
       openPage(contentType);
     });
@@ -151,9 +151,9 @@ class PushNotificationService {
           }
         });
 
-         print('<><> onMessage id--->' + id);
-        print('<><> onMessage contentType--->' + contentType);
-        print("<><> onMessage Image URL : " + image.toString() + " <><>");
+         print('<><> onMessage id--->$id');
+        print('<><> onMessage contentType--->$contentType');
+        print("<><> onMessage Image URL : $image <><>");
         const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: true, presentAlert: true);
         if (image != null)
         {
