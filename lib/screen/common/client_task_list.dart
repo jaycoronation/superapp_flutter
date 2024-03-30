@@ -203,8 +203,8 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
       final url = Uri.parse(CHEETAH_TASK_LIST);
 
       Map<String, String> jsonBody = {
-        "pan_card": "DPHPK1681E",//sessionManagerPMS.getPanCard(),
-        "client_name": "Jiten Patel",//"${sessionManagerPMS.getFristName()} ${sessionManagerPMS.getLastName()}",
+        "pan_card": sessionManagerPMS.getPanCard(),
+        "client_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
         "fromdate": '',
         "todate": '',
         "pageindex": _pageIndex.toString(),
