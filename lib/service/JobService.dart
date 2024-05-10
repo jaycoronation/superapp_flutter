@@ -294,23 +294,5 @@ class JobService {
     } else {
 
     }
-
-    String dateTimeString = sessionManagerPMS.getLastSyncDate();
-    DateTime parsedDateTime = dateTimeString.isNotEmpty ? DateTime.parse(dateTimeString) : DateTime.now().subtract(Duration(hours: 3));
-
-    print("dateTimeString ==== $dateTimeString");
-    print("isTwoHoursPassed ==== ${isTwoHoursPassed(parsedDateTime)}");
-    if (isTwoHoursPassed(parsedDateTime))
-    {
-      getLatestDataFromMint();
-    }
-
   }
-
-  bool isTwoHoursPassed(DateTime timestamp) {
-    DateTime now = DateTime.now();
-    Duration difference = now.difference(timestamp);
-    return difference.inHours >= 2;
-  }
-
 }

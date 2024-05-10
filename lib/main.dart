@@ -18,6 +18,7 @@ import 'package:superapp_flutter/service/UpdateData.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/session_manager.dart';
 import 'package:superapp_flutter/utils/session_manager_methods.dart';
+import 'package:superapp_flutter/utils/session_manager_pms.dart';
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
 import 'firebase_options.dart';
@@ -141,7 +142,6 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Switzer',
             ),
             home: const MyHomePage(),
-            navigatorKey: NavigationService.navigatorKey
           );
       },
       maximumSize: const Size(1160.0, 812.0),
@@ -159,15 +159,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isLoggedIn = false ;
   SessionManager sessionManager = SessionManager();
+  SessionManagerPMS sessionManagerPMS = SessionManagerPMS();
   
   final cron = Cron();
 
   @override
   void initState() {
     super.initState();
-    cron.schedule(Schedule.parse('* 5 * * *'), () {
-      JobService().getCommonXirr();
-    },);
     doSomeAsyncStuff();
   }
 
@@ -178,9 +176,20 @@ class _MyHomePageState extends State<MyHomePage> {
       if(isLoggedIn)
       {
         JobService().getCommonXirr();
+
+        String dateTimeString = sessionManagerPMS.getLastSyncDate();
+        DateTime parsedDateTime = dateTimeString.isNotEmpty ? DateTime.parse(dateTimeString) : DateTime.now().subtract(Duration(hours: 3));
+
+        print("dateTimeString ==== $dateTimeString");
+        print("isTwoHoursPassed ==== ${isTwoHoursPassed(parsedDateTime)}");
+        if (isTwoHoursPassed(parsedDateTime))
+        {
+          JobService().getLatestDataFromMint();
+        }
+
         Timer(const Duration(seconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-             kIsWeb ? const HomePageForWeb() : const HomePage()), (Route<dynamic> route) => false));
+             kIsWeb ? const HomePage() : const HomePage()), (Route<dynamic> route) => false));
       }
       else
       {

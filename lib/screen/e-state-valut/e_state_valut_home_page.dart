@@ -472,9 +472,11 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   }
 
   _saveDataCall(String data, String isFor) async {
+
     setState(() {
       isReportDownloading = true;
     });
+
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
     ]);

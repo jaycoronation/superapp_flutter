@@ -116,9 +116,13 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                                           fit: BoxFit.cover,
                                           width: MediaQuery.of(context).size.width,
                                           height: 160,
-                                          placeholder: 'assets/images/ic_alpha_logo.png',
-                                        ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                            width: 50, height: 50),
+                                          placeholder: 'assets/images/bg_gray.jpeg',
+                                        )
+                                            : Image.asset(
+                                                'assets/images/bg_gray.jpeg',
+                                                width: 50,
+                                                height: 50
+                                            ),
                                       ),
                                       const Gap(10),
                                       Text(checkValidString(listData[index].snippet!.title.toString()),

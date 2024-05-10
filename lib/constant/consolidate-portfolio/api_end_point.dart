@@ -30,7 +30,7 @@ String capitalGain = "capital_gain_summury";
 String portfolio = "portfolio_consolidated";
 
 //dashboard : since inception
-  String performance = "performance";
+String performance = "performance";
 
 //dashboard : current year XIRR data
 String xirr = "xirr";

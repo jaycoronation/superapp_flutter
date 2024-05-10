@@ -7,8 +7,9 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
+import 'package:superapp_flutter/constant/global_context.dart';
 import 'package:superapp_flutter/screen/common/blog_detail_page.dart';
-import '../../constant/blogs_api_end_point.dart';
+
 import '../../constant/colors.dart';
 import '../../model/BlogListResponseModel.dart' as blog;
 import '../../model/BlogListResponseModel.dart';
@@ -149,10 +150,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
               child: getBackArrow(),
           ),
           automaticallyImplyLeading: false,
-          title: Text("Alpha Capital Blog",
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 18, color: black, fontWeight: FontWeight.w800),
-          ),
+          title: getTitle("Alpha Capital Blog",),
           centerTitle: false,
           elevation: 0,
           backgroundColor: white,
@@ -252,6 +250,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () {
+                                    //push(MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])));
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
                                   },
                                   child: Container(
@@ -352,6 +351,10 @@ class _BlogsPageState extends BaseState<BlogsPage> {
     );
   }
 
+  Future<void> push(Route route) {
+    return NavigationService.navigatorKey.currentState!.push(route);
+  }
+
   SafeArea _setData() {
     return SafeArea(
       child: Padding(
@@ -430,6 +433,8 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTap: () {
+                                    //push(MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])));
+
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
                                   },
                                   child: Container(
@@ -454,13 +459,13 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                                   borderRadius: BorderRadius.circular(12),
                                                   child: listData[index].blogImage.toString().isNotEmpty
                                                       ? FadeInImage.assetNetwork(
-                                                    image: listData[index].blogImage.toString(),
-                                                    fit: BoxFit.cover,
-                                                    width: MediaQuery.of(context).size.width,
-                                                    height: 160,
-                                                    placeholder: 'assets/images/ic_alpha_logo.png',
-                                                  ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                                      width: 50, height: 50),
+                                                        image: listData[index].blogImage.toString(),
+                                                        fit: BoxFit.cover,
+                                                        width: MediaQuery.of(context).size.width,
+                                                        height: 160,
+                                                        placeholder: 'assets/images/bg_gray.jpeg',
+                                                      )
+                                                      : Image.asset('assets/images/bg_gray.jpeg', width: 50, height: 50),
                                                 ),
                                                 Container(
                                                   margin: const EdgeInsets.only(top: 12,right: 12),
@@ -470,7 +475,6 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                                     child: Text(listData[index].category.toString(),style: const TextStyle(color: white,fontSize: 14,fontWeight: FontWeight.w400)),
                                                   ),
                                                 )
-
                                               ],
                                             ),
                                           ),
@@ -729,6 +733,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
     }
 
   }
+
 
 /*void getFilterData() async {
     setState(() {

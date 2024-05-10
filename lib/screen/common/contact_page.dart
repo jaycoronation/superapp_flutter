@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -679,7 +680,10 @@ class _ContactPageState extends BaseState<ContactPage> {
     if (statusCode == 200 && dataResponse.success == 1) {
       showSnackBar(dataResponse.message, context);
 
-      Navigator.pop(context);
+      if (!kIsWeb)
+        {
+          Navigator.pop(context);
+        }
 
       setState(() {
         _isLoading = false;

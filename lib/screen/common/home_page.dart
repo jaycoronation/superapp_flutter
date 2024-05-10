@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/constant/global_context.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
@@ -37,6 +40,10 @@ class _HomePageState extends BaseState<HomePage> {
   final bool _isLoading = false;
 
 
+  int currentIndex = 0;
+  PageController pageController = PageController();
+  SideMenuController sideMenu = SideMenuController();
+
   @override
   void initState() {
     super.initState();
@@ -45,65 +52,429 @@ class _HomePageState extends BaseState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        final timeGap = DateTime.now().difference(preBackPressTime);
-        final cantExit = timeGap >= const Duration(seconds: 2);
-        preBackPressTime = DateTime.now();
-        if (cantExit) {
-          showSnackBar('Press back button again to exit', context);
-          return Future.value(false);
-        } else {
-          SystemNavigator.pop();
-          return Future.value(true);
-        }
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: appBg,
-        appBar: AppBar(
-            toolbarHeight: 60,
-            automaticallyImplyLeading: false,
-            backgroundColor: appBg,
-            elevation: 0,
-            centerTitle: false,
-            title: Row(
-              children: [
+    if (kIsWeb)
+      {
+        return WillPopScope(
+          child: Scaffold(
+            backgroundColor: chart_color11,
+            appBar: AppBar(
+              backgroundColor: chart_color11,
+              elevation: 0,
+              centerTitle: false,
+              toolbarHeight: 66,
+              title: Padding(
+                padding: const EdgeInsets.only( left: 28, right: 32),
+                child: Image.asset('assets/images/ic_logo.png',  height: 40),
+              ),
+              actions: [
                 GestureDetector(
-                  onTap: () {
-                    startActivity(context, const ProfilePage());
-                  },
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
-                  ),
-                ),
-                Expanded(
-                    child: Text(
-                    "Hi ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                  )
-                ),
-                GestureDetector(
-                  onTap: () {
+                  onTap: (){
                     logoutFromApp();
                   },
                   child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(left: 8),
-                    child: Image.asset('assets/images/ic_logout.png', width: 40, height: 40),
+                      padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(right: 32),
+                      // decoration: BoxDecoration(
+                      //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                      //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                      // ),
+                      child: Row(
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                border: currentIndex == 8 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                color: chart_color12,
+                              ),
+                              child: Image.asset('assets/images/ic_logout.png', width: 35, height: 35)
+                          ),
+                          Container(width: 18,),
+                          Text('Logout', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 8 ?white : black, fontSize: 18),
+                          )
+                        ],
+                      )
                   ),
-                )
+                ),
               ],
-            )
-        ),
-        body: SafeArea(
-          top: false,
-          child: _isLoading
-              ? const LoadingWidget()
-              : Container(
+            ),
+            body: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 18, bottom: 32, left: 32, right: 4),
+                  width: 310,
+                  height: MediaQuery.of(context).size.height,
+                  child: Material(
+                    color: white,
+                    shadowColor: Colors.grey,
+                    shape: const RoundedRectangleBorder(
+                        side:  BorderSide(color: grayLight),
+                        borderRadius: BorderRadius.all( Radius.circular(12))
+                    ),
+                    elevation: 10.0,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(height: 12,),
+                            Padding(
+                              padding: const EdgeInsets.all(18),
+                              child: Text('Hello, ${sessionManagerPMS.getFirstName()}!', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 22)),
+                            ),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  currentIndex = 0;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 0 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          color: currentIndex == 0 ? listActionColor : chart_color12,
+
+                                          borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                          // border: currentIndex == 0 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                          // color: chart_color12,
+                                        ),
+                                        child: currentIndex == 0
+                                            ? Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35, color: white,)
+                                            : Image.asset('assets/images/ic_consolidated.png', width: 35, height: 35, ) ,
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Consolidated Portfolio', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 0 ? white : black, fontSize: 18),
+                                      )],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  currentIndex = 1;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 1 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  // decoration:  BoxDecoration(
+                                  //     border: currentIndex == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                  // ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                            border: currentIndex == 1 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                            color: currentIndex == 1 ? listActionColor : chart_color12,
+                                          ),
+                                          child: currentIndex == 1
+                                              ? Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35, color: white,)
+                                              : Image.asset('assets/images/ic_estate_a.png', width: 35, height: 35)
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Estate Analysis', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 1 ?white : black, fontSize: 18),
+                                      )],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  currentIndex = 2;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 2 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  // decoration: BoxDecoration(
+                                  //     border: currentIndex == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                  // ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                            border: currentIndex == 2 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                            color: currentIndex == 2 ? listActionColor : chart_color12,
+                                          ),
+                                          child: currentIndex == 2
+                                              ? Image.asset('assets/images/ic_vault.png', width: 35, height: 35, color: white,)
+                                              : Image.asset('assets/images/ic_vault.png', width: 35, height: 35)
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Estate Vault', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 2 ? white : black, fontSize: 18),
+                                      )],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+                            GestureDetector(
+                              onTap: () async {
+                                final Uri url = Uri.parse('https://alphacapital.coronation.in/calendly/index.html');
+                                if (!await launchUrl(url)) {
+                                  throw Exception('Could not launch ');
+                                }
+                                setState(() {
+                                  currentIndex = 0;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 3 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  // decoration:  BoxDecoration(
+                                  //     border: currentIndex == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                  // ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                            border: currentIndex == 3 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                            color: currentIndex == 3 ? listActionColor : chart_color12,
+                                          ),
+                                          child:   currentIndex == 3
+                                              ? Image.asset('assets/images/ic_meeting.png', width: 35, height: 35, color: white,)
+                                              : Image.asset('assets/images/ic_meeting.png', width: 35, height: 35)
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Fix Meeting', style: TextStyle(fontWeight: FontWeight.w500,color: currentIndex == 3 ? white : black, fontSize: 18),
+                                      )
+                                    ],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  currentIndex = 4;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 4 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  // decoration: BoxDecoration(
+                                  //     border: currentIndex == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                  // ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                            border: currentIndex == 4 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                            color: currentIndex == 4 ? listActionColor : chart_color12,
+                                          ),
+                                          child:  currentIndex == 4
+                                              ? Image.asset('assets/images/ic_videos.png', width: 35, height: 35, color: white,)
+                                              : Image.asset('assets/images/ic_videos.png', width: 35, height: 35)
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Videos', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 4 ?white : black, fontSize: 18),
+                                      )
+                                    ],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  currentIndex = 5;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 5 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  // decoration: BoxDecoration(
+                                  //     border: currentIndex == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                  // ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                            border: currentIndex == 5 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                            color: currentIndex == 5 ? listActionColor : chart_color12,
+                                          ),
+                                          child: currentIndex == 5
+                                              ? Image.asset('assets/images/ic_blog.png', width: 35, height: 35,color: white,)
+                                              : Image.asset('assets/images/ic_blog.png', width: 35, height: 35)
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Blogs', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 5 ?white : black, fontSize: 18),
+                                      )
+                                    ],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  currentIndex = 6;
+                                });
+                              },
+                              child: Container(
+                                  color: currentIndex == 6 ? blue : Colors.white,
+                                  padding: const EdgeInsets.all(12),
+                                  // decoration: BoxDecoration(
+                                  //     border: currentIndex == 7 ? Border.all(color: blue, width: 1) : Border.all(width: 0),
+                                  //     color: white, borderRadius: BorderRadius.all(Radius.circular(15))
+                                  // ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: const BorderRadius.all(Radius.circular(22)),
+                                            border: currentIndex == 6 ? Border.all(color: blue, width: 1) : Border.all(width: 0, color: Colors.transparent),
+                                            color: currentIndex == 6 ? listActionColor : chart_color12,
+                                          ),
+                                          child: currentIndex == 6
+                                              ? Image.asset('assets/images/ic_contact.png', width: 35, height: 35, color: white,)
+                                              : Image.asset('assets/images/ic_contact.png', width: 35, height: 35)
+                                      ),
+                                      Container(width: 18,),
+                                      Text('Contact', style: TextStyle(fontWeight: FontWeight.w500, color: currentIndex == 6 ?white : black, fontSize: 18),
+                                      )
+                                    ],
+                                  )
+                              ),
+                            ),
+                            //Container(height: 18,),
+
+                          ],
+                        )
+                    ),
+                  ),
+                ),
+                Container(width: 22,),
+                Expanded(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    margin: const EdgeInsets.only(top: 18, bottom: 32, left: 4, right: 32),
+                    decoration: BoxDecoration(
+                      border:Border.all(color: grayLight, width: 0.5 ),
+                      color: white,
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    ),
+                    child: Material(
+                      shadowColor: Colors.grey,
+                      shape: const RoundedRectangleBorder(
+                          side:  BorderSide(color: grayLight),
+                          borderRadius: BorderRadius.all( Radius.circular(14))
+                      ),
+                      elevation: 10.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: IndexedStack(
+                          index: currentIndex,
+                          children: const [
+                            CPHomePage(),
+                            EStateAnalysisHomePage(),
+                            EStateVaultHomePage(),
+                            MeetingPage(),
+                            VideoListPage(),
+                            BlogsPage(),
+                            ContactPage()
+                          ],
+                        ),
+
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          onWillPop: () {
+            SystemNavigator.pop();
+            return Future.value(true);
+          },
+        );
+      }
+    else
+      {
+        return WillPopScope(
+          onWillPop: () {
+            final timeGap = DateTime.now().difference(preBackPressTime);
+            final cantExit = timeGap >= const Duration(seconds: 2);
+            preBackPressTime = DateTime.now();
+            if (cantExit) {
+              showSnackBar('Press back button again to exit', context);
+              return Future.value(false);
+            } else {
+              SystemNavigator.pop();
+              return Future.value(true);
+            }
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            backgroundColor: appBg,
+            appBar: AppBar(
+                toolbarHeight: 60,
+                automaticallyImplyLeading: false,
+                backgroundColor: appBg,
+                elevation: 0,
+                centerTitle: false,
+                title: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        startActivity(context, const ProfilePage());
+                      },
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(right: 8),
+                        child: Image.asset('assets/images/ic_profile.png', width: 40, height: 40),
+                      ),
+                    ),
+                    Expanded(
+                        child: Text(
+                          "Hi ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                        )
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        logoutFromApp();
+                      },
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(left: 8),
+                        child: Image.asset('assets/images/ic_logout.png', width: 40, height: 40),
+                      ),
+                    )
+                  ],
+                )
+            ),
+            body: SafeArea(
+              top: false,
+              child: _isLoading
+                  ? const LoadingWidget()
+                  : Container(
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
                     color: dashboardBg,
@@ -124,28 +495,29 @@ class _HomePageState extends BaseState<HomePage> {
                   ),
                 ),
               ),
-        ),
-        floatingActionButton: Container(
-          margin: EdgeInsets.only(bottom: 22),
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () async {
-              Uri url = Uri.parse('https://api.whatsapp.com/send/?phone=%2B917400066608&text&type=phone_number');
-              if (await canLaunchUrl(url))
-                {
-                  launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
-                }
-              else
-                {
-                  print("NOT LAUCHING");
-                }
-            },
-            child: Image.asset('assets/images/ic_whatsapp.png',width: 50,height: 50,),
+            ),
+            floatingActionButton: Container(
+              margin: EdgeInsets.only(bottom: 22),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () async {
+                  Uri url = Uri.parse('https://api.whatsapp.com/send/?phone=%2B917400066608&text&type=phone_number');
+                  if (await canLaunchUrl(url))
+                  {
+                    launchUrl(url,mode: LaunchMode.externalNonBrowserApplication);
+                  }
+                  else
+                  {
+                    print("NOT LAUCHING");
+                  }
+                },
+                child: Image.asset('assets/images/ic_whatsapp.png',width: 50,height: 50,),
+              ),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      ),
-    );
+        );
+      }
   }
 
   Widget homePageBlocks() {

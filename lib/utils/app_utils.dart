@@ -190,7 +190,7 @@ String getFinancialYearFormated() {
   DateTime now = DateTime.now();
   int currentYear = now.year;
   int currentMonth = now.month;
-  int financialYearStartMonth = 4; // Assuming the financial year starts in April (4th month)
+  int financialYearStartMonth = 3; // Assuming the financial year starts in April (4th month)
 
   int financialYear;
   if (currentMonth >= financialYearStartMonth) {
@@ -202,7 +202,7 @@ String getFinancialYearFormated() {
   int nextYearTemp = financialYear + 1;
 
   String nextYear = universalDateConverter("yyyy", "yy", nextYearTemp.toString());
-
+  print(' Current FinancialYear ===== $financialYear-$nextYear');
   return '$financialYear-$nextYear';
 }
 
@@ -210,20 +210,19 @@ String getPerviousFinancialYearFormated() {
   DateTime now = DateTime.now();
   int currentYear = now.year;
   int currentMonth = now.month;
-  int financialYearStartMonth = 4; // Assuming the financial year starts in April (4th month)
+  int financialYearStartMonth = 3; // Assuming the financial year starts in April (4th month)
 
   int financialYear;
   if (currentMonth >= financialYearStartMonth) {
-    financialYear = currentYear;
+    financialYear = currentYear - 1;
   } else {
     financialYear = currentYear - 2;
   }
 
-
   int nextYearTemp = financialYear + 1;
 
   String nextYear = universalDateConverter("yyyy", "yy", nextYearTemp.toString());
-
+  print('PerviousFinancialYear ===== $financialYear-$nextYear');
   return '$financialYear-$nextYear';
 }
 
@@ -361,6 +360,12 @@ extension RupeesFormatter on num {
   String inRupeesFormat() {
     return numberFormatter.format(this);
   }
+}
+
+bool isTwoHoursPassed(DateTime timestamp) {
+  DateTime now = DateTime.now();
+  Duration difference = now.difference(timestamp);
+  return difference.inHours >= 2;
 }
 
 /*generate hex color into material color*/

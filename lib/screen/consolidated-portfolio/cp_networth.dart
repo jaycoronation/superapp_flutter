@@ -36,10 +36,10 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
 
     if ((sessionManagerPMS.getApplicantsList() != null))
     {
-      if (sessionManagerPMS.getApplicantsList().isNotEmpty ?? false)
+      if (sessionManagerPMS.getApplicantsList().isNotEmpty)
       {
         listApplicants = [];
-        listApplicants.addAll(sessionManagerPMS.getApplicantsList() ?? []);
+        listApplicants.addAll(sessionManagerPMS.getApplicantsList());
 
         if (listApplicants.isNotEmpty)
         {
@@ -427,11 +427,6 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
       });
     }
 
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

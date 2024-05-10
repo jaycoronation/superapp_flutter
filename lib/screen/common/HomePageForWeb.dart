@@ -27,7 +27,7 @@ class HomePageForWeb extends StatefulWidget {
   const HomePageForWeb({Key? key}) : super(key: key);
 
   @override
-  _HomePageForWebState createState() => _HomePageForWebState();
+  BaseState<HomePageForWeb> createState() => _HomePageForWebState();
 }
 
 class _HomePageForWebState extends BaseState<HomePageForWeb> {
@@ -52,7 +52,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
       statusBarBrightness: Brightness.dark,
     ));
 
-    return  WillPopScope(
+    return WillPopScope(
           child: Scaffold(
             backgroundColor: chart_color11,
             appBar: AppBar(

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +10,6 @@ import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../model/BlogListResponseModel.dart';
 import '../../utils/base_class.dart';
-
 
 class BlogsDetailPage extends StatefulWidget {
   final ItemBlogs getSet;
@@ -51,8 +51,18 @@ class _BlogsDetailPageState extends BaseState<BlogsDetailPage> {
           actions: [
             GestureDetector(
               onTap: () {
+
                 var shareText = "Hey There,\n\nSharing Alpha Capital's latest article, '${dataGetSet.title},' which is now available on there website. For the insightful read, click the below link \n\n https://www.alphacapital.in/blog/${dataGetSet.slug?.toString()}\n\nhope you find it engaging and valuable.";
-                Share.share(shareText);
+
+                if (kIsWeb)
+                  {
+                    //onShare(shareText);
+                    Share.shareUri(Uri.parse(shareText));
+                  }
+                else
+                  {
+                    Share.share(shareText);
+                  }
               },
               child: Container(
                 alignment: Alignment.centerLeft,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/CapitalGainResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
@@ -24,15 +25,21 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
   bool _isLoading = false;
   List<SaleValues> listData = [];
   GrandTotal grandTotal = GrandTotal();
+  String selectedYear = '';
 
   @override
   void initState() {
     super.initState();
+    selectedYear = getFinancialYear();
     _getLatestTransactionData();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    List<String> listYears = generateFinancialYears(20);
+
+
     return Scaffold(
       appBar: AppBar(
           toolbarHeight: 60,
@@ -46,14 +53,57 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
             },
             child: getBackArrow(),
           ),
-          title: getTitle("Capital Gain",)),
+          title: getTitle("Capital Gain",)
+      ),
       backgroundColor: const Color(0XffEDEDEE),
       body: _isLoading
           ? const LoadingWidget()
           : Container(
               margin: const EdgeInsets.only(top: 8),
             child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Visibility(
+                    visible: listYears.length > 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Gap(12),
+                        const Text("Select Year - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                        Container(
+                          margin: const EdgeInsets.only(top: 12,bottom: 12),
+                          decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Wrap(
+                            children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  openApplicantSelection(listYears);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(selectedYear,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                                      const Icon(Icons.keyboard_arrow_down_outlined),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Expanded(
                       child: Padding(
                           padding: const EdgeInsets.only(left: 6, right: 6),
@@ -114,7 +164,8 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                                   )
                                   : const MyNoDataWidget(msg: "No data found."),
                             ],
-                          )))
+                          ))
+                  )
                 ],
               ),
           ),
@@ -317,6 +368,100 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
         )));
   }
 
+  List<String> generateFinancialYears(int numberOfYears) {
+    List<String> years = [];
+    DateTime now = DateTime.now();
+
+    // Calculate the current financial year
+    int currentYear = now.year;
+    int currentMonth = now.month;
+    int startYear;
+
+    if (currentMonth >= 4) {
+      // Financial year has started
+      startYear = currentYear;
+    } else {
+      // Financial year has not started yet
+      startYear = currentYear - 1;
+    }
+
+    // Loop to generate financial years
+    for (int i = 0; i < numberOfYears; i++) {
+      String financialYear = "${startYear}-${startYear + 1}";
+      years.add(financialYear);
+      startYear--;
+    }
+
+    return years;
+  }
+
+  void openApplicantSelection(List<String> listYears) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.88),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+                child: Wrap(
+                  children: <Widget>[
+                    Column(
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text("Select Year",style: TextStyle(color: blue,fontSize: 18,fontWeight: FontWeight.w600),)
+                          ],
+                        ),
+                        const Gap(22),
+                        ListView.builder(
+                          itemCount: listYears.length,
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                Navigator.pop(context);
+                                setState(() {
+                                  selectedYear = listYears[index] ?? '';
+
+                                  _getLatestTransactionData();
+
+                                  print(selectedYear);
+
+                                });
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(listYears[index] ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
+                                  ),
+                                  const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+        }
+    );
+  }
+
   _getLatestTransactionData() async {
     setState(() {
       _isLoading = true;
@@ -328,7 +473,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
     final url = Uri.parse(API_URL_CP + capitalGain);
     Map<String, String> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
-      'cr_yr': getFinancialYear(),
+      'cr_yr': selectedYear,
     };
 
     final response = await http.post(url, body: jsonBody);
