@@ -398,7 +398,7 @@ MaterialColor createMaterialColor(Color color) {
 
 Future<void> shareFileWithText(String text,String filePath) async {
   try {
-    Share.shareFiles([filePath], text: text);
+    Share.shareXFiles([XFile(filePath)], text: text);
   } catch (e) {
     if (kDebugMode) {
       print(e);

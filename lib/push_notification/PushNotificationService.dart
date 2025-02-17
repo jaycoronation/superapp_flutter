@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import '../constant/global_context.dart';
 import '../screen/common/home_page.dart';
@@ -86,7 +86,7 @@ class PushNotificationService {
   }
 
   registerNotificationListeners() async {
-    AndroidNotificationChannel channel = androidNotificationChannel();
+    /*AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
@@ -94,18 +94,18 @@ class PushNotificationService {
 
     var androidSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    var iOSSettings = const IOSInitializationSettings(
+    var iOSSettings = const DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,);
 
     var initSettings = InitializationSettings(android: androidSettings, iOS: iOSSettings);
 
-    flutterLocalNotificationsPlugin.initialize(initSettings, onSelectNotification: (payload) {
+    flutterLocalNotificationsPlugin.initialize(initSettings, onDidReceiveNotificationResponse: (payload) {
       // This function handles the click in the notification when the app is in foreground
       // Get.toNamed(NOTIFICATIOINS_ROUTE);
       try {
-        /*print('<><> TAP onMessage :' + payload.toString() + "  <><>");*/
+        *//*print('<><> TAP onMessage :' + payload.toString() + "  <><>");*//*
         var contentType = payload.toString();
         openPage(contentType);
       } catch (e) {
@@ -154,7 +154,7 @@ class PushNotificationService {
          print('<><> onMessage id--->$id');
         print('<><> onMessage contentType--->$contentType');
         print("<><> onMessage Image URL : $image <><>");
-        const IOSNotificationDetails iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: true, presentAlert: true);
+        const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentSound: true, presentAlert: true);
         if (image != null)
         {
             if(image.toString().isNotEmpty)
@@ -224,7 +224,7 @@ class PushNotificationService {
       {
           print("<><> CHECK DATA : " + " <><>");
       }
-    });
+    });*/
   }
 
   Future<String> _downloadAndSaveFile(String url, String fileName) async {
@@ -243,14 +243,14 @@ class PushNotificationService {
         sound: true);
   }
 
-  androidNotificationChannel() => const AndroidNotificationChannel(
+  /*androidNotificationChannel() => const AndroidNotificationChannel(
         'high_importance_channel', // id
         'High Importance Notifications', // title
         description: 'This channel is used for important notifications.', // description
         importance: Importance.max,
         playSound: true,
         sound: RawResourceAndroidNotificationSound('notification_sound_tone.mp3'),
-      );
+      );*/
 
   void openPage(String contentId) {
     NavigationService.notif_type = contentId;

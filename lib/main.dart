@@ -52,7 +52,7 @@ Future<void> main() async {
 
   const fatalError = true;
   // Non-async exceptions
-  FlutterError.onError = (errorDetails) {
+ /* FlutterError.onError = (errorDetails) {
     if (fatalError) {
       // If you want to record a "fatal" exception
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -61,7 +61,7 @@ Future<void> main() async {
       // If you want to record a "non-fatal" exception
       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
     }
-  };
+  };*/
   // Async exceptions
   PlatformDispatcher.instance.onError = (error, stack) {
     if (fatalError) {

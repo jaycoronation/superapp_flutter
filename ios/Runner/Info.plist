@@ -28,6 +28,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Super app wants to use your location.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -39,12 +41,16 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Super app wants to use your Camera for update your profile picture.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Super app wants to use your FaceId for security</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Super app wants to use your mic.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Super app wants to use your Photos for update your profile picture.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

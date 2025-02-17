@@ -70,7 +70,7 @@ class _MeetingPageState extends BaseState<MeetingPage> {
           children: [
             Visibility(visible:_isLoading, child: const CircularProgressIndicator()),
             InAppWebView(
-              initialUrlRequest: URLRequest(url: Uri.parse(_url)),
+              initialUrlRequest: URLRequest(url: WebUri(_url)),
               initialUserScripts: UnmodifiableListView<UserScript>([]),
               onWebViewCreated: (controller) async {
                 webViewController = controller;

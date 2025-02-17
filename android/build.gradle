@@ -1,15 +1,25 @@
 buildscript {
-    ext.kotlin_version = '1.9.23'
+    ext.kotlin_version = '1.8.0'
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://www.jitpack.io'
+            credentials {
+//                username authToken
+                username 'jp_r9me618aib27fnsqpnfo3i5hg4'
+            }
+        }
+        maven {
+            url "https://maven.google.com"
+        }
+
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.13'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
 }
 
@@ -17,8 +27,18 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://www.jitpack.io'
+            credentials {
+//                username authToken
+                username 'jp_r9me618aib27fnsqpnfo3i5hg4'
+            }
+        }
+        maven {
+            url "https://maven.google.com"
+        }
     }
 }
+
 
 rootProject.buildDir = '../build'
 subprojects {

@@ -77,7 +77,6 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     DateTime today = DateTime.now();
     DateTime twoDaysAgo = today.subtract(const Duration(days: 2));
     asPerDate = DateFormat("dd MMM,yyyy").format(twoDaysAgo);
-
   }
 
   @override
@@ -289,22 +288,26 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                           ),
                         ),
                     const Gap(16),
-                    _isShowTable ? Container() :Row(
+                    _isShowTable
+                        ? Container()
+                        : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: List.generate(resultData.applicantDetails!.length - 1, (i) {
-                        return resultData.applicantDetails![i].allocation != 0 ? Container(
-                          margin: const EdgeInsets.all(6),
-                          child: Indicator(
-                            color: colorsApplicantAllocation[i],
-                            text: resultData.applicantDetails![i].applicant.toString(),
-                            isSquare: false,
-                            size: touchedIndexApplicant == i ? 18 : 16,
-                            textColor: touchedIndexApplicant == i
-                                ? Colors.black
-                                : Colors.black38,
-                          ),
-                        ) : Container();
+                        return resultData.applicantDetails![i].allocation != 0
+                            ? Container(
+                              margin: const EdgeInsets.all(6),
+                              child: Indicator(
+                                color: colorsApplicantAllocation[i],
+                                text: resultData.applicantDetails![i].applicant.toString(),
+                                isSquare: false,
+                                size: touchedIndexApplicant == i ? 18 : 16,
+                                textColor: touchedIndexApplicant == i
+                                    ? Colors.black
+                                    : Colors.black38,
+                              ),
+                            )
+                            : Container();
                       }),
                     ),
                     const Gap(16),
@@ -2213,8 +2216,6 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
         setState(() {
           _isLoading = true;
         });
-
-
       }
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [

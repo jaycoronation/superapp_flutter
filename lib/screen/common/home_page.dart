@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -16,6 +17,7 @@ import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/api_end_point.dart';
 import '../../model/CommanResponse.dart';
+import '../../utils/Utils.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
@@ -37,7 +39,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends BaseState<HomePage> {
   DateTime preBackPressTime = DateTime.now();
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
 
   int currentIndex = 0;
@@ -47,6 +49,7 @@ class _HomePageState extends BaseState<HomePage> {
   @override
   void initState() {
     super.initState();
+    getDeviceToken();
     print("<><> SESS :: ${sessionManager.getUserId()} <><> ${sessionManagerPMS.getUserId()} <><> ${sessionManagerVault.getUserId()}");
   }
 
@@ -363,7 +366,6 @@ class _HomePageState extends BaseState<HomePage> {
                               ),
                             ),
                             //Container(height: 18,),
-
                           ],
                         )
                     ),
@@ -531,21 +533,26 @@ class _HomePageState extends BaseState<HomePage> {
                 child: Row(
                   children: [
                     Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
-                          decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/ic_portfolio.png', width: 40, height: 40),
-                              const Spacer(),
-                              const Text(
-                                "Alpha Portfolio",
-                                maxLines: 2,
-                                style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                              )
-                            ],
+                        child: InkWell(
+                          onTap: () {
+                            generateAuth('');
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
+                            decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/ic_portfolio.png', width: 40, height: 40),
+                                const Spacer(),
+                                const Text(
+                                  "Alpha Portfolio",
+                                  maxLines: 2,
+                                  style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
                         )
                     ),
@@ -805,6 +812,136 @@ class _HomePageState extends BaseState<HomePage> {
     );
   }
 
+  Future<dynamic> generateAuth(String loginType) async {
+    // Show progress indicator
+    setState(() {
+      //isLoading = true;
+    });
+
+    // API endpoint
+    //final String url = "https://demo.investwell.app/api/aggregator/auth/getAuthorizationToken";
+    final String url = "https://alphacapital.investwell.app/api/aggregator/auth/getAuthorizationToken";
+
+    try {
+      // Make POST request
+
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+
+      Map<String, String> jsonBody = {
+        "authName": "alphacapitalapi",
+        "password": "jdbvalrijb"
+      };
+
+      final urls = Uri.parse(url);
+      final response = await http.post(urls, body: jsonBody);
+
+      // Handle response
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+
+        // Check response status
+        if (jsonResponse['status'] == 0) {
+          final result = jsonResponse['result'];
+          final String token = result['token'];
+          print('Success: ${jsonResponse.toString()}');
+          // Call another function with token
+          getAuthenticationKey(token, "broker");
+        } else {
+          print('Error: ${jsonResponse.toString()}');
+          showSnackBar("Error: ${jsonResponse['message']}",context);
+        }
+      } else {
+        showSnackBar("Error: ${response.reasonPhrase}",context);
+        print('Success: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      showSnackBar("Error: $error",context);
+      print('Success: ${error}');
+    } finally {
+      // Hide progress indicator let me check sure
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Map<String, String> getParams(String token, String type) {
+    Map<String, String> params = {
+      "token": token,
+      "username": type.isEmpty ? "alphacapital" : "mukesh57"
+    };
+
+    return params;
+  }
+
+  Future<dynamic> getAuthenticationKey(String token,String type) async {
+
+    // Show progress indicator
+    setState(() {
+      _isLoading = true;
+    });
+
+    // API endpoint
+    final String url = "https://alphacapital.investwell.app/api/aggregator/auth/getAuthenticationKey";
+
+    try {
+      // Make POST request
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+      final urls = Uri.parse(url);
+      Map<String, String> jsonBody = getParams(token, type);
+      final response = await http.post(urls, body: jsonBody);
+
+      // Handle response
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+
+        // Check response status
+        if (jsonResponse['status'] == 0) {
+          final result = jsonResponse['result'];
+          final String SSOToken = result['SSOToken'];
+          print('Success 2 and openSDK: ${jsonResponse.toString()}');
+          // invoke sdk
+          //preprare jsonobject
+          Map<String,String> jso= {
+            'ssoToken': SSOToken,
+            'fcmToken': sessionManager.getDeviceToken(),
+            'domain':'alphacapital'
+          };
+          openMintLib(jso);
+        } else {
+          showSnackBar("Error: ${jsonResponse['message']}",context);
+          print('Success: ${jsonResponse.toString()}');
+        }
+      } else {
+        showSnackBar("Error: ${response.reasonPhrase}",context);
+        print('Success: ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      showSnackBar("Error: $error",context);
+      print('Success: ${error}');
+    } finally {
+      // Hide progress indicator
+      setState(() {
+        _isLoading = false;
+      });
+    }
+
+  }
+
+  void openMintLib(Map<String,String> jsonArray) async{
+    try{
+      try{
+        await MintUtils.platform.invokeMethod('openMintLib',jsonArray);
+      }catch(e){}
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   void lastInsertedModule(String module) async {
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
@@ -836,7 +973,7 @@ class _HomePageState extends BaseState<HomePage> {
     var fcmToken = await FirebaseMessaging.instance.getToken();
     sessionManager.setDeviceToken(fcmToken.toString());
     print("*************** $fcmToken");
-    if (sessionManager.getDeviceToken().toString().trim().isNotEmpty) {
+    if (sessionManager.getDeviceToken().toString().trim().isEmpty) {
       // updateDeviceTokenData();
     }
   }
@@ -913,7 +1050,7 @@ class _HomePageState extends BaseState<HomePage> {
                                 Navigator.pushAndRemoveUntil(
                                     context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
                               },
-                              child: const Text("Yes", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
+                              child: const Text("Yes", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
                             ),
                           ),
                         ),

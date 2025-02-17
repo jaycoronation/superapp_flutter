@@ -94,8 +94,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                     height: kIsWeb ? 800 : 300 ,
                     child: LineChart(
                         generatedLineChart(),
-                      swapAnimationDuration: Duration(milliseconds: 150), // Optional
-                      swapAnimationCurve: Curves.linear,
+                      duration: Duration(milliseconds: 150), // Optional
+                      curve: Curves.linear,
                     )
                 )
                 : Column(
@@ -256,7 +256,9 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           }).toList();
         },
         touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: blue,
+          getTooltipColor: (touchedSpot) {
+            return blue;
+          },
           tooltipRoundedRadius: 8,
           getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
             return lineBarsSpot.map((lineBarSpot) {

@@ -14,7 +14,7 @@ abstract class BaseState<T extends StatefulWidget> extends State {
   void castStatefulWidget();
 
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   SessionManager sessionManager = SessionManager();
   SessionManagerPMS sessionManagerPMS = SessionManagerPMS();
   SessionManagerVault sessionManagerVault = SessionManagerVault();
@@ -49,7 +49,7 @@ abstract class BaseState<T extends StatefulWidget> extends State {
     initConnectivity();
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
+        .listen((List<ConnectivityResult> result) async {
       await _updateConnectionStatus().then((bool isConnected) => setState(() {
         isOnline = isConnected;
       }));

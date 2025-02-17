@@ -10,8 +10,6 @@ import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
 import '../../../widget/loading.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import '../../model/CommanResponse.dart';
-import '../../model/InvestWellResponse.dart';
 import '../../model/LoginResponseModel.dart';
 import '../../service/JobService.dart';
 import '../../utils/responsive.dart';

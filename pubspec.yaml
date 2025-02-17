@@ -37,54 +37,49 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   google_fonts:
-  http: ^0.13.4
-  http_interceptor: ^1.0.2
+  http: ^1.2.2
+  http_interceptor: ^2.0.0
   pretty_http_logger:
   shared_preferences: ^2.0.12
   intl:
   connectivity_plus:
   lottie:
-  photo_view:
+  photo_view: ^0.15.0
   smooth_page_indicator: ^1.0.0+2
-  share_plus:
-  firebase_messaging: ^14.0.3
-  firebase_auth: ^4.2.1
-  firebase_core:
-  flutter_local_notifications: ^9.5.3+1
+  share_plus: ^10.1.4
+  firebase_messaging: ^15.1.4
+  firebase_core: ^3.9.0
   flutter_staggered_animations: ^1.1.1
-  url_launcher:
-  gap:
-  file_picker:
-  image_picker:
+  url_launcher: ^6.3.1
+  gap: ^3.0.1
+  file_picker: ^8.3.1
+  image_picker: ^1.1.2
   cached_network_image:
   path_provider:
-  flutter_absolute_path:
-    git:
-      url: https://github.com/canewsin/flutter_absolute_path.git
   slide_indexed_stack: ^0.0.1
-  chip_list: ^2.3.3+8
+  chip_list: ^3.1.0
   dotted_line: ^3.1.0
-  flutter_inappwebview:
-  flutter_widget_from_html: ^0.14.11
+  webview_flutter: ^4.10.0
+  flutter_widget_from_html: ^0.15.2
   auto_orientation: ^2.2.1
-  youtube_player_flutter: ^8.1.1
-  fl_chart: ^0.61.0
-  flutter_web_frame: ^0.0.3
-  cron: ^0.5.1
-  firebase_crashlytics: ^3.3.6
+  youtube_player_flutter: ^9.1.1
+  fl_chart: ^0.69.0
+  flutter_web_frame: ^1.0.0
+  cron: ^0.6.1
+  firebase_crashlytics: ^4.1.4
   provider: ^6.0.5
-  easy_sidemenu: ^0.5.0
+  easy_sidemenu: ^0.6.0
   change_app_package_name: ^1.1.0
-  detectable_text_field: ^2.1.0
-  image_cropper: ^3.0.1
-  package_info_plus: ^4.2.0
-  permission_handler: ^10.3.0
+  detectable_text_field: ^3.0.2
+  image_cropper:
+  package_info_plus: ^8.1.1
+  permission_handler: ^11.3.1
   open_file: ^3.3.2
 
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.11.0
-  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.14.1
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
 

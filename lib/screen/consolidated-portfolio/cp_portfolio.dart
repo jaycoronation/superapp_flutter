@@ -587,14 +587,10 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
       final result = userData['result'];
       final parsedJson = result['portfolio'];
       parsedJson.forEach((value){
-        print(value);
-        print(selectedApplicant);
-
 
         Map<String,dynamic> valueData = value;
 
         valueData.forEach((key, value) {
-          print("USER DATA ADDING IN IF == $key === $value");
           if(key == (selectedApplicant))
           {
             var tpp = List<TempResponse>.empty(growable: true);
@@ -603,14 +599,11 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
               value.forEach((v) {
                 tpp.add(TempResponse.fromJson(v));
               });
-              print("USER DATA ADDING IN IF == ${tpp.length}");
               listData.addAll(tpp);
             }
           }
         });
       });
-
-      print("listData SIZE === ${listData.length}");
     }
     else
     {

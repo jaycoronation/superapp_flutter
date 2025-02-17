@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
-import 'package:detectable_text_field/functions.dart';
 import 'package:detectable_text_field/widgets/detectable_text.dart';
-import 'package:detectable_text_field/widgets/detectable_text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -139,9 +137,6 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
                         "(?!\\n)(?:^|\\s)([#@]([$detectionContentLetters]+))|$urlRegexContent",
                         multiLine: true,
                       ),
-                      callback: (bool readMore) {
-                        debugPrint('Read more >>>>>>> $readMore');
-                      },
                       onTap: (tappedText) async {
                         print(tappedText);
                         if (tappedText.startsWith('#')) {

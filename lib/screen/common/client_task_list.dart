@@ -17,7 +17,7 @@ import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
 class ClientTaskListScreen extends StatefulWidget {
-  const ClientTaskListScreen({Key? key}) : super(key: key);
+  const ClientTaskListScreen({super.key});
 
   @override
   BaseState<ClientTaskListScreen> createState() => _ClientTaskListScreenState();
@@ -102,9 +102,6 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
                                                 "(?!\\n)(?:^|\\s)([#@]([$detectionContentLetters]+))|$urlRegexContent",
                                                 multiLine: true,
                                               ),
-                                              callback: (bool readMore) {
-                                                debugPrint('Read more >>>>>>> $readMore');
-                                              },
                                               basicStyle: listTasks[index].taskStatusId == 2 ? const TextStyle(
                                                 decoration: TextDecoration.lineThrough,
                                                 fontSize: 15,
