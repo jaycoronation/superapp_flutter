@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/constant/api_end_point.dart';
 
 import '../../constant/colors.dart';
+import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  ForgotPasswordScreen({super.key});
+  const ForgotPasswordScreen({super.key});
 
   @override
   BaseState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -15,7 +20,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
   TextEditingController userNameController = TextEditingController();
-
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,7 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                   Container(height: 28,),
                   TextField(
                     readOnly: false,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.text,
                     cursorColor: black,
                     controller:userNameController,
                     style: const TextStyle(
@@ -82,15 +87,28 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                   ),
 
                   Container(height: 30,),
-                  Container(
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: blue
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      if (userNameController.value.text.isEmpty)
+                        {
+                          showSnackBar("Please enter username", context);
+                        }
+                      else
+                        {
+                          _mintForgotPassword();
+                        }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: blue
+                      ),
+                      child: const Text("Submit", style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: white),),
                     ),
-                    child: const Text("Submit", style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: white),),
                   )
                 ],
               ),
@@ -106,7 +124,40 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
 
   @override
   void castStatefulWidget() {
-    // TODO: implement castStatefulWidget
+    widget is ForgotPasswordScreen;
+  }
+
+  _mintForgotPassword()async {
+    setState(() {
+      if(!_isLoading){
+        _isLoading = true;
+      }
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+    var headers = {
+      "User-Agent": "MintApp",
+      'Content-Type': 'application/json',
+    };
+    var body = json.encode({
+      "username":userNameController.value.text.trim(),
+    });
+    final url = Uri.parse(MINT_URL+forgotPassword);
+    final response = await http.post(url,body: body,headers: headers);
+    final statusCode = response.statusCode;
+    final mbody = response.body;
+    Map res = jsonDecode(mbody);
+    if(statusCode == 200 && res['status'] ==0){
+      showSnackBar("Reset Password email has been sent Successfully.", context);
+    }else{
+      showSnackBar("${res['message']}", context);
+    }
+    setState(() {
+      if(!_isLoading){
+        _isLoading = false;
+      }
+    });
   }
 
 }

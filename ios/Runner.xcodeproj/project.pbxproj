@@ -14,6 +14,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		9FAC6A2C2A829870009DE99B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9FAC6A2B2A829870009DE99B /* GoogleService-Info.plist */; };
+		D8CEC1E8EAD55D78E82617C4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE30757DDEB2D785A7DA2020 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +45,10 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9FAC6A2B2A829870009DE99B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AE58886A76C229C355CA120B /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		D1910EA30EF005DE2E4A450D /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		E8E1CC91A22C27F150CA0484 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		EE30757DDEB2D785A7DA2020 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBC4D8AB2A39983B00049A7A /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -52,15 +57,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8CEC1E8EAD55D78E82617C4 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49200D8C9880F2254E73DA1F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EE30757DDEB2D785A7DA2020 /* Pods_Runner.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		814D61366B0518E070161FA0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				AE58886A76C229C355CA120B /* Pods-Runner.debug.xcconfig */,
+				E8E1CC91A22C27F150CA0484 /* Pods-Runner.release.xcconfig */,
+				D1910EA30EF005DE2E4A450D /* Pods-Runner.profile.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -83,6 +100,7 @@
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				814D61366B0518E070161FA0 /* Pods */,
+				49200D8C9880F2254E73DA1F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,12 +136,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
+				8D109F36435CA7BBD3739C21 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+				990CC6B61983393C9293855D /* [CP] Embed Pods Frameworks */,
+				D5F3C240A011F80D141AC3AE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -199,6 +220,28 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
 		};
+		8D109F36435CA7BBD3739C21 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -213,6 +256,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+		};
+		990CC6B61983393C9293855D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D5F3C240A011F80D141AC3AE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -313,6 +390,84 @@
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BiometricAuthentication/BiometricAuthentication.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CTSlidingUpPanel/CTSlidingUpPanel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/CropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DGCharts/DGCharts.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DKImagePickerController/DKImagePickerController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DKPhotoGallery/DKPhotoGallery.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DropDown/DropDown.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging/FirebaseMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop/FirebaseRemoteConfigInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSessions/FirebaseSessions.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardCore/IQKeyboardCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardNotification/IQKeyboardNotification.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardReturnManager/IQKeyboardReturnManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardToolbar/IQKeyboardToolbar.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardToolbarManager/IQKeyboardToolbarManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQTextInputViewNotification/IQTextInputViewNotification.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQTextView/IQTextView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KnobGestureRecognizer/KnobGestureRecognizer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ListPlaceholder/ListPlaceholder.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Mixpanel-swift/Mixpanel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OTPFieldView/OTPFieldView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OTPTextField/OTPTextField.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OrderedSet/OrderedSet.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesSwift/Promises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PryntTrimmerView/PryntTrimmerView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SVGKit/SVGKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SideMenu/SideMenu.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SteviaLayout/Stevia.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyGif/SwiftyGif.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyJSON/SwiftyJSON.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController-framework/TOCropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TextFieldEffects/TextFieldEffects.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/UINavigationItem+Margin/UINavigationItem_Margin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YPImagePicker/YPImagePicker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/audio_session/audio_session.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/auto_orientation/auto_orientation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus/connectivity_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/file_picker/file_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core/firebase_core.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_crashlytics/firebase_crashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_messaging/firebase_messaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_inappwebview_ios/flutter_inappwebview_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/image_cropper/image_cropper.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/image_picker_ios/image_picker_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/just_audio/just_audio.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/lottie-ios/Lottie.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/open_file_ios/open_file_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus/package_info_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation/path_provider_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple/permission_handler_apple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus/share_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/sqflite_darwin/sqflite_darwin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios/url_launcher_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/video_player_avfoundation/video_player_avfoundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/wakelock_plus/wakelock_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/TOCropViewController\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Super App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -322,7 +477,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.coronation.superapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alphacapital.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -460,6 +615,84 @@
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BiometricAuthentication/BiometricAuthentication.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CTSlidingUpPanel/CTSlidingUpPanel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/CropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DGCharts/DGCharts.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DKImagePickerController/DKImagePickerController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DKPhotoGallery/DKPhotoGallery.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DropDown/DropDown.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging/FirebaseMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop/FirebaseRemoteConfigInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSessions/FirebaseSessions.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardCore/IQKeyboardCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardNotification/IQKeyboardNotification.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardReturnManager/IQKeyboardReturnManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardToolbar/IQKeyboardToolbar.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardToolbarManager/IQKeyboardToolbarManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQTextInputViewNotification/IQTextInputViewNotification.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQTextView/IQTextView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KnobGestureRecognizer/KnobGestureRecognizer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ListPlaceholder/ListPlaceholder.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Mixpanel-swift/Mixpanel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OTPFieldView/OTPFieldView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OTPTextField/OTPTextField.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OrderedSet/OrderedSet.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesSwift/Promises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PryntTrimmerView/PryntTrimmerView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SVGKit/SVGKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SideMenu/SideMenu.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SteviaLayout/Stevia.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyGif/SwiftyGif.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyJSON/SwiftyJSON.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController-framework/TOCropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TextFieldEffects/TextFieldEffects.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/UINavigationItem+Margin/UINavigationItem_Margin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YPImagePicker/YPImagePicker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/audio_session/audio_session.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/auto_orientation/auto_orientation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus/connectivity_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/file_picker/file_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core/firebase_core.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_crashlytics/firebase_crashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_messaging/firebase_messaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_inappwebview_ios/flutter_inappwebview_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/image_cropper/image_cropper.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/image_picker_ios/image_picker_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/just_audio/just_audio.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/lottie-ios/Lottie.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/open_file_ios/open_file_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus/package_info_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation/path_provider_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple/permission_handler_apple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus/share_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/sqflite_darwin/sqflite_darwin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios/url_launcher_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/video_player_avfoundation/video_player_avfoundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/wakelock_plus/wakelock_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/TOCropViewController\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Super App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -469,7 +702,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.coronation.superapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alphacapital.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -495,6 +728,84 @@
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = MVT4675X39;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BiometricAuthentication/BiometricAuthentication.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CTSlidingUpPanel/CTSlidingUpPanel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CropViewController/CropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DGCharts/DGCharts.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DKImagePickerController/DKImagePickerController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DKPhotoGallery/DKPhotoGallery.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DropDown/DropDown.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging/FirebaseMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseRemoteConfigInterop/FirebaseRemoteConfigInterop.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseSessions/FirebaseSessions.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardCore/IQKeyboardCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardNotification/IQKeyboardNotification.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardReturnManager/IQKeyboardReturnManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardToolbar/IQKeyboardToolbar.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQKeyboardToolbarManager/IQKeyboardToolbarManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQTextInputViewNotification/IQTextInputViewNotification.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/IQTextView/IQTextView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KnobGestureRecognizer/KnobGestureRecognizer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ListPlaceholder/ListPlaceholder.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Mixpanel-swift/Mixpanel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OTPFieldView/OTPFieldView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OTPTextField/OTPTextField.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/OrderedSet/OrderedSet.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesSwift/Promises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PryntTrimmerView/PryntTrimmerView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SVGKit/SVGKit.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SideMenu/SideMenu.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SteviaLayout/Stevia.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyGif/SwiftyGif.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyJSON/SwiftyJSON.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController-framework/TOCropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TextFieldEffects/TextFieldEffects.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/UINavigationItem+Margin/UINavigationItem_Margin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YPImagePicker/YPImagePicker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/audio_session/audio_session.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/auto_orientation/auto_orientation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/connectivity_plus/connectivity_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/file_picker/file_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_core/firebase_core.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_crashlytics/firebase_crashlytics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/firebase_messaging/firebase_messaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_inappwebview_ios/flutter_inappwebview_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/image_cropper/image_cropper.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/image_picker_ios/image_picker_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/just_audio/just_audio.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/lottie-ios/Lottie.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/open_file_ios/open_file_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/package_info_plus/package_info_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/path_provider_foundation/path_provider_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/permission_handler_apple/permission_handler_apple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/share_plus/share_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/sqflite_darwin/sqflite_darwin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_ios/url_launcher_ios.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/video_player_avfoundation/video_player_avfoundation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/wakelock_plus/wakelock_plus.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/TOCropViewController\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Super App";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -504,7 +815,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.coronation.superapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alphacapital.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

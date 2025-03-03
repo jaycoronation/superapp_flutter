@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 
@@ -368,7 +367,9 @@ class _EditProfilePageState extends BaseState<EditProfilePage> {
       var pickedfiles = await ImagePicker().pickImage(source: ImageSource.camera,imageQuality: 80);
       if (pickedfiles != null) {
         final filePath = pickedfiles.path;
-        _cropImage(filePath);
+        pickImgSelectedPath = pickedfiles.path;
+        print("_pickImage picImgPath crop ====>$pickImgSelectedPath");
+        // _cropImage(filePath);
       } else {
         print("No image is selected.");
       }
@@ -382,7 +383,9 @@ class _EditProfilePageState extends BaseState<EditProfilePage> {
       var pickedfiles = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 80);
       if (pickedfiles != null) {
         final filePath = pickedfiles.path;
-        _cropImage(filePath);
+        // _cropImage(filePath);
+        pickImgSelectedPath = pickedfiles.path;
+        print("_pickImage picImgPath crop ====>$pickImgSelectedPath");
       } else {
         print("No image is selected.");
       }
@@ -391,7 +394,7 @@ class _EditProfilePageState extends BaseState<EditProfilePage> {
     }
   }
 
-  Future<void> _cropImage(filePath) async {
+  /*Future<void> _cropImage(filePath) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(sourcePath: filePath,compressQuality: 80,);
     if (croppedFile != null) {
       setState(() {
@@ -399,7 +402,7 @@ class _EditProfilePageState extends BaseState<EditProfilePage> {
         print("_pickImage picImgPath crop ====>$pickImgSelectedPath");
       });
     }
-  }
+  }*/
 
   @override
   void castStatefulWidget() {

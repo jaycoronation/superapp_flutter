@@ -20,7 +20,7 @@ def flutter_root
   end
   raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
 end
-pod 'TOCropViewController', '~> 2.5.0'
+
 
 # Loading Flutter's podhelper.rb for additional configuration
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
@@ -38,6 +38,7 @@ post_install do |installer|
   installer.generated_projects.each do |project|
     project.targets.each do |target|
       target.build_configurations.each do |config|
+	 config.build_settings['SWIFT_VERSION'] = '5.10'  # Specify Swift 5.10 here
          config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""
       config.build_settings['CODE_SIGNING_REQUIRED'] = "NO"
       config.build_settings['CODE_SIGNING_ALLOWED'] = "NO"

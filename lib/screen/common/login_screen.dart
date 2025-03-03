@@ -183,8 +183,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                         showSnackBar("Please enter password", context);
                                       } else {
                                         if (isInternetConnected) {
-                                          //_makeSignInRequest();
-                                          _makeLoginInRequest(_emailController.value.text.trim());
+                                          _mintLogin();
+                                          // _makeLoginInRequest(_emailController.value.text.trim());
                                         } else {
                                           noInterNet(context);
                                         }
@@ -307,8 +307,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                     showSnackBar("Please enter password", context);
                                   } else {
                                     if (isInternetConnected) {
-                                      //_makeSignInRequest();
-                                      _makeLoginInRequest(_emailController.value.text.trim());
+                                      _mintLogin();
+                                      // _makeLoginInRequest(_emailController.value.text.trim());
                                     } else {
                                       noInterNet(context);
                                     }
@@ -380,8 +380,8 @@ class _LoginScreenState extends BaseState<LoginScreen> {
                                       showSnackBar("Please enter password", context);
                                     } else {
                                       if (isInternetConnected) {
-                                        //_makeSignInRequest();
-                                        _makeLoginInRequest(_emailController.value.text.trim());
+                                        _mintLogin();
+                                        // _makeLoginInRequest(_emailController.value.text.trim());
                                       } else {
                                         noInterNet(context);
                                       }
@@ -417,9 +417,57 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
   //API call function...
 
-  _makeLoginInRequest(String uId) async {
+  _mintLogin() async{
     setState(() {
       _isLoading = true;
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    var mInputEmail = _emailController.value.text.toString();
+    var mInputPassword = _pwController.value.text.toString();
+
+    var headers = {
+      "User-Agent": "MintApp",
+      'Content-Type': 'application/json',
+    };
+    var body = json.encode({
+      "email":mInputEmail,
+      "password":mInputPassword,
+      "brokerDomain": "alphacapital",
+    });
+    final url = Uri.parse(MINT_URL + mintLogin);
+    final response = await http.post(url,body: body,headers: headers);
+    final statusCode = response.statusCode;
+    final allHeaders = response.headers.toString();
+    final mbody = response.body;
+    Map res = jsonDecode(mbody);
+    if(statusCode == 200 && res['status'] ==0){
+      setState(() {
+        _isLoading = false;
+      });
+      // sessionManager.setMintUser(mInputEmail);
+      // sessionManager.setmintPass(mInputPassword);
+      var mintResponse = mbody;
+      // startMintSession(mbody);
+      // startMintFirstHeaders(allHeaders);
+      _makeLoginInRequest(res['result']['username'],res['result']['name'],res['result']['email'],mintResponse);
+    }else{
+      showSnackBar("${res['message']}", context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  _makeLoginInRequest(String userName,String name,String email, String mintResponse) async {
+    setState(() {
+      if(!_isLoading){
+        _isLoading = true;
+      }else{
+        _isLoading = true;
+      }
     });
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
@@ -428,12 +476,14 @@ class _LoginScreenState extends BaseState<LoginScreen> {
     final url = Uri.parse(API_URL+login);
 
     Map<String, String> jsonBody = {
-      'username': uId,
-      'email': _emailController.value.text.trim(),
-      'password': _pwController.value.text.trim(),
+      'username': userName,
+      'email': email,
+      'first_name': name,
+      'pan_no': '',
+      'last_name': '',
     };
 
-   /* Map<String, String> jsonBody = {
+    /* Map<String, String> jsonBody = {
       'username': uId.trim(),
       'email': 'mukesh58',
       'password': 'Mykel@3421',
@@ -447,6 +497,7 @@ class _LoginScreenState extends BaseState<LoginScreen> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
+        // startMintSession(mintResponse);
         sessionManager.setIsLoggedIn(true);
         await sessionManager.createLoginSession(
             checkValidString(dataResponse.profile!.userId.toString()),
@@ -480,20 +531,24 @@ class _LoginScreenState extends BaseState<LoginScreen> {
           checkValidString(dataResponse.vault!.cityId.toString()),
         );
 
-        JobService().getCommonXirr();
-        JobService().getNetworthData();
-
         openHomePage();
+
       } catch (e) {
         print(e);
       }
 
       setState(() {
-        _isLoading = false;
+        if(_isLoading){
+          _isLoading = false;
+        }
       });
     } else {
       setState(() {
-        _isLoading = false;
+        if(_isLoading){
+          _isLoading = false;
+        }else{
+          _isLoading = false;
+        }
       });
       showSnackBar(dataResponse.message, context);
     }

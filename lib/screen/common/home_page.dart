@@ -858,7 +858,7 @@ class _HomePageState extends BaseState<HomePage> {
       }
     } catch (error) {
       showSnackBar("Error: $error",context);
-      print('Success: ${error}');
+      print('Success: $error');
     } finally {
       // Hide progress indicator let me check sure
       setState(() {
@@ -903,14 +903,15 @@ class _HomePageState extends BaseState<HomePage> {
         if (jsonResponse['status'] == 0) {
           final result = jsonResponse['result'];
           final String SSOToken = result['SSOToken'];
-          print('Success 2 and openSDK: ${jsonResponse.toString()}');
+          print('Success 2 and openSDK: ${jsonResponse.toString()} === ${sessionManager.getDeviceToken()}');
           // invoke sdk
           //preprare jsonobject
-          Map<String,String> jso= {
+          Map<String,String> jso = {
             'ssoToken': SSOToken,
-            'fcmToken': sessionManager.getDeviceToken(),
+            'fcmToken': '123',
             'domain':'alphacapital'
           };
+          print("jso == $jso");
           openMintLib(jso);
         } else {
           showSnackBar("Error: ${jsonResponse['message']}",context);
@@ -922,7 +923,7 @@ class _HomePageState extends BaseState<HomePage> {
       }
     } catch (error) {
       showSnackBar("Error: $error",context);
-      print('Success: ${error}');
+      print('Success: $error');
     } finally {
       // Hide progress indicator
       setState(() {

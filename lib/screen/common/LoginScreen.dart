@@ -165,8 +165,8 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
                             showSnackBar("Please enter password", context);
                           } else {
                             if (isInternetConnected) {
-                              //_makeSignInRequest();
-                              _makeLoginInRequest(userNameController.value.text.trim());
+                              _mintLogin();
+                              // _makeLoginInRequest(userNameController.value.text.trim());
                             } else {
                               noInterNet(context);
                             }
@@ -200,7 +200,148 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     widget is LoginScreenNew;
   }
 
-  _makeLoginInRequest(String uId) async {
+  _mintLogin() async{
+    setState(() {
+      _isLoading = true;
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    var mInputEmail = userNameController.value.text.toString();
+    var mInputPassword = _pwController.value.text.toString();
+
+    var headers = {
+      "User-Agent": "MintApp",
+      'Content-Type': 'application/json',
+    };
+    var body = json.encode({
+      "email":mInputEmail,
+      "password":mInputPassword,
+      "brokerDomain": "alphacapital",
+    });
+    final url = Uri.parse(MINT_URL + mintLogin);
+    final response = await http.post(url,body: body,headers: headers);
+    final statusCode = response.statusCode;
+    final allHeaders = response.headers.toString();
+    final mbody = response.body;
+    Map res = jsonDecode(mbody);
+    if(statusCode == 200 && res['status'] ==0){
+      setState(() {
+        _isLoading = false;
+      });
+      // sessionManager.setMintUser(mInputEmail);
+      // sessionManager.setmintPass(mInputPassword);
+      var mintResponse = mbody;
+      // startMintSession(mbody);
+      // startMintFirstHeaders(allHeaders);
+      _makeLoginInRequest(res['result']['username'],res['result']['name'],res['result']['email'],mintResponse);
+    }else{
+      showSnackBar("${res['message']}", context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  _makeLoginInRequest(String userName,String name,String email, String mintResponse) async {
+    setState(() {
+      if(!_isLoading){
+        _isLoading = true;
+      }else{
+        _isLoading = true;
+      }
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL+login);
+
+    Map<String, String> jsonBody = {
+      'username': userName,
+      'email': email,
+      'first_name': name,
+      'pan_no': '',
+      'last_name': '',
+    };
+
+    /* Map<String, String> jsonBody = {
+      'username': uId.trim(),
+      'email': 'mukesh58',
+      'password': 'Mykel@3421',
+    };*/
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = LoginResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try {
+        // startMintSession(mintResponse);
+        sessionManager.setIsLoggedIn(true);
+        await sessionManager.createLoginSession(
+            checkValidString(dataResponse.profile!.userId.toString()),
+            checkValidString(dataResponse.profile!.username.toString()),
+            checkValidString(dataResponse.profile!.email.toString()),
+            checkValidString(dataResponse.profile!.phone.toString()),
+            checkValidString(dataResponse.profile!.image.toString()),
+            false);
+
+        sessionManagerPMS.setIsLoggedIn(true);
+        await sessionManagerPMS.createLoginSession(
+            checkValidString(dataResponse.portfolio!.userId.toString()),
+            checkValidString(dataResponse.portfolio!.firstName.toString()),
+            checkValidString(dataResponse.portfolio!.lastName.toString()),
+            checkValidString(dataResponse.portfolio!.email.toString()),
+            checkValidString(dataResponse.portfolio!.panNo.toString())
+        );
+
+        sessionManagerVault.setIsLoggedIn(true);
+        await sessionManagerVault.createLoginSession(
+          checkValidString(dataResponse.vault!.userId.toString()),
+          checkValidString(dataResponse.vault!.username.toString()),
+          checkValidString(dataResponse.vault!.email.toString()),
+          checkValidString(dataResponse.vault!.phone.toString()),
+          checkValidString(dataResponse.vault!.image.toString()),
+          checkValidString(dataResponse.vault!.countryName.toString()),
+          checkValidString(dataResponse.vault!.countryId.toString()),
+          checkValidString(dataResponse.vault!.stateName.toString()),
+          checkValidString(dataResponse.vault!.stateId.toString()),
+          checkValidString(dataResponse.vault!.cityName.toString()),
+          checkValidString(dataResponse.vault!.cityId.toString()),
+        );
+
+        JobService().getCommonXirr();
+        JobService().getNetworthData();
+
+
+        openHomePage();
+
+      } catch (e) {
+        print(e);
+      }
+
+      setState(() {
+        if(_isLoading){
+          _isLoading = false;
+        }
+      });
+    } else {
+      setState(() {
+        if(_isLoading){
+          _isLoading = false;
+        }else{
+          _isLoading = false;
+        }
+      });
+      showSnackBar(dataResponse.message, context);
+    }
+  }
+
+  /*_makeLoginInRequest(String uId) async {
     setState(() {
       _isLoading = true;
     });
@@ -216,11 +357,11 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       'password': _pwController.value.text.trim(),
     };
 
-    /* Map<String, String> jsonBody = {
+    *//* Map<String, String> jsonBody = {
       'username': uId.trim(),
       'email': 'mukesh58',
       'password': 'Mykel@3421',
-    };*/
+    };*//*
 
     final response = await http.post(url, body: jsonBody);
     final statusCode = response.statusCode;
@@ -280,7 +421,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       });
       showSnackBar(dataResponse.message, context);
     }
-  }
+  }*/
 
   void openHomePage() {
     if(kIsWeb)

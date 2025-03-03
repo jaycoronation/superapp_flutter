@@ -19,3 +19,10 @@ String login = "loginForSuperApp";
 String additionalLinks = "additionallinks";
 String contactSave = "inquiries/save";
 String add = "last_used_module/add";
+
+// ========== MINT URLS ============
+
+const String MINT_URL ="https://alphacapital.investwell.app/";
+
+String mintLogin = "api/auth/login";
+String forgotPassword = "api/auth/sendPasswordResetMail";

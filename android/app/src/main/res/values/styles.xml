@@ -24,6 +24,6 @@
         <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
-    <style name="Ucrop.CropTheme" parent="Theme.AppCompat.Light.NoActionBar"/> <!--add this line-->
+<!--    <style name="Ucrop.CropTheme" parent="Theme.AppCompat.Light.NoActionBar"/> &lt;!&ndash;add this line&ndash;&gt;-->
 
 </resources>

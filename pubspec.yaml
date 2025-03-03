@@ -20,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.2 <3.7.0'
+  sdk: ">=2.18.2 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -71,7 +71,7 @@ dependencies:
   easy_sidemenu: ^0.6.0
   change_app_package_name: ^1.1.0
   detectable_text_field: ^3.0.2
-  image_cropper:
+#  image_cropper: ^8.1.0
   package_info_plus: ^8.1.1
   permission_handler: ^11.3.1
   open_file: ^3.3.2

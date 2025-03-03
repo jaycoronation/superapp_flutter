@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -1282,7 +1281,15 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
       var pickedfiles = await ImagePicker().pickImage(source: ImageSource.camera);
       if (pickedfiles != null) {
         final filePath = pickedfiles.path;
-        _cropImage(filePath);
+        final pickImgSelectedPath = pickedfiles.path;
+        // _cropImage(filePath);
+        var extensionName = ".${getExtension(pickImgSelectedPath)}";
+        File imagefile = File(pickImgSelectedPath); //convert Path to File
+        Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
+        String base64string = base64.encode(imagebytes); //convert bytes to base64 string
+        if (base64string.isNotEmpty) {
+          _addComments("", true, extensionName, base64string);
+        }
       } else {
         print("No image is selected.");
       }
@@ -1295,8 +1302,15 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
     try {
       var pickedfiles = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedfiles != null) {
-        final filePath = pickedfiles.path;
-        _cropImage(filePath);
+        final pickImgSelectedPath = pickedfiles.path;
+        // _cropImage(filePath);
+        var extensionName = ".${getExtension(pickImgSelectedPath)}";
+        File imagefile = File(pickImgSelectedPath); //convert Path to File
+        Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
+        String base64string = base64.encode(imagebytes); //convert bytes to base64 string
+        if (base64string.isNotEmpty) {
+          _addComments("", true, extensionName, base64string);
+        }
       } else {
         print("No image is selected.");
       }
@@ -1305,7 +1319,7 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
     }
   }
 
-  Future<void> _cropImage(filePath) async {
+  /*Future<void> _cropImage(filePath) async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(sourcePath: filePath);
 
     if (croppedFile != null)
@@ -1319,13 +1333,11 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
         _addComments("", true, extensionName, base64string);
       }
     }
-  }
+  }*/
 
   void _scrollDown() {
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
   }
-
-
 
   @override
   void castStatefulWidget() {
