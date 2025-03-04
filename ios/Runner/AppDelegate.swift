@@ -3,7 +3,7 @@ import Flutter
 import Firebase
 import MintFrameworks
 import IQKeyboardManagerSwift
-import IQKeyboardToolbarManager
+//import IQKeyboardToolbarManager
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
@@ -15,7 +15,7 @@ import IQKeyboardToolbarManager
       Messaging.messaging().delegate = self
       
       IQKeyboardManager.shared.enable = true
-        IQKeyboardToolbarManager.shared.isEnabled = true
+//        IQKeyboardToolbarManager.shared.isEnabled = true
           // let controller : FlutterViewController = navigationController.topViewController as! FlutterViewController
           let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
           let mintChannel = FlutterMethodChannel(name: "mint-android-app", binaryMessenger: controller.binaryMessenger)

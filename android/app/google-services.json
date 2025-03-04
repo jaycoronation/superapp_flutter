@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "204998889984",
     "project_id": "alpha-capital-super-app",
-    "storage_bucket": "alpha-capital-super-app.appspot.com"
+    "storage_bucket": "alpha-capital-super-app.firebasestorage.app"
   },
   "client": [
     {

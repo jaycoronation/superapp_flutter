@@ -58,19 +58,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCIO9zXDh3SQSbD7sZ-4vyd9dUZmnk2Zac',
-    appId: '1:204998889984:android:31c7b55cb70ea81d0d7ee5',
+    appId: '1:204998889984:android:3910b2faebf1d7620d7ee5',
     messagingSenderId: '204998889984',
     projectId: 'alpha-capital-super-app',
-    storageBucket: 'alpha-capital-super-app.appspot.com',
+    storageBucket: 'alpha-capital-super-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBZDAO3h-lEmymlcqyj3Uf4T1JN8NNcyxc',
-    appId: '1:204998889984:ios:1aa03f4a2390cb670d7ee5',
+    appId: '1:204998889984:ios:9742c8a24e1332e60d7ee5',
     messagingSenderId: '204998889984',
     projectId: 'alpha-capital-super-app',
-    storageBucket: 'alpha-capital-super-app.appspot.com',
+    storageBucket: 'alpha-capital-super-app.firebasestorage.app',
     androidClientId: '204998889984-0ro472fmihktjvd4c2ojse7hecu5q3cs.apps.googleusercontent.com',
-    iosBundleId: 'com.app.coronation.superapp',
+    iosBundleId: 'com.alphacapital.app',
   );
+
 }
