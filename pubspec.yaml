@@ -52,7 +52,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   url_launcher: ^6.3.1
   gap: ^3.0.1
-  file_picker: ^8.3.1
+  file_picker: ^9.0.2
   image_picker: ^1.1.2
   cached_network_image:
   path_provider:
@@ -60,10 +60,10 @@ dependencies:
   chip_list: ^3.1.0
   dotted_line: ^3.1.0
   webview_flutter: ^4.10.0
-  flutter_widget_from_html: ^0.15.2
+  flutter_widget_from_html: ^0.16.0
   auto_orientation: ^2.2.1
   youtube_player_flutter: ^9.1.1
-  fl_chart: ^0.69.0
+  fl_chart: ^0.70.2
   flutter_web_frame: ^1.0.0
   cron: ^0.6.1
   firebase_crashlytics: ^4.1.4

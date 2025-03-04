@@ -282,8 +282,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
             reservedSize: 40,
             getTitlesWidget: (double value, TitleMeta meta) {
               return SideTitleWidget(
-                axisSide: meta.axisSide,
                 space: 4,
+                meta: meta,
                 child: Text(universalDateConverter('dd.MM.yyyy', 'dd.MM.\nyyyy', listGraphData[value.toInt()].timestamp.toString())),
               );
             },
