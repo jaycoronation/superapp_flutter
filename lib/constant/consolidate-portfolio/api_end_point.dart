@@ -45,3 +45,7 @@ String xirrCommon = "commonXIRR";
 
 String generatePortfolioReport = 'generateReportEntrytoTable';
 
+String deviceTokenUpdateUrl = 'update_device_token';
+
+String appVersionUrl = 'get_app_version';
+

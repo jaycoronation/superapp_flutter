@@ -37,6 +37,17 @@ class SessionManagerVault {
     await SessionManagerMethods.setString(cityId, cityIdApi);
   }
 
+
+  String getUserName() {
+    return checkValidString(SessionManagerMethods.getString(username));
+  }
+
+  Future<void> setUserName(String data)
+  async {
+    await SessionManagerMethods.setString(username, data);
+  }
+
+
   bool? checkIsLoggedIn() {
     return SessionManagerMethods.getBool(isLoggedIn);
   }

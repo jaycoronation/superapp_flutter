@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Superapp</string>
+	<string>Alpha Capital</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -38,15 +38,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Super app wants to use your Camera for update your profile picture.</string>
+	<string>Alpha Capital wants to use your Camera for update your profile picture.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Super app wants to use your FaceId for security</string>
+	<string>Alpha Capital wants to use your FaceId for security</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Super app wants to use your location.</string>
+	<string>Alpha Capital wants to use your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Super app wants to use your mic.</string>
+	<string>Alpha Capital wants to use your mic.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Super app wants to use your Photos for update your profile picture.</string>
+	<string>Alpha Capital wants to use your Photos for update your profile picture.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

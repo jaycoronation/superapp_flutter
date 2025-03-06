@@ -113,6 +113,6 @@ class MainActivity: FlutterActivity() {
     }
     fun showToast(message:String?){
         println("SDK App6--> $message")
-        Toast.makeText(this@MainActivity,"SDK App      --> $message",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this@MainActivity,"SDK App      --> $message",Toast.LENGTH_SHORT).show()
     }
 }

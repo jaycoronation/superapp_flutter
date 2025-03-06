@@ -186,6 +186,30 @@ String getFinancialYear() {
   return '$financialYear-$nextYear';
 }
 
+String getCurrentFinancialYear() {
+  // Get the current date
+  DateTime now = DateTime.now();
+
+  // If the current month is before April, we consider the previous financial year
+  if (now.month < 4) {
+    return "${now.year - 1}-${universalDateConverter("yyyy", 'yy', (now.year).toString())}";
+  } else {
+    return "${now.year}-${universalDateConverter("yyyy", 'yy', (now.year + 1).toString())}";
+  }
+}
+
+String getPreviousFinancialYear() {
+  // Get the current date
+  DateTime now = DateTime.now();
+
+  // If the current month is before April, the previous financial year is the previous year
+  if (now.month < 4) {
+    return "${now.year - 2}-${universalDateConverter("yyyy", 'yy', (now.year - 1).toString())}";
+  } else {
+    return "${now.year - 1}-${universalDateConverter("yyyy", 'yy', (now.year).toString())}";
+  }
+}
+
 String getFinancialYearFormated() {
   DateTime now = DateTime.now();
   int currentYear = now.year;
@@ -194,9 +218,10 @@ String getFinancialYearFormated() {
 
   int financialYear;
   if (currentMonth >= financialYearStartMonth) {
-    financialYear = currentYear;
-  } else {
     financialYear = currentYear - 1;
+  } else {
+    financialYear = currentYear;
+
   }
 
   int nextYearTemp = financialYear + 1;
@@ -214,9 +239,10 @@ String getPerviousFinancialYearFormated() {
 
   int financialYear;
   if (currentMonth >= financialYearStartMonth) {
-    financialYear = currentYear - 1;
-  } else {
+
     financialYear = currentYear - 2;
+  } else {
+    financialYear = currentYear - 1;
   }
 
   int nextYearTemp = financialYear + 1;

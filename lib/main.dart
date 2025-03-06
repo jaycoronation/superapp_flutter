@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:cron/cron.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -8,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_frame/flutter_web_frame.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
+import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
 import 'package:superapp_flutter/screen/common/HomePageForWeb.dart';
 import 'package:superapp_flutter/screen/common/LoginScreen.dart';
 import 'package:superapp_flutter/screen/common/home_page.dart';
@@ -19,9 +24,11 @@ import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/session_manager.dart';
 import 'package:superapp_flutter/utils/session_manager_methods.dart';
 import 'package:superapp_flutter/utils/session_manager_pms.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'constant/colors.dart';
 import 'constant/global_context.dart';
 import 'firebase_options.dart';
+import 'model/GetAppVersionRepsponseModel.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -160,13 +167,127 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isLoggedIn = false ;
   SessionManager sessionManager = SessionManager();
   SessionManagerPMS sessionManagerPMS = SessionManagerPMS();
-  
+  String isForceUpdate = '0';
   final cron = Cron();
+
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+  );
 
   @override
   void initState() {
     super.initState();
-    doSomeAsyncStuff();
+    // doSomeAsyncStuff();
+    getAppVersion();
+    getVersionFromLocal();
+  }
+
+
+  Future<void> getVersionFromLocal() async {
+    _packageInfo = await PackageInfo.fromPlatform();
+  }
+
+  getAppVersion() async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP + appVersionUrl);
+
+
+    final response = await http.get(url);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> apiResponse = jsonDecode(body);
+    var dataResponse = GetAppVersionRepsponseModel.fromJson(apiResponse);
+    if (statusCode == 200 && dataResponse.success == 1) {
+      var verApp = int.parse(_packageInfo.version.toString().replaceAll(".", ''));
+      if (Platform.isAndroid)
+        {
+          var verLive = int.parse(dataResponse.android?.version.toString().replaceAll(".", '') ?? '0');
+          print(verLive);
+          print("APP verApp == $verApp");
+          print("APP verLive == $verLive");
+          print(verApp < verLive);
+          isForceUpdate = dataResponse.android?.forceUpdate ?? '';
+          if (verLive > verApp) {
+            showVersionMismatchDialog(dataResponse.android?.version ?? '', _packageInfo.version ?? '');
+          } else {
+            doSomeAsyncStuff();
+          }
+        }
+      else
+        {
+          var verLive = int.parse(dataResponse.ios?.version.toString().replaceAll(".", '') ?? '0');
+          print(verLive);
+          print("APP verApp == $verApp");
+          print("APP verLive == $verLive");
+          print(verApp < verLive);
+          isForceUpdate = dataResponse.ios?.forceUpdate ?? '';
+          if (verLive > verApp) {
+            showVersionMismatchDialog(dataResponse.android?.version ?? '', _packageInfo.version ?? '');
+          } else {
+            doSomeAsyncStuff();
+          }
+        }
+
+    } else {
+      doSomeAsyncStuff();
+    }
+  }
+
+  void showVersionMismatchDialog(String verLive, String verApp) {
+    var titleText = "Upgrade";
+    var messageText = "A new version of Alpha Capital is ready for installation. Please upgrade from $verApp to $verLive to continue.";
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(titleText, style: const TextStyle(color: black, fontWeight: FontWeight.w500, fontSize: 16)),
+        content: Text(messageText, style: const TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 14)),
+        actions: <Widget>[
+          Visibility(
+            visible: isForceUpdate != 1,
+            child: TextButton(
+                onPressed: () {
+                  doSomeAsyncStuff();
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Skip",
+                  style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
+                )),
+          ),
+          TextButton(
+              onPressed: () async {
+                String appPackageName = _packageInfo.packageName; // getPackageName() from Context or Activity object
+                try {
+                  if (Platform.isIOS) {
+                    if (await canLaunchUrl(Uri.parse("https://apps.apple.com/us/app/alpha-capital/id1075956827"))) {
+                      launchUrl(Uri.parse("https://apps.apple.com/us/app/alpha-capital/id1075956827"), mode: LaunchMode.externalApplication);
+                    }
+                  } else {
+                    if (await canLaunchUrl(Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"))) {
+                      launchUrl(Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"), mode: LaunchMode.externalApplication);
+                    }
+                  }
+                } catch (anfe) {
+                  if (await canLaunchUrl(Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"))) {
+                    launchUrl(Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName"));
+                  }
+                }
+              },
+              child: const Text(
+                "Upgrade",
+                style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
+              ))
+        ],
+      ),
+    );
   }
 
   Future<void> doSomeAsyncStuff() async {
@@ -187,14 +308,14 @@ class _MyHomePageState extends State<MyHomePage> {
           JobService().getLatestDataFromMint();
         }
 
-        Timer(const Duration(seconds:1),
+        Timer(const Duration(milliseconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
              kIsWeb ? const HomePage() : const HomePage()), (Route<dynamic> route) => false));
       }
       else
       {
         Timer(
-            const Duration(seconds:1),
+            const Duration(milliseconds:1),
                 () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
             const LoginScreenNew()), (Route<dynamic> route) => false));
       }

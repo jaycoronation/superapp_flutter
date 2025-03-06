@@ -133,24 +133,36 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
         _isLoading = true;
       }
     });
+
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
+
     var headers = {
       "User-Agent": "MintApp",
       'Content-Type': 'application/json',
     };
+
     var body = json.encode({
       "username":userNameController.value.text.trim(),
     });
-    final url = Uri.parse(MINT_URL+forgotPassword);
+
+    final url = Uri.parse(MINT_URL + forgotPassword);
+
     final response = await http.post(url,body: body,headers: headers);
+
     final statusCode = response.statusCode;
+
     final mbody = response.body;
+
     Map res = jsonDecode(mbody);
-    if(statusCode == 200 && res['status'] ==0){
+
+    if(statusCode == 200 && res['status'] ==0)
+    {
       showSnackBar("Reset Password email has been sent Successfully.", context);
-    }else{
+    }
+    else
+    {
       showSnackBar("${res['message']}", context);
     }
     setState(() {

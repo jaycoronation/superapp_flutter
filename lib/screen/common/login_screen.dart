@@ -500,9 +500,9 @@ class _LoginScreenState extends BaseState<LoginScreen> {
         // startMintSession(mintResponse);
         sessionManager.setIsLoggedIn(true);
         await sessionManager.createLoginSession(
-            checkValidString(dataResponse.profile!.userId.toString()),
-            checkValidString(dataResponse.profile!.username.toString()),
-            checkValidString(dataResponse.profile!.email.toString()),
+            dataResponse.profile?.userId ?? '',
+            dataResponse.profile?.username ?? '',
+            dataResponse.profile?.email ?? '',
             checkValidString(dataResponse.profile!.phone.toString()),
             checkValidString(dataResponse.profile!.image.toString()),
             false);

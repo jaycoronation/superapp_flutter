@@ -1706,8 +1706,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   });
                 },
                 child: _isVisible2023_24
-                    ? Text(getFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue))
-                    : Text(getFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
+                    ? Text(getCurrentFinancialYear(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue))
+                    : Text(getCurrentFinancialYear(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
               ),
             ),
           ),
@@ -1727,8 +1727,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                   });
                 },
                 child: _isVisible2022_23
-                    ? Text(getPerviousFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue))
-                    : Text(getPerviousFinancialYearFormated(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
+                    ? Text(getPreviousFinancialYear(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: blue))
+                    : Text(getPreviousFinancialYear(),style:const TextStyle(fontSize: 17,fontWeight: FontWeight.bold,color: black)),
               ),
             ),
           ),

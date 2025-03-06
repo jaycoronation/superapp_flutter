@@ -16,7 +16,8 @@
   import '../../../utils/app_utils.dart';
   import '../../../utils/base_class.dart';
   import '../../constant/api_end_point.dart';
-  import '../../model/CommanResponse.dart';
+  import '../../constant/consolidate-portfolio/api_end_point.dart';
+import '../../model/CommanResponse.dart';
   import '../../utils/Utils.dart';
   import '../../utils/session_manager_methods.dart';
   import '../../widget/loading.dart';
@@ -835,7 +836,7 @@
         };
 
         final urls = Uri.parse(url);
-        final response = await http.post(urls, body: jsonBody);
+        final response = await http.post(urls, body: jsonBody,headers: {'User-Agent' : "MintApp"});
 
         // Handle response
         if (response.statusCode == 200) {
@@ -870,7 +871,7 @@
     Map<String, String> getParams(String token, String type) {
       Map<String, String> params = {
         "token": token,
-        "username": type.isEmpty ? "alphacapital" : "mukesh57"
+        "username": type.isEmpty ? "alphacapital" : sessionManagerVault.getUserName()
       };
 
       return params;
@@ -893,7 +894,7 @@
         ]);
         final urls = Uri.parse(url);
         Map<String, String> jsonBody = getParams(token, type);
-        final response = await http.post(urls, body: jsonBody);
+        final response = await http.post(urls, body: jsonBody,headers: {'User-Agent' : "MintApp"});
 
         // Handle response
         if (response.statusCode == 200) {
@@ -982,9 +983,48 @@
       var fcmToken = await FirebaseMessaging.instance.getToken();
       sessionManager.setDeviceToken(fcmToken.toString());
       print("*************** $fcmToken");
-      if (sessionManager.getDeviceToken().toString().trim().isEmpty) {
-        // updateDeviceTokenData();
+      updateDeviceTokenData();
+    }
+
+    updateDeviceTokenData() async {
+
+      // Show progress indicator
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        // Make POST request
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        Map<String, String> jsonBody = {
+          'user_id' : sessionManagerPMS.getUserId(),
+          'device_type' : Platform.isAndroid ? 'android' : "IOS",
+          'device_token' : sessionManager.getDeviceToken(),
+        };
+
+        final urls = Uri.parse(API_URL_CP + deviceTokenUpdateUrl);
+        final response = await http.post(urls, body: jsonBody);
+        final statusCode = response.statusCode;
+
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = CommanResponse.fromJson(user);
+
+        if (statusCode == 200 && dataResponse.success == 1) {} else {}
+
+      } catch (error) {
+        showSnackBar("Error: $error",context);
+        print('Success: $error');
+      } finally {
+        // Hide progress indicator
+        setState(() {
+          _isLoading = false;
+        });
       }
+
     }
 
     void logoutFromApp() {
@@ -1075,6 +1115,8 @@
         },
       );
     }
+
+
 
     /*updateDeviceTokenData() async {
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
