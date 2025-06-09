@@ -23,6 +23,8 @@ String add = "last_used_module/add";
 // Documents API //
 
 String documentLists = '${API_URL}manage_documents/list';
+String summaryLists = 'https://demo1.coronation.in/AlphacapitalReportApp/api/Client/GetAllSummaryByClient';
+String RecommendationLists = 'https://demo1.coronation.in/AlphacapitalReportApp/api/Client/GetAllRecommendationByClient';
 
 // ========== MINT URLS ============
 

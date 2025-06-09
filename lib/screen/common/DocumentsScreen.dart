@@ -60,6 +60,7 @@ class _DocumentsScreenState extends BaseState<DocumentsScreen> {
             itemCount: listDocument.length,
             itemBuilder: (context, index) {
               return Container(
+                margin: const EdgeInsets.only(left: 12, right: 12),
                 alignment: Alignment.center,
                 width: double.infinity,
                 color: white,
@@ -95,22 +96,29 @@ class _DocumentsScreenState extends BaseState<DocumentsScreen> {
                             ],
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Expanded(flex: 2, child: Text(
-                                "Document Name",
-                                maxLines: 3,
-                                style: TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
-                              )),
+                              Expanded(
+                                child: Text(
+                                  "Document Name",
+                                  style: TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                ),
+                              ),
                               const Text(
                                 " : ",
-                                maxLines: 3,
-                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                style: TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w400),
                               ),
-                              Expanded(flex: 4, child: Text(
-                                checkValidString(listDocument[index].title),
-                                maxLines: 3,
-                                style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
-                              )),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left : 8.0),
+                                  child: Text(
+                                    checkValidString(listDocument[index].title),
+                                    maxLines: 3,
+                                    style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -139,7 +147,8 @@ class _DocumentsScreenState extends BaseState<DocumentsScreen> {
       final url = Uri.parse(documentLists);
 
       Map<String, String> jsonBody = {
-        "user_id": sessionManagerPMS.getUserId(),
+        // "user_id": sessionManagerPMS.getUserId(),
+        "user_id": "3925",
       };
 
       final response = await http.post(url, body: jsonBody, headers: {

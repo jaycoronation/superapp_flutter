@@ -14,6 +14,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
+import '../RecommendationListScreen.dart';
+import 'DocumentsScreen.dart';
+import 'SummaryScreen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -134,6 +137,123 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                                   ),
                                 ),
                                 const Text("Open Tasks – Status",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
+                          ),
+                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        startActivity(context, const DocumentsScreen());
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
+                                ),
+                                const Text("Document",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
+                          ),
+                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        startActivity(context, const SummaryScreen());
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
+                                ),
+                                const Text("Summary",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic_arrow_right.png',
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                const Gap(12)
+                              ],
+                            ),
+                          ),
+                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        startActivity(context, const RecommendationListScreen());
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
+                                    ),
+                                  ),
+                                ),
+                                const Text("Recommendation",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
                                 const Spacer(),
                                 Image.asset(
                                   'assets/images/ic_arrow_right.png',
