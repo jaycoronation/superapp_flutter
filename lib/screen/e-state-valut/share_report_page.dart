@@ -116,7 +116,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                               if (isValidData())
                               {
                                 var data = _makeJsonData();
-                                if (isInternetConnected) {
+                                if (isOnline) {
                                   _saveDataCall(data,"SAVE");
                                   FocusScope.of(context).unfocus();
                                 } else {
@@ -155,7 +155,7 @@ class _ShareReportPageState extends BaseState<ShareReportPage> {
                               if (isValidData())
                               {
                                 var data = _makeJsonData();
-                                 if (isInternetConnected) {
+                                 if (isOnline) {
                                     _saveDataCall(data,'DOWNLOAD');
                                   FocusScope.of(context).unfocus();
                                 } else {

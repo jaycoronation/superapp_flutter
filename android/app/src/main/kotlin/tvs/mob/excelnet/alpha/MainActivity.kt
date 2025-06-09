@@ -3,8 +3,8 @@ package tvs.mob.excelnet.alpha
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.app.TaskStackBuilder
+import investwell.mintSdk.MintSDK
 import investwell.utils.AppSession
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -12,7 +12,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
+
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "mint-android-app"
@@ -22,7 +22,6 @@ class MainActivity: FlutterActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         // Aligns the Flutter view vertically with the window.
-//        WindowCompat.setDecorFitsSystemWindows(getWindow(), false)
         showToast("OnCreate")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // Disable the Android splash screen fade out animation to avoid
@@ -35,7 +34,8 @@ class MainActivity: FlutterActivity() {
 //        invoke()
         GeneratedPluginRegistrant.registerWith(FlutterEngine(this))
         flutterEngine?.dartExecutor?.binaryMessenger?.let {  MethodChannel(it,CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "openMintLib") {
+            if (call.method == "openMintLib")
+            {
                 try {
                     var domain =""
                     var sso =""
@@ -77,16 +77,41 @@ class MainActivity: FlutterActivity() {
                         // For Android 12 and above, use the standard startActivity
                         startActivity(intentsdk)
                     }
+
+
                     result.success("Success")
                 }catch (e: JSONException) {
                     // Handle JSON parsing error
                     result.error("JSON Parsing Error", e.message, null)
                 }
-            } else {
+            }
+            else if (call.method == "isValidAuth")
+            {
+                handleAuthCheck(result)
+            }
+            else if (call.method == "clearSession"){
+            clearSDK()
+        }
+            else
+            {
                 result.notImplemented()
             }
         } }
     }
+
+    // add this function to handle the existing session
+    private fun handleAuthCheck(result: MethodChannel.Result) {
+        val mintSdk = MintSDK(this@MainActivity)
+        mintSdk.configureSDK(true)
+        mintSdk.setIsProduction(!BuildConfig.DEBUG)
+        result.success(mintSdk.isAuthValidated)
+    }
+    private fun clearSDK(){
+        val mintSdk = MintSDK(this@MainActivity)
+        mintSdk.setIsProduction(!BuildConfig.DEBUG)
+        mintSdk.clearSDKData()
+    }
+
     override fun onStart() {
         showToast("onStart")
         super.onStart()

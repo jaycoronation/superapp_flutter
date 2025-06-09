@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dashboard_bg">#2042FE</color>
+    <color name="colorNavigationBar">#000000</color>
+    <color name="colorStatusBar">#000000</color>
+    <color name="colorPrimary">#2042FE</color>
+    <color name="colorPrimaryDark">#2042FE</color>
+    <color name="colorAccent">#2042FE</color>
+    <color name="colorToolbar">#2042FE</color>
 </resources>

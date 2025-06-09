@@ -20,10 +20,18 @@
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/launch_background</item>
     </style>
 
-    <style name="Ucrop.CropTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+    <style name="Ucrop.CropTheme" parent="Theme.Material3.DayNight.NoActionBar">
     </style>
 
-<!--    <style name="Ucrop.CropTheme" parent="Theme.AppCompat.Light.NoActionBar"/> &lt;!&ndash;add this line&ndash;&gt;-->
+        <!-- Base application theme. -->
+        <style name="Base.Theme.MintSample" parent="Theme.Material3.DayNight.NoActionBar">
+            <!-- Customize your light theme here. -->
+             <item name="colorPrimary">@color/dashboard_bg</item>
+            <!--<item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+            <item name="android:fitsSystemWindows">true</item>-->
+        </style>
+
+        <style name="Theme.MintSample" parent="Theme.Material3.DayNight.NoActionBar" />
+
 
 </resources>

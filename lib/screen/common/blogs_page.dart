@@ -22,7 +22,7 @@ import '../../widget/no_data.dart';
 import '../../widget/no_internet.dart';
 
 class BlogsPage extends StatefulWidget {
-  const BlogsPage({Key? key}) : super(key: key);
+  const BlogsPage({super.key});
 
   @override
   _BlogsPageState createState() => _BlogsPageState();
@@ -68,7 +68,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
     });
 
-    if (isInternetConnected) {
+    if (isOnline) {
       // getFilterData();
       getCategoryList();
 
@@ -130,13 +130,17 @@ class _BlogsPageState extends BaseState<BlogsPage> {
               elevation: 0,
               backgroundColor: white,
             ),
-            body: isInternetConnected
-                ? _isLoading
-                ? const LoadingWidget()
-                : listData.isEmpty
-                ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
-                : _setData()
-                : const NoInternetWidget()
+            body: isOnline
+                ? _setData()
+                : NoInternetWidget(() {
+              if (isOnline) {
+                // getFilterData();
+                getCategoryList();
+
+              }else {
+                noInterNet(context);
+              }
+                },)
         )
         : Scaffold(
         backgroundColor: white,
@@ -155,13 +159,21 @@ class _BlogsPageState extends BaseState<BlogsPage> {
           elevation: 0,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             : listData.isEmpty
             ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
             :  _setDataForWeb()
-            : const NoInternetWidget()
+            : NoInternetWidget(() {
+          if (isOnline) {
+            // getFilterData();
+            getCategoryList();
+
+          }else {
+            noInterNet(context);
+          }
+            },)
     ) ;
 
   }
@@ -413,7 +425,11 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                 ),
               ),
               Container(height: 12,),
-              Expanded(
+              _isLoading
+                  ? Expanded(child: const LoadingWidget())
+                  : listData.isEmpty
+                  ? const Center(child: MyNoDataWidget(msg: 'No blogs data found!'))
+                  : Expanded(
                   child:SingleChildScrollView(
                     controller: _scrollViewController,
                     child: AnimationLimiter(
@@ -449,9 +465,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            height: 160,
                                             width: MediaQuery.of(context).size.width,
-                                            // color: grayLight,
                                             child: Stack(
                                               alignment: Alignment.topRight,
                                               children: [
@@ -460,9 +474,8 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                                                   child: listData[index].blogImage.toString().isNotEmpty
                                                       ? FadeInImage.assetNetwork(
                                                         image: listData[index].blogImage.toString(),
-                                                        fit: BoxFit.cover,
+                                                        fit: BoxFit.fitWidth,
                                                         width: MediaQuery.of(context).size.width,
-                                                        height: 160,
                                                         placeholder: 'assets/images/bg_gray.jpeg',
                                                       )
                                                       : Image.asset('assets/images/bg_gray.jpeg', width: 50, height: 50),

@@ -125,7 +125,7 @@ class _AddSharesBondsPageState extends BaseState<AddSharesBondsPage> {
                         if (isValidData())
                         {
                           var data = _makeJsonData();
-                           if (isInternetConnected) {
+                           if (isOnline) {
                               _saveDataCall(data);
                             FocusScope.of(context).unfocus();
                           } else {

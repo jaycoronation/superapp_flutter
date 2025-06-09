@@ -178,7 +178,7 @@ class _AddDomesticEmployeeState extends BaseState<AddDomesticEmployee> {
                         }
                         else
                         {
-                          if (isInternetConnected) {
+                          if (isOnline) {
                             _saveDataCall(_makeJsonData());
                             FocusScope.of(context).unfocus();
                           } else {

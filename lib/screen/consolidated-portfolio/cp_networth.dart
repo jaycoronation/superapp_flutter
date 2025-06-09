@@ -73,6 +73,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
               children: [
                 Visibility(
                   visible: listApplicants.length > 1,
+                  // visible: false,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

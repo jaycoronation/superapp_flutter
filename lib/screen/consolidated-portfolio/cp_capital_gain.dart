@@ -15,7 +15,7 @@ import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
 
 class CPCapitalGainPage extends StatefulWidget {
-  const CPCapitalGainPage({Key? key}) : super(key: key);
+  const CPCapitalGainPage({super.key});
 
   @override
   BaseState<CPCapitalGainPage> createState() => CPCapitalGainPageState();
@@ -122,7 +122,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                                             child: const Row(
                                               children: [
                                                 Expanded(
-                                                    flex: 2,
+                                                    flex: 1,
                                                     child: Text('Asset Type',
                                                         style: TextStyle(
                                                             color: blue,
@@ -213,7 +213,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                           child: Row(
                             children: [
                               const Expanded(
-                                  flex: 2,
+                                  flex: 1,
                                   child: Text("Total",
                                       style: TextStyle(
                                           color: blue,
@@ -256,7 +256,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                             child: Row(
                               children: [
                                 const Expanded(
-                                    flex: 2,
+                                    flex: 1,
                                     child: Text("Grand Total",
                                         style: TextStyle(
                                             color: blue,
@@ -329,7 +329,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
                     Row(
                       children: [
                         Expanded(
-                            flex: 2,
+                            flex: 1,
                             child: Text(toDisplayCase(subListData[index].categoryKey.toString()),
                                 style: const TextStyle(
                                     color: black,

@@ -3,10 +3,10 @@ import Flutter
 import Firebase 
 import MintFrameworks
 import IQKeyboardManagerSwift
-//import IQKeyboardToolbarManager
+import IQKeyboardToolbarManager
 
 @main
-@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
+@objc class AppDelegate: FlutterAppDelegate,MessagingDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -22,30 +22,20 @@ import IQKeyboardManagerSwift
             print("FCM registration token: \(token)")
         }
       }
-    
       
-    if #available(iOS 10.0, *) {
-        // For iOS 10 display notification (sent via APNS)
-        UNUserNotificationCenter.current().delegate = self
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-    } else {
-        let settings: UIUserNotificationSettings =
-        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-        application.registerUserNotificationSettings(settings)
-    }
-    application.registerForRemoteNotifications()
-      
-      IQKeyboardManager.shared.enable = true
-//        IQKeyboardToolbarManager.shared.isEnabled = true
+        IQKeyboardManager.shared.isEnabled = true
+        IQKeyboardToolbarManager.shared.isEnabled = true
           // let controller : FlutterViewController = navigationController.topViewController as! FlutterViewController
           let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
           let mintChannel = FlutterMethodChannel(name: "mint-android-app", binaryMessenger: controller.binaryMessenger)
           mintChannel.setMethodCallHandler({
               (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+              print("IS METHOD CHANNEL CALLING ")
+              print(call.method)
               if call.method == "openMintLibIOS" {
+                  
+                  print(call.arguments as? [String: Any])
+                  print("IS METHOD CHANNEL CALLING INSIDE")
                   guard let args = call.arguments as? [String: Any],
                         let ssoToken = args["ssoToken"] as? String,
                         let fcmToken = args["fcmToken"] as? String,
@@ -55,14 +45,32 @@ import IQKeyboardManagerSwift
                                           details: nil))
                       return
                   }
-                  self.invokeMintSDK(ssoToken: ssoToken, fcmToken: fcmToken, domain: domain)
+                  self.invokeMintSDK(ssoToken: ssoToken, fcmToken: fcmToken, domain: domain,colorPrimary:"2042FE",colorToolbar:"2042FE")
+
                   result("Success")
+              } else if call.method == "isValidAuth"{
+                  result(MintSDKInvoke().isSessionAvailable())
+              } else if call.method == "clearSessionIos"{
+                  result(MintSDKInvoke().clearSDKSession())
               } else {
                   result(FlutterMethodNotImplemented)
               }
           })
-
-     
+//      GeneratedPluginRegistrant.register(with: self)
+      
+      if #available(iOS 10.0, *) {
+          // For iOS 10 display notification (sent via APNS)
+          UNUserNotificationCenter.current().delegate = self
+          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+          UNUserNotificationCenter.current().requestAuthorization(
+                  options: authOptions,
+                  completionHandler: {_, _ in })
+      } else {
+          let settings: UIUserNotificationSettings =
+          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+          application.registerUserNotificationSettings(settings)
+      }
+      application.registerForRemoteNotifications()
     
       return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
@@ -86,9 +94,9 @@ import IQKeyboardManagerSwift
         print("didReceiveRemoteNotification Response Info :\(userInfo)")
     }
     
-    private func invokeMintSDK(ssoToken: String, fcmToken: String, domain: String) {
-       if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
-           MintSDKInvoke().invokeMintAppFormFlutterApp(domain: domain, token: ssoToken, navigateToview: "", controller: rootViewController)
-       }
-     }
+    private func invokeMintSDK(ssoToken: String, fcmToken: String, domain: String, colorPrimary: String, colorToolbar: String) {
+        if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
+            MintSDKInvoke().invokeMintAppFormFlutterApp(domain: domain, token: ssoToken, navigateToview: "", controller: rootViewController,colorPrimary: colorPrimary,colorToolbar: colorToolbar)
+        }
+      }
 }

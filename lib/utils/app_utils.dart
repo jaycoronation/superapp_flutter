@@ -499,8 +499,7 @@ List<String> getPeriodicity() {
   return listData;
 }
 
-openFileFromURL(String url,BuildContext? context)
-async {
+openFileFromURL(String url,BuildContext? context) async {
     try {
       if(checkValidString(url).toString().isNotEmpty)
           {
@@ -517,4 +516,30 @@ async {
       print(e);
       showSnackBar("File URL not found.", context);
     }
+}
+
+Widget getCommonButton(String title, bool isLoading, void Function() onPressed, [Color textColor = white,FontWeight weight = FontWeight.w600]){
+  return TextButton(
+    onPressed: isLoading ? null : onPressed,
+    style: ButtonStyle(
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            side: const BorderSide(color: white,width: 0.6)
+        ),
+      ),
+      backgroundColor: MaterialStateProperty.all<Color>(blue),
+    ),
+    child: isLoading
+        ? const Padding(
+      padding: EdgeInsets.only(top: 11,bottom: 11),
+      child: SizedBox(width: 16,height: 16,child: CircularProgressIndicator(color: white,strokeWidth: 2)),
+    )
+        : Padding(
+      padding: const EdgeInsets.only(top: 11,bottom: 11,),
+      child: Text(title.toUpperCase(),
+        style: TextStyle(fontSize: 14, fontWeight: weight, color: textColor,),
+      ),
+    ),
+  );
 }

@@ -32,7 +32,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getData();
     }else{
       noInterNet(context);
@@ -60,7 +60,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
             elevation: 0,
             backgroundColor: white,
           ),
-          body: isInternetConnected
+          body: isOnline
               ? _isLoading
               ? const LoadingWidget()
               : SafeArea(
@@ -162,7 +162,20 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                   ),
                 )
             ),)
-              : const NoInternetWidget(),
+              : NoInternetWidget(() {
+                if (isOnline)
+                  {
+                    if(isOnline) {
+                      getData();
+                    }else{
+                      noInterNet(context);
+                    }
+                  }
+                else
+                  {
+                    noInterNet(context);
+                  }
+              },),
         )
         :  Scaffold(
           backgroundColor: white,
@@ -189,7 +202,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
             titleSpacing: 0,
             backgroundColor: white,
           ),
-          body: isInternetConnected
+          body: isOnline
               ? _isLoading
               ? const LoadingWidget()
               : SafeArea(
@@ -299,7 +312,20 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                   ),
                 )
             ),)
-              : const NoInternetWidget(),
+              : NoInternetWidget(() {
+            if (isOnline)
+            {
+              if(isOnline) {
+                getData();
+              }else{
+                noInterNet(context);
+              }
+            }
+            else
+            {
+              noInterNet(context);
+            }
+              },),
         );
   }
 

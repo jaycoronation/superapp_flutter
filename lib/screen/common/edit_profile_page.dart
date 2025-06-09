@@ -252,7 +252,7 @@ class _EditProfilePageState extends BaseState<EditProfilePage> {
                                   });
 
                                 } else {
-                                  if(isInternetConnected) {
+                                  if(isOnline) {
                                     //saveDetails();
                                     FocusScope.of(context).unfocus();
                                   } else {

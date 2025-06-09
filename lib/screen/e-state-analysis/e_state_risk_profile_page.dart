@@ -32,7 +32,7 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }else{
       noInterNet(context);
@@ -139,7 +139,7 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
           elevation: 0,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             :  SafeArea(
@@ -169,7 +169,13 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
                   ],
                 ),
               )
-            : const NoInternetWidget(),
+            : NoInternetWidget(() {
+          if(isOnline) {
+            getListData();
+          }else{
+            noInterNet(context);
+          }
+            },),
     );
   }
 
@@ -212,7 +218,7 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
                     var ansId = getAnswerIds();
                     print("<><> Answer Ids : " + ansId + " <><>");
 
-                    if(isInternetConnected) {
+                    if(isOnline) {
                       saveDetails(ansId);
                     }else{
                       noInterNet(context);
@@ -316,7 +322,7 @@ class _EStateRiskProfilePageState extends BaseState<EStateRiskProfilePage> {
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
       setState(() {
         _isLoading = true;
       });

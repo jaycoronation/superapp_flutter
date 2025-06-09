@@ -20,7 +20,6 @@ abstract class BaseState<T extends StatefulWidget> extends State {
   SessionManagerVault sessionManagerVault = SessionManagerVault();
   /// the internet connectivity status
   bool isOnline = true;
-  bool isInternetConnected = true;
   /// initialize connectivity checking
   /// Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initConnectivity() async {

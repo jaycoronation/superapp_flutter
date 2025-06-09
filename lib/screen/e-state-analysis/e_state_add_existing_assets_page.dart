@@ -55,7 +55,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
       _currentValueController.text = checkValidString(dataGetSet.currentValue.toString());
     }
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getData();
     }else{
       noInterNet(context);
@@ -200,7 +200,7 @@ class _EStateAddExistingAssetsPageState extends BaseState<EStateAddExistingAsset
                                         });
 
                                       } else {
-                                        if(isInternetConnected) {
+                                        if(isOnline) {
                                           saveDetails();
                                           FocusScope.of(context).unfocus();
                                         } else {

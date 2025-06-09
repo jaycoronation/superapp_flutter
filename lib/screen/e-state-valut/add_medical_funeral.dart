@@ -213,7 +213,7 @@ class _AddMedicalFuneralPageState extends BaseState<AddMedicalFuneralPage> {
                         }
                         else
                         {
-                          if (isInternetConnected) {
+                          if (isOnline) {
                             _saveDataCall(_makeJsonData());
                             FocusScope.of(context).unfocus();
                           } else {

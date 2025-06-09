@@ -18,7 +18,7 @@ import 'e_state_add_future_inflow_page.dart';
 
 class EStateFutureInflowPage extends StatefulWidget {
   final bool isFromMainList;
-  const EStateFutureInflowPage(this.isFromMainList, {Key? key}) : super(key: key);
+  const EStateFutureInflowPage(this.isFromMainList, {super.key});
 
   @override
   _EStateFutureInflowPageState createState() => _EStateFutureInflowPageState();
@@ -34,7 +34,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }else{
       noInterNet(context);
@@ -63,7 +63,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
           elevation: 0,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             : SafeArea(
@@ -263,7 +263,13 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
                       )
               ),
             )
-            : const NoInternetWidget(),
+            : NoInternetWidget(() {
+          if(isOnline) {
+            getListData();
+          }else{
+            noInterNet(context);
+          }
+            },),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
             _redirectToNextPage(context, FutureInflows(), false);
@@ -386,7 +392,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
       setState(() {
         _isLoading = true;
       });

@@ -54,7 +54,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getAspirationType();
     }else{
       noInterNet(context);
@@ -306,7 +306,7 @@ class _EStateAddFutureExpensePageState extends BaseState<EStateAddFutureExpenseP
                                               });
 
                                             } else {
-                                              if(isInternetConnected)
+                                              if(isOnline)
                                               {
                                                 saveAspirationsFutureExpense();
                                                 FocusScope.of(context).unfocus();

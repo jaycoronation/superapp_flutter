@@ -44,7 +44,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getData();
     }else{
       noInterNet(context);
@@ -195,7 +195,7 @@ class _EStateAddExistingLiabilitiesPageState extends BaseState<EStateAddExisting
                                         });
 
                                       } else {
-                                        if(isInternetConnected) {
+                                        if(isOnline) {
                                           saveDetails();
                                           FocusScope.of(context).unfocus();
                                         } else {

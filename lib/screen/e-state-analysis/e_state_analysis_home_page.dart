@@ -39,7 +39,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
     super.initState();
 
     setMenuData();
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }else{
       noInterNet(context);
@@ -78,7 +78,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
 
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
         HttpLogger(logLevel: LogLevel.BODY),

@@ -37,7 +37,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
   @override
   void initState() {
     super.initState();
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }else{
       noInterNet(context);
@@ -80,7 +80,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
           elevation: 0,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             : SafeArea(
@@ -363,7 +363,13 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
                 )
             ),
           ),)
-            : const NoInternetWidget(),
+            : NoInternetWidget(() {
+          if(isOnline) {
+            getListData();
+          }else{
+            noInterNet(context);
+          }
+            },),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
             _redirectToNextPage(context, true);
@@ -482,7 +488,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
       setState(() {
         _isLoading = true;
       });

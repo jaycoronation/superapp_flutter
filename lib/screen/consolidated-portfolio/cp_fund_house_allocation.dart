@@ -48,7 +48,7 @@ class CPFundHouseAllocationPageState extends BaseState<CPFundHouseAllocationPage
       body: _isLoading
           ? const LoadingWidget()
           : Container(
-              margin: const EdgeInsets.only(top: 8,bottom: 50),
+              margin: const EdgeInsets.only(top: 8,bottom: 12),
             child: Column(
                 children: [
                   Expanded(

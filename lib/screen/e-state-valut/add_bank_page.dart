@@ -123,7 +123,7 @@ class _AddBankPageState extends BaseState<AddBankPage> {
                         if (isValidData())
                         {
                           var data = _makeJsonData();
-                           if (isInternetConnected) {
+                           if (isOnline) {
                               _saveDataCall(data);
                             FocusScope.of(context).unfocus();
                           } else {

@@ -103,11 +103,21 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
           titleSpacing: 12,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             : _setData()
-            : const NoInternetWidget()
+            : NoInternetWidget(() {
+              if (isOnline)
+                {
+                  _getDetails(true);
+                  getAllTaskAttachment();
+                }
+              else
+                {
+                  noInterNet(context);
+                }
+            },)
       ),
       onWillPop: (){
         Navigator.pop(context,"success");
@@ -682,12 +692,15 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: listComments.length,
-        itemBuilder: (ctx, index) => (Container(
-              margin: const EdgeInsets.only(top: 4, bottom: 4),
-              child: listComments[index].employeeId.toString() == sessionManager.getUserId()
-                  ? userMsg(listComments[index])
-                  : otherUserMsg(listComments[index]),
-            )));
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(top: 4, bottom: 4),
+            child: listComments[index].employeeId.toString() == sessionManager.getUserId()
+                ? userMsg(listComments[index])
+                : otherUserMsg(listComments[index]),
+          );
+        },
+    );
   }
 
   userMsg(TaskCommentData commentItem) {
@@ -830,7 +843,7 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
   }
 
   _getDetails(bool isLoadVisible) async {
-    if (isInternetConnected) {
+    if (isOnline) {
       if (isLoadVisible) {
         setState(() {
           _isLoading = true;
@@ -939,7 +952,7 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
   }
 
   _getComments() async {
-    if (isInternetConnected) {
+    if (isOnline) {
 
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
         HttpLogger(logLevel: LogLevel.BODY),
@@ -977,7 +990,7 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
 
 
   _addComments(String msg, bool isImg, String fileExtension, String imgUrl) async {
-    if (isInternetConnected) {
+    if (isOnline) {
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
         HttpLogger(logLevel: LogLevel.BODY),
       ]);
@@ -1106,7 +1119,7 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
   }
 
   getAllTaskAttachment() async {
-    if (isInternetConnected)
+    if (isOnline)
     {
       /* updateState(() {
           _isLoadingTask = true;

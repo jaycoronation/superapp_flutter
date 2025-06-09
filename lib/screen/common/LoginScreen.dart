@@ -38,13 +38,8 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 30,
-            backgroundColor: blue,
+            backgroundColor: white,
             elevation: 0,
-            systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: blue,
-              statusBarIconBrightness: Brightness.light,
-              statusBarBrightness: Brightness.light,
-            ),
           ),
           body: _isLoading 
               ? const LoadingWidget()
@@ -164,7 +159,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
                           }else if (password.isEmpty) {
                             showSnackBar("Please enter password", context);
                           } else {
-                            if (isInternetConnected) {
+                            if (isOnline) {
                               _mintLogin();
                               // _makeLoginInRequest(userNameController.value.text.trim());
                             } else {
@@ -223,7 +218,6 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     final url = Uri.parse(MINT_URL + mintLogin);
     final response = await http.post(url,body: body,headers: headers);
     final statusCode = response.statusCode;
-    final allHeaders = response.headers.toString();
     final mbody = response.body;
     Map res = jsonDecode(mbody);
     if(statusCode == 200 && res['status'] ==0){
@@ -258,12 +252,17 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
 
     final url = Uri.parse(API_URL+login);
 
+
+    print("mintResponse === $mintResponse");
+
+    var mintDecoded = jsonDecode(mintResponse);
+
     Map<String, String> jsonBody = {
-      'username': userName,
-      'email': email,
-      'first_name': name,
+      'first_name': mintDecoded['result']['name'],
+      'email': mintDecoded['result']['email'],
+      'username': mintDecoded['result']['username'],
+      'phone_number': mintDecoded['result']['phone'],
       'pan_no': '',
-      'last_name': '',
     };
 
     /* Map<String, String> jsonBody = {
@@ -283,40 +282,39 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
         // startMintSession(mintResponse);
         sessionManager.setIsLoggedIn(true);
         await sessionManager.createLoginSession(
-            checkValidString(dataResponse.profile!.userId.toString()),
-            checkValidString(dataResponse.profile!.username.toString()),
-            checkValidString(dataResponse.profile!.email.toString()),
-            checkValidString(dataResponse.profile!.phone.toString()),
-            checkValidString(dataResponse.profile!.image.toString()),
+            dataResponse.profile?.userId ?? '',
+            userName,
+            dataResponse.profile?.email ?? '',
+            dataResponse.profile?.phone ?? '',
+            dataResponse.profile?.image ?? '',
             false);
 
         sessionManagerPMS.setIsLoggedIn(true);
         await sessionManagerPMS.createLoginSession(
-            checkValidString(dataResponse.portfolio!.userId.toString()),
-            checkValidString(dataResponse.portfolio!.firstName.toString()),
-            checkValidString(dataResponse.portfolio!.lastName.toString()),
-            checkValidString(dataResponse.portfolio!.email.toString()),
-            checkValidString(dataResponse.portfolio!.panNo.toString())
+            dataResponse.portfolio?.userId ?? '',
+            dataResponse.portfolio?.firstName ?? '',
+            dataResponse.portfolio?.lastName ?? '',
+            dataResponse.portfolio?.email ?? '',
+            dataResponse.portfolio?.panNo ?? ''
         );
 
         sessionManagerVault.setIsLoggedIn(true);
         await sessionManagerVault.createLoginSession(
-          checkValidString(dataResponse.vault!.userId.toString()),
-          checkValidString(dataResponse.vault!.username.toString()),
-          checkValidString(dataResponse.vault!.email.toString()),
-          checkValidString(dataResponse.vault!.phone.toString()),
-          checkValidString(dataResponse.vault!.image.toString()),
-          checkValidString(dataResponse.vault!.countryName.toString()),
-          checkValidString(dataResponse.vault!.countryId.toString()),
-          checkValidString(dataResponse.vault!.stateName.toString()),
-          checkValidString(dataResponse.vault!.stateId.toString()),
-          checkValidString(dataResponse.vault!.cityName.toString()),
-          checkValidString(dataResponse.vault!.cityId.toString()),
+          dataResponse.vault?.userId ?? '',
+          userName,
+          dataResponse.vault?.email ?? '',
+          dataResponse.vault?.phone ?? '',
+          dataResponse.vault?.image ?? '',
+          dataResponse.vault?.countryName ?? '',
+          dataResponse.vault?.countryId ?? '',
+          dataResponse.vault?.stateName ?? '',
+          dataResponse.vault?.stateId ?? '',
+          dataResponse.vault?.cityName ?? '',
+          dataResponse.vault?.cityId ?? '',
         );
 
         JobService().getCommonXirr();
         JobService().getNetworthData();
-
 
         openHomePage();
 

@@ -224,7 +224,7 @@ class _ContactPageState extends BaseState<ContactPage> {
                                       });
 
                                     } else {
-                                      if(isInternetConnected) {
+                                      if(isOnline) {
                                         saveDetails();
                                         FocusScope.of(context).unfocus();
                                       } else {
@@ -620,7 +620,7 @@ class _ContactPageState extends BaseState<ContactPage> {
                                           });
 
                                         } else {
-                                          if(isInternetConnected) {
+                                          if(isOnline) {
                                             saveDetails();
                                             FocusScope.of(context).unfocus();
                                           } else {

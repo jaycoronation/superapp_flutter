@@ -329,7 +329,7 @@ class _AddBusinessPageState extends BaseState<AddBusinessPage> {
                         }
                         else
                         {
-                          if (isInternetConnected) {
+                          if (isOnline) {
                             _saveDataCall(_makeJsonData());
                             FocusScope.of(context).unfocus();
                           } else {

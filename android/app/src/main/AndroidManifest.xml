@@ -7,24 +7,26 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
 
     <application
-        android:name="investwell.activity.AppApplication"
+        android:name=".DemoClass"
         android:allowBackup="false"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="AlphaCapital Super App"
+        android:label="Alpha Capital"
+        android:theme="@style/Ucrop.CropTheme"
+        android:enableOnBackInvokedCallback="true"
         android:requestLegacyExternalStorage="true"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup,android:theme">
         <activity
             android:name=".MintSDKInit"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleInstancePerTask"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             android:parentActivityName=".MainActivity" />
 
         <activity
@@ -33,7 +35,7 @@
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             android:windowSoftInputMode="adjustResize">
 
             <!--
@@ -48,7 +50,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

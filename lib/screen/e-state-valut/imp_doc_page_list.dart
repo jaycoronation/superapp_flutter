@@ -67,9 +67,11 @@ class _ImpDocPageListState extends BaseState<ImpDocPageList> {
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: Stack(
                             children: [
-                              listData.isNotEmpty ? Container(
-                                child: _itemList(),
-                              ) : const MyNoDataWidget(msg: "No data found."),
+                              listData.isNotEmpty
+                                  ? Container(
+                                    child: _itemList(),
+                                  )
+                                  : const MyNoDataWidget(msg: "No data found."),
                               Positioned(
                                   bottom: 40,
                                   right: 10,

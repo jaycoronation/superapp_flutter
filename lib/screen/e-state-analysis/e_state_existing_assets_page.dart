@@ -35,7 +35,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }else{
       noInterNet(context);
@@ -60,7 +60,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
           elevation: 0,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             : SafeArea(
@@ -355,7 +355,13 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
                       )
               ),
             )
-            : const NoInternetWidget(),
+            : NoInternetWidget(() {
+          if(isOnline) {
+            getListData();
+          }else{
+            noInterNet(context);
+          }
+            },),
         floatingActionButton: //listData.isNotEmpty ?
         FloatingActionButton(
           onPressed: (){
@@ -481,7 +487,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
       setState(() {
         _isLoading = true;
       });

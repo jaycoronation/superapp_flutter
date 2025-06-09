@@ -110,7 +110,7 @@ class _AddCharityRelatedPageState extends BaseState<AddCharityRelatedPage> {
                         if (isValidData())
                         {
                           var data = _makeJsonData();
-                           if (isInternetConnected) {
+                           if (isOnline) {
                               _saveDataCall(data);
                             FocusScope.of(context).unfocus();
                           } else {

@@ -13,14 +13,13 @@ import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/CommanResponse.dart';
 import '../../utils/base_class.dart';
-import '../../utils/responsive.dart';
 import '../../utils/session_manager_methods.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
 import '../e-state-analysis/e_state_analysis_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
+import 'LoginScreen.dart';
 import 'blogs_page.dart';
 import 'contact_page.dart';
-import 'login_screen.dart';
 import 'meeting_page.dart';
 
 class HomePageForWeb extends StatefulWidget {
@@ -513,7 +512,7 @@ class _HomePageForWebState extends BaseState<HomePageForWeb> {
                                 Navigator.pop(context);
                                 SessionManagerMethods.clear();
                                 Navigator.pushAndRemoveUntil(
-                                    context, MaterialPageRoute(builder: (context) => const LoginScreen()), (Route<dynamic> route) => false);
+                                    context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
                               },
                               child: const Text("Yes", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: white)),
                             ),

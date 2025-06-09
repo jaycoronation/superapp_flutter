@@ -271,7 +271,7 @@ class _EStateAddFutureInflowPageState extends BaseState<EStateAddFutureInflowPag
                                         });
 
                                       } else {
-                                        if(isInternetConnected)
+                                        if(isOnline)
                                         {
                                           saveDetails();
                                           FocusScope.of(context).unfocus();

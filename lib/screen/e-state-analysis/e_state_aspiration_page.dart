@@ -33,7 +33,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }
     else
@@ -60,7 +60,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
         elevation: 0,
         backgroundColor: white,
       ),
-      body: isInternetConnected
+      body: isOnline
           ? _isLoading
           ? const LoadingWidget()
           : SafeArea(
@@ -259,7 +259,15 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
               ),
             )
         ),)
-          : const NoInternetWidget(),
+          : NoInternetWidget(() {
+        if(isOnline) {
+          getListData();
+        }
+        else
+        {
+          noInterNet(context);
+        }
+          },),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           _redirectToNextPage(context, ListData(), false);
@@ -387,7 +395,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
       setState(() {
         _isLoading = true;
       });

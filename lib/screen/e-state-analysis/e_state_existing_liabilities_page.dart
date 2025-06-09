@@ -18,7 +18,7 @@ import '../../widget/no_internet.dart';
 import 'e_state_add_existing_liabilities_page.dart';
 
 class EStateExistingLiabilitiesPage extends StatefulWidget {
-  const EStateExistingLiabilitiesPage({Key? key}) : super(key: key);
+  const EStateExistingLiabilitiesPage({super.key});
 
   @override
   _EStateExistingLiabilitiesPageState createState() => _EStateExistingLiabilitiesPageState();
@@ -33,7 +33,7 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
   void initState() {
     super.initState();
 
-    if(isInternetConnected) {
+    if(isOnline) {
       getListData();
     }else{
       noInterNet(context);
@@ -58,7 +58,7 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
           elevation: 0,
           backgroundColor: white,
         ),
-        body: isInternetConnected
+        body: isOnline
             ? _isLoading
             ? const LoadingWidget()
             : SafeArea(
@@ -205,7 +205,13 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
                 ),
               )
           ),)
-            : const NoInternetWidget(),
+            : NoInternetWidget(() {
+          if(isOnline) {
+            getListData();
+          }else{
+            noInterNet(context);
+          }
+            },),
         floatingActionButton: //listData.isNotEmpty ?
         FloatingActionButton(
           onPressed: (){
@@ -333,7 +339,7 @@ class _EStateExistingLiabilitiesPageState extends BaseState<EStateExistingLiabil
 
   //API call func..
   void getListData() async {
-    if(isInternetConnected) {
+    if(isOnline) {
       setState(() {
         _isLoading = true;
       });

@@ -126,7 +126,7 @@ class _AddIntellectualPropertyPageState extends BaseState<AddIntellectualPropert
                         if (isValidData())
                         {
                           var data = _makeJsonData();
-                           if (isInternetConnected) {
+                           if (isOnline) {
                               _saveDataCall(data);
                             FocusScope.of(context).unfocus();
                           } else {

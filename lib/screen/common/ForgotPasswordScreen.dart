@@ -87,28 +87,19 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
                   ),
 
                   Container(height: 30,),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: getCommonButton("Submit",_isLoading,() {
+                      FocusScope.of(context).unfocus();
                       if (userNameController.value.text.isEmpty)
-                        {
-                          showSnackBar("Please enter username", context);
-                        }
+                      {
+                        showSnackBar("Please enter username", context);
+                      }
                       else
-                        {
-                          _mintForgotPassword();
-                        }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: blue
-                      ),
-                      child: const Text("Submit", style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: white),),
-                    ),
+                      {
+                        _mintForgotPassword();
+                      }
+                    },),
                   )
                 ],
               ),
@@ -129,9 +120,7 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
 
   _mintForgotPassword()async {
     setState(() {
-      if(!_isLoading){
-        _isLoading = true;
-      }
+      _isLoading = true;
     });
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
@@ -166,9 +155,7 @@ class _ForgotPasswordScreenState extends BaseState<ForgotPasswordScreen> {
       showSnackBar("${res['message']}", context);
     }
     setState(() {
-      if(!_isLoading){
-        _isLoading = false;
-      }
+      _isLoading = false;
     });
   }
 

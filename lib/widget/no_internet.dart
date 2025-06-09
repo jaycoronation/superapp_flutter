@@ -4,8 +4,8 @@ import 'package:gap/gap.dart';
 import '../constant/colors.dart';
 
 class NoInternetWidget extends StatelessWidget {
-
-  const NoInternetWidget({Key? key}) : super(key: key);
+  final void Function() onPress;
+  const NoInternetWidget(this.onPress,{super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +51,7 @@ class NoInternetWidget extends StatelessWidget {
                   enableFeedback: true,
                   alignment: Alignment.center,
                 ),
-                onPressed: () {
-                  // tabNavigationReload();
-                },
+                onPressed: onPress,
                 child: const Text("Try Again", textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: white, fontWeight: FontWeight.w600)),
               ),
             ),

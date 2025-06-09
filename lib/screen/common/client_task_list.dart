@@ -186,7 +186,7 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
 
   //API Call Func...
   _getList() async {
-    if (isInternetConnected) {
+    if (isOnline) {
 
       setState(() {
         isLoading = true;

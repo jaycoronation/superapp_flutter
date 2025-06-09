@@ -334,7 +334,7 @@ class _AddDependentChildrenPageState extends BaseState<AddDependentChildrenPage>
                         }
                         else
                         {
-                          if (isInternetConnected) {
+                          if (isOnline) {
                             _saveDataCall(_makeJsonData());
                             FocusScope.of(context).unfocus();
                           } else {
