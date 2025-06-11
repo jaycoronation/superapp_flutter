@@ -88,7 +88,15 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
             visible: kIsWeb == false,
             child: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                if(sessionManager.getUserType() == "client")
+                {
+                  Navigator.pop(context);
+                }
+                else
+                {
+                  sessionManagerPMS.createLoginSession('', '', '', '', '');
+                  Navigator.pop(context);
+                }
               },
               child:  getBackArrow(),
             ),

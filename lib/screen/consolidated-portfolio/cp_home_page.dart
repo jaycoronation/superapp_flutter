@@ -90,7 +90,16 @@ class CPHomePageState extends BaseState<CPHomePage> {
                 onTap: () {
                   if (_currentIndex == 0)
                     {
-                      Navigator.pop(context);
+
+                      if(sessionManager.getUserType() == "client")
+                      {
+                        Navigator.pop(context);
+                      }
+                      else
+                      {
+                        sessionManagerPMS.createLoginSession('', '', '', '', '');
+                        Navigator.pop(context);
+                      }
                     }
                   else
                     {

@@ -32,3 +32,5 @@ const String MINT_URL ="https://alphacapital.investwell.app/";
 
 String mintLogin = "api/auth/login";
 String forgotPassword = "api/auth/sendPasswordResetMail";
+
+String userListAPI = "user/list";

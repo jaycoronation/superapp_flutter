@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:superapp_flutter/constant/global_context.dart';
 import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
+import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
@@ -51,10 +52,12 @@ class _HomePageState extends BaseState<HomePage> {
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
   num isDisableConsolidatedPortfolio = 0;
+  String userType = "";
 
   @override
   void initState() {
     super.initState();
+    userType = sessionManager.getUserType();
     getDeviceData();
     getDeviceToken();
     print(
@@ -634,13 +637,25 @@ class _HomePageState extends BaseState<HomePage> {
                           width: 40, height: 40),
                     ),
                   ),
-                  Expanded(
-                      child: Text(
-                    "Hi ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                  )),
+
+                  Visibility(
+                    visible: sessionManager.getUserType() == "client",
+                    replacement: Expanded(
+                        child: Text(
+                          "Hi ${toDisplayCase(sessionManager.getRMIDName())}",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                        )),
+                    child: Expanded(
+                        child: Text(
+                          "Hi ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                        )),
+                  ),
+
                   GestureDetector(
                     onTap: () {
                       logoutFromApp();
@@ -729,15 +744,33 @@ class _HomePageState extends BaseState<HomePage> {
 
                     final result = await _checkNativeLibrary();
                     if (!result) {
-                      // call SSOToken API
-                      if (sessionManagerVault.getUserName().isNotEmpty)
+
+                      if(sessionManager.getUserType() == "client")
+                      {
+                        // call SSOToken API
+                        if (sessionManagerVault.getUserName().isNotEmpty)
                         {
                           generateAuth("");
                         }
-                      else
+                        else
                         {
                           showSnackBar("User name not found", context);
                         }
+                      }
+                      else
+                      {
+                        // call SSOToken API
+                        if (sessionManager.getRMIUserName().isNotEmpty)
+                        {
+                          generateAuth("");
+                        }
+                        else
+                        {
+                          showSnackBar("User name not found", context);
+                        }
+                      }
+
+
                     }
                   },
                   child: Container(
@@ -772,10 +805,18 @@ class _HomePageState extends BaseState<HomePage> {
                   child: Expanded(
                       child: InkWell(
                     onTap: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CPHomePage()));
+
+                      if(userType == "client")
+                      {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const CPHomePage()));
+                      }
+                      else
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
+                      }
                     },
                     child: Container(
                       padding: const EdgeInsets.only(
@@ -813,12 +854,21 @@ class _HomePageState extends BaseState<HomePage> {
                 Expanded(
                     child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const EStateAnalysisHomePage()),
-                    );
-                    lastInsertedModule("login-estate-analysis");
+
+                    if(userType == "client")
+                    {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EStateAnalysisHomePage()),
+                      );
+                      lastInsertedModule("login-estate-analysis");
+                    }
+                    else
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+                    }
+
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
@@ -849,12 +899,21 @@ class _HomePageState extends BaseState<HomePage> {
                 Expanded(
                     child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const EStateVaultHomePage()),
-                    );
-                    lastInsertedModule("login-estate-vault");
+
+                    if(sessionManager.getUserType() == "client")
+                    {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EStateVaultHomePage()),
+                      );
+                      lastInsertedModule("login-estate-vault");
+                    }
+                    else
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
+                    }
+
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
@@ -1131,7 +1190,7 @@ class _HomePageState extends BaseState<HomePage> {
           final String token = result['token'];
           print('Success: ${jsonResponse.toString()}');
           // Call another function with token
-          getAuthenticationKey(token, "broker");
+          getAuthenticationKey(token, sessionManager.getUserType() == "client" ? "client"  : "broker");
         } else {
           print('Error: ${jsonResponse.toString()}');
           showSnackBar("Error: ${jsonResponse['message']}", context);
@@ -1155,7 +1214,9 @@ class _HomePageState extends BaseState<HomePage> {
     Map<String, String> params = {
       "token": token,
       "username":
-          type.isEmpty ? "alphacapital" : sessionManagerVault.getUserName()
+          type.isEmpty
+              ? "alphacapital"
+              :type == "client" ? sessionManagerVault.getUserName() : sessionManager.getRMIUserName()
     };
 
     return params;
@@ -1292,7 +1353,7 @@ class _HomePageState extends BaseState<HomePage> {
       ]);
 
       Map<String, String> jsonBody = {
-        'user_id': sessionManagerPMS.getUserId(),
+        'user_id': sessionManager.getUserType() == "client" ? sessionManagerPMS.getUserId() : sessionManager.getRMIDAdminId(),
         'device_type': Platform.isAndroid ? 'android' : "IOS",
         'device_token': sessionManager.getDeviceToken(),
         'device_name': deviceName,

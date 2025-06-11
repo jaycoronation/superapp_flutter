@@ -49,3 +49,5 @@ String deviceTokenUpdateUrl = 'update_device_token';
 
 String appVersionUrl = 'get_app_version';
 
+String getPortfolioRMID = "getPortfolioRMID";
+

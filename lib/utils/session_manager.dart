@@ -11,6 +11,10 @@ class SessionManager {
   final String phone = "phone";
   final String image = "image";
   final String isSocial = "isSocial";
+  final String userType = "userType";
+  final String rmidAdminId = "rmidAdminId";
+  final String rmUserName = "rmUserName";
+  final String rmName = "rmName";
 
   //set data into shared preferences...
   Future createLoginSession(String userIdApi,String fullNameApi ,String emailApi,
@@ -34,7 +38,6 @@ class SessionManager {
     await SessionManagerMethods.setBool(isLoggedIn, isLogin);
   }
 
-
   String getUserId() {
     return checkValidString(SessionManagerMethods.getString(userId));
   }
@@ -52,7 +55,6 @@ class SessionManager {
   async {
     await SessionManagerMethods.setString(fullName, data);
   }
-  
 
   String getEmail() {
     return checkValidString(SessionManagerMethods.getString(email));
@@ -97,6 +99,42 @@ class SessionManager {
   Future<void> setDeviceToken(String apiDeviceToken)
   async {
     await SessionManagerMethods.setString(deviceToken, apiDeviceToken);
+  }
+
+  String getUserType() {
+    return checkValidString(SessionManagerMethods.getString(userType));
+  }
+
+  Future<void> setUserType(String data)
+  async {
+    await SessionManagerMethods.setString(userType, data);
+  }
+
+  String getRMIDAdminId() {
+    return checkValidString(SessionManagerMethods.getString(rmidAdminId));
+  }
+
+  Future<void> setRMIDAdminId(String data)
+  async {
+    await SessionManagerMethods.setString(rmidAdminId, data);
+  }
+
+  String getRMIUserName() {
+    return checkValidString(SessionManagerMethods.getString(rmUserName));
+  }
+
+  Future<void> setRMIUserName(String data)
+  async {
+    await SessionManagerMethods.setString(rmUserName, data);
+  }
+
+  String getRMIDName() {
+    return checkValidString(SessionManagerMethods.getString(rmName));
+  }
+
+  Future<void> setRMIDName(String data)
+  async {
+    await SessionManagerMethods.setString(rmName, data);
   }
 
   checkValidString (String? value) {

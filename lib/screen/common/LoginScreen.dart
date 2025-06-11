@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
+import 'package:superapp_flutter/model/PortfolioRMIDResponseModel.dart';
 import 'package:superapp_flutter/widget/loading.dart';
 
 import '../../constant/api_end_point.dart';
@@ -229,13 +231,85 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       var mintResponse = mbody;
       // startMintSession(mbody);
       // startMintFirstHeaders(allHeaders);
-      _makeLoginInRequest(res['result']['username'],res['result']['name'],res['result']['email'],mintResponse);
+
+      sessionManager.setUserType(res['result']['userType']);
+      print("Display user type : ${sessionManager.getUserType()}");
+
+      if(sessionManager.getUserType() == "client")
+      {
+        _makeLoginInRequest(res['result']['username'],res['result']['name'],res['result']['email'],mintResponse);
+      }
+      else
+      {
+        sessionManager.setRMIUserName(res['result']['username']);
+        sessionManager.setRMIDName(res['result']['name']);
+        _makeLoginRequestRMID(res['result']['email']);
+      }
+
     }else{
       showSnackBar("${res['message']}", context);
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  _makeLoginRequestRMID(String email) async
+  {
+    setState(() {
+      if(!_isLoading){
+        _isLoading = true;
+      }else{
+        _isLoading = true;
+      }
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP+getPortfolioRMID);
+
+    Map<String, String> jsonBody = {
+      'email': email
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = PortfolioRMIDResponseModel.fromJson(user);
+
+    if(statusCode == 200 && dataResponse.success == 1)
+    {
+      try
+      {
+        sessionManager.setIsLoggedIn(true);
+        sessionManager.setRMIDAdminId(dataResponse.adminId ?? "");
+        openHomePage();
+      }
+      catch(error)
+      {
+        print("login error : $error");
+      }
+      setState(() {
+        if(_isLoading)
+        {
+          _isLoading = false;
+        }
+      });
+    }
+    else
+    {
+      setState(() {
+        if(_isLoading){
+          _isLoading = false;
+        }else{
+          _isLoading = false;
+        }
+      });
+      showSnackBar(dataResponse.message, context);
+    }
+
   }
 
   _makeLoginInRequest(String userName,String name,String email, String mintResponse) async {
@@ -251,7 +325,6 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     ]);
 
     final url = Uri.parse(API_URL+login);
-
 
     print("mintResponse === $mintResponse");
 
