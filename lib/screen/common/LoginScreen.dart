@@ -13,6 +13,7 @@ import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/LoginResponseModel.dart';
 import '../../service/JobService.dart';
+import '../../utils/AuthService.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import 'ForgotPasswordScreen.dart';
@@ -243,6 +244,10 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       {
         sessionManager.setRMIUserName(res['result']['username']);
         sessionManager.setRMIDName(res['result']['name']);
+
+        print("Display user name : ${sessionManager.getRMIUserName()}");
+        print("Display name : ${sessionManager.getRMIDName()}");
+
         _makeLoginRequestRMID(res['result']['email']);
       }
 
@@ -285,7 +290,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       {
         sessionManager.setIsLoggedIn(true);
         sessionManager.setRMIDAdminId(dataResponse.adminId ?? "");
-        openHomePage();
+        getAuthCheck();
       }
       catch(error)
       {
@@ -389,7 +394,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
         JobService().getCommonXirr();
         JobService().getNetworthData();
 
-        openHomePage();
+        getAuthCheck();
 
       } catch (e) {
         print(e);
@@ -493,6 +498,24 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       showSnackBar(dataResponse.message, context);
     }
   }*/
+
+  Future<void> getAuthCheck() async {
+    bool isAuthenticated = await AuthService.authenticateUser();
+    print("Display is authenticated : $isAuthenticated");
+    if (isAuthenticated)
+    {
+      openHomePage();
+    }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Authentication failed.'),
+        ),
+      );
+    }
+
+  }
 
   void openHomePage() {
     if(kIsWeb)

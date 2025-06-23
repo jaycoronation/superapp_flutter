@@ -27,6 +27,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'constant/colors.dart';
 import 'firebase_options.dart';
 import 'model/GetAppVersionRepsponseModel.dart';
+import 'utils/AuthService.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -176,10 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // doSomeAsyncStuff();
-    // getAppVersion();
     getVersionFromLocal();
-
     initConnectivity();
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
@@ -304,20 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
       isLoggedIn = sessionManager.checkIsLoggedIn() ?? false;
       if(isLoggedIn)
       {
-        JobService().getCommonXirr();
-
-        String dateTimeString = sessionManagerPMS.getLastSyncDate();
-        DateTime parsedDateTime = dateTimeString.isNotEmpty ? DateTime.parse(dateTimeString) : DateTime.now().subtract(Duration(hours: 3));
-
-        print("dateTimeString ==== $dateTimeString");
-        print("isTwoHoursPassed ==== ${isTwoHoursPassed(parsedDateTime)}");
-        if (isTwoHoursPassed(parsedDateTime))
-        {
-          JobService().getLatestDataFromMint();
-        }
-
-        Timer(const Duration(milliseconds:1),
-                () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false));
+        getAuthCheck();
       }
       else
       {
@@ -406,5 +391,39 @@ class _MyHomePageState extends State<MyHomePage> {
       return false;
     }
     return isConnected;
+  }
+
+  Future<void> getAuthCheck() async {
+    bool isAuthenticated = await AuthService.authenticateUser();
+    print("Display is authenticated : $isAuthenticated");
+    if (isAuthenticated)
+    {
+      if (sessionManager.getUserType() == "client")
+      {
+        JobService().getCommonXirr();
+      }
+
+      String dateTimeString = sessionManagerPMS.getLastSyncDate();
+      DateTime parsedDateTime = dateTimeString.isNotEmpty ? DateTime.parse(dateTimeString) : DateTime.now().subtract(Duration(hours: 3));
+
+      print("dateTimeString ==== $dateTimeString");
+      print("isTwoHoursPassed ==== ${isTwoHoursPassed(parsedDateTime)}");
+      if (isTwoHoursPassed(parsedDateTime) && sessionManager.getUserType() == "client")
+      {
+        JobService().getLatestDataFromMint();
+      }
+
+      Timer(const Duration(milliseconds:1),
+              () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomePage()), (Route<dynamic> route) => false));
+    }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Authentication failed.'),
+        ),
+      );
+    }
+
   }
 }

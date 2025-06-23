@@ -75,7 +75,7 @@ dependencies:
   permission_handler: ^11.3.1
   open_file: ^3.3.2
   device_info_plus: ^11.3.3
-
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1

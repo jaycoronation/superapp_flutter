@@ -10,6 +10,7 @@ const String GET_ALL_TASK_ATTACHMENT = '${BASE_URL}Task/GetAllTaskAttachemntByTa
 const String SaveTaskAttachment = '${BASE_URL}Task/SaveTaskAttachment';
 const String TASK_DETAILS = "${BASE_URL}Task/GetTaskDetailById";
 const String TASK_MESSAGE = "${BASE_URL}Task/GetAllTaskMessageByTaskId";
+
 const String TASK_MESSAGE_SAVE = "${BASE_URL}Task/SaveTaskMessageByClient";
 String authHeader = "Basic QWxwaGFjYXBpdGFsOkFwcC00U1RTQTY0TzYyV1FXWlIwUVNJSw==";
 
@@ -20,13 +21,13 @@ String additionalLinks = "additionallinks";
 String contactSave = "inquiries/save";
 String add = "last_used_module/add";
 
-// Documents API //
+// ============ Documents API ============ //
 
 String documentLists = '${API_URL}manage_documents/list';
 String summaryLists = 'https://demo1.coronation.in/AlphacapitalReportApp/api/Client/GetAllSummaryByClient';
 String RecommendationLists = 'https://demo1.coronation.in/AlphacapitalReportApp/api/Client/GetAllRecommendationByClient';
 
-// ========== MINT URLS ============
+// ========== MINT URLS ============ //
 
 const String MINT_URL ="https://alphacapital.investwell.app/";
 

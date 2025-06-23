@@ -50,7 +50,6 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
   @override
   void initState() {
     isFor = (widget as RMIDUserSelectScreen).isFor;
-    print("Display is for type : $isFor");
     getUserList(true);
     _scrollViewController = ScrollController();
     _scrollViewController.addListener(() {
@@ -478,17 +477,53 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
       });
 
       try {
-        sessionManagerPMS.setIsLoggedIn(true);
-        await sessionManagerPMS.createLoginSession(
-            dataResponse.portfolio?.userId ?? '',
-            dataResponse.portfolio?.firstName ?? '',
-            dataResponse.portfolio?.lastName ?? '',
-            dataResponse.portfolio?.email ?? '',
-            dataResponse.portfolio?.panNo ?? ''
-        );
 
-        JobService().getCommonXirr();
-        JobService().getNetworthData();
+        //Consolidated Portfolio
+        if(isFor == "CP")
+        {
+          sessionManagerPMS.setIsLoggedIn(true);
+          await sessionManagerPMS.createLoginSession(
+              dataResponse.portfolio?.userId ?? '',
+              dataResponse.portfolio?.firstName ?? '',
+              dataResponse.portfolio?.lastName ?? '',
+              dataResponse.portfolio?.email ?? '',
+              dataResponse.portfolio?.panNo ?? ''
+          );
+
+          JobService().getListApplicants();
+          JobService().getCommonXirr();
+          JobService().getNetworthData();
+        }
+        //Financial Planning
+        else if(isFor == "FP")
+        {
+          sessionManager.setIsLoggedIn(true);
+          await sessionManager.createLoginSession(
+              dataResponse.profile?.userId ?? '',
+              dataResponse.profile?.username ?? '',
+              dataResponse.profile?.email ?? '',
+              dataResponse.profile?.phone ?? '',
+              dataResponse.profile?.image ?? '',
+              false);
+        }
+        //Estate Vault
+        else if(isFor == "EV")
+        {
+          sessionManagerVault.setIsLoggedIn(true);
+          await sessionManagerVault.createLoginSession(
+            dataResponse.vault?.userId ?? '',
+            dataResponse.vault?.username ?? '',
+            dataResponse.vault?.email ?? '',
+            dataResponse.vault?.phone ?? '',
+            dataResponse.vault?.image ?? '',
+            dataResponse.vault?.countryName ?? '',
+            dataResponse.vault?.countryId ?? '',
+            dataResponse.vault?.stateName ?? '',
+            dataResponse.vault?.stateId ?? '',
+            dataResponse.vault?.cityName ?? '',
+            dataResponse.vault?.cityId ?? '',
+          );
+        }
 
         openPage();
 
@@ -525,7 +560,6 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
     {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()),);
     }
-    else{}
 
   }
 

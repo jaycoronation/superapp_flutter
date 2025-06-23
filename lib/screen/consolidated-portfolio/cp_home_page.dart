@@ -41,26 +41,32 @@ class CPHomePageState extends BaseState<CPHomePage> {
   late TabController tabController;
   bool isLoading = false;
 
-
   @override
   void initState() {
     super.initState();
+
     _currentIndex = 0;
+
     _pages = [
       const CPDashboardPage(),
       const CPNetworthPage(),
       const CPPortfolioPage()
     ];
-    itemsList.add(BottomNavigationBarItem(
-      icon: Image.asset("assets/images/ic_home_disable.png", width: 24, height: 24),
-      activeIcon: Image.asset("assets/images/ic_home_selected.png", width: 24, height: 24),
-      label: 'Dashboard',
-    ));
+
+    itemsList.add(
+        BottomNavigationBarItem(
+          icon: Image.asset("assets/images/ic_home_disable.png", width: 24, height: 24),
+          activeIcon: Image.asset("assets/images/ic_home_selected.png", width: 24, height: 24),
+          label: 'Dashboard',
+        )
+    );
+
     itemsList.add(BottomNavigationBarItem(
       icon: Image.asset("assets/images/ic_networth_disable.png", width: 24, height: 24),
       activeIcon: Image.asset("assets/images/ic_networth_selected.png", width: 24, height: 24),
       label: 'Networth',
     ));
+
     itemsList.add(BottomNavigationBarItem(
       icon: Image.asset("assets/images/ic_portfolio_disable.png", width: 24, height: 24),
       activeIcon: Image.asset("assets/images/ic_portfolio_selected.png", width: 24, height: 24),
@@ -119,7 +125,6 @@ class CPHomePageState extends BaseState<CPHomePage> {
                   ? "Networth"
                   : "Portfolio",
             ),
-
             actions: [
               GestureDetector(
                 onTap: () {

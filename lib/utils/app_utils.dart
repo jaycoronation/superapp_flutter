@@ -342,6 +342,7 @@ toDisplayCase (String str) {
   } catch (e) {
     if (kDebugMode) {
       print(e);
+      return str;
     }
   }
 }

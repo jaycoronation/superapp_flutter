@@ -17,7 +17,7 @@ import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
 
 class CPPortfolioPage extends StatefulWidget {
-  const CPPortfolioPage({Key? key}) : super(key: key);
+  const CPPortfolioPage({super.key});
 
   @override
   BaseState<CPPortfolioPage> createState() => CPPortfolioPageState();
@@ -33,21 +33,18 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   @override
   void initState() {
     super.initState();
-    //selectedApplicant = context.watch<UpdateData>().selectedApplicant.toString();
 
     if ((sessionManagerPMS.getApplicantsList() != null))
     {
-      if (sessionManagerPMS.getApplicantsList().isNotEmpty ?? false)
+      if (sessionManagerPMS.getApplicantsList().isNotEmpty)
       {
         listApplicants = [];
-        listApplicants.addAll(sessionManagerPMS.getApplicantsList() ?? []);
+        listApplicants.addAll(sessionManagerPMS.getApplicantsList());
 
         if (listApplicants.isNotEmpty)
-        {
-          selectedApplicant = listApplicants[0].applicant ?? '';
-        }
-
-        print((listApplicants.length));
+          {
+            selectedApplicant = listApplicants[0].applicant ?? '';
+          }
       }
       else
       {
@@ -58,8 +55,6 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     {
       listApplicants = [];
     }
-
-
     _getPortfolioDataNew();
   }
 
@@ -67,25 +62,6 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0XffEDEDEE),
-      /*appBar: AppBar(
-        toolbarHeight: 60,
-        automaticallyImplyLeading: false,
-        backgroundColor: appBg,
-        elevation: 0,
-        leading: Visibility(
-          visible: kIsWeb == false,
-          child: GestureDetector(
-            onTap: () {
-              final BottomNavigationBar bar = bottomWidgetKey.currentWidget as BottomNavigationBar;
-              bar.onTap!(0);
-            },
-            child: getBackArrow(),
-          ),
-        ),
-        centerTitle: true,
-        titleSpacing: 0,
-        title: getTitle("Portfolio",),
-      ),*/
       body: _isLoading
           ? const LoadingWidget()
           : Container(
@@ -368,58 +344,65 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         primary: false,
         padding: EdgeInsets.zero,
         itemCount: schemes.length,
-        itemBuilder: (ctx, index) => (Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    color: index % 2 == 0 ? white : semiBlue,
-                    borderRadius: const BorderRadius.all(Radius.zero)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text(toDisplayCase(schemes[index].schemeName.toString()),
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700))),
-                        Expanded(
-                            flex: 1,
-                            child: Text(convertCommaSeparatedAmount(schemes[index].initialValue.toString()),textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: schemes[index].schemeName.toString().toLowerCase() == "sub total" ? FontWeight.w700 : schemes[index].schemeName.toString().toLowerCase() == "total" ?  FontWeight.w700 : FontWeight.w200))),
-                        Expanded(
-                            flex: 1,
-                            child: Text(convertCommaSeparatedAmount(schemes[index].currentValue.toString()),textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: schemes[index].schemeName.toString().toLowerCase() == "sub total" ? FontWeight.w700 : schemes[index].schemeName.toString().toLowerCase() == "total" ?  FontWeight.w700 : FontWeight.w200))),
-                        Expanded(
-                            flex: 1,
-                            child: Text(schemes[index].schemeName.toString().toLowerCase() == "sub total" ? convertCommaSeparatedAmount(schemes[index].gain.toString()) : convertCommaSeparatedAmount(schemes[index].gain.toString()) + "\n" + schemes[index].cagr,textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: schemes[index].schemeName.toString().toLowerCase() == "sub total" ? FontWeight.w700 : schemes[index].schemeName.toString().toLowerCase() == "total" ?  FontWeight.w700 : FontWeight.w200))),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        )));
+        itemBuilder: (context, index) {
+          return Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      color: index % 2 == 0 ? white : semiBlue,
+                      borderRadius: const BorderRadius.all(Radius.zero)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                  toDisplayCase(schemes[index].schemeName ?? ''),
+                                  style: const TextStyle(
+                                      color: black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700
+                                  )
+                              )
+                          ),
+                          Expanded(
+                              flex: 1,
+                              child: Text(convertCommaSeparatedAmount(schemes[index].initialValue.toString()),textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: black,
+                                      fontSize: 12,
+                                      fontWeight: schemes[index].schemeName.toString().toLowerCase() == "sub total" ? FontWeight.w700 : schemes[index].schemeName.toString().toLowerCase() == "total" ?  FontWeight.w700 : FontWeight.w200))),
+                          Expanded(
+                              flex: 1,
+                              child: Text(convertCommaSeparatedAmount(schemes[index].currentValue.toString()),textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: black,
+                                      fontSize: 12,
+                                      fontWeight: schemes[index].schemeName.toString().toLowerCase() == "sub total" ? FontWeight.w700 : schemes[index].schemeName.toString().toLowerCase() == "total" ?  FontWeight.w700 : FontWeight.w200))),
+                          Expanded(
+                              flex: 1,
+                              child: Text(schemes[index].schemeName.toString().toLowerCase() == "sub total" ? convertCommaSeparatedAmount(schemes[index].gain.toString()) : convertCommaSeparatedAmount(schemes[index].gain.toString()) + "\n" + schemes[index].cagr,textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: black,
+                                      fontSize: 12,
+                                      fontWeight: schemes[index].schemeName.toString().toLowerCase() == "sub total" ? FontWeight.w700 : schemes[index].schemeName.toString().toLowerCase() == "total" ?  FontWeight.w700 : FontWeight.w200))),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+    );
   }
 
   void openApplicantSelection() {
@@ -459,16 +442,9 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
                                 listData = [];
 
-                                print(selectedApplicant);
-
-
                                 final result = userData['result'];
                                 final parsedJson = result['portfolio'];
                                 parsedJson.forEach((value){
-                                  print(value);
-                                  print(selectedApplicant);
-
-
                                   Map<String,dynamic> valueData = value;
 
                                   valueData.forEach((key, value) {
@@ -496,7 +472,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                                   child: Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
                                 ),
                                 const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
@@ -574,22 +550,20 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
     final response = await http.post(url, body: jsonBody);
 
+    print("USER DATA Body == ${jsonEncode(jsonBody)}");
     print("USER DATA response == $response");
 
     final statusCode = response.statusCode;
     final body = response.body;
     userData = jsonDecode(body);
 
-    print("USER DATA FIled == $userData");
-
     if (statusCode == 200 && userData['success'] == 1)
     {
       final result = userData['result'];
       final parsedJson = result['portfolio'];
+
       parsedJson.forEach((value){
-
         Map<String,dynamic> valueData = value;
-
         valueData.forEach((key, value) {
           if(key == (selectedApplicant))
           {

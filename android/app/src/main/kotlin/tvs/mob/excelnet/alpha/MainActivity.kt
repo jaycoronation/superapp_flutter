@@ -12,9 +12,10 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import org.json.JSONException
 import org.json.JSONObject
+import io.flutter.embedding.android.FlutterFragmentActivity
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "mint-android-app"
     private var msession: AppSession?= null
     companion object{
