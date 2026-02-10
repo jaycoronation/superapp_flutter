@@ -27,7 +27,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
   List<SipStpDetails> listData = [];
   List<SipStpDetails> listDataMainHoldingData = [];
 
-  List<ApplicantsOnly> listApplicants = [];
+  List<String> listApplicants = [];
   String selectedApplicant = "";
 
   @override
@@ -44,7 +44,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
 
         if (listApplicants.isNotEmpty)
         {
-          selectedApplicant = listApplicants[0].applicant ?? '';
+          selectedApplicant = listApplicants[0] ?? '';
         }
 
         print((listApplicants.length));
@@ -410,7 +410,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                             onTap: () {
                               Navigator.pop(context);
                               setState(() {
-                                selectedApplicant = listApplicants[index].applicant ?? '';
+                                selectedApplicant = listApplicants[index] ?? '';
 
                                 listData = [];
 
@@ -445,7 +445,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
+                                  child: Text(listApplicants[index] ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
                                 ),
                                 const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
                               ],

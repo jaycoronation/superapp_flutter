@@ -38,6 +38,9 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven {
+            url "$rootDir/../.android/Flutter/local_maven"
+        }
     }
 }
 

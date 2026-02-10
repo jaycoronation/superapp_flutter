@@ -64,6 +64,8 @@ class _HomePageState extends BaseState<HomePage> {
         getDeviceToken();
       }
     print("<><> SESS :: ${sessionManager.getUserId()} <><> ${sessionManagerPMS.getUserId()} <><> ${sessionManagerVault.getUserId()}");
+    print("<><> SESS :: ${sessionManagerPMS.getFirstName()} <><> ${sessionManagerPMS.getLastName()}");
+    print("<><> userType :: ${userType}");
   }
 
   @override
@@ -926,10 +928,7 @@ class _HomePageState extends BaseState<HomePage> {
                                   ),
                                   backgroundColor: WidgetStateProperty.all<Color>(blue)),
                               onPressed: () {
-                                Navigator.pop(context);
-                                SessionManagerMethods.clear();
-                                _clearMintSDKData();
-                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
+                                _logoutWork();
                               },
                               child: const Text("Yes",
                                   style: TextStyle(
@@ -950,6 +949,24 @@ class _HomePageState extends BaseState<HomePage> {
         );
       },
     );
+  }
+
+  _logoutWork(){
+
+    sessionManagerPMS.savePerformanceList([]);
+
+    sessionManagerPMS.saveNextYearList([]);
+
+    sessionManagerPMS.savePerviousYearList([]);
+
+    sessionManagerPMS.setReportDate('');
+
+    sessionManagerPMS.saveApplicantsList([]);
+
+    Navigator.pop(context);
+    SessionManagerMethods.clear();
+    _clearMintSDKData();
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
   }
 
   //  add this class member function for check is available session or not

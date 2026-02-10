@@ -94,20 +94,23 @@ class SessionManagerPMS {
     await SessionManagerMethods.setString(email, data);
   }
 
-  Future<void> saveApplicantsList(List<ApplicantsOnly> listItems) async {
+  Future<void> saveApplicantsList(List<String> listItems) async {
     var json = jsonEncode(listItems);
     await SessionManagerMethods.setString(KEY_APPLICANTS_LIST, json);
   }
 
-  List<ApplicantsOnly> getApplicantsList() {
-    List<ApplicantsOnly> listJsonData = [];
-    String jsonString = checkValidString(SessionManagerMethods.getString(KEY_APPLICANTS_LIST));
-    if (jsonString.isNotEmpty)
-    {
+  List<String> getApplicantsList() {
+    List<String> list = [];
+
+    String jsonString =
+    checkValidString(SessionManagerMethods.getString(KEY_APPLICANTS_LIST));
+
+    if (jsonString.isNotEmpty) {
       List<dynamic> jsonDataList = jsonDecode(jsonString);
-      listJsonData = jsonDataList.map((jsonData) => ApplicantsOnly.fromJson(jsonData)).toList();
+      list = jsonDataList.map((e) => e.toString()).toList();
     }
-    return listJsonData;
+
+    return list;
   }
 
   Future<void> savePerformanceList(List<Xirr> listItems) async {
@@ -218,11 +221,7 @@ class SessionManagerPMS {
   }
 
 
-  checkValidString (String? value) {
-    if (value == null || value == "null" || value == "<null>")
-    {
-      value = "";
-    }
-    return value.trim();
+  checkValidString(String? value) {
+    return value?.trim();
   }
 }

@@ -26,7 +26,7 @@ class CPNetworthPage extends StatefulWidget {
 class CPNetworthPageState extends BaseState<CPNetworthPage> {
   bool _isLoading = false;
   List<Networth> listData = [];
-  List<ApplicantsOnly> listApplicants = [];
+  List<String> listApplicants = [];
   String selectedApplicant = "";
 
   @override
@@ -34,24 +34,17 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     super.initState();
     _getNetworthData();
 
-    if ((sessionManagerPMS.getApplicantsList() != null))
+    if (sessionManagerPMS.getApplicantsList()?.isNotEmpty ?? false)
     {
-      if (sessionManagerPMS.getApplicantsList().isNotEmpty)
-      {
-        listApplicants = [];
-        listApplicants.addAll(sessionManagerPMS.getApplicantsList());
+      listApplicants = [];
+      listApplicants.addAll(sessionManagerPMS.getApplicantsList());
 
-        if (listApplicants.isNotEmpty)
-        {
-          selectedApplicant = listApplicants[0].applicant ?? '';
-        }
-
-        print((listApplicants.length));
-      }
-      else
+      if (listApplicants.isNotEmpty)
       {
-        listApplicants = [];
+        selectedApplicant = listApplicants[0] ?? '';
       }
+
+      print((listApplicants.length));
     }
     else
     {
@@ -112,10 +105,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                   ),
                 ),
                 Expanded(
-                  child: Stack(
-                    children: [
-                      listData.isNotEmpty
-                          ? Column(
+                  child: listData.isNotEmpty
+                      ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -123,17 +114,24 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                               padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
                               decoration: const BoxDecoration(
                                   color:white,
-                                  borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft:Radius.circular(8),
+                                      topRight: Radius.circular(8)
+                                  )
+                              ),
                               child: const Row(
                                 children: [
                                   Expanded(
                                       flex: 2,
-                                      child: Text('Asset Type',
+                                      child: Text(
+                                          'Asset Type',
                                           style: TextStyle(
                                               color: blue,
                                               fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.w600))),
+                                              fontWeight: FontWeight.w600
+                                          )
+                                      )
+                                  ),
                                   Expanded(
                                       flex: 1,
                                       child: Text('Amount',
@@ -142,7 +140,9 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                               color: blue,
                                               fontSize: 16,
                                               fontWeight:
-                                              FontWeight.w600))),
+                                              FontWeight.w600)
+                                      )
+                                  ),
                                   Expanded(
                                       flex: 1,
                                       child: Text('Allocation',
@@ -155,14 +155,10 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                 ],
                               ),
                             ),
-                            Expanded(
-                              child: _itemList(),
-                            ),
+                            Expanded(child: _itemList()),
                           ]
                       )
-                          : const MyNoDataWidget(msg: "No data found."),
-                    ],
-                  ),
+                      : const MyNoDataWidget(msg: "No data found."),
                 ),
               ],
             )),
@@ -175,41 +171,50 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: const AlwaysScrollableScrollPhysics(),
-        primary: false,
         padding: EdgeInsets.zero,
         itemCount: listData.length,
-        itemBuilder: (ctx, index) => (Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: index % 2 == 0 ? white : semiBlue,
-                    borderRadius: index == listData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.all(12),
-                        width: double.infinity,
-                        color: lightBlue,
-                        child: Text(
-                            toDisplayCase(listData[index]
-                                .asset
-                                .toString()),
-                            style: const TextStyle(
-                                color: blue,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900))),
-                    Container(child: _subItemList(listData[index].objectives!,index)),
-                  ],
-                ),
-              )
-            ],
-          ),
-        )));
+        itemBuilder: (context, index) {
+          return Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: index % 2 == 0 ? white : semiBlue,
+                      borderRadius: index == listData.length - 1
+                          ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8))
+                          : const BorderRadius.all(Radius.circular(0)
+                      )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(12),
+                          width: double.infinity,
+                          color: lightBlue,
+                          child: Text(
+                              listData[index].asset ?? '',
+                              style: const TextStyle(
+                                  color: blue,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900
+                              )
+                          )
+                      ),
+                      Container(
+                          child: _subItemList(listData[index].objectives ?? [],index)
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+    );
   }
 
   ListView _subItemList(List<Objectives> subListData,int topPos) {
@@ -241,7 +246,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                         children: [
                           Expanded(
                               flex: 2,
-                              child: Text(toDisplayCase(subListData[index].objective.toString()),
+                              child: Text(
+                                  toDisplayCase(subListData[index].objective ?? ''),
                                   style: const TextStyle(
                                       color: black,
                                       fontSize: 12,
@@ -250,7 +256,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                           ),
                           Expanded(
                               flex: 1,
-                              child: Text(convertCommaSeparatedAmount(subListData[index].amount.toString()),textAlign: TextAlign.center,
+                              child: Text(convertCommaSeparatedAmount(subListData[index].amount.toString())
+                                  ,textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: black,
                                       fontSize: 12,
@@ -321,7 +328,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                             onTap: () {
                               Navigator.pop(context);
                               setState(() {
-                                selectedApplicant = listApplicants[index].applicant ?? '';
+                                selectedApplicant = listApplicants[index] ?? '';
 
                                 _getNetworthData();
 
@@ -335,7 +342,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
+                                  child: Text(listApplicants[index] ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
                                 ),
                                 const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
                               ],
@@ -389,7 +396,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     final url = Uri.parse(API_URL_CP + networth);
     Map<String, String> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
-      'applicant' : selectedApplicant
+      'applicant' : selectedApplicant == 'ALL' ? "" : selectedApplicant
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -402,7 +409,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     {
       try {
         if (dataResponse.result?.networth != null) {
-          listData = dataResponse.result!.networth!;
+          listData = dataResponse.result?.networth ?? [];
           setState(() {
             _isLoading = false;
           });

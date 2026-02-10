@@ -53,6 +53,7 @@ class MintSDKInit : FlutterActivity() {
 
     private fun invokeSDK(sso: String,fcmToken:String,domain:String,classWithPackage:String= "${this@MintSDKInit.packageName}.MintSDKInit") {
         val mintSdk = MintSDK(this@MintSDKInit)
+        mintSdk.configureSDK(true,null)
         mintSdk.setIsProduction(!BuildConfig.DEBUG)
 //        mintSdk.invokeMintSDKForFlutter(sso, fcmToken, domain)
         mintSdk.invokeMintSDK(sso, fcmToken,  domain,classWithPackage)

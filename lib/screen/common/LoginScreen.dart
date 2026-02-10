@@ -1,13 +1,18 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' ;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' ;
 import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
 import 'package:superapp_flutter/model/PortfolioRMIDResponseModel.dart';
 import 'package:superapp_flutter/widget/loading.dart';
+import 'dart:typed_data';
+import 'dart:convert' show utf8;
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:encrypt/encrypt.dart' as enc;
+import 'package:convert/convert.dart' as convert;
 
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
@@ -162,9 +167,22 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
                           }else if (password.isEmpty) {
                             showSnackBar("Please enter password", context);
                           } else {
-                            if (isOnline) {
+                            if (isOnline)
+                            {
+                              print("IS IN");
+                              const authName = 'alphacapitalapi';
+                              const password = 'Mukesh@2025';
+
+                              final c = encryptPasswordForAggregator(secretKey: authName, password: password);
+                              final p = decryptPasswordForAggregator(secretKey: authName, hexCiphertext: c);
+
+                              assert(p == password);
+                              print('OK: $c');
+                              print('p: $p');
+                              // _makeLoginRequestRMID("manjeet@alphacapital.in");
                               _mintLogin();
-                              // _makeLoginInRequest(userNameController.value.text.trim());
+                              // _makeLoginInRequest("OM1143","OM PRAKASH DHINGRA","nishchay64@gmail.com","9210574409");
+                              // _makeLoginInRequest("gauravgarg0209@gmail.com","GAURAV GARG","gauravgarg0209@gmail.com","9911280201");
                             } else {
                               noInterNet(context);
                             }
@@ -176,7 +194,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
-                              color: blue
+                              color: gray
                           ),
                             child: const Text("Sign In", style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: white),),
                         ),
@@ -198,7 +216,58 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     widget is LoginScreenNew;
   }
 
-  _mintLogin() async{
+
+
+  /// Encrypt a plaintext password using:
+  /// - AES-256-CBC
+  /// - key = SHA-256(secretKey)
+  /// - iv  = MD5(secretKey)
+  /// Returns lowercase hex string of ciphertext.
+  String encryptPasswordForAggregator({
+    required String secretKey, // must be the user's authName
+    required String password,
+  }) {
+    // Derive key (32 bytes) via SHA-256(secretKey)
+    final keyBytes = crypto.sha256.convert(utf8.encode(secretKey)).bytes;
+    // Derive IV (16 bytes) via MD5(secretKey)
+    final ivBytes = crypto.md5.convert(utf8.encode(secretKey)).bytes;
+
+    final key = enc.Key(Uint8List.fromList(keyBytes)); // 32 bytes
+    final iv  = enc.IV(Uint8List.fromList(ivBytes));   // 16 bytes
+
+    final encrypter = enc.Encrypter(
+      enc.AES(key, mode: enc.AESMode.cbc, padding: 'PKCS7'),
+    );
+
+    final encrypted = encrypter.encrypt(password, iv: iv);
+
+    // Hex-encode ciphertext (lowercase)
+    return convert.hex.encode(encrypted.bytes);
+  }
+
+  String decryptPasswordForAggregator({
+    required String secretKey,
+    required String hexCiphertext,
+  }) {
+    final keyBytes = crypto.sha256.convert(utf8.encode(secretKey)).bytes;
+    final ivBytes  = crypto.md5.convert(utf8.encode(secretKey)).bytes;
+
+    final key = enc.Key(Uint8List.fromList(keyBytes));
+    final iv  = enc.IV(Uint8List.fromList(ivBytes));
+
+    final encrypter = enc.Encrypter(
+      enc.AES(key, mode: enc.AESMode.cbc, padding: 'PKCS7'),
+    );
+
+    final cipherBytes = Uint8List.fromList(convert.hex.decode(hexCiphertext));
+    final encrypted = enc.Encrypted(cipherBytes);
+    return encrypter.decrypt(encrypted, iv: iv);
+  }
+
+
+
+
+   _mintLogin() async{
     setState(() {
       _isLoading = true;
     });
@@ -317,7 +386,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
 
   }
 
-  _makeLoginInRequest(String userName,String name,String email, String mintResponse) async {
+  _makeLoginInRequest(String? userName,String? name,String? email, String? mintResponse) async {
     setState(() {
       if(!_isLoading){
         _isLoading = true;
@@ -333,13 +402,21 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
 
     print("mintResponse === $mintResponse");
 
-    var mintDecoded = jsonDecode(mintResponse);
+    // var mintDecoded = jsonDecode(mintResponse ?? '{}');
+
+    // Map<String, String> jsonBody = {
+    //   'first_name': mintDecoded['result']['name'] ?? '',
+    //   'email': mintDecoded['result']['email'] ?? '',
+    //   'username': mintDecoded['result']['username'] ?? '',
+    //   'phone_number': mintDecoded['result']['phone'] ?? '',
+    //   'pan_no': '',
+    // };
 
     Map<String, String> jsonBody = {
-      'first_name': mintDecoded['result']['name'],
-      'email': mintDecoded['result']['email'],
-      'username': mintDecoded['result']['username'],
-      'phone_number': mintDecoded['result']['phone'],
+      'first_name': name ?? '',
+      'email': email ?? '',
+      'username': userName ?? '',
+      'phone_number': mintResponse ?? '',
       'pan_no': '',
     };
 
@@ -358,16 +435,22 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
         // startMintSession(mintResponse);
+
+        sessionManager.setUserType('client');
+
         sessionManager.setIsLoggedIn(true);
         await sessionManager.createLoginSession(
             dataResponse.profile?.userId ?? '',
-            userName,
+            userName ?? '',
             dataResponse.profile?.email ?? '',
             dataResponse.profile?.phone ?? '',
             dataResponse.profile?.image ?? '',
             false);
 
         sessionManagerPMS.setIsLoggedIn(true);
+
+        print("JSON MODEL === ${jsonEncode(dataResponse.portfolio)}");
+
         await sessionManagerPMS.createLoginSession(
             dataResponse.portfolio?.userId ?? '',
             dataResponse.portfolio?.firstName ?? '',
@@ -376,10 +459,14 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
             dataResponse.portfolio?.panNo ?? ''
         );
 
+        print("Session === ${sessionManagerPMS.getFirstName()}");
+        print("Session === ${sessionManagerPMS.getLastName()}");
+        print("Session === ${sessionManagerPMS.getUserId()}");
+
         sessionManagerVault.setIsLoggedIn(true);
         await sessionManagerVault.createLoginSession(
           dataResponse.vault?.userId ?? '',
-          userName,
+          userName ?? '',
           dataResponse.vault?.email ?? '',
           dataResponse.vault?.phone ?? '',
           dataResponse.vault?.image ?? '',
@@ -417,88 +504,6 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     }
   }
 
-  /*_makeLoginInRequest(String uId) async {
-    setState(() {
-      _isLoading = true;
-    });
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL+login);
-
-    Map<String, String> jsonBody = {
-      'username': uId,
-      'email': userNameController.value.text.trim(),
-      'password': _pwController.value.text.trim(),
-    };
-
-    *//* Map<String, String> jsonBody = {
-      'username': uId.trim(),
-      'email': 'mukesh58',
-      'password': 'Mykel@3421',
-    };*//*
-
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = LoginResponseModel.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        sessionManager.setIsLoggedIn(true);
-        await sessionManager.createLoginSession(
-            checkValidString(dataResponse.profile!.userId.toString()),
-            checkValidString(dataResponse.profile!.username.toString()),
-            checkValidString(dataResponse.profile!.email.toString()),
-            checkValidString(dataResponse.profile!.phone.toString()),
-            checkValidString(dataResponse.profile!.image.toString()),
-            false);
-
-        sessionManagerPMS.setIsLoggedIn(true);
-        await sessionManagerPMS.createLoginSession(
-            checkValidString(dataResponse.portfolio!.userId.toString()),
-            checkValidString(dataResponse.portfolio!.firstName.toString()),
-            checkValidString(dataResponse.portfolio!.lastName.toString()),
-            checkValidString(dataResponse.portfolio!.email.toString()),
-            checkValidString(dataResponse.portfolio!.panNo.toString())
-        );
-
-        sessionManagerVault.setIsLoggedIn(true);
-        await sessionManagerVault.createLoginSession(
-          checkValidString(dataResponse.vault!.userId.toString()),
-          checkValidString(dataResponse.vault!.username.toString()),
-          checkValidString(dataResponse.vault!.email.toString()),
-          checkValidString(dataResponse.vault!.phone.toString()),
-          checkValidString(dataResponse.vault!.image.toString()),
-          checkValidString(dataResponse.vault!.countryName.toString()),
-          checkValidString(dataResponse.vault!.countryId.toString()),
-          checkValidString(dataResponse.vault!.stateName.toString()),
-          checkValidString(dataResponse.vault!.stateId.toString()),
-          checkValidString(dataResponse.vault!.cityName.toString()),
-          checkValidString(dataResponse.vault!.cityId.toString()),
-        );
-
-        JobService().getCommonXirr();
-        JobService().getNetworthData();
-
-        openHomePage();
-      } catch (e) {
-        print(e);
-      }
-
-      setState(() {
-        _isLoading = false;
-      });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      showSnackBar(dataResponse.message, context);
-    }
-  }*/
-
   Future<void> getAuthCheck() async {
     bool isAuthenticated = await AuthService.authenticateUser();
     print("Display is authenticated : $isAuthenticated");
@@ -508,11 +513,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
     }
     else
     {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Authentication failed.'),
-        ),
-      );
+      showSnackBar('Authentication failed.', context);
     }
 
   }

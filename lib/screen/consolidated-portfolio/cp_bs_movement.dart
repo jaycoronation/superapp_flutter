@@ -259,7 +259,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           getTooltipColor: (touchedSpot) {
             return blue;
           },
-          tooltipRoundedRadius: 8,
+          tooltipBorderRadius: BorderRadius.circular(8),
           getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
             return lineBarsSpot.map((lineBarSpot) {
               return LineTooltipItem(

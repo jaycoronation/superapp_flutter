@@ -19,7 +19,7 @@ class JobService {
   List<Data> listCurrentYearXIRR = List<Data>.empty(growable: true);
   List<Data> listPreviousYearXIRR = List<Data>.empty(growable: true);
 
-  List<applicants.ApplicantsOnly> listApplicants = List<applicants.ApplicantsOnly>.empty(growable: true);
+  List<String> listApplicants = [];
 
   List<Xirr> listSinceInceptionNew = [];
   List<Xirr> listCurrentYearXIRRNew = [];
@@ -56,7 +56,7 @@ class JobService {
   }
 
   void getCommonXirr() async {
-    getListApplicants();
+    // getListApplicants();
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
@@ -94,7 +94,7 @@ class JobService {
     getNetworthData();
   }
 
-  void getListApplicants() async {
+  Future<void> getListApplicants() async {
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
@@ -112,110 +112,19 @@ class JobService {
     Map<String, dynamic> user = jsonDecode(body);
     var dataResponse = applicants.ApplicantResponseModel.fromJson(user);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      if (dataResponse.applicantDetails != null) {
-        listApplicants = dataResponse.applicantDetails ?? [];
-        sessionManagerPMS.saveApplicantsList(listApplicants);
-      }
-    } else {
-
-    }
-  }
-
-  /*void getSinceInceptionData() async {
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL_CP + performance);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
-
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = SinceInceptionResponse.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      if (dataResponse.result != null) {
-        listSinceInception = dataResponse.result!.data!;
-        sessionManagerPMS.savePerformanceList(listSinceInception);
-      }
-    } else {
-
-    }
-    getCurrentYearXIRR();
-  }
-
-  void getCurrentYearXIRR() async {
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL_CP + xirr);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
-
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = SinceInceptionResponse.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-
-        if (dataResponse.result != null) {
-          listCurrentYearXIRR = dataResponse.result!.data!;
-          sessionManagerPMS.saveNextYearList(listCurrentYearXIRR);
-        }
-      } catch (e)
+    if (statusCode == 200 && dataResponse.success == 1)
+    {
+      if (dataResponse.applicantDetails != null)
       {
+        // listApplicants = dataResponse.applicantDetails ?? [];
+        // sessionManagerPMS.saveApplicantsList(listApplicants);
       }
-    } else {
+    }
+    else
+    {
 
     }
-    getPreviousYearXIRR();
   }
-
-  void getPreviousYearXIRR() async {
-
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
-
-    final url = Uri.parse(API_URL_CP + xirrPrevious);
-    Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
-    };
-
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = SinceInceptionResponse.fromJson(user);
-
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.result != null)
-        {
-          listPreviousYearXIRRNew = dataResponse.result!.data!;
-          sessionManagerPMS.savePerviousYearList(listPreviousYearXIRRNew);
-        }
-      }
-      catch (e)
-      {
-
-      }
-    } else {
-
-    }
-    getNetworthData();
-  }*/
 
   getNetworthData() async {
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
@@ -258,6 +167,9 @@ class JobService {
                   }
               }
           }
+
+          listApplicants = dataResponse.applicantsFilter ?? [];
+          sessionManagerPMS.saveApplicantsList(listApplicants);
 
           print(jsonEncode(sessionManagerPMS.getNetworthData()));
           print(sessionManagerPMS.getTotalNetworth());

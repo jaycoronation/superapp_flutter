@@ -28,7 +28,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
   bool _isLoading = false;
   List<TransactionDetails> listDataMainHoldingData = [];
   List<TransactionDetails> listData = [];
-  List<ApplicantsOnly> listApplicants = [];
+  List<String> listApplicants = [];
   String selectedApplicant = "";
 
   @override
@@ -46,7 +46,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
 
         if (listApplicants.isNotEmpty)
         {
-          selectedApplicant = listApplicants[0].applicant ?? '';
+          selectedApplicant = listApplicants[0] ?? '';
         }
 
         print((listApplicants.length));
@@ -407,7 +407,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
                             onTap: () {
                               Navigator.pop(context);
                               setState(() {
-                                selectedApplicant = listApplicants[index].applicant ?? '';
+                                selectedApplicant = listApplicants[index] ?? '';
 
                                 listData = [];
 
@@ -444,7 +444,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
+                                  child: Text(listApplicants[index] ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
                                 ),
                                 const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
                               ],

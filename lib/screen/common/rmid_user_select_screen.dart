@@ -9,6 +9,8 @@ import 'package:superapp_flutter/constant/api_end_point.dart';
 import 'package:superapp_flutter/constant/colors.dart';
 import 'package:superapp_flutter/model/LoginResponseModel.dart';
 import 'package:superapp_flutter/model/UserListResponseModel.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponseModel.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/PercentageResponse.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_home_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_analysis_home_page.dart';
 import 'package:superapp_flutter/screen/e-state-valut/e_state_valut_home_page.dart';
@@ -176,7 +178,6 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
         margin: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
           children: [
-
             Visibility(
               visible: isSearchShow && !isLoading,
               child: Container(
@@ -272,14 +273,10 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
                 ),
               ),
             ),
-
             const Gap(10),
-
             Expanded(child: isLoading ? LoadingWidget() : setUserList()),
-
             Visibility(visible: isLoadingMore, child: const LoadingMoreWidget()),
             const Gap(20)
-
           ],
         ),
       ),
@@ -472,15 +469,22 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
 
-      setState(() {
-        getSet.isLoading = false;
-      });
+
 
       try {
 
         //Consolidated Portfolio
         if(isFor == "CP")
         {
+          sessionManagerPMS.setTotalNetworth('');
+          sessionManagerPMS.saveNetworthData(Result());
+          sessionManagerPMS.savePercentageData(PercentageResponse());
+          sessionManagerPMS.saveApplicantsList([]);
+          sessionManagerPMS.savePerformanceList([]);
+          sessionManagerPMS.saveNextYearList([]);
+          sessionManagerPMS.savePerviousYearList([]);
+          sessionManagerPMS.setReportDate('');
+
           sessionManagerPMS.setIsLoggedIn(true);
           await sessionManagerPMS.createLoginSession(
               dataResponse.portfolio?.userId ?? '',
@@ -490,9 +494,9 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
               dataResponse.portfolio?.panNo ?? ''
           );
 
-          JobService().getListApplicants();
+          // await JobService().getListApplicants();
           JobService().getCommonXirr();
-          JobService().getNetworthData();
+          await JobService().getNetworthData();
         }
         //Financial Planning
         else if(isFor == "FP")
@@ -524,6 +528,10 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
             dataResponse.vault?.cityId ?? '',
           );
         }
+
+        setState(() {
+          getSet.isLoading = false;
+        });
 
         openPage();
 

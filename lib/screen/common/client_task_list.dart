@@ -201,7 +201,8 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
 
       Map<String, String> jsonBody = {
         "pan_card": sessionManagerPMS.getPanCard(),
-        "client_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+        // "client_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+        "first_name": "${sessionManagerPMS.getFirstName()}",
         "fromdate": '',
         "todate": '',
         "pageindex": _pageIndex.toString(),

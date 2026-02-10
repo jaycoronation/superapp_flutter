@@ -6,13 +6,11 @@ import android.os.Bundle
 import androidx.core.app.TaskStackBuilder
 import investwell.mintSdk.MintSDK
 import investwell.utils.AppSession
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant
 import org.json.JSONException
 import org.json.JSONObject
-import io.flutter.embedding.android.FlutterFragmentActivity
 
 
 class MainActivity : FlutterFragmentActivity() {
@@ -102,13 +100,14 @@ class MainActivity : FlutterFragmentActivity() {
 
     private fun handleAuthCheck(result: MethodChannel.Result) {
         val mintSdk = MintSDK(this@MainActivity)
-        mintSdk.configureSDK(true)
+        mintSdk.configureSDK(true,null)
         mintSdk.setIsProduction(!BuildConfig.DEBUG)
-        result.success(mintSdk.isAuthValidated)
+        result.success(mintSdk.isAuthValidated())
     }
 
     private fun clearSDK() {
         val mintSdk = MintSDK(this@MainActivity)
+        mintSdk.configureSDK(true,null)
         mintSdk.setIsProduction(!BuildConfig.DEBUG)
         mintSdk.clearSDKData()
     }

@@ -7,35 +7,43 @@ NetworthResponseModel networthResponseModelFromJson(String str) => NetworthRespo
 String networthResponseModelToJson(NetworthResponseModel data) => json.encode(data.toJson());
 class NetworthResponseModel {
   NetworthResponseModel({
-      Result? result, 
+    List<String>? applicantsFilter,
+    Result? result,
       num? success, 
       String? message,}){
+    _applicantsFilter = applicantsFilter;
     _result = result;
     _success = success;
     _message = message;
 }
 
   NetworthResponseModel.fromJson(dynamic json) {
+    _applicantsFilter = json['applicants_filter'] != null ? json['applicants_filter'].cast<String>() : [];
     _result = json['result'] != null ? Result.fromJson(json['result']) : null;
     _success = json['success'];
     _message = json['message'];
   }
   Result? _result;
+  List<String>? _applicantsFilter;
   num? _success;
   String? _message;
 NetworthResponseModel copyWith({  Result? result,
+  List<String>? applicantsFilter,
   num? success,
   String? message,
 }) => NetworthResponseModel(  result: result ?? _result,
+  applicantsFilter: applicantsFilter ?? _applicantsFilter,
   success: success ?? _success,
   message: message ?? _message,
 );
   Result? get result => _result;
+  List<String>? get applicantsFilter => _applicantsFilter;
   num? get success => _success;
   String? get message => _message;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    map['applicants_filter'] = _applicantsFilter;
     if (_result != null) {
       map['result'] = _result?.toJson();
     }

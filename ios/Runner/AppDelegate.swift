@@ -1,102 +1,51 @@
 import UIKit
 import Flutter
-import Firebase 
 import MintFrameworks
 import IQKeyboardManagerSwift
 import IQKeyboardToolbarManager
 
 @main
-@objc class AppDelegate: FlutterAppDelegate,MessagingDelegate {
+@objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-      FirebaseApp.configure()
+    IQKeyboardManager.shared.isEnabled = true
+  IQKeyboardToolbarManager.shared.isEnabled = true
+    // let controller : FlutterViewController = navigationController.topViewController as! FlutterViewController
+    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+    let mintChannel = FlutterMethodChannel(name: "mint-android-app", binaryMessenger: controller.binaryMessenger)
+    mintChannel.setMethodCallHandler({
+        (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+        if call.method == "openMintLibIOS" {
+            guard let args = call.arguments as? [String: Any],
+                  let ssoToken = args["ssoToken"] as? String,
+                  let fcmToken = args["fcmToken"] as? String,
+                  let domain = args["domain"] as? String else {
+                result(FlutterError(code: "INVALID_ARGS",
+                                    message: "Invalid arguments",
+                                    details: nil))
+                return
+            }
+            self.invokeMintSDK(ssoToken: ssoToken, fcmToken: fcmToken, domain: domain)
+            result("Success")
+        } else if call.method == "isValidAuth"{
+            result(MintSDKInvoke().isSessionAvailable())
+        }else if call.method == "clearSession"{
+            result(MintSDKInvoke().clearSDKSession())
+        }else if call.method == "clearSessionIos"{
+            result(MintSDKInvoke().clearSDKSession())
+        }
+        else {
+            result(FlutterMethodNotImplemented)
+        }
+    })
       GeneratedPluginRegistrant.register(with: self)
-      Messaging.messaging().delegate = self
-      
-      Messaging.messaging().token { token, error in
-        if let error = error {
-          print("Error fetching FCM registration token: \(error)")
-        } else if let token = token {
-            print("FCM registration token: \(token)")
-        }
-      }
-      
-        IQKeyboardManager.shared.isEnabled = true
-        IQKeyboardToolbarManager.shared.isEnabled = true
-          // let controller : FlutterViewController = navigationController.topViewController as! FlutterViewController
-          let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-          let mintChannel = FlutterMethodChannel(name: "mint-android-app", binaryMessenger: controller.binaryMessenger)
-          mintChannel.setMethodCallHandler({
-              (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
-              print("IS METHOD CHANNEL CALLING ")
-              print(call.method)
-              if call.method == "openMintLibIOS" {
-                  
-                  print(call.arguments as? [String: Any])
-                  print("IS METHOD CHANNEL CALLING INSIDE")
-                  guard let args = call.arguments as? [String: Any],
-                        let ssoToken = args["ssoToken"] as? String,
-                        let fcmToken = args["fcmToken"] as? String,
-                        let domain = args["domain"] as? String else {
-                      result(FlutterError(code: "INVALID_ARGS",
-                                          message: "Invalid arguments",
-                                          details: nil))
-                      return
-                  }
-                  self.invokeMintSDK(ssoToken: ssoToken, fcmToken: fcmToken, domain: domain,colorPrimary:"2042FE",colorToolbar:"2042FE")
-
-                  result("Success")
-              } else if call.method == "isValidAuth"{
-                  result(MintSDKInvoke().isSessionAvailable())
-              } else if call.method == "clearSessionIos"{
-                  result(MintSDKInvoke().clearSDKSession())
-              } else {
-                  result(FlutterMethodNotImplemented)
-              }
-          })
-//      GeneratedPluginRegistrant.register(with: self)
-      
-      if #available(iOS 10.0, *) {
-          // For iOS 10 display notification (sent via APNS)
-          UNUserNotificationCenter.current().delegate = self
-          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-          UNUserNotificationCenter.current().requestAuthorization(
-                  options: authOptions,
-                  completionHandler: {_, _ in })
-      } else {
-          let settings: UIUserNotificationSettings =
-          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-          application.registerUserNotificationSettings(settings)
-      }
-      application.registerForRemoteNotifications()
-    
-      return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
-    
-    
-    @objc func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-//         print( "fcmToken ==== " , fcmToken)
+  private func invokeMintSDK(ssoToken: String, fcmToken: String, domain: String) {
+    if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
+        MintSDKInvoke().invokeMintAppFormFlutterApp(domain: domain, token: ssoToken, navigateToview: "", controller: rootViewController,colorPrimary:"#2042FE",colorToolbar:"#FFFFFF",launchIcon: nil)
     }
-    
-    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        print("willPresent Response Info :\(notification.request.content.userInfo)")
-        if #available(iOS 14.0, *) {
-            completionHandler([.banner, .badge, .sound])
-        }else{
-            completionHandler([.alert, .badge, .sound])
-        }
-        
-    }
-    
-    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print("didReceiveRemoteNotification Response Info :\(userInfo)")
-    }
-    
-    private func invokeMintSDK(ssoToken: String, fcmToken: String, domain: String, colorPrimary: String, colorToolbar: String) {
-        if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
-            MintSDKInvoke().invokeMintAppFormFlutterApp(domain: domain, token: ssoToken, navigateToview: "", controller: rootViewController,colorPrimary: colorPrimary,colorToolbar: colorToolbar)
-        }
-      }
+  }
 }

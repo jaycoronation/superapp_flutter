@@ -138,7 +138,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                               ],
                             ),
                             Text((convertCommaSeparatedAmount(strNetWorth)),
-                                style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900,letterSpacing: 1.6)),
+                                style: const TextStyle(color: white, fontSize: 12, fontWeight: FontWeight.w900,letterSpacing: 5.8)),
                             const Gap(18),
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -400,7 +400,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                                 style: TextStyle(color: white, fontSize: 16, fontWeight: FontWeight.w400)),
                             const Gap(20),
                             Text((convertCommaSeparatedAmount(strNetWorth)),
-                                style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900)),
+                                style: const TextStyle(color: white, fontSize: 26, fontWeight: FontWeight.w900,letterSpacing: 1.6)),
                             const Gap(10),
                             Visibility(
                               visible: false,
@@ -479,7 +479,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     _isShowTopTable ? Container () : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(resultData.macroAssetStratagic!.length - 1, (i) {
+                      children: List.generate(resultData.macroAssetStratagic?.isNotEmpty ?? false ? (resultData.macroAssetStratagic?.length ?? 0) - 1 : 0, (i) {
                         return resultData.macroAssetStratagic![i].actual != 0 ? Container(
                           margin: const EdgeInsets.all(6),
                           child: Indicator(
@@ -552,7 +552,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     _isShowTable ? Container() :Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(resultData.applicantDetails!.length - 1, (i) {
+                      children: List.generate(resultData.applicantDetails?.isNotEmpty ?? false ? (resultData.applicantDetails?.length ?? 0) - 1 : 0, (i) {
                         return resultData.applicantDetails![i].allocation != 0 ? Container(
                           margin: const EdgeInsets.all(6),
                           child: Indicator(
@@ -638,7 +638,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   }
 
   List<PieChartSectionData> generateAssetAllocationChart() {
-    return List.generate(resultData.macroAssetStratagic!.length - 1, (i) {
+    return List.generate(resultData.macroAssetStratagic?.isNotEmpty ?? false ? (resultData.macroAssetStratagic?.length ?? 0) - 1 : 0, (i) {
       final isTouched = i == touchedIndexAsset;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
@@ -665,7 +665,9 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   }
 
   List<PieChartSectionData> generateApplicantsChart() {
-    return List.generate(resultData.applicantDetails!.length - 1, (i) {
+    return List.generate(
+        resultData.applicantDetails?.isNotEmpty ?? false ? (resultData.applicantDetails?.length ?? 0) - 1 : 0,
+            (i) {
       final isTouched = i == touchedIndexApplicant;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
@@ -688,7 +690,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
           shadows: shadows,
         ),
       );
-    });
+    },
+    );
   }
 
   Widget setUpAssetAllocationTopTableData() {
@@ -1027,7 +1030,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ]),
             ),
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
-            resultData.macroAssetStratagic!.isNotEmpty
+            resultData.macroAssetStratagic?.isNotEmpty ?? false
                 ? ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
@@ -1400,7 +1403,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ),
             ),
             const Divider(height: 1.0, thickness: 1.0,color: blue, indent: 0.0, endIndent: 0.0),
-            resultData.macroAssetTactical!.isNotEmpty
+            resultData.macroAssetTactical?.isNotEmpty ?? false
                 ? ListView.builder(
                 shrinkWrap: true,
                 physics: const ScrollPhysics(),
@@ -2270,6 +2273,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
 
     _getPercentageData();
+
 
   }
 

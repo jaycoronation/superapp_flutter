@@ -26,7 +26,7 @@ class CPPortfolioPage extends StatefulWidget {
 class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   bool _isLoading = false;
   List<TempResponse> listData = [];
-  List<ApplicantsOnly> listApplicants = [];
+  List<String> listApplicants = [];
   String selectedApplicant = "";
   Map<String, dynamic> userData = {};
 
@@ -43,7 +43,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
         if (listApplicants.isNotEmpty)
           {
-            selectedApplicant = listApplicants[0].applicant ?? '';
+            selectedApplicant = listApplicants[0] ?? '';
           }
       }
       else
@@ -93,6 +93,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                           GestureDetector(
                                             behavior: HitTestBehavior.opaque,
                                             onTap: () {
+                                              // _getPortfolioDataNew();
                                               openApplicantSelection();
                                             },
                                             child: Padding(
@@ -280,7 +281,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                         width: double.infinity,
                         color: lightBlue,
                         child: Text(
-                            toDisplayCase(listData[index].asset.toString()),
+                            listData[index].asset ?? '',
                             style: const TextStyle(
                                 color: blue,
                                 fontSize: 16,
@@ -320,9 +321,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                         width: double.infinity,
                         color: white,
                         child: Text(
-                            toDisplayCase(objectives[index]
-                                .objective
-                                .toString()),
+                            objectives[index].objective ?? '',
                             style: const TextStyle(
                                 color: blue,
                                 fontSize: 16,
@@ -345,6 +344,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         padding: EdgeInsets.zero,
         itemCount: schemes.length,
         itemBuilder: (context, index) {
+          print("schemes ==== ${schemes[index].schemeName.toString()} ==== ${schemes[index].initialValue.toString()}");
           return Container(
             alignment: Alignment.center,
             width: double.infinity,
@@ -364,7 +364,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                           Expanded(
                               flex: 1,
                               child: Text(
-                                  toDisplayCase(schemes[index].schemeName ?? ''),
+                                  schemes[index].schemeName ?? '',
                                   style: const TextStyle(
                                       color: black,
                                       fontSize: 12,
@@ -438,7 +438,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                             onTap: () {
                               Navigator.pop(context);
                               setState(() {
-                                selectedApplicant = listApplicants[index].applicant ?? '';
+                                selectedApplicant = listApplicants[index] ?? '';
 
                                 listData = [];
 
@@ -446,11 +446,11 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                 final parsedJson = result['portfolio'];
                                 parsedJson.forEach((value){
                                   Map<String,dynamic> valueData = value;
-
                                   valueData.forEach((key, value) {
-                                    print("USER DATA ADDING IN IF == $key === $value");
                                     if(key == (selectedApplicant))
                                     {
+                                      print("USER DATA ADDING IN IF == $key === $value");
+
                                       var tpp = List<TempResponse>.empty(growable: true);
                                       if(value !=null)
                                         {
@@ -458,6 +458,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                             tpp.add(TempResponse.fromJson(v));
                                           });
                                           print("USER DATA ADDING IN IF == ${tpp.length}");
+                                          print("USER DATA ADDING IN IF == ${jsonEncode(tpp)}");
                                           listData.addAll(tpp);
                                         }
                                     }
@@ -473,7 +474,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                                  child: Text(listApplicants[index].applicant ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
+                                  child: Text(listApplicants[index] ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
                                 ),
                                 const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
                               ],
@@ -539,7 +540,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
       _isLoading = true;
     });
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.NONE),
+      HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
     final url = Uri.parse(API_URL_CP + portfolio);

@@ -153,13 +153,11 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  BaseState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends BaseState<MyHomePage> {
   bool isLoggedIn = false ;
-  SessionManager sessionManager = SessionManager();
-  SessionManagerPMS sessionManagerPMS = SessionManagerPMS();
   String isForceUpdate = '0';
   final cron = Cron();
 
@@ -177,24 +175,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    getVersionFromLocal();
-    initConnectivity();
-    _connectivitySubscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> result) async {
-      await _updateConnectionStatus().then((bool isConnected) => setState(() {
-        isOnline = isConnected;
-        if (isOnline)
-          {
-            getAppVersion();
-          }
-      }));
-    });
-  }
-
-
-  Future<void> getVersionFromLocal() async {
-    _packageInfo = await PackageInfo.fromPlatform();
+    if (isOnline)
+      {
+        getAppVersion();
+      }
   }
 
   getAppVersion() async {
@@ -204,14 +188,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final url = Uri.parse(API_URL_CP + appVersionUrl);
 
-
     final response = await http.get(url);
+
     final statusCode = response.statusCode;
+
     final body = response.body;
+
     Map<String, dynamic> apiResponse = jsonDecode(body);
+
     var dataResponse = GetAppVersionRepsponseModel.fromJson(apiResponse);
-    if (statusCode == 200 && dataResponse.success == 1) {
+
+    if (statusCode == 200 && dataResponse.success == 1)
+    {
+      _packageInfo = await PackageInfo.fromPlatform();
+
       var verApp = int.parse(_packageInfo.version.toString().replaceAll(".", ''));
+
       if (Platform.isAndroid)
         {
           var verLive = int.parse(dataResponse.android?.version.toString().replaceAll(".", '') ?? '0');
@@ -257,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
         content: Text(messageText, style: const TextStyle(color: black, fontWeight: FontWeight.w400, fontSize: 14)),
         actions: <Widget>[
           Visibility(
-            visible: isForceUpdate != 1,
+            visible: isForceUpdate != "1",
             child: TextButton(
                 onPressed: () {
                   doSomeAsyncStuff();
@@ -347,50 +339,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void castStatefulWidget() {
     widget is MyHomePage;
-  }
-
-  bool isOnline = true;
-  /// initialize connectivity checking
-  /// Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initConnectivity() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      print(e.toString());
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return;
-    }
-
-    await _updateConnectionStatus().then((bool isConnected) => setState(() {
-      isOnline = isConnected;
-    }));
-  }
-
-  @override
-  void dispose() {
-    _connectivitySubscription?.cancel();
-    super.dispose();
-  }
-
-  Future<bool> _updateConnectionStatus() async {
-    bool isConnected = false;
-    try {
-      final List<InternetAddress> result =
-      await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        isConnected = true;
-      }
-    } on SocketException catch (_) {
-      isConnected = false;
-      return false;
-    }
-    return isConnected;
   }
 
   Future<void> getAuthCheck() async {
