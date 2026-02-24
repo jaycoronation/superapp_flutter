@@ -94,6 +94,8 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
                     :AnimationLimiter(
                   child: Column(
                     children: [
+
+
                       Container(
                         margin: const EdgeInsets.only(top: 5),
                         /*decoration: BoxDecoration(

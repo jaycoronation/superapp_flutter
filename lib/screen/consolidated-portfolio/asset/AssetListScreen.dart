@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/AssetListResponseModel.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/asset/AddAssetScreen.dart';
 import 'package:superapp_flutter/widget/loading.dart';
 
 import '../../../common_widget/common_widget.dart';
@@ -13,6 +15,7 @@ import '../../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../../model/CommanResponse.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
+import '../../../widget/loading_more.dart';
 
 class AssetListScreen extends StatefulWidget {
   const AssetListScreen({super.key});
@@ -26,10 +29,54 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
   bool _isLoading = false;
   List<Assets> listAssets = [];
 
+  bool isLoadingMore = false;
+  int pageIndex = 1;
+  int pageResult = 20;
+  bool isLastPage = false;
+  bool isScrollingDown = false;
+  bool isSearchShow = false;
+  late ScrollController _scrollViewController;
+
+
   @override
   void initState() {
-    getAssetsListApi();
+    getAssetsListApi(true);
+
+    _scrollViewController = ScrollController();
+    _scrollViewController.addListener(() {
+      if (_scrollViewController.position.userScrollDirection == ScrollDirection.reverse)
+      {
+        if (!isScrollingDown)
+        {
+          isScrollingDown = true;
+          setState(() => {});
+        }
+      }
+
+      if (_scrollViewController.position.userScrollDirection == ScrollDirection.forward)
+      {
+        if (isScrollingDown)
+        {
+          isScrollingDown = false;
+          setState(() => {});
+        }
+      }
+      pagination();
+    });
     super.initState();
+  }
+
+  void pagination() {
+    if (!isLastPage && !isLoadingMore && listAssets.isNotEmpty)
+    {
+      if ((_scrollViewController.position.pixels == _scrollViewController.position.maxScrollExtent))
+      {
+        setState(() {
+          isLoadingMore = true;
+        });
+        getAssetsListApi(false);
+      }
+    }
   }
 
   @override
@@ -49,173 +96,263 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
           ),
           title: getTitle("Assets",)
       ),
-      backgroundColor: const Color(0XffEDEDEE),
+      // backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: white,
       body: _isLoading
           ? LoadingWidget()
-          : Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListView.builder(
-            itemCount: listAssets.length,
-              physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                        decoration: BoxDecoration(
-                            color: index % 2 == 0 ? white : semiBlue,
-                            borderRadius: index == listAssets.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                      toDisplayCase(listAssets[index].firstHolder ?? ''),
-                                      style: const TextStyle(
-                                          color: black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700)),
-                                ),
-                                GestureDetector(
-                                  onTap: (){
-                                    // _redirectAdd(listData[index],true);
-                                  },
-                                  child: Container(
-                                    width: 32,
-                                    height: 32,
-                                    decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Image.asset('assets/images/fin_plan_ic_edit_gray.png', width: 24, height: 24, color: black),
-                                    ),
+          : Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15), 
+            child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: listAssets.length,
+                              controller: _scrollViewController,
+                              physics: BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  padding: const EdgeInsets.all(15),
+                                  margin: const EdgeInsets.only(top: 8, bottom: 8),
+                                  decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              listAssets[index].firstHolder ?? '',
+                                              style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                          const Gap(10),
+                                          GestureDetector(
+                                            onTap: (){
+                                            },
+                                            child: Container(
+                                              width: 32,
+                                              height: 32,
+                                              decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8),
+                                                child: Image.asset('assets/images/fin_plan_ic_edit_gray.png', width: 24, height: 24, color: black),
+                                              ),
+                                            ),
+                                          ),
+                                          const Gap(10),
+                                          InkWell(
+                                            onTap: (){
+                                              deleteListData(listAssets[index], index);
+                                            },
+                                            child: Container(
+                                                width: 32,
+                                                height: 32,
+                                                decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Image.asset('assets/images/fin_plan_ic_delete_black.png', width: 24, height: 24, color: black),
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                "Current Value",
+                                                maxLines: 3,
+                                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                              )
+                                          ),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                convertCommaSeparatedAmount(listAssets[index].currentValue.toString()),
+                                                maxLines: 3,
+                                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                              )
+                                          ),
+                                        ],
+                                      ),
+                                      Gap(4),
+                                      Row(
+                                        children: [
+                                          const Expanded(flex: 2, child: Text(
+                                            "Investment Type",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                          )),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(flex: 4, child: Text(
+                                            listAssets[index].investmentType?.isEmpty ?? true ? "-" :  listAssets[index].investmentType ?? '',
+                                            maxLines: 3,
+                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          )),
+                                        ],
+                                      ),
+                                      Gap(4),
+                                      Row(
+                                        children: [
+                                          const Expanded(flex: 2, child: Text(
+                                            "Asset Class",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                          )),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(flex: 4, child: Text(
+                                            listAssets[index].assetClass?.isEmpty ?? true ? "-" :  listAssets[index].assetClass ?? '',
+                                            maxLines: 3,
+                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          )),
+                                        ],
+                                      ),
+                                      Gap(4),
+                                      Row(
+                                        children: [
+                                          const Expanded(flex: 2, child: Text(
+                                            "Company",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                          )),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(flex: 4, child: Text(
+                                            listAssets[index].companyName?.isEmpty ?? true ? "-" :  listAssets[index].companyName ?? '',
+                                            maxLines: 3,
+                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          )),
+                                        ],
+                                      ),
+                                      Gap(4),
+                                      Row(
+                                        children: [
+                                          const Expanded(flex: 2, child: Text(
+                                            "Broker",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                          )),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(flex: 4, child: Text(
+                                            listAssets[index].brokerAdvisor?.isEmpty ?? true ? "-" :  listAssets[index].brokerAdvisor ?? '',
+                                            maxLines: 3,
+                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          )),
+                                        ],
+                                      ),
+                                      Gap(4),
+                                      Row(
+                                        children: [
+                                          const Expanded(flex: 2, child: Text(
+                                            "Property",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                          )),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(flex: 4, child: Text(
+                                            listAssets[index].propertyName?.isEmpty ?? true ? "-" :  listAssets[index].propertyName ?? '',
+                                            maxLines: 3,
+                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          )),
+                                        ],
+                                      ),
+    
+                                      Gap(4),
+                                      Row(
+                                        children: [
+                                          const Expanded(flex: 2, child: Text(
+                                            "Scheme/Bank Name",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                          )),
+                                          const Text(
+                                            " : ",
+                                            maxLines: 3,
+                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                                          ),
+                                          Expanded(flex: 4, child: Text(
+                                            listAssets[index].schemeBankName?.isEmpty ?? true ? "-" : listAssets[index].schemeBankName ?? '',
+                                            maxLines: 3,
+                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                          )),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const Gap(10),
-                                InkWell(
-                                  onTap: (){
-                                    // deleteListData(listData[index], index);
-
-                                  },
-                                  child: Container(
-                                      width: 32,
-                                      height: 32,
-                                      decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Image.asset('assets/images/fin_plan_ic_delete_black.png', width: 24, height: 24, color: black),
-                                      )),
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                            Text(convertCommaSeparatedAmount(listAssets[index].currentValue.toString()),
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w200)),
-                            Text(
-                                listAssets[index].investmentType,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                            Text(
-                                listAssets[index].assetClass,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                            Text(
-                                listAssets[index].companyName,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                            Text(
-                                listAssets[index].brokerAdvisor,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                            Text(
-                                listAssets[index].propertyName,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                            Text(
-                                listAssets[index].schemeBankName,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-          )
-        ],
-      ),
+                          ),
+                          Visibility(visible: isLoadingMore, child: const LoadingMoreWidget()),
+                        ],
+                      ),
+          ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            startActivity(context, AddAssetScreen());
+          },
+          backgroundColor: blue,
+          child: const Icon(Icons.add, color: white,),
+        )
     );
   }
 
-  getAssetsListApi() async {
-    setState(() {
-      _isLoading = true;
-    });
+  getAssetsListApi(bool isFirstTime) async {
+    if (isFirstTime)
+    {
+      setState(() {
+        isLastPage = false;
+        pageIndex = 1;
+        isLoadingMore = false;
+        _isLoading = true;
+      });
+    }
+
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
     final url = Uri.parse(API_URL_CP + getAssetsList);
     Map<String, String> jsonBody = {
-      'user_id': sessionManagerPMS.getUserId().trim(),
+      // 'user_id': sessionManagerPMS.getUserId().trim(),
+      'user_id': '423',
       'from_aggrigator': "no",
       'loadArchives': "no",
       'is_from_superapp': "yes",
-      'limit': "15",
-      'page': "1",
+      'limit': pageResult.toString(),
+      'page': pageIndex.toString(),
       'search_string': "",
     };
-
-    // from_aggrigator
-    // :
-    // "no"
-    // is_from_superapp
-    // :
-    // "yes"
-    // limit
-    // :
-    // "15"
-    // loadArchives
-    // :
-    // "no"
-    // page
-    // :
-    // "1"
-    // search_string
-    // :
-    // ""
-    // user_id
-    // :
-    // "500"
 
     final response = await http.post(url, body: jsonBody);
     final statusCode = response.statusCode;
@@ -223,24 +360,35 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
     Map<String, dynamic> user = jsonDecode(body);
     var dataResponse = AssetListResponseModel.fromJson(user);
 
+    if (isFirstTime)
+    {
+      listAssets = [];
+    }
+
     if (statusCode == 200 && dataResponse.success == 1) {
-      try {
-        if (dataResponse.assets != null) {
-          listAssets = dataResponse.assets ?? [];
+      try
+      {
+        List<Assets>? _tempList = dataResponse.assets ?? [];
+        listAssets.addAll(_tempList);
 
-
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
-        setState(() {
-          _isLoading = false;
-        });
-        if (kDebugMode) {
-          print(e);
+        if (_tempList.isNotEmpty)
+        {
+          pageIndex += 1;
+          if (_tempList.isEmpty || _tempList.length % pageResult != 0)
+          {
+            isLastPage = true;
+          }
         }
       }
+      catch(error)
+      {
+        print("display error : $error");
+      }
+
+      setState(() {
+        _isLoading = false;
+        isLoadingMore = false;
+      });
     } else {
       setState(() {
         _isLoading = false;

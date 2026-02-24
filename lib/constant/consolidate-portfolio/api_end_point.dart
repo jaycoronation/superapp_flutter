@@ -3,6 +3,10 @@ const String API_DOMAIN_CP = "https://portfolio.alphacapital.in/"; //for live
 
 const String API_URL_CP = "${API_DOMAIN_CP}api/servicesv2/";
 
+// https://portfolio.alphacapital.in/api/services/settings/get_pdf_bottom_text
+
+String suggestedActions = 'settings/get_pdf_bottom_text';
+
 //latest transaction
 String latestTransaction = "last_30_days_transaction_consolidated_networth";
 
@@ -58,3 +62,4 @@ String getAssetsList = "assets/list";
 
 String assetDelete = "assets/delete";
 
+String investmentTypes = "get_investment_type";

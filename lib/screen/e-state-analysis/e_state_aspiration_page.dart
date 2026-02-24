@@ -64,201 +64,209 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
           ? _isLoading
           ? const LoadingWidget()
           : SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-            child: listData.isEmpty ?
-            const Center(
-                child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
-            )
-                :AnimationLimiter(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  primary: false,
-                  padding: EdgeInsets.zero,
-                  itemCount: listData.length,
-                  itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 5),
-                          /*decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border:Border.all(color: grayLight, width: 1,)
-                          ),*/
-                          child: Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: double.infinity,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        InkWell(
-                                            onTap:(){
-                                              _redirectToNextPage(context, listData[index], true);
-                                            },
-                                            child: Container(
-                                              width: 36,
-                                              height: 36,
-                                              decoration: BoxDecoration(color: grayLight,
-                                                borderRadius: BorderRadius.circular(20),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                child: listData.isEmpty
+                    ? const Center(
+                        child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
+                    )
+                    : Column(
+                      children: [
+                        Text("*Target Return may or may not be delivered due to market risk.",style: TextStyle(color: black,fontSize: 16,fontWeight: FontWeight.w500),),
+                        Expanded(
+                          child: AnimationLimiter(
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                primary: false,
+                                padding: EdgeInsets.zero,
+                                itemCount: listData.length,
+                                itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: 375),
+                                  child: SlideAnimation(
+                                    verticalOffset: 50.0,
+                                    child: FadeInAnimation(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 5),
+                                        /*decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border:Border.all(color: grayLight, width: 1,)
+                                        ),*/
+                                        child: Card(
+                                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                                          elevation: 1,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: [
+                                                      InkWell(
+                                                          onTap:(){
+                                                            _redirectToNextPage(context, listData[index], true);
+                                                          },
+                                                          child: Container(
+                                                            width: 36,
+                                                            height: 36,
+                                                            decoration: BoxDecoration(color: grayLight,
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            // padding: const EdgeInsets.all(8),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(10.0),
+                                                              child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
+                                                                color: black, ),
+                                                            ),
+                                                          )
+                                                      ),
+                                                      Gap(10),
+                                                      InkWell(
+                                                          onTap:(){
+                                                            deleteListData(listData[index], index);
+                                                          },
+                                                          child: Container(
+                                                            width: 36,
+                                                            height: 36,
+                                                            decoration: BoxDecoration(color: grayLight,
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            // padding: const EdgeInsets.all(8),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(7.0),
+                                                              child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
+                                                                  color: black, ),
+                                                            ),
+                                                          )
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Text(checkValidString(listData[index].aspirationType.toString()), textAlign: TextAlign.start,
+                                                    style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  const Gap(6),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const Expanded(
+                                                        flex:4,
+                                                        child: Text("Amount", textAlign: TextAlign.start,
+                                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                        ),
+                                                      ),
+                                                      const Text("  :  ", textAlign: TextAlign.start,
+                                                        style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                      ),
+                                                      Expanded(
+                                                        flex:6,
+                                                        child: Text(checkValidString(getPrice(listData[index].amount.toString())), textAlign: TextAlign.start,
+                                                          style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const Gap(8),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const Expanded(
+                                                        flex:4,
+                                                        child: Text("Periodicity(In Year)", textAlign: TextAlign.start,
+                                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                        ),
+                                                      ),
+                                                      const Text("  :  ", textAlign: TextAlign.start,
+                                                        style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                      ),
+                                                      Expanded(
+                                                        flex:6,
+                                                        child: Text(checkValidString(listData[index].periodicity), textAlign: TextAlign.start,
+                                                          style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const Gap(8),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisSize: MainAxisSize.max,
+                                                          children: [
+                                                            const Expanded(
+                                                              flex:4,
+                                                              child: Text("Start Year", textAlign: TextAlign.start,
+                                                                style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                              ),
+                                                            ),
+                                                            const Text("  :  ", textAlign: TextAlign.start,
+                                                              style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                            ),
+                                                            Expanded(
+                                                              flex:6,
+                                                              child: Text(checkValidString(listData[index].startYear), textAlign: TextAlign.start,
+                                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisSize: MainAxisSize.max,
+                                                          children: [
+                                                            const Expanded(
+                                                              flex:4,
+                                                              child: Text("End Year", textAlign: TextAlign.start,
+                                                                style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.bold),
+                                                              ),
+                                                            ),
+                                                            const Text("  :  ", textAlign: TextAlign.start,
+                                                              style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                                                            ),
+                                                            Expanded(
+                                                              flex:6,
+                                                              child: Text(checkValidString(listData[index].endYear), textAlign: TextAlign.start,
+                                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  // const Divider(height: 0.5, color: kLightGray, thickness: 1,)
+                                                ],
                                               ),
-                                              // padding: const EdgeInsets.all(8),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(10.0),
-                                                child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
-                                                  color: black, ),
-                                              ),
-                                            )
+                                            ),
+                                          ),
                                         ),
-                                        Gap(10),
-                                        InkWell(
-                                            onTap:(){
-                                              deleteListData(listData[index], index);
-                                            },
-                                            child: Container(
-                                              width: 36,
-                                              height: 36,
-                                              decoration: BoxDecoration(color: grayLight,
-                                                borderRadius: BorderRadius.circular(20),
-                                              ),
-                                              // padding: const EdgeInsets.all(8),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(7.0),
-                                                child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
-                                                    color: black, ),
-                                              ),
-                                            )
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                    Text(checkValidString(listData[index].aspirationType.toString()), textAlign: TextAlign.start,
-                                      style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
-                                    ),
-                                    const Gap(6),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Expanded(
-                                          flex:4,
-                                          child: Text("Amount", textAlign: TextAlign.start,
-                                            style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                        const Text("  :  ", textAlign: TextAlign.start,
-                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                        ),
-                                        Expanded(
-                                          flex:6,
-                                          child: Text(checkValidString(getPrice(listData[index].amount.toString())), textAlign: TextAlign.start,
-                                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Gap(8),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Expanded(
-                                          flex:4,
-                                          child: Text("Periodicity(In Year)", textAlign: TextAlign.start,
-                                            style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                        const Text("  :  ", textAlign: TextAlign.start,
-                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                        ),
-                                        Expanded(
-                                          flex:6,
-                                          child: Text(checkValidString(listData[index].periodicity), textAlign: TextAlign.start,
-                                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Gap(8),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              const Expanded(
-                                                flex:4,
-                                                child: Text("Start Year", textAlign: TextAlign.start,
-                                                  style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                ),
-                                              ),
-                                              const Text("  :  ", textAlign: TextAlign.start,
-                                                style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                              ),
-                                              Expanded(
-                                                flex:6,
-                                                child: Text(checkValidString(listData[index].startYear), textAlign: TextAlign.start,
-                                                  style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              const Expanded(
-                                                flex:4,
-                                                child: Text("End Year", textAlign: TextAlign.start,
-                                                  style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.bold),
-                                                ),
-                                              ),
-                                              const Text("  :  ", textAlign: TextAlign.start,
-                                                style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                              ),
-                                              Expanded(
-                                                flex:6,
-                                                child: Text(checkValidString(listData[index].endYear), textAlign: TextAlign.start,
-                                                  style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // const Divider(height: 0.5, color: kLightGray, thickness: 1,)
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                )
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
-              ),
-            )
-        ),)
+                      ],
+                    )
+            ),
+          )
           : NoInternetWidget(() {
         if(isOnline) {
           getListData();

@@ -9,6 +9,8 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/GenerateReportResponseModel.dart';
+import 'package:superapp_flutter/screen/common/SuggestedActionsScreen.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/asset/AssetListScreen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_movement.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_capital_gain.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_dashboard.dart';
@@ -361,6 +363,58 @@ class CPHomePageState extends BaseState<CPHomePage> {
                             thickness: 0.5,
                             color: divider_color,
                           ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const SuggestedActionsScreen()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Suggested Actions",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AssetListScreen()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Add Assets",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
 
                           Image.asset('assets/images/portfolio_icon_logo_header_blue.png',fit: BoxFit.contain,color: blue, width: 250,height: 100,),
 
@@ -388,6 +442,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
 
     Map<String, String> jsonBody = {
       'logged_in_id' : sessionManagerPMS.getUserId(),
+      'set_no_password' : "yes",
       'send_mail' : "",
       'user_id' : sessionManagerPMS.getUserId()
     };

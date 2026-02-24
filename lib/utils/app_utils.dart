@@ -544,3 +544,50 @@ Widget getCommonButton(String title, bool isLoading, void Function() onPressed, 
     ),
   );
 }
+
+Widget getBottomSheetHeaderWithoutButton(BuildContext context,String title){
+  return SizedBox(
+    width: MediaQuery.of(context).size.width,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 2,
+          width: 50,
+          alignment: Alignment.center,
+          color: textFieldBorder,
+          margin: const EdgeInsets.only(top: 10, bottom: 8),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 12,bottom: 20),
+          child: Text(title, style: const TextStyle(fontSize: 20, color: black, fontWeight: FontWeight.w600)),
+        ),
+      ],
+    ),
+  );
+}
+
+Column getBottomSheetItemWithoutSelection(String title,bool isSelected,bool isDividerVisible) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        padding: const EdgeInsets.only(left: 22, right: 22, top: 12, bottom: 12),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w400,
+            color: black,
+            fontSize: 16,
+          ),
+        ),
+      ),
+      Container(
+        height: 1,
+        color: isDividerVisible ? Colors.transparent : borderGray,
+      ),
+    ],
+  );
+}

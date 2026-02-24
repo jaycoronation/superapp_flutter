@@ -17,6 +17,8 @@ bool isNewsReload = false;
 
 const Color appBg= Color(0xffffffff);
 const Color black= Color(0xff000000);
+const Color textFieldBorder= Color(0xff1E1E1E);
+const Color borderGray = Color(0xffF0F0F0);
 const Color blackLight = Color(0xff1E1E1E);
 const Color white= Color(0xffffffff);
 const Color gray = Color(0xffD3DADC);

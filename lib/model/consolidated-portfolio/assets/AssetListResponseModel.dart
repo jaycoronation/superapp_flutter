@@ -4,9 +4,9 @@
 
 class AssetListResponseModel {
   AssetListResponseModel({
-      List<Assets> assets, 
-      String count, 
-      num success,}){
+      List<Assets>? assets,
+      String? count,
+      num? success,}){
     _assets = assets;
     _count = count;
     _success = success;
@@ -16,30 +16,30 @@ class AssetListResponseModel {
     if (json['assets'] != null) {
       _assets = [];
       json['assets'].forEach((v) {
-        _assets.add(Assets.fromJson(v));
+        _assets?.add(Assets.fromJson(v));
       });
     }
     _count = json['count'];
     _success = json['success'];
   }
-  List<Assets> _assets;
-  String _count;
-  num _success;
-AssetListResponseModel copyWith({  List<Assets> assets,
-  String count,
-  num success,
+  List<Assets>? _assets;
+  String? _count;
+  num? _success;
+AssetListResponseModel copyWith({  List<Assets>? assets,
+  String? count,
+  num? success,
 }) => AssetListResponseModel(  assets: assets ?? _assets,
   count: count ?? _count,
   success: success ?? _success,
 );
-  List<Assets> get assets => _assets;
-  String get count => _count;
-  num get success => _success;
+  List<Assets>? get assets => _assets;
+  String? get count => _count;
+  num? get success => _success;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (_assets != null) {
-      map['assets'] = _assets.map((v) => v.toJson()).toList();
+      map['assets'] = _assets?.map((v) => v.toJson()).toList();
     }
     map['count'] = _count;
     map['success'] = _success;
@@ -65,20 +65,20 @@ AssetListResponseModel copyWith({  List<Assets> assets,
 
 class Assets {
   Assets({
-      String quantity, 
-      String id, 
-      String userId, 
-      String itId, 
-      String assetClass, 
-      String schemeBankName, 
-      String propertyName, 
-      String companyName, 
-      String investmentType, 
-      String brokerAdvisor, 
-      String firstHolder, 
-      num currentValue, 
-      String deletedOn, 
-      String isActive,}){
+      String? quantity,
+      String? id,
+      String? userId,
+      String? itId,
+      String? assetClass,
+      String? schemeBankName,
+      String? propertyName,
+      String? companyName,
+      String? investmentType,
+      String? brokerAdvisor,
+      String? firstHolder,
+      num? currentValue,
+      String? deletedOn,
+      String? isActive,}){
     _quantity = quantity;
     _id = id;
     _userId = userId;
@@ -107,38 +107,38 @@ class Assets {
     _investmentType = json['investment_type'];
     _brokerAdvisor = json['broker_advisor'];
     _firstHolder = json['first_holder'];
-    _currentValue = json['current_value'];
+    _currentValue = json['current_value'] is String ? num.tryParse(json['current_value']) : json['current_value'];
     _deletedOn = json['deleted_on'];
     _isActive = json['is_active'];
   }
-  String _quantity;
-  String _id;
-  String _userId;
-  String _itId;
-  String _assetClass;
-  String _schemeBankName;
-  String _propertyName;
-  String _companyName;
-  String _investmentType;
-  String _brokerAdvisor;
-  String _firstHolder;
-  num _currentValue;
-  String _deletedOn;
-  String _isActive;
-Assets copyWith({  String quantity,
-  String id,
-  String userId,
-  String itId,
-  String assetClass,
-  String schemeBankName,
-  String propertyName,
-  String companyName,
-  String investmentType,
-  String brokerAdvisor,
-  String firstHolder,
-  num currentValue,
-  String deletedOn,
-  String isActive,
+  String? _quantity;
+  String? _id;
+  String? _userId;
+  String? _itId;
+  String? _assetClass;
+  String? _schemeBankName;
+  String? _propertyName;
+  String? _companyName;
+  String? _investmentType;
+  String? _brokerAdvisor;
+  String? _firstHolder;
+  num? _currentValue;
+  String? _deletedOn;
+  String? _isActive;
+Assets copyWith({  String? quantity,
+  String? id,
+  String? userId,
+  String? itId,
+  String? assetClass,
+  String? schemeBankName,
+  String? propertyName,
+  String? companyName,
+  String? investmentType,
+  String? brokerAdvisor,
+  String? firstHolder,
+  num? currentValue,
+  String? deletedOn,
+  String? isActive,
 }) => Assets(  quantity: quantity ?? _quantity,
   id: id ?? _id,
   userId: userId ?? _userId,
@@ -154,20 +154,20 @@ Assets copyWith({  String quantity,
   deletedOn: deletedOn ?? _deletedOn,
   isActive: isActive ?? _isActive,
 );
-  String get quantity => _quantity;
-  String get id => _id;
-  String get userId => _userId;
-  String get itId => _itId;
-  String get assetClass => _assetClass;
-  String get schemeBankName => _schemeBankName;
-  String get propertyName => _propertyName;
-  String get companyName => _companyName;
-  String get investmentType => _investmentType;
-  String get brokerAdvisor => _brokerAdvisor;
-  String get firstHolder => _firstHolder;
-  num get currentValue => _currentValue;
-  String get deletedOn => _deletedOn;
-  String get isActive => _isActive;
+  String? get quantity => _quantity;
+  String? get id => _id;
+  String? get userId => _userId;
+  String? get itId => _itId;
+  String? get assetClass => _assetClass;
+  String? get schemeBankName => _schemeBankName;
+  String? get propertyName => _propertyName;
+  String? get companyName => _companyName;
+  String? get investmentType => _investmentType;
+  String? get brokerAdvisor => _brokerAdvisor;
+  String? get firstHolder => _firstHolder;
+  num? get currentValue => _currentValue;
+  String? get deletedOn => _deletedOn;
+  String? get isActive => _isActive;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

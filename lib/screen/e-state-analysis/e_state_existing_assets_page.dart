@@ -76,6 +76,9 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text("Details coming directly from portfolio",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: black),),
+                            Gap(8),
+                            Text("*Expected return may or may not come in future due to market risk",style: TextStyle(color: black,fontSize: 16,fontWeight: FontWeight.w500),),
+                            Gap(8),
                             AnimationLimiter(
                               child: ListView.builder(
                                   scrollDirection: Axis.vertical,
