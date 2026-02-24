@@ -51,3 +51,10 @@ String appVersionUrl = 'get_app_version';
 
 String getPortfolioRMID = "getPortfolioRMID";
 
+
+// Assets
+
+String getAssetsList = "assets/list";
+
+String assetDelete = "assets/delete";
+
