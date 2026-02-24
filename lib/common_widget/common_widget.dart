@@ -19,3 +19,35 @@ Widget getTitle(String title){
   );
 }
 
+TextStyle getRegularTextStyle({Color color = black, double fontSize = 14}){
+  return TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w400
+  );
+}
+
+TextStyle getMediumTextStyle({Color color = black, double fontSize = 14}){
+  return TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w500
+  );
+}
+
+TextStyle getSemiBoldTextStyle({Color color = black, double fontSize = 14}){
+  return TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w600
+  );
+}
+
+TextStyle getBoldTextStyle({Color color = black, double fontSize = 14}){
+  return TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w700
+  );
+}
+

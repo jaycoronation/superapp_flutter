@@ -8,16 +8,19 @@ String networthResponseModelToJson(NetworthResponseModel data) => json.encode(da
 class NetworthResponseModel {
   NetworthResponseModel({
     List<String>? applicantsFilter,
+    List<String>? brokerFilter,
     Result? result,
       num? success, 
       String? message,}){
     _applicantsFilter = applicantsFilter;
+    _brokerFilter = brokerFilter;
     _result = result;
     _success = success;
     _message = message;
 }
 
   NetworthResponseModel.fromJson(dynamic json) {
+    _brokerFilter = json['broker_filter'] != null ? json['broker_filter'].cast<String>() : [];
     _applicantsFilter = json['applicants_filter'] != null ? json['applicants_filter'].cast<String>() : [];
     _result = json['result'] != null ? Result.fromJson(json['result']) : null;
     _success = json['success'];
@@ -25,6 +28,7 @@ class NetworthResponseModel {
   }
   Result? _result;
   List<String>? _applicantsFilter;
+  List<String>? _brokerFilter;
   num? _success;
   String? _message;
 NetworthResponseModel copyWith({  Result? result,
@@ -33,17 +37,20 @@ NetworthResponseModel copyWith({  Result? result,
   String? message,
 }) => NetworthResponseModel(  result: result ?? _result,
   applicantsFilter: applicantsFilter ?? _applicantsFilter,
+  brokerFilter: brokerFilter ?? _brokerFilter,
   success: success ?? _success,
   message: message ?? _message,
 );
   Result? get result => _result;
   List<String>? get applicantsFilter => _applicantsFilter;
+  List<String>? get brokerFilter => _brokerFilter;
   num? get success => _success;
   String? get message => _message;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['applicants_filter'] = _applicantsFilter;
+    map['broker_filter'] = _brokerFilter;
     if (_result != null) {
       map['result'] = _result?.toJson();
     }

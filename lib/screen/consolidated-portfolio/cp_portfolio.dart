@@ -27,8 +27,12 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   bool _isLoading = false;
   List<TempResponse> listData = [];
   List<String> listApplicants = [];
+  List<String> listBrokerFilter = [];
   String selectedApplicant = "";
   Map<String, dynamic> userData = {};
+
+  String selectedBroker = "";
+  String selectedApplicantName = "";
 
   @override
   void initState() {
@@ -75,7 +79,87 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Visibility(
+
+                              SizedBox(
+                                height: 50,
+                                child: SingleChildScrollView(
+                                  child: Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          openFilterDialog(1);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                                          decoration: BoxDecoration(
+                                              color: white,
+                                              borderRadius: BorderRadius.circular(12)
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                selectedApplicantName.isEmpty ? "Select Applicant" : selectedApplicantName,
+                                                style: getMediumTextStyle(fontSize: 12, color: selectedApplicantName == "" ? gray : blue),
+                                              ),
+                                              const Gap(4),
+                                              selectedApplicantName.isEmpty ?
+                                              const Icon(Icons.keyboard_arrow_down_outlined) :
+                                              GestureDetector(
+                                                behavior: HitTestBehavior.opaque,
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedApplicantName = "";
+                                                  });
+                                                  _getPortfolioDataNew();
+                                                },
+                                                child: const Icon(Icons.close, size: 24, color: black,),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const Gap(10),
+                                      GestureDetector(
+                                        onTap: () {
+                                          openFilterDialog(2);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                                          decoration: BoxDecoration(
+                                              color: white,
+                                              borderRadius: BorderRadius.circular(12)
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                selectedBroker.isEmpty ? "Select Brokers" : selectedBroker,
+                                                style: getMediumTextStyle(fontSize: 12, color: selectedBroker == "" ? gray : blue),
+                                              ),
+                                              const Gap(4),
+                                              selectedBroker.isEmpty ?
+                                              const Icon(Icons.keyboard_arrow_down_outlined) :
+                                              GestureDetector(
+                                                behavior: HitTestBehavior.opaque,
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedBroker = "";
+                                                  });
+                                                  _getPortfolioDataNew();
+                                                },
+                                                child: const Icon(Icons.close, size: 24, color: black,),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              /*Visibility(
                                 visible: listApplicants.length > 1,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -114,7 +198,8 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                     ),
                                   ],
                                 ),
-                              ),
+                              ),*/
+
                                 Container(
                                   padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
                                   decoration: const BoxDecoration(
@@ -405,6 +490,103 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     );
   }
 
+  void openFilterDialog(int isFor) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setStateNew) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+              child: Wrap(
+                children: <Widget>[
+
+                  Column(
+                    children: [
+                      Center(
+                        child: Text(isFor == 1 ? "Select Applicant" : "Select Broker",style: TextStyle(color: blue,fontSize: 18,fontWeight: FontWeight.w600),),
+                      ),
+                      const Gap(22),
+
+                      ListView.builder(
+                        itemCount: isFor == 1 ?  listApplicants.length : listBrokerFilter.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              if(isFor == 1)
+                              {
+                                setState(() {
+                                  selectedApplicantName = listApplicants[index];
+
+                                  selectedApplicant = listApplicants[index] ?? '';
+
+                                  listData = [];
+
+                                  final result = userData['result'];
+                                  final parsedJson = result['portfolio'];
+                                  parsedJson.forEach((value){
+                                    Map<String,dynamic> valueData = value;
+                                    valueData.forEach((key, value) {
+                                      if(key == (selectedApplicant))
+                                      {
+                                        print("USER DATA ADDING IN IF == $key === $value");
+
+                                        var tpp = List<TempResponse>.empty(growable: true);
+                                        if(value !=null)
+                                        {
+                                          value.forEach((v) {
+                                            tpp.add(TempResponse.fromJson(v));
+                                          });
+                                          print("USER DATA ADDING IN IF == ${tpp.length}");
+                                          print("USER DATA ADDING IN IF == ${jsonEncode(tpp)}");
+                                          listData.addAll(tpp);
+                                        }
+                                      }
+                                    });
+                                  });
+                                });
+                              }
+                              else
+                              {
+                                setState(() {
+                                  selectedBroker = listBrokerFilter[index];
+                                });
+                              }
+                              _getPortfolioDataNew();
+                              Navigator.pop(context);
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                                  child: Text(
+                                    isFor == 1 ? listApplicants[index] : listBrokerFilter[index],
+                                    style: getMediumTextStyle(fontSize: 14, color: isFor == 1 ? (selectedApplicantName == listApplicants[index] ? blue : black) : (selectedBroker == listBrokerFilter[index] ? blue : black)),
+                                  ),
+                                ),
+                                const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
+        }
+    );
+  }
+
   void openApplicantSelection() {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -547,6 +729,8 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     Map<String, String> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
       'from_app': 'true',
+      "broker": selectedBroker,
+      "applicant": selectedApplicantName
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -560,6 +744,10 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
     if (statusCode == 200 && userData['success'] == 1)
     {
+
+      listBrokerFilter = List<String>.from(userData['broker_filter'] ?? []);
+      print("Display broker filter data : $listBrokerFilter");
+
       final result = userData['result'];
       final parsedJson = result['portfolio'];
 

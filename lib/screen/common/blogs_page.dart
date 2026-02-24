@@ -97,7 +97,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
 
     return ResponsiveWidget.isMediumScreen(context)
         ? Scaffold(
-            backgroundColor: white,
+            backgroundColor: dashboardBg,
             appBar: AppBar(
               toolbarHeight: 55,
               automaticallyImplyLeading: false,
@@ -143,7 +143,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
                 },)
         )
         : Scaffold(
-        backgroundColor: white,
+        backgroundColor: dashboardBg,
         appBar: AppBar(
           toolbarHeight: 55,
           leading: GestureDetector(
@@ -237,109 +237,166 @@ class _BlogsPageState extends BaseState<BlogsPage> {
               ),
               Container(height: 28,),
               Expanded(
-                  child:SingleChildScrollView(
-                    controller: _scrollViewController,
-                    child: AnimationLimiter(
-                      child: GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisExtent: 332,
-                            crossAxisCount: 2, // number of items in each row
-                            mainAxisSpacing: 22.0, // spacing between rows
-                            crossAxisSpacing: 22.0, // spacing between columns
+                child: SingleChildScrollView(
+                  controller: _scrollViewController,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: ListView.builder(
+                    itemCount: listData.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+
+                      final data = listData[index];
+
+                      return GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(data)),);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(10)
                           ),
-                          scrollDirection: Axis.vertical,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          primary: false,
-                          padding: EdgeInsets.zero,
-                          itemCount: listData.length,
-                          itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: const Duration(milliseconds: 375),
-                            child: SlideAnimation(
-                              verticalOffset: 50.0,
-                              child: FadeInAnimation(
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    //push(MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])));
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        // borderRadius: BorderRadius.circular(10),
-                                        border:Border.all(color: lightGrey, width: 1,)
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 160,
-                                            width: MediaQuery.of(context).size.width,
-                                            // color: grayLight,
-                                            child: listData[index].blogImage.toString().isNotEmpty
-                                                ? FadeInImage.assetNetwork(
-                                              image: listData[index].blogImage.toString(),
-                                              fit: BoxFit.cover,
-                                              width: MediaQuery.of(context).size.width,
-                                              height: 160,
-                                              placeholder: 'assets/images/ic_alpha_logo.png',
-                                            ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                                width: 50, height: 50),
-                                          ),
-                                          const Gap(10),
-                                          SizedBox(
-                                            height: 40,
-                                            child: Text(toDisplayCase(listData[index].title.toString()  + "\n"),
-                                              textAlign: TextAlign.start,
-                                              maxLines: 2,
-                                              style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          const Gap(10),
-                                          Text(checkValidString(listData[index].publishedBy!.toString()),
-                                            textAlign: TextAlign.start,
-                                            maxLines: 2,
-                                            style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
-                                          ),
-                                          const Gap(15),
-                                          const Divider(
-                                            height: 0.5,
-                                            color: lightGrey,
-                                            thickness: 1,
-                                          ),
-                                          const Gap(20),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(listData[index].publishedDateView.toString(),
-                                                textAlign: TextAlign.start,
-                                                style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
-                                              ),
-                                              Container(
-                                                alignment: Alignment.topLeft,
-                                                margin: const EdgeInsets.only(right: 8),
-                                                child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
-                                              ),
-                                            ],
-                                          ),
-                                          // const Gap(10),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  data.blogImage ?? "",
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            ),
-                          )
-                      ),
-                    ),
-                  )
+                              const Gap(8),
+                              Text(
+                                data.createdAt ?? "",
+                                style: getRegularTextStyle(fontSize: 12, color: grayDark),
+                              ),
+                              const Gap(4),
+                              Text(
+                                data.title ?? "",
+                                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
+
+              // Expanded(
+              //     child:SingleChildScrollView(
+              //       controller: _scrollViewController,
+              //       child: AnimationLimiter(
+              //         child: GridView.builder(
+              //             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //               mainAxisExtent: 332,
+              //               crossAxisCount: 2, // number of items in each row
+              //               mainAxisSpacing: 22.0, // spacing between rows
+              //               crossAxisSpacing: 22.0, // spacing between columns
+              //             ),
+              //             scrollDirection: Axis.vertical,
+              //             physics: const NeverScrollableScrollPhysics(),
+              //             shrinkWrap: true,
+              //             primary: false,
+              //             padding: EdgeInsets.zero,
+              //             itemCount: listData.length,
+              //             itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+              //               position: index,
+              //               duration: const Duration(milliseconds: 375),
+              //               child: SlideAnimation(
+              //                 verticalOffset: 50.0,
+              //                 child: FadeInAnimation(
+              //                   child: GestureDetector(
+              //                     behavior: HitTestBehavior.opaque,
+              //                     onTap: () {
+              //                       //push(MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])));
+              //                       Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData[index])),);
+              //                     },
+              //                     child: Container(
+              //                       decoration: BoxDecoration(
+              //                           // borderRadius: BorderRadius.circular(10),
+              //                           border:Border.all(color: lightGrey, width: 1,)
+              //                       ),
+              //                       child: Padding(
+              //                         padding: const EdgeInsets.all(10.0),
+              //                         child: Column(
+              //                           crossAxisAlignment: CrossAxisAlignment.start,
+              //                           children: [
+              //                             SizedBox(
+              //                               height: 160,
+              //                               width: MediaQuery.of(context).size.width,
+              //                               // color: grayLight,
+              //                               child: listData[index].blogImage.toString().isNotEmpty
+              //                                   ? FadeInImage.assetNetwork(
+              //                                 image: listData[index].blogImage.toString(),
+              //                                 fit: BoxFit.cover,
+              //                                 width: MediaQuery.of(context).size.width,
+              //                                 height: 160,
+              //                                 placeholder: 'assets/images/ic_alpha_logo.png',
+              //                               ) : Image.asset('assets/images/ic_alpha_logo.png',
+              //                                   width: 50, height: 50),
+              //                             ),
+              //                             const Gap(10),
+              //                             SizedBox(
+              //                               height: 40,
+              //                               child: Text(toDisplayCase(listData[index].title.toString()  + "\n"),
+              //                                 textAlign: TextAlign.start,
+              //                                 maxLines: 2,
+              //                                 style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.bold),
+              //                               ),
+              //                             ),
+              //                             const Gap(10),
+              //                             Text(checkValidString(listData[index].publishedBy!.toString()),
+              //                               textAlign: TextAlign.start,
+              //                               maxLines: 2,
+              //                               style: const TextStyle(fontSize: 15, color: blue, fontWeight: FontWeight.w500),
+              //                             ),
+              //                             const Gap(15),
+              //                             const Divider(
+              //                               height: 0.5,
+              //                               color: lightGrey,
+              //                               thickness: 1,
+              //                             ),
+              //                             const Gap(20),
+              //                             Row(
+              //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                               mainAxisSize: MainAxisSize.max,
+              //                               crossAxisAlignment: CrossAxisAlignment.start,
+              //                               children: [
+              //                                 Text(listData[index].publishedDateView.toString(),
+              //                                   textAlign: TextAlign.start,
+              //                                   style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+              //                                 ),
+              //                                 Container(
+              //                                   alignment: Alignment.topLeft,
+              //                                   margin: const EdgeInsets.only(right: 8),
+              //                                   child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
+              //                                 ),
+              //                               ],
+              //                             ),
+              //                             // const Gap(10),
+              //                           ],
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ),
+              //             )
+              //         ),
+              //       ),
+              //     )
+              // ),
               Visibility(
                 visible: _isLoadingMore,
                 child: Container(

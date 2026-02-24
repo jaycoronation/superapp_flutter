@@ -70,7 +70,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                 const Center(
                     child: MyNoDataWidget(msg: 'No videos found!')
                 )
-                    :AnimationLimiter(
+                :AnimationLimiter(
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -178,7 +178,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
               },),
         )
         :  Scaffold(
-          backgroundColor: white,
+          backgroundColor: dashboardBg,
           appBar: AppBar(
             toolbarHeight: 55,
             automaticallyImplyLeading: false,
@@ -212,105 +212,166 @@ class _VideoListPageState extends BaseState<VideoListPage> {
                 const Center(
                     child: MyNoDataWidget(msg: 'No videos found!')
                 )
-                    :AnimationLimiter(
-                  child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisExtent: 310,
-                        crossAxisCount: 2, // number of items in each row
-                        mainAxisSpacing: 22.0, // spacing between rows
-                        crossAxisSpacing: 22.0, // spacing between columns
-                      ),
-                      scrollDirection: Axis.vertical,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      primary: false,
-                      padding: EdgeInsets.zero,
-                      itemCount: listData.length,
-                      itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                        position: index,
-                        duration: const Duration(milliseconds: 375),
-                        child: SlideAnimation(
-                          verticalOffset: 50.0,
-                          child: FadeInAnimation(
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                if(kIsWeb)
-                                {
-                                  launchUrl(Uri.parse("https://www.youtube.com/watch?v=${listData[index].id!.videoId.toString()}"));
-                                }
-                                else
-                                {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              VideoPlayerScreen(listData[index].id!.videoId.toString())
-                                      )
-                                  );
-                                }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    border:Border.all(color: lightGrey, width: 0.6,)
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 160,
-                                        width: MediaQuery.of(context).size.width,
-                                        // color: grayLight,
-                                        child: listData[index].snippet!.thumbnails!.high!.url.toString().isNotEmpty
-                                            ? FadeInImage.assetNetwork(
-                                          image: listData[index].snippet!.thumbnails!.high!.url.toString(),
-                                          fit: BoxFit.cover,
-                                          width: MediaQuery.of(context).size.width,
-                                          height: 160,
-                                          placeholder: 'assets/images/ic_alpha_logo.png',
-                                        ) : Image.asset('assets/images/ic_alpha_logo.png',
-                                            width: 50, height: 50),
-                                      ),
-                                      const Gap(10),
-                                      Text(checkValidString("${listData[index].snippet!.title}\n\n"),
-                                        // textAlign: TextAlign.start,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.clip,
-                                        style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
-                                      ),
-                                      const Gap(15),
-                                      const Divider(height: 0.5, color: lightGrey, thickness: 0.6,),
-                                      const Gap(25),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].snippet!.publishedAt.toString()),
-                                            textAlign: TextAlign.start,
-                                            style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
-                                          ),
-                                          Container(
-                                            alignment: Alignment.topLeft,
-                                            margin: const EdgeInsets.only(right: 8),
-                                            child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
-                                          ),
-                                        ],
-                                      ),
-                                      const Gap(10)
-                                    ],
+                    : ListView.builder(
+                  itemCount: listData.length,
+                  shrinkWrap: true,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final data = listData[index];
+
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPlayerScreen(data.id?.videoId ?? "")));
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    data.snippet?.thumbnails?.high?.url ?? "",
+                                    height: 200,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                              ),
+                                Image.asset(
+                                  "assets/images/img_youtube.png",
+                                  height: 70,
+                                  width: 70,
+                                  color: red,
+                                )
+                              ],
                             ),
-                          ),
+                            const Gap(8),
+                            Text(
+                              universalDateConverter("yyyy-MM-ddThh:mm:ss", "dd MMM, yyyy", data.snippet?.publishedAt ?? ""),
+                              style: getRegularTextStyle(fontSize: 12, color: grayDark),
+                            ),
+                            const Gap(4),
+                            Text(
+                              data.snippet?.title ?? "",
+                              style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          ],
                         ),
-                      )
-                  ),
+                      ),
+                    );
+                  },
                 )
+
+                //     :AnimationLimiter(
+                //   child: GridView.builder(
+                //       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                //         mainAxisExtent: 310,
+                //         crossAxisCount: 2, // number of items in each row
+                //         mainAxisSpacing: 22.0, // spacing between rows
+                //         crossAxisSpacing: 22.0, // spacing between columns
+                //       ),
+                //       scrollDirection: Axis.vertical,
+                //       physics: const AlwaysScrollableScrollPhysics(),
+                //       shrinkWrap: true,
+                //       primary: false,
+                //       padding: EdgeInsets.zero,
+                //       itemCount: listData.length,
+                //       itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                //         position: index,
+                //         duration: const Duration(milliseconds: 375),
+                //         child: SlideAnimation(
+                //           verticalOffset: 50.0,
+                //           child: FadeInAnimation(
+                //             child: GestureDetector(
+                //               behavior: HitTestBehavior.opaque,
+                //               onTap: () {
+                //                 if(kIsWeb)
+                //                 {
+                //                   launchUrl(Uri.parse("https://www.youtube.com/watch?v=${listData[index].id!.videoId.toString()}"));
+                //                 }
+                //                 else
+                //                 {
+                //                   Navigator.push(
+                //                       context,
+                //                       MaterialPageRoute(
+                //                           builder: (context) =>
+                //                               VideoPlayerScreen(listData[index].id!.videoId.toString())
+                //                       )
+                //                   );
+                //                 }
+                //               },
+                //               child: Container(
+                //                 decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(0),
+                //                     border:Border.all(color: lightGrey, width: 0.6,)
+                //                 ),
+                //                 child: Padding(
+                //                   padding: const EdgeInsets.all(10.0),
+                //                   child: Column(
+                //                     crossAxisAlignment: CrossAxisAlignment.start,
+                //                     children: [
+                //                       Container(
+                //                         height: 160,
+                //                         width: MediaQuery.of(context).size.width,
+                //                         // color: grayLight,
+                //                         child: listData[index].snippet!.thumbnails!.high!.url.toString().isNotEmpty
+                //                             ? FadeInImage.assetNetwork(
+                //                           image: listData[index].snippet!.thumbnails!.high!.url.toString(),
+                //                           fit: BoxFit.cover,
+                //                           width: MediaQuery.of(context).size.width,
+                //                           height: 160,
+                //                           placeholder: 'assets/images/ic_alpha_logo.png',
+                //                         ) : Image.asset('assets/images/ic_alpha_logo.png',
+                //                             width: 50, height: 50),
+                //                       ),
+                //                       const Gap(10),
+                //                       Text(checkValidString("${listData[index].snippet!.title}\n\n"),
+                //                         // textAlign: TextAlign.start,
+                //                         maxLines: 2,
+                //                         overflow: TextOverflow.clip,
+                //                         style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
+                //                       ),
+                //                       const Gap(15),
+                //                       const Divider(height: 0.5, color: lightGrey, thickness: 0.6,),
+                //                       const Gap(25),
+                //                       Row(
+                //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //                         mainAxisSize: MainAxisSize.max,
+                //                         crossAxisAlignment: CrossAxisAlignment.start,
+                //                         children: [
+                //                           Text(universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM,yyyy", listData[index].snippet!.publishedAt.toString()),
+                //                             textAlign: TextAlign.start,
+                //                             style: const TextStyle(fontSize: 14, color: grayDark, fontWeight: FontWeight.w600),
+                //                           ),
+                //                           Container(
+                //                             alignment: Alignment.topLeft,
+                //                             margin: const EdgeInsets.only(right: 8),
+                //                             child: Image.asset('assets/images/up-arrow.png',height: 26, width: 26, color: black,),
+                //                           ),
+                //                         ],
+                //                       ),
+                //                       const Gap(10)
+                //                     ],
+                //                   ),
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       )
+                //   ),
+                // )
             ),)
               : NoInternetWidget(() {
             if (isOnline)

@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
@@ -26,8 +27,16 @@ class CPNetworthPage extends StatefulWidget {
 class CPNetworthPageState extends BaseState<CPNetworthPage> {
   bool _isLoading = false;
   List<Networth> listData = [];
+  List<Networth> listDataMain = [];
   List<String> listApplicants = [];
   String selectedApplicant = "";
+
+  List<String> listBrokerFilter = [];
+  List<String> listAssetFilter = [];
+
+  String selectedApplicantName = "";
+  String selectedBroker = "";
+  String selectedAsset = "";
 
   @override
   void initState(){
@@ -64,46 +73,166 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
             padding: const EdgeInsets.only(left: 6, right: 6),
             child: Column(
               children: [
-                Visibility(
-                  visible: listApplicants.length > 1,
-                  // visible: false,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
-                      Container(
-                        margin: const EdgeInsets.only(top: 12,bottom: 12),
-                        decoration: BoxDecoration(
-                            color: white,
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                        child: Wrap(
-                          children: [
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                openApplicantSelection();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
-                                    const Icon(Icons.keyboard_arrow_down_outlined),
-                                  ],
-                                ),
-                              ),
+
+                SizedBox(
+                  height: 50,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            openFilterDialog(3);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                            decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(12)
                             ),
-                          ],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  selectedAsset.isEmpty ? "All Assets" : selectedAsset,
+                                  style: getMediumTextStyle(fontSize: 12, color: selectedAsset == "" ? grayDark : blue),
+                                ),
+                                const Gap(4),
+                                selectedAsset.isEmpty ?
+                                const Icon(Icons.keyboard_arrow_down_outlined) :
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedAsset = "";
+                                      listData = listDataMain;
+                                    });
+                                  },
+                                  child: const Icon(Icons.close, size: 24, color: black,),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        const Gap(8),
+                        GestureDetector(
+                          onTap: () {
+                            openFilterDialog(1);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                            decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(12)
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  selectedApplicantName.isEmpty ? "Select Applicant" : selectedApplicantName,
+                                  style: getMediumTextStyle(fontSize: 12, color: selectedApplicantName == "" ? grayDark : blue),
+                                ),
+                                const Gap(4),
+                                selectedApplicantName.isEmpty ?
+                                const Icon(Icons.keyboard_arrow_down_outlined) :
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedApplicantName = "";
+                                    });
+                                    _getNetworthData();
+                                  },
+                                  child: const Icon(Icons.close, size: 24, color: black,),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Gap(8),
+                        GestureDetector(
+                          onTap: () {
+                           openFilterDialog(2);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                            decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(12)
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  selectedBroker.isEmpty ? "Select Brokers" : selectedBroker,
+                                  style: getMediumTextStyle(fontSize: 12, color: selectedBroker == "" ? grayDark : blue),
+                                ),
+                                const Gap(4),
+                                selectedBroker.isEmpty ?
+                                const Icon(Icons.keyboard_arrow_down_outlined) :
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    setState(() {
+                                      selectedBroker = "";
+                                    });
+                                    _getNetworthData();
+                                  },
+                                  child: const Icon(Icons.close, size: 24, color: black,),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+
+
+                // Visibility(
+                //   visible: listApplicants.length > 1,
+                //   // visible: false,
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: [
+                //       const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
+                //       Container(
+                //         margin: const EdgeInsets.only(top: 12,bottom: 12),
+                //         decoration: BoxDecoration(
+                //             color: white,
+                //             borderRadius: BorderRadius.circular(12)
+                //         ),
+                //         child: Wrap(
+                //           children: [
+                //             GestureDetector(
+                //               behavior: HitTestBehavior.opaque,
+                //               onTap: () {
+                //                 openApplicantSelection();
+                //               },
+                //               child: Padding(
+                //                 padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                //                 child: Row(
+                //                   mainAxisAlignment: MainAxisAlignment.start,
+                //                   crossAxisAlignment: CrossAxisAlignment.start,
+                //                   mainAxisSize: MainAxisSize.min,
+                //                   children: [
+                //                     Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
+                //                     const Icon(Icons.keyboard_arrow_down_outlined),
+                //                   ],
+                //                 ),
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+
                 Expanded(
                   child: listData.isNotEmpty
                       ? Column(
@@ -296,6 +425,103 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     );
   }
 
+  void openFilterDialog(int isFor) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setStateNew) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+              child: Wrap(
+                children: <Widget>[
+
+                  Column(
+                    children: [
+                      Center(
+                        child: Text(isFor == 1 ? "Select Applicant" : isFor == 2 ? "Select Broker" : "Select Asset",style: TextStyle(color: blue,fontSize: 18,fontWeight: FontWeight.w600),),
+                      ),
+                      const Gap(22),
+
+                      ListView.builder(
+                        itemCount: isFor == 1 ?  listApplicants.length : isFor == 2 ? listBrokerFilter.length : listAssetFilter.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              if(isFor == 1)
+                              {
+                                setState(() {
+                                  selectedApplicantName = listApplicants[index];
+                                });
+                                _getNetworthData();
+                              }
+                              else if(isFor == 2)
+                              {
+                                setState(() {
+                                  selectedBroker = listBrokerFilter[index];
+                                });
+                                _getNetworthData();
+                              }
+                              else
+                              {
+
+                                setState(() {
+                                  selectedAsset = listAssetFilter[index];
+
+                                  if (selectedAsset.isEmpty)
+                                  {
+                                    listData = listDataMain;
+                                  }
+                                  else
+                                  {
+                                    listData = listDataMain.where((item) => item.asset == selectedAsset).toList();
+                                  }
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                                  child: isFor == 1 ?
+                                  Text(
+                                    listApplicants[index],
+                                    style: getMediumTextStyle(fontSize: 14, color: selectedApplicantName == listApplicants[index] ? blue : black),
+                                  ) :
+                                  isFor == 2 ?
+                                  Text(
+                                    listBrokerFilter[index],
+                                    style: getMediumTextStyle(fontSize: 14, color: selectedBroker == listBrokerFilter[index] ? blue : black),
+                                  ) :
+                                  Text(
+                                    listAssetFilter[index],
+                                    style: getMediumTextStyle(fontSize: 14, color: selectedAsset == listAssetFilter[index] ? blue : black),
+                                  ),
+                                ),
+                                const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
+        }
+    );
+  }
+
   void openApplicantSelection() {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -362,6 +588,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
 
   _getNetworthData() async {
 
+    listAssetFilter = [];
+
     if ((sessionManagerPMS.getNetworthData() != null))
     {
       print("IS FIRST IF");
@@ -369,12 +597,14 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
       {
         print("IS IN IF");
         listData = sessionManagerPMS.getNetworthData().networth ?? [];
+        listDataMain = sessionManagerPMS.getNetworthData().networth ?? [];
         print((listData.length));
       }
       else
       {
         print("IS IN ELSE");
         listData = [];
+        listDataMain = [];
       }
     }
     else
@@ -396,7 +626,9 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     final url = Uri.parse(API_URL_CP + networth);
     Map<String, String> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
-      'applicant' : selectedApplicant == 'ALL' ? "" : selectedApplicant
+      // 'applicant' : selectedApplicant == 'ALL' ? "" : selectedApplicant
+      "applicant": selectedApplicantName.isEmpty ? "" : selectedApplicantName,
+      "broker": selectedBroker.isEmpty ? "" : selectedBroker
     };
 
     final response = await http.post(url, body: jsonBody);
@@ -408,11 +640,35 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     if (statusCode == 200 && dataResponse.success == 1)
     {
       try {
+
+        if(dataResponse.brokerFilter?.isNotEmpty ?? false)
+        {
+          listBrokerFilter = dataResponse.brokerFilter ?? [];
+        }
+        else
+        {
+          listBrokerFilter = [];
+        }
+
+        print("Display list broker filter : $listBrokerFilter");
+
         if (dataResponse.result?.networth != null) {
-          listData = dataResponse.result?.networth ?? [];
+
+          listDataMain = dataResponse.result?.networth ?? [];
+          listData = listDataMain;
+
+
+          for(int i = 0; i < listDataMain.length; i++)
+          {
+            listAssetFilter.add(listDataMain[i].asset ?? "");
+          }
+
+          print("Display list asset filter : $listAssetFilter");
+
           setState(() {
             _isLoading = false;
           });
+
         }
         else{
           setState(() {

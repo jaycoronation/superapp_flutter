@@ -17,6 +17,7 @@ bool isNewsReload = false;
 
 const Color appBg= Color(0xffffffff);
 const Color black= Color(0xff000000);
+const Color blackLight = Color(0xff1E1E1E);
 const Color white= Color(0xffffffff);
 const Color gray = Color(0xffD3DADC);
 const Color grayLight= Color(0xffe0e0e0);
@@ -45,6 +46,13 @@ const Color chart_color11= Color(0xfff1f3f4);
 const Color chart_color12= Color(0xfff1f3f4);
 const Color listActionColor = Color(0xff3366ff);
 const Color lightGrey = Color(0xffacbecc);
+const Color red = Color(0xffea1b1b);
+
+const Color volatileColor = Color(0xFFffc4a3);
+const Color fixedIncomeColor = Color(0xFFa3d5ff);
+const Color realEstateColor = Color(0xFFc2e5d3);
+const Color alternativeColor = Color(0xFFd3c2f5);
+const Color realEstateYellow = Color(0xFFfbe3a3);
 
 const LinearGradient loginBgGradient = LinearGradient(
     begin: FractionalOffset.bottomCenter,

@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
@@ -56,6 +57,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   int touchedIndexAsset = -1;
   int touchedIndexApplicant = -1;
 
+  int touchedIndexMacroAsset = -1;
+
   var strNetWorth = "";
   String asPerDate = "";
 
@@ -64,6 +67,8 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
   final List<Color> colorsApplicantAllocation = <Color>[chart_color6, chart_color10,chart_color3,chart_color4,chart_color5,
     chart_color1,chart_color7,chart_color8,chart_color9,chart_color2];
+
+  final List<Color> colorsMacroAssetAllocation = [volatileColor, fixedIncomeColor, realEstateColor];
 
   @override
   void initState() {
@@ -82,7 +87,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: dashboardBg,
       body: _isLoading
           ? const LoadingWidget()
           : ResponsiveWidget.isMediumScreen(context)
@@ -380,6 +385,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               )
           )
           : SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
               child: Padding(padding: const EdgeInsets.only(left: 6, right: 6,top: 25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,6 +424,82 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                         ),
                       ),
                     ),
+
+/*
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Macro Asset Allocation - Strategic:",
+                            style: getMediumTextStyle(fontSize: 14, color: blue),
+                          ),
+                          const Gap(8),
+                          Divider(color: gray,),
+                          const Gap(8),
+
+                          //macro_asset_tactical
+                          Container(
+                            margin: const EdgeInsets.only(top: 20, bottom: 10),
+                            height: 250,
+                            child: PieChart(
+                              PieChartData(
+                                sectionsSpace: 0,
+                                centerSpaceRadius: 0,
+                                startDegreeOffset: -100,
+                                pieTouchData: PieTouchData(
+                                  touchCallback: (event, response) {
+                                    setState(() {
+                                      if (!event.isInterestedForInteractions || response == null || response.touchedSection == null)
+                                      {
+                                        touchedIndexMacroAsset = -1;
+                                        return;
+                                      }
+                                      touchedIndexMacroAsset = response.touchedSection!.touchedSectionIndex;
+                                    });
+                                  },
+                                ),
+                                sections: List.generate((resultData.macroAssetTactical?.length ?? 0), (index) {
+                                  // int total = listVoterInclinationData.fold(0,(sum, item) => sum + item.count,);
+                                  // final value = listVoterInclinationData[index];
+                                  if (resultData.macroAssetTactical?.isEmpty ?? true)
+                                  {
+                                    return PieChartSectionData(value: 0);
+                                  }
+
+                                  final isTouched = index == touchedIndexMacroAsset;
+                                  final percent = (value.count / total * 100).toStringAsFixed(1);
+
+                                  final percentValue = value.count / total * 100;
+
+                                  return PieChartSectionData(
+                                    showTitle: percentValue > 1,
+                                    titlePositionPercentageOffset: percentValue < 1 ? 1.1 : 0.7,
+                                    color: colorsMacroAssetAllocation[index],
+                                    value: double.tryParse("${value.count}"),
+                                    radius: isTouched ? 130 : 120,
+                                    title: isTouched
+                                        ? "${listVoterInclinationData[index].count}"
+                                        : "$percent% (${value.count})",
+                                    titleStyle: getSemiBoldTextStyle(fontSize: 12, color: white),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+
+
+                        ],
+                      ),
+                    ),
+*/
+
                     Container(
                       margin: const EdgeInsets.only(left: 16,right: 16),
                       child: Row(

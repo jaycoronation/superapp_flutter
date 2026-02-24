@@ -15,13 +15,18 @@ import 'package:superapp_flutter/constant/global_context.dart';
 import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
+import 'package:superapp_flutter/screen/common/video_player_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/base_class.dart';
+import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
+import '../../model/BlogListResponseModel.dart';
 import '../../model/CommanResponse.dart';
+import '../../model/CommonModel.dart';
+import '../../model/video_data_response_model.dart';
 import '../../utils/Utils.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
@@ -29,6 +34,7 @@ import '../consolidated-portfolio/cp_home_page.dart';
 import '../e-state-analysis/e_state_analysis_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
 import 'LoginScreen.dart';
+import 'blog_detail_page.dart';
 import 'blogs_page.dart';
 import 'contact_page.dart';
 import 'meeting_page.dart';
@@ -44,6 +50,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends BaseState<HomePage> {
   DateTime preBackPressTime = DateTime.now();
   bool _isLoading = false;
+  bool isLoadingBlog = false;
+  bool isLoadingYoutubeVideos = false;
 
   String deviceName = '';
   String osVersion = '';
@@ -54,10 +62,15 @@ class _HomePageState extends BaseState<HomePage> {
   num isDisableConsolidatedPortfolio = 0;
   String userType = "";
 
+  List<CommonValueModel> listDashboardData = [];
+  List<Items> listYoutubeVideos = [];
+  List<ItemBlogs> listBlogData = [];
+
   @override
   void initState() {
     super.initState();
     userType = sessionManager.getUserType();
+    setData();
     getDeviceData();
     if (userType == "client")
       {
@@ -66,6 +79,23 @@ class _HomePageState extends BaseState<HomePage> {
     print("<><> SESS :: ${sessionManager.getUserId()} <><> ${sessionManagerPMS.getUserId()} <><> ${sessionManagerVault.getUserId()}");
     print("<><> SESS :: ${sessionManagerPMS.getFirstName()} <><> ${sessionManagerPMS.getLastName()}");
     print("<><> userType :: ${userType}");
+    fetchYoutubeVideosList();
+    fetchBlogList();
+  }
+
+  setData(){
+    listDashboardData = [
+      CommonValueModel(title: "Alpha Portfolio", description: "Investments by Alpha Capital", image: "assets/images/ic_portfolio.png", id: "1"),
+      CommonValueModel(title: "Consolidated Portfolio", description: "Complete Financial Snapshot", image: "assets/images/ic_consolidated.png", id: "2"),
+      CommonValueModel(title: "Financial Planning", description: "Strategic Roadmap for Future Investments", image: "assets/images/ic_estate_a.png", id: "3"),
+      CommonValueModel(title: "Estate Vault", description: "Digital Locker for Legacy Documents", image: "assets/images/ic_vault.png", id: "4"),
+      // CommonValueModel(title: "Fix Meeting", description: "Fix Meeting", image: "assets/images/ic_meeting.png", id: "5"),
+      CommonValueModel(title: "Tasks & Summaries", description: "Track Your Financial To-Dos", image: "assets/images/img_task_summary.png", id: "5"),
+      CommonValueModel(title: "Contact", description: "Get in Touch", image: "assets/images/ic_contact.png", id: "6"),
+      // CommonValueModel(title: "Blogs", description: "Blogs", image: "assets/images/ic_blog.png", id: "7"),
+      // CommonValueModel(title: "Videos", description: "Videos", image: "assets/images/ic_videos.png", id: "8"),
+    ];
+    print("Display list data length : ${listDashboardData.length}");
   }
 
   @override
@@ -85,7 +115,7 @@ class _HomePageState extends BaseState<HomePage> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: appBg,
+        backgroundColor: dashboardBg,
         appBar: AppBar(
             toolbarHeight: 60,
             automaticallyImplyLeading: false,
@@ -108,7 +138,7 @@ class _HomePageState extends BaseState<HomePage> {
 
                 Expanded(
                     child: Text(
-                      sessionManager.getUserType() != "client" ? "Hi ${toDisplayCase(sessionManager.getRMIDName())}" : "Hi ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+                      sessionManager.getUserType() != "client" ? "Welcome ${toDisplayCase(sessionManager.getRMIDName())}" : "Welcome ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontSize: 18, color: blue, fontWeight: FontWeight.w600),
@@ -131,32 +161,20 @@ class _HomePageState extends BaseState<HomePage> {
           top: false,
           child: _isLoading
               ? const LoadingWidget()
-              : Container(
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-                color: dashboardBg,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(22),
-                    topRight: Radius.circular(22))),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  homePageBlocks(),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Image.asset(
-                        'assets/images/ic_login_logo.png',
-                        width: 200,
-                        height: 80,
-                        color: blue),
-                  ),
-                ],
+              : Column(
+            children: [
+              homePageBlocks(),
+              Container(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  'assets/images/ic_login_logo.png',
+                  width: 200,
+                  height: 80,
+                  color: blue
+                ),
               ),
-            ),
-          ),
+            ],
+          )
         ),
         floatingActionButton: Container(
           margin: EdgeInsets.only(bottom: 22),
@@ -186,428 +204,793 @@ class _HomePageState extends BaseState<HomePage> {
 
   Widget homePageBlocks() {
     return Expanded(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Gap(10),
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                  onTap: () async {
-                    // generateAuth('');
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Gap(10),
+              GridView.builder(
+                itemCount: listDashboardData.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 160),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
 
-                    final result = await _checkNativeLibrary();
-                    if (!result) {
+                  var data = listDashboardData[index];
 
-                      if(sessionManager.getUserType() == "client")
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () async{
+                      if(data.id == "1")
                       {
-                        // call SSOToken API
-                        if (sessionManagerVault.getUserName().isNotEmpty)
+                        //alpha portfolio
+                        final result = await _checkNativeLibrary();
+                        if (!result) {
+
+                          if(sessionManager.getUserType() == "client")
+                          {
+                            // call SSOToken API
+                            if (sessionManagerVault.getUserName().isNotEmpty)
+                            {
+                              generateAuth("");
+                            }
+                            else
+                            {
+                              showSnackBar("User name not found", context);
+                            }
+                          }
+                          else
+                          {
+                            // call SSOToken API
+                            if (sessionManager.getRMIUserName().isNotEmpty)
+                            {
+                              generateAuth("");
+                            }
+                            else
+                            {
+                              showSnackBar("User name not found", context);
+                            }
+                          }
+
+
+                        }
+                      }
+                      else if(data.id == "2")
+                      {
+                        //consolidated portfolio
+                        if(userType == "client")
                         {
-                          generateAuth("");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CPHomePage()));
                         }
                         else
                         {
-                          showSnackBar("User name not found", context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
                         }
                       }
-                      else
+                      else if(data.id == "3")
                       {
-                        // call SSOToken API
-                        if (sessionManager.getRMIUserName().isNotEmpty)
+                        //financial planning
+                        if(userType == "client")
                         {
-                          generateAuth("");
-                        }
-                        else
-                        {
-                          showSnackBar("User name not found", context);
-                        }
-                      }
-
-
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_portfolio.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Alpha Portfolio",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
-                Visibility(
-                    visible: isDisableConsolidatedPortfolio == 0,
-                    child: const Gap(15)),
-                Visibility(
-                  visible: isDisableConsolidatedPortfolio == 0,
-                  child: Expanded(
-                      child: InkWell(
-                    onTap: () async {
-
-                      if(userType == "client")
-                      {
-                        Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const CPHomePage()));
+                                builder: (context) => const EStateAnalysisHomePage()),
+                          );
+                          lastInsertedModule("login-estate-analysis");
+                        }
+                        else
+                        {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+                        }
                       }
-                      else
+                      else if(data.id == "4")
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
+                        //estate value
+                        if(sessionManager.getUserType() == "client")
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const EStateVaultHomePage()),
+                          );
+                          lastInsertedModule("login-estate-vault");
+                        }
+                        else
+                        {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
+                        }
+                      }
+                      else if(data.id == "5")
+                      {
+                        /*//fix meeting
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MeetingPage()),
+                        );*/
+
+                        //task summary
+
+                      }
+                      else if(data.id == "6")
+                      {
+                        //contact
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ContactPage()),
+                        );
+                      }
+                      else if(data.id == "7")
+                      {
+                        //blogs
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const BlogsPage()),
+                        );
+                      }
+                      else if(data.id == "8")
+                      {
+                        //videos
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const VideoListPage()),
+                        );
                       }
                     },
                     child: Container(
-                      padding: const EdgeInsets.only(
-                          left: 15, bottom: 16, top: 16, right: 2),
-                      decoration: const BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('assets/images/ic_consolidated.png',
-                              width: 40, height: 40),
-                          const Spacer(),
-                          const Text(
-                            "Consolidated Portfolio",
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Image.asset(
+                              data.image,
+                              height: 40,
+                              width: 40,
+                            ),
+                          ),
+                          const Gap(10),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data.title,
+                                  style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const Gap(4),
+                                Text(
+                                  data.description,
+                                  style: getMediumTextStyle(fontSize: 12, color: grayDark),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              // Expanded(
+              //     flex: 1,
+              //     child: Row(
+              //       children: [
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () async {
+              //             // generateAuth('');
+              //
+              //             final result = await _checkNativeLibrary();
+              //             if (!result) {
+              //
+              //               if(sessionManager.getUserType() == "client")
+              //               {
+              //                 // call SSOToken API
+              //                 if (sessionManagerVault.getUserName().isNotEmpty)
+              //                 {
+              //                   generateAuth("");
+              //                 }
+              //                 else
+              //                 {
+              //                   showSnackBar("User name not found", context);
+              //                 }
+              //               }
+              //               else
+              //               {
+              //                 // call SSOToken API
+              //                 if (sessionManager.getRMIUserName().isNotEmpty)
+              //                 {
+              //                   generateAuth("");
+              //                 }
+              //                 else
+              //                 {
+              //                   showSnackBar("User name not found", context);
+              //                 }
+              //               }
+              //
+              //
+              //             }
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_portfolio.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Alpha Portfolio",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         )),
+              //         Visibility(
+              //             visible: isDisableConsolidatedPortfolio == 0,
+              //             child: const Gap(15)),
+              //         Visibility(
+              //           visible: isDisableConsolidatedPortfolio == 0,
+              //           child: Expanded(
+              //               child: InkWell(
+              //             onTap: () async {
+              //
+              //               if(userType == "client")
+              //               {
+              //                 Navigator.push(
+              //                     context,
+              //                     MaterialPageRoute(
+              //                         builder: (context) => const CPHomePage()));
+              //               }
+              //               else
+              //               {
+              //                 Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
+              //               }
+              //             },
+              //             child: Container(
+              //               padding: const EdgeInsets.only(
+              //                   left: 15, bottom: 16, top: 16, right: 2),
+              //               decoration: const BoxDecoration(
+              //                   color: white,
+              //                   borderRadius: BorderRadius.all(Radius.circular(15))),
+              //               child: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 mainAxisAlignment: MainAxisAlignment.center,
+              //                 children: [
+              //                   Image.asset('assets/images/ic_consolidated.png',
+              //                       width: 40, height: 40),
+              //                   const Spacer(),
+              //                   const Text(
+              //                     "Consolidated Portfolio",
+              //                     maxLines: 2,
+              //                     style: TextStyle(
+              //                         color: black,
+              //                         fontSize: 18,
+              //                         fontWeight: FontWeight.w600),
+              //                   )
+              //                 ],
+              //               ),
+              //             ),
+              //           )),
+              //         )
+              //       ],
+              //     )),
+              // const Gap(15),
+              // Expanded(
+              //     flex: 1,
+              //     child: Row(
+              //       children: [
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () {
+              //
+              //             if(userType == "client")
+              //             {
+              //               Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                     builder: (context) => const EStateAnalysisHomePage()),
+              //               );
+              //               lastInsertedModule("login-estate-analysis");
+              //             }
+              //             else
+              //             {
+              //               Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+              //             }
+              //
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(
+              //                 left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_estate_a.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Financial Planning",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         )),
+              //         const Gap(15),
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () {
+              //
+              //             if(sessionManager.getUserType() == "client")
+              //             {
+              //               Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                     builder: (context) => const EStateVaultHomePage()),
+              //               );
+              //               lastInsertedModule("login-estate-vault");
+              //             }
+              //             else
+              //             {
+              //               Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
+              //             }
+              //
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(
+              //                 left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_vault.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Estate Vault",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         ))
+              //       ],
+              //     )),
+              // const Gap(15),
+              // /*Expanded(
+              //           flex: 1,
+              //           child: Row(
+              //             children: [
+              //               Expanded(
+              //                   child: InkWell(
+              //                     onTap: () {
+              //                       Navigator.push(context, MaterialPageRoute(builder: (context) => const WebviewPage('https://www.alphacapital.in/investor_charter/')),);
+              //                     },
+              //                     child: Container(
+              //                       padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
+              //                       decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+              //                       child: Column(
+              //                         crossAxisAlignment: CrossAxisAlignment.start,
+              //                         mainAxisAlignment: MainAxisAlignment.center,
+              //                         children: [
+              //                           Image.asset('assets/images/ic_blog.png', width: 40, height: 40),
+              //                           const Spacer(),
+              //                           const Text("RIA Charter",
+              //                             maxLines: 2,
+              //                             style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+              //                           )
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   )
+              //               ),
+              //               const Gap(15),
+              //               Expanded(
+              //                   child: InkWell(
+              //                     onTap: () {
+              //                       Navigator.push(context, MaterialPageRoute(builder: (context) => const ClientTaskListScreen()),);
+              //                     },
+              //                     child: Container(
+              //                       padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
+              //                       decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+              //                       child: Column(
+              //                         crossAxisAlignment: CrossAxisAlignment.start,
+              //                         mainAxisAlignment: MainAxisAlignment.center,
+              //                         children: [
+              //                           Image.asset('assets/images/ic_videos.png', width: 40, height: 40),
+              //                           const Spacer(),
+              //                           const Text("My Task",
+              //                             maxLines: 2,
+              //                             style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
+              //                           )
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   ))
+              //             ],
+              //           )
+              //       ),
+              //       const Gap(15),*/
+              // Expanded(
+              //     flex: 1,
+              //     child: Row(
+              //       children: [
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                   builder: (context) => const MeetingPage()),
+              //             );
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(
+              //                 left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_meeting.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Fix Meeting",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         )),
+              //         const Gap(15),
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                   builder: (context) => const ContactPage()),
+              //             );
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(
+              //                 left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_contact.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Contact",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         ))
+              //       ],
+              //     )),
+              // const Gap(15),
+              // Expanded(
+              //     flex: 1,
+              //     child: Row(
+              //       children: [
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                   builder: (context) => const BlogsPage()),
+              //             );
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(
+              //                 left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_blog.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Blogs",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         )),
+              //         const Gap(15),
+              //         Expanded(
+              //             child: InkWell(
+              //           onTap: () {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                   builder: (context) => const VideoListPage()),
+              //             );
+              //           },
+              //           child: Container(
+              //             padding: const EdgeInsets.only(
+              //                 left: 15, right: 15, top: 16, bottom: 16),
+              //             decoration: const BoxDecoration(
+              //                 color: white,
+              //                 borderRadius: BorderRadius.all(Radius.circular(15))),
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Image.asset('assets/images/ic_videos.png',
+              //                     width: 40, height: 40),
+              //                 const Spacer(),
+              //                 const Text(
+              //                   "Videos",
+              //                   maxLines: 2,
+              //                   style: TextStyle(
+              //                       color: black,
+              //                       fontSize: 18,
+              //                       fontWeight: FontWeight.w600),
+              //                 )
+              //               ],
+              //             ),
+              //           ),
+              //         ))
+              //       ],
+              //     )),
+              // const Gap(15),
+
+              const Gap(16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Market Minds on Screen :",
+                      style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                    ),
+                  ),
+                  const Gap(10),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      //videos
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: blue),
+                        borderRadius: BorderRadius.circular(8)
+                      ),
+                      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                      child: Text(
+                        "View All",
+                        style: getMediumTextStyle(fontSize: 12, color: blue),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const Gap(10),
+              ListView.builder(
+                itemCount: listYoutubeVideos.length > 4 ? 4 : listYoutubeVideos.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(0),
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+
+                  final listData = listYoutubeVideos[index];
+
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPlayerScreen(listData.id?.videoId ?? "")));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  listData.snippet?.thumbnails?.high?.url ?? "",
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Image.asset(
+                                "assets/images/img_youtube.png",
+                                height: 70,
+                                width: 70,
+                                color: red,
+                              )
+                            ],
+                          ),
+                          const Gap(8),
+                          Text(
+                            universalDateConverter("yyyy-MM-ddThh:mm:ss", "dd MMM, yyyy", listData.snippet?.publishedAt ?? ""),
+                            style: getRegularTextStyle(fontSize: 12, color: grayDark),
+                          ),
+                          const Gap(4),
+                          Text(
+                            listData.snippet?.title ?? "",
+                            style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
                           )
                         ],
                       ),
                     ),
-                  )),
-                )
-              ],
-            )),
-        const Gap(15),
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-
-                    if(userType == "client")
-                    {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EStateAnalysisHomePage()),
-                      );
-                      lastInsertedModule("login-estate-analysis");
-                    }
-                    else
-                    {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
-                    }
-
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_estate_a.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Financial Planning",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
-                const Gap(15),
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-
-                    if(sessionManager.getUserType() == "client")
-                    {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EStateVaultHomePage()),
-                      );
-                      lastInsertedModule("login-estate-vault");
-                    }
-                    else
-                    {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
-                    }
-
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_vault.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Estate Vault",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ),
-                ))
-              ],
-            )),
-        const Gap(15),
-        /*Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const WebviewPage('https://www.alphacapital.in/investor_charter/')),);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
-                              decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/images/ic_blog.png', width: 40, height: 40),
-                                  const Spacer(),
-                                  const Text("RIA Charter",
-                                    maxLines: 2,
-                                    style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                      ),
-                      const Gap(15),
-                      Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ClientTaskListScreen()),);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 15,right: 15,top: 16,bottom: 16),
-                              decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset('assets/images/ic_videos.png', width: 40, height: 40),
-                                  const Spacer(),
-                                  const Text("My Task",
-                                    maxLines: 2,
-                                    style: TextStyle(color: black, fontSize: 18, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ))
-                    ],
-                  )
+                  );
+                },
               ),
-              const Gap(15),*/
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MeetingPage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_meeting.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Fix Meeting",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
+              const Gap(16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Insights by Alpha Research :",
+                      style: getSemiBoldTextStyle(fontSize: 14, color: blue),
                     ),
                   ),
-                )),
-                const Gap(15),
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ContactPage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_contact.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Contact",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
+                  const Gap(10),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      //blogs
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: blue),
+                          borderRadius: BorderRadius.circular(8)
+                      ),
+                      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                      child: Text(
+                        "View All",
+                        style: getMediumTextStyle(fontSize: 12, color: blue),
+                      ),
                     ),
-                  ),
-                ))
-              ],
-            )),
-        const Gap(15),
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BlogsPage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_blog.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Blogs",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
+                  )
+                ],
+              ),
+              const Gap(10),
+              ListView.builder(
+                itemCount: listBlogData.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(0),
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+
+                  final listData = listBlogData[index];
+
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BlogsDetailPage(listData)),);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              listData.blogImage ?? "",
+                              height: 200,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const Gap(8),
+                          Text(
+                            listData.createdAt ?? "",
+                            style: getRegularTextStyle(fontSize: 12, color: grayDark),
+                          ),
+                          const Gap(4),
+                          Text(
+                            listData.title ?? "",
+                            style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                )),
-                const Gap(15),
-                Expanded(
-                    child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const VideoListPage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, top: 16, bottom: 16),
-                    decoration: const BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/ic_videos.png',
-                            width: 40, height: 40),
-                        const Spacer(),
-                        const Text(
-                          "Videos",
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
-                  ),
-                ))
-              ],
-            )),
-        const Gap(15),
-      ],
-    ));
+                  );
+                },
+              )
+            ],
+         ),
+        ),
+      ));
   }
 
   Future<dynamic> generateAuth(String loginType) async {
@@ -1025,6 +1408,122 @@ class _HomePageState extends BaseState<HomePage> {
       if (statusCode == 200 && dataResponse.success == 1) {
       } else {}
     }*/
+
+  void fetchBlogList() async {
+
+    if(isOnline)
+    {
+      setState(() {
+        isLoadingBlog = true;
+      });
+
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse("https://www.alphacapital.in/api/admin/blogs/list");
+        Map<String, String> jsonBody = {
+          'category': "all",
+          'from_app': "true",
+          'limit': "4",
+          'page': "1",
+        };
+
+        final response = await http.post(url,body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> codes = jsonDecode(body);
+        var dataResponse = BlogListResponseModel.fromJson(codes);
+
+        if (statusCode == 200 && dataResponse.success == 1)
+        {
+          if (dataResponse.itemBlogs != null && (dataResponse.itemBlogs?.isNotEmpty ?? false))
+          {
+            listBlogData = dataResponse.itemBlogs ?? [];
+          }
+          else
+          {
+            listBlogData = [];
+          }
+
+          print("Display blog list length : ${listBlogData.length}");
+        }
+        else
+        {
+          listBlogData = [];
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch blog list : $e");
+      }
+      finally
+      {
+        if(mounted)
+        {
+          setState(() {
+            isLoadingBlog = false;
+          });
+        }
+      }
+    }
+    else
+    {
+      noInterNet(context);
+    }
+  }
+
+  void fetchYoutubeVideosList() async {
+    if(isOnline)
+    {
+      setState(() {
+        isLoadingYoutubeVideos = true;
+      });
+
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse("https://www.alphacapital.in/youtube.php");
+        final response = await http.get(url);
+        final statusCode = response.statusCode;
+
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = VideoDataResponseModel.fromJson(user);
+
+        if (statusCode == 200)
+        {
+          listYoutubeVideos = dataResponse.items ?? [];
+        }
+        else
+        {
+          listYoutubeVideos = [];
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch youtube video list : $e");
+      }
+      finally
+      {
+        if(mounted)
+        {
+          setState(() {
+            isLoadingYoutubeVideos = false;
+          });
+        }
+      }
+    }
+    else
+    {
+      print("No Internet");
+    }
+  }
 
   @override
   void castStatefulWidget() {
