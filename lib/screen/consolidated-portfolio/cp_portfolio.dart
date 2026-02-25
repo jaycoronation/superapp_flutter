@@ -430,7 +430,6 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         padding: EdgeInsets.zero,
         itemCount: schemes.length,
         itemBuilder: (context, index) {
-          print("schemes ==== ${schemes[index].schemeName.toString()} ==== ${schemes[index].initialValue.toString()}");
           return Container(
             alignment: Alignment.center,
             width: double.infinity,

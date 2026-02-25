@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
@@ -213,9 +218,11 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                             print(base64Str);
 
                             var _url = API_URL_ANALYSIS + generateFinalReport + base64Str;
-                            if(_url.isNotEmpty) {
-                              launch(_url);
-                            }
+                            // if(_url.isNotEmpty) {
+                            //   launch(_url);
+                            // }
+
+                            _getDownloadDirectory(context,_url);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(15),
@@ -248,6 +255,85 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
         ),
       ),
     );
+  }
+
+  Future<String> _getDownloadDirectory(BuildContext context, String fileUrlServer) async {
+    String? directory;
+    try {
+
+      if (Platform.isIOS)
+      {
+        var pathMain = await getApplicationDocumentsDirectory();
+        directory = pathMain.path;
+      }
+      else
+      {
+        directory = await FilePicker.platform.getDirectoryPath();
+      }
+
+      _downloadFile(directory ?? '',fileUrlServer);
+    } catch (e) {
+      print("Error while picking directory: $e");
+    }
+
+    if (directory == null)
+      {
+        showSnackBar("No directory selected!", context);
+        return "";
+      }
+    return directory;
+  }
+
+  Future<void> _downloadFile(String downloadPath, String fileUrlServer) async {
+    // Example using `http` package
+    String fileUrl = fileUrlServer;
+    String fileName = '${sessionManagerPMS.getFirstName()}_${sessionManagerPMS.getLastName()}_${DateTime.now().millisecondsSinceEpoch / 1000}.pdf';
+
+    if (Platform.isIOS)
+    {
+      var permissionStatus = await Permission.storage.status;
+      if (permissionStatus.isDenied)
+      {
+        await Permission.storage.request();
+      }
+    }
+
+    HttpClient().getUrl(Uri.parse(fileUrl))
+        .then((HttpClientRequest request) {
+      return request.close(); // Return the result of request.close()
+    })
+        .catchError((error, stackTrace) {
+      print("error === ${error}");
+      print("stackTrace === ${stackTrace}");
+      return error;
+    },)
+        .then((HttpClientResponse response) async {
+      File file = File('$downloadPath/$fileName');
+
+      await response.pipe(file.openWrite(mode: FileMode.write))
+          .catchError((error, stackTrace) {
+        print("error === ${error}");
+        print("stackTrace === ${stackTrace}");
+      },);
+
+      print('File Path ==== ${file.path}');
+
+      if (Platform.isAndroid)
+      {
+        final result = await OpenFile.open(file.path);
+        setState(() {
+          var openResult = "type=${result.type}  message=${result.message}";
+          print("openResult === $openResult");
+        });
+        //Navigator.pop(context);
+      }
+      else
+      {
+        final result = await OpenFile.open(file.path);
+        var openResult = "type=${result.type}  message=${result.message}";
+        print("openResult === $openResult");
+      }
+    });
   }
 
 

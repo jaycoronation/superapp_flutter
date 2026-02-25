@@ -1,15 +1,21 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/model/CommanResponse.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/assets/SchemesResponseModel.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/assets/SearchSchemeResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/base_class.dart';
 
 import '../../../common_widget/common_widget.dart';
 import '../../../constant/colors.dart';
 import '../../../constant/consolidate-portfolio/api_end_point.dart';
+import '../../../model/CommonModel.dart';
+import '../../../model/consolidated-portfolio/assets/FamilyMembersResponseModel.dart';
 import '../../../model/consolidated-portfolio/assets/InvestmentTypeResponseModel.dart';
 
 class AddAssetScreen extends StatefulWidget {
@@ -24,7 +30,26 @@ class AddAssetScreen extends StatefulWidget {
 class _AddAssetScreenState extends BaseState<AddAssetScreen> {
 
   bool isLoading = false;
+
+  List<SearchSchemes> listSearchScheme = [];
+  SearchSchemes selectedScheme = SearchSchemes();
+
   List<InvestmentTypeList> listInvestmentType = [];
+  List<InvestmentTypeList> listInvestmentTypeMain = [];
+
+  List<SchemesFinal> listSchemesFinal = [];
+  String selectedSchemeName = '';
+  String selectedSchemeNameId = '';
+
+  List<Members> listFamilyMember = [];
+  String selectedFamilyMember = '';
+  String selectedFamilyMemberId = '';
+
+  List<CommonValueModel> listTransactionType = [];
+  String selectedTransactionType = '';
+
+  List<CommonValueModel> listAssetType = [];
+  String selectedAssetType = '';
 
   String showSection = '';
 
@@ -81,10 +106,36 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
   TextEditingController cryptoPLController = TextEditingController();
   TextEditingController cryptoPLFigController = TextEditingController();
 
+  Timer? _debounce;
+
   @override
   void initState() {
     getInvestmentType();
+    getFamilyMembers();
+    setData();
+
+    schemeNameController.addListener(() {
+      if (selectedScheme.schemeName == null)
+        {
+          _onSearchChanged(schemeNameController.text);
+        }
+    });
+
     super.initState();
+  }
+
+  void _onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (text.isNotEmpty) {
+        searchSchemeApi(text);
+      } else {
+        setState(() {
+          listSearchScheme.clear();
+        });
+      }
+    });
   }
 
   @override
@@ -122,7 +173,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: 'Select Investment Type',
+                  labelText: 'Select Investment Type * ',
+                  suffix: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -133,9 +185,83 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               margin: EdgeInsets.fromLTRB(12, 8, 12, 8),
               child: getCommonButton("Submit", isLoading, () {
 
+                if (showSection.isEmpty)
+                  {
+                    showToast("Please select Investment Type");
+                    return;
+                  }
+
+                if (showSection == "add_asset_1")
+                  {
+                    if (selectedAssetType.isEmpty)
+                      {
+                        showToast("Please select Asset Type.");
+                      }
+                    else if (selectedTransactionType.isEmpty)
+                      {
+                        showToast("Please select Transaction Type");
+                      }
+                    else if (amountInvestedController.text.isEmpty)
+                      {
+                        showToast("Please enter Amount Invested.");
+                      }
+                    else if (currentValueController.text.isEmpty)
+                      {
+                        showToast("Please enter Current Value.");
+                      }
+                    else
+                      {
+                        saveAssetsApi();
+                      }
+                  }
+                else if (showSection == "add_asset_12")
+                  {
+                    if (schemeNameController.text.isEmpty)
+                      {
+                        showToast("Please select Scheme Name");
+                      }
+                    else if (selectedAssetClassController.text.isEmpty)
+                      {
+                        showToast("Please select Asset Type.");
+                      }
+                    else if (categoryController.text.isEmpty)
+                      {
+                        showToast("Please enter category.");
+                      }
+                    else if (selectedTransactionType.isEmpty)
+                      {
+                        showToast("Please select Transaction Type");
+                      }
+                    else if (amountInvestedController.text.isEmpty)
+                      {
+                        showToast("Please enter amount invested");
+                      }
+                    else if (currentValueController.text.isEmpty)
+                      {
+                        showToast("Please enter current value");
+                      }
+                    else
+                      {
+                        saveAssetsApi();
+                      }
+                  }
+                else if (showSection == "add_asset_2")
+                  {
+                    if (amountInvestedController.text.isEmpty)
+                      {
+                        showToast("Please enter invested amount");
+                      }
+                    else if (currentValueController.text.isEmpty)
+                      {
+                        showToast("Please enter current value");
+                      }
+                    else
+                      {
+                        saveAssetsApi();
+                      }
+                  }
               },),
             )
-
           ],
         ),
       ),
@@ -165,11 +291,176 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       try
       {
         listInvestmentType = dataResponse.investmentTypeList ?? [];
+        listInvestmentTypeMain = listInvestmentType;
         listInvestmentType.sort((a, b) => a.name!.compareTo(b.name ?? ''),);
       }
       catch(error)
       {
         print("display error : $error");
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  getFamilyMembers() async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP_ASSETS + getFamilyMembersApi);
+    Map<String, String> jsonBody = {
+      "user_id" : sessionManagerPMS.getUserId()
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = FamilyMembersResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try
+      {
+        setState(() {
+          listFamilyMember = dataResponse.members ?? [];
+        });
+      }
+      catch(error)
+      {
+        print("display error : $error");
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  getSchemeApi() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP + getFamilyMembersApi);
+    Map<String, String> jsonBody = {
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = SchemesResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try
+      {
+        listSchemesFinal = dataResponse.schemesFinal ?? [];
+      }
+      catch(error)
+      {
+        print("display error : $error");
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  searchSchemeApi(String text) async {
+    setState(() {
+      isLoading = true;
+    });
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_CP_ASSETS + searchScheme);
+
+    Map<String, String> jsonBody = {
+      "investment_type" : selectedInvestmentTypeId,
+      "search_schemes" : text
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = SearchSchemeResponseModel.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try
+      {
+        listSearchScheme = dataResponse.searchSchemes ?? [];
+      }
+      catch(error)
+      {
+        print("display error : $error");
+        setState(() {
+          isLoading = false;
+        });
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  saveAssetsApi() async {
+    setState(() {
+      isLoading = true;
+    });
+    print("IS IN SAVE ${saveAsset}");
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse("https://portfolio.alphacapital.in/api/services/assets/add");
+
+    Map<String, String> jsonBody = getPayloads();
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      try
+      {
+        showToast(dataResponse.message);
+        Navigator.pop(context);
+      }
+      catch(error)
+      {
+        print("display error : $error");
+        setState(() {
+          isLoading = false;
+        });
       }
 
       setState(() {
@@ -188,11 +479,104 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
   }
 
   void openInvestmentTypeBottomSheet() {
+
+    TextEditingController searchController = TextEditingController();
+
     showModalBottomSheet(
         isScrollControlled: true,
         backgroundColor: white,
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.88
+        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setStateNew) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+              child: Column(
+                children: [
+                  getBottomSheetHeaderWithoutButton(context, "Select Investment Type"),
+                  TextField(
+                    cursorColor: black,
+                    controller: searchController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.search,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: black,
+                        fontWeight: FontWeight.w400
+                    ),
+                    onChanged: (value) {
+                      setStateNew((){
+                        if (value.isNotEmpty)
+                        {
+                          listInvestmentType = [];
+                          for (var i=0; i < listInvestmentTypeMain.length; i++)
+                          {
+                            if (listInvestmentTypeMain[i].name?.toLowerCase().contains(value.toLowerCase()) ?? false)
+                            {
+                              listInvestmentType.add(listInvestmentTypeMain[i]);
+                            }
+                          }
+                        }
+                        else
+                        {
+                          listInvestmentType = listInvestmentTypeMain;
+                        }
+                      });
+
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      hintText: 'Search Investment Type...',
+                      // enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0), borderSide: BorderSide.none),
+                      // border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0), borderSide: BorderSide.none),
+                      // focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0), borderSide: BorderSide.none),
+                      contentPadding: const EdgeInsets.only(left: 12, right: 12),
+                      prefixIcon: const InkWell(
+                        onTap: null,
+                        child: Icon(Icons.search_rounded, size: 26, color: black),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: listInvestmentType.length,
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            Navigator.pop(context);
+                            setState(() {
+                              selectedInvestmentTypeId = listInvestmentType[index].itId ?? '';
+                              selectedInvestmentTypeName = listInvestmentType[index].name ?? '';
+                              selectInvestmentTypeController.text = listInvestmentType[index].name ?? '';
+                              selectInvestmentForm();
+                            });
+                          },
+                          child: getBottomSheetItemWithoutSelection(listInvestmentType[index].name ?? '',selectedInvestmentTypeId == listInvestmentType[index].itId, false),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },);
+        }
+    );
+  }
+
+  void openFirstHolderBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.88
         ),
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
         context: context,
@@ -204,9 +588,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 children: <Widget>[
                   Column(
                     children: [
-                      getBottomSheetHeaderWithoutButton(context, "Select Investment Type"),
+                      getBottomSheetHeaderWithoutButton(context, "Select 1st Holder"),
                       ListView.builder(
-                        itemCount: listInvestmentType.length,
+                        itemCount: listFamilyMember.length,
                         physics: const AlwaysScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -215,13 +599,104 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                             onTap: () {
                               Navigator.pop(context);
                               setState(() {
-                                selectedInvestmentTypeId = listInvestmentType[index].itId ?? '';
-                                selectedInvestmentTypeName = listInvestmentType[index].name ?? '';
-                                selectInvestmentTypeController.text = listInvestmentType[index].name ?? '';
-                                selectInvestmentForm();
+                                selectedFamilyMember = listFamilyMember[index].applicantName ?? '';
+                                selectedFamilyMemberId = listFamilyMember[index].userId ?? '';
+                                firstHolderController.text = listFamilyMember[index].applicantName ?? '';
                               });
                             },
-                            child: getBottomSheetItemWithoutSelection(listInvestmentType[index].name ?? '',selectedInvestmentTypeId == listInvestmentType[index].itId, false),
+                            child: getBottomSheetItemWithoutSelection(listFamilyMember[index].applicantName ?? '',selectedFamilyMember == listFamilyMember[index].applicantName, false),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
+        }
+    );
+  }
+
+  void openAssetClassBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.88
+        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+              child: Wrap(
+                children: <Widget>[
+                  Column(
+                    children: [
+                      getBottomSheetHeaderWithoutButton(context, "Select Asset Class"),
+                      ListView.builder(
+                        itemCount: listAssetType.length,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              Navigator.pop(context);
+                              setState(() {
+                                selectedAssetType = listAssetType[index].title ?? '';
+                                selectedAssetClassController.text = listAssetType[index].title ?? '';
+                              });
+                            },
+                            child: getBottomSheetItemWithoutSelection(listAssetType[index].title ?? '',selectedAssetType == listAssetType[index].title, false),
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
+        }
+    );
+  }
+
+  void openTransactionTypeBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: white,
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.88
+        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
+              child: Wrap(
+                children: <Widget>[
+                  Column(
+                    children: [
+                      getBottomSheetHeaderWithoutButton(context, "Select Transaction Type"),
+                      ListView.builder(
+                        itemCount: listTransactionType.length,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              Navigator.pop(context);
+                              setState(() {
+                                selectedTransactionType = listTransactionType[index].title ?? '';
+                                transactionTypeController.text = listTransactionType[index].title ?? '';
+                              });
+                            },
+                            child: getBottomSheetItemWithoutSelection(listTransactionType[index].title ?? '',selectedTransactionType == listTransactionType[index].title, false),
                           );
                         },
                       ),
@@ -256,14 +731,17 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         }
       });
 
-      print("showSection == ${showSection}");
+      print("showSection == $showSection");
     });
   }
 
-  getSelectedGroupFields() {
+  Widget getSelectedGroupFields() {
+
+    Widget getDataView = Column();
+
     if (showSection == "add_asset_1")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -275,10 +753,12 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: selectedAssetClassController,
                 readOnly: true,
                 onTap: () {
+                  openAssetClassBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: 'Asset Class',
+                  labelText: 'Asset Class *',
+                  suffix: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -289,9 +769,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: categoryController,
-                readOnly: true,
-                onTap: () {
-                },
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Category',
@@ -305,9 +783,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: schemeNameController,
-                readOnly: true,
-                onTap: () {
-                },
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Scheme Name',
@@ -323,10 +799,12 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: transactionTypeController,
                 readOnly: true,
                 onTap: () {
+                  openTransactionTypeBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: 'Transaction Type',
+                  labelText: 'Transaction Type *',
+                  suffix: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -339,6 +817,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: transactionDateController,
                 readOnly: true,
                 onTap: () {
+                  openDatePicker(transactionDateController);
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -350,15 +829,13 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: amountInvestedController,
                 readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: 'Amount Invested (Purchase Value)',
+                  labelText: 'Amount Invested (Purchase Value) *',
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -366,12 +843,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: quantityController,
-                readOnly: true,
-                onTap: () {
-                },
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Quantity',
@@ -382,11 +856,17 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: purchasePriceController,
-                readOnly: true,
-                onTap: () {
+                onChanged: (value) {
+                  if (quantityController.value.text.isNotEmpty)
+                    {
+                      var qty = num.parse(quantityController.value.text);
+                      var purchasePrice = num.parse(purchasePriceController.value.text);
+
+                      amountInvestedController.text = (qty * purchasePrice).toString();
+                    }
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -398,11 +878,17 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: currentPriceController,
-                readOnly: true,
-                onTap: () {
+                onChanged: (value) {
+                  if (quantityController.value.text.isNotEmpty)
+                  {
+                    var qty = num.parse(quantityController.value.text);
+                    var purchasePrice = num.parse(currentPriceController.value.text);
+
+                    currentValueController.text = (qty * purchasePrice).toString();
+                  }
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -418,8 +904,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 cursorColor: black,
                 controller: currentValueController,
                 readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Current Value *',
@@ -433,9 +917,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: folioNoController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Folio No / Account No',
@@ -449,9 +930,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: ISINNoController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'ISIN No',
@@ -467,10 +945,12 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: firstHolderController,
                 readOnly: true,
                 onTap: () {
+                  openFirstHolderBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: '1st Holder *',
+                  suffix: Icon(Icons.keyboard_arrow_down_outlined,size: 20,),
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -481,12 +961,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: secondHolderController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: '2nd Holder *',
+                  labelText: '2nd Holder',
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -497,9 +974,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: nomineeController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Nominee',
@@ -513,9 +987,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: brokerController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Broker / Advisor',
@@ -529,9 +1000,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: bankDetailsController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Bank Details',
@@ -545,9 +1013,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: notesController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Notes',
@@ -560,24 +1025,68 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_12")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
-              child: TextField(
-                keyboardType: TextInputType.text,
-                cursorColor: black,
-                controller: schemeNameController,
-                readOnly: true,
-                onTap: () {
-                },
-                decoration: InputDecoration(
-                  counterText: "",
-                  labelText: 'Scheme Name',
-                ),
-                style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: schemeNameController,
+                    cursorColor: black,
+                    decoration: InputDecoration(
+                      labelText: "Scheme Name",
+                      suffixIcon: isLoading
+                          ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2,color: blue,),
+                          width: 18,
+                        ),
+                      )
+                          : null,
+                    ),
+                  ),
+
+                  /// Dropdown Result
+                  if (listSearchScheme.isNotEmpty)
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 250),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: listSearchScheme.length,
+                        itemBuilder: (context, index) {
+                          final item = listSearchScheme[index];
+
+                          return ListTile(
+                            title: Text(
+                              item.schemeName ?? "",
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            subtitle: Text(item.category ?? ""),
+                            onTap: () {
+                              setState(() {
+                                selectedScheme = item;
+                                schemeNameController.text = item.schemeName ?? "";
+                                selectedAssetClassController.text = item.assetClass ?? "";
+                                categoryController.text = item.category ?? "";
+                                ISINNoController.text = item.isinNo ?? "";
+                                listSearchScheme.clear();
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                ],
               ),
             ),
             Container(
@@ -587,8 +1096,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 cursorColor: black,
                 controller: selectedAssetClassController,
                 readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Asset Class',
@@ -603,8 +1110,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 cursorColor: black,
                 controller: categoryController,
                 readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Category',
@@ -621,6 +1126,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: transactionTypeController,
                 readOnly: true,
                 onTap: () {
+                  openTransactionTypeBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -637,6 +1143,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: transactionDateController,
                 readOnly: true,
                 onTap: () {
+                  openDatePicker(transactionDateController);
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -648,15 +1155,12 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: amountInvestedController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: 'Amount Invested (Purchase Value)',
+                  labelText: 'Amount Invested (Purchase Value) *',
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -664,12 +1168,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: quantityController,
-                readOnly: true,
-                onTap: () {
-                },
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Quantity',
@@ -680,11 +1181,17 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: purchasePriceController,
-                readOnly: true,
-                onTap: () {
+                onChanged: (value) {
+                  if (quantityController.value.text.isNotEmpty)
+                  {
+                    var qty = num.parse(quantityController.value.text);
+                    var purchasePrice = num.parse(purchasePriceController.value.text);
+
+                    amountInvestedController.text = (qty * purchasePrice).toString();
+                  }
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -696,11 +1203,17 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: currentPriceController,
-                readOnly: true,
-                onTap: () {
+                onChanged: (value) {
+                  if (quantityController.value.text.isNotEmpty)
+                  {
+                    var qty = num.parse(quantityController.value.text);
+                    var purchasePrice = num.parse(currentPriceController.value.text);
+
+                    currentValueController.text = (qty * purchasePrice).toString();
+                  }
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -716,11 +1229,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 cursorColor: black,
                 controller: currentValueController,
                 readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: 'Current Value',
+                  labelText: 'Current Value *',
                 ),
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
@@ -731,9 +1242,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: folioNoController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Folio No / Account No',
@@ -748,8 +1256,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 cursorColor: black,
                 controller: ISINNoController,
                 readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'ISIN No',
@@ -765,6 +1271,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: firstHolderController,
                 readOnly: true,
                 onTap: () {
+                  openFirstHolderBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -777,11 +1284,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
                 keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
                 cursorColor: black,
                 controller: secondHolderController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: '2nd Holder *',
@@ -795,9 +1300,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: nomineeController,
-                readOnly: true,
-                onTap: () {
-                },
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Nominee',
@@ -811,9 +1314,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: brokerController,
-                readOnly: true,
-                onTap: () {
-                },
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Broker / Advisor',
@@ -827,9 +1328,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: bankDetailsController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Bank Details',
@@ -843,9 +1341,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: notesController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Notes',
@@ -858,7 +1353,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_2")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -870,6 +1365,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: selectedAssetClassController,
                 readOnly: true,
                 onTap: () {
+                  openAssetClassBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -884,9 +1380,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: schemeNameController,
-                readOnly: true,
-                onTap: () {
-                },
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Scheme / Bank Name',
@@ -902,6 +1396,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: transactionTypeController,
                 readOnly: true,
                 onTap: () {
+                  openTransactionTypeBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -910,7 +1405,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
             ),
-
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
@@ -919,6 +1413,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: transactionDateController,
                 readOnly: true,
                 onTap: () {
+                  openDatePicker(transactionDateController);
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -930,12 +1425,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: amountInvestedController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Amount Invested (Purchase Value)',
@@ -946,12 +1438,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: interestRateController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Interest Rate',
@@ -959,16 +1448,12 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
             ),
-
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 cursorColor: black,
                 controller: currentValueController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Current Value',
@@ -984,6 +1469,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: maturityDateController,
                 readOnly: true,
                 onTap: () {
+                  openDatePicker(maturityDateController);
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -998,9 +1484,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: folioNoController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Folio No / Account No',
@@ -1008,7 +1491,6 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
               ),
             ),
-
             Container(
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
@@ -1017,6 +1499,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 controller: firstHolderController,
                 readOnly: true,
                 onTap: () {
+                  openFirstHolderBottomSheet();
                 },
                 decoration: InputDecoration(
                   counterText: "",
@@ -1029,11 +1512,9 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
               child: TextField(
                 keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.words,
                 cursorColor: black,
                 controller: secondHolderController,
-                readOnly: true,
-                onTap: () {
-                },
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: '2nd Holder *',
@@ -1047,9 +1528,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                 keyboardType: TextInputType.text,
                 cursorColor: black,
                 controller: nomineeController,
-                readOnly: true,
-                onTap: () {
-                },
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   counterText: "",
                   labelText: 'Nominee',
@@ -1126,7 +1605,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_3")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1427,7 +1906,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_4")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1758,7 +2237,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_5")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1943,7 +2422,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_6")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2144,7 +2623,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
     else if (showSection == "add_asset_7")
       {
-        return Column(
+        getDataView = Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2328,5 +2807,118 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         );
       }
 
+    return getDataView;
   }
+
+  void setData() {
+    listAssetType.add(CommonValueModel(title: "Alternate", description: '', image: "", id: ""));
+    listAssetType.add(CommonValueModel(title: "Debt", description: '', image: "", id: ""));
+    listAssetType.add(CommonValueModel(title: "Equity", description: '', image: "", id: ""));
+    listAssetType.add(CommonValueModel(title: "Hybrid", description: '', image: "", id: ""));
+    listAssetType.add(CommonValueModel(title: "Real Estate", description: '', image: "", id: ""));
+
+
+    //  <ng-option value="Switch Out">Div Reinvest</ng-option>
+    //                             <ng-option value="Purchase">Purchase</ng-option>
+    //                             <ng-option value="Sell">Sell</ng-option>
+    //                             <ng-option value="SIP">SIP</ng-option>
+    //                             <!-- <ng-option value="STP">STP</ng-option> -->
+    //                             <ng-option value="SWP">SWP</ng-option>
+    //                             <ng-option value="Switch In">Switch In</ng-option>
+    //                             <ng-option value="Switch Out">Switch Out</ng-option>
+
+    listTransactionType.add(CommonValueModel(title: "Div Reinvest", description: "", image: "", id: ""));
+    listTransactionType.add(CommonValueModel(title: "Purchase", description: "", image: "", id: ""));
+    listTransactionType.add(CommonValueModel(title: "Sell", description: "", image: "", id: ""));
+    listTransactionType.add(CommonValueModel(title: "SIP", description: "", image: "", id: ""));
+    listTransactionType.add(CommonValueModel(title: "SWP", description: "", image: "", id: ""));
+    listTransactionType.add(CommonValueModel(title: "Switch In", description: "", image: "", id: ""));
+    listTransactionType.add(CommonValueModel(title: "Switch Out", description: "", image: "", id: ""));
+  }
+
+  Future<void> openDatePicker(TextEditingController controller) async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: checkValidString(controller.text).isNotEmpty ? DateFormat("dd MMM,yyyy").parse(controller.text) : DateTime.now(),
+        firstDate: DateTime(1901),
+        lastDate:  DateTime.now().subtract(const Duration(days: 0)),
+        helpText: 'Transaction Date',
+        builder: (context, Widget? child) => Theme(
+          data: Theme.of(context).copyWith(
+              appBarTheme: Theme.of(context)
+                  .appBarTheme
+                  .copyWith(backgroundColor: black, iconTheme: Theme.of(context).appBarTheme.iconTheme?.copyWith(color: white)),
+              scaffoldBackgroundColor: white,
+              colorScheme: const ColorScheme.light(onPrimary: white, primary: black)),
+          child: child!,
+        ));
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd MMM,yyyy').format(pickedDate);
+      setState(() {
+        controller.text = formattedDate; //set output date to TextField value.
+        // listData[index].setCreatedOn = formattedDate;
+      });
+    }
+  }
+
+  Map<String, String> getPayloads() {
+    Map<String, String> jsonData = {};
+
+    if (showSection == "add_asset_1")
+      {
+        jsonData = {
+          "amount_invested": amountInvestedController.text,
+          "asset_class": selectedAssetType,
+          "bank_details": bankDetailsController.text,
+          "broker_advisor": brokerController.text,
+          "category": categoryController.text,
+          "current_price": currentPriceController.text,
+          "current_value": currentValueController.text,
+          "first_holder": selectedFamilyMember,
+          "folio_no_account_no": folioNoController.text,
+          "investment_type": selectedInvestmentTypeId,
+          "is_from_superapp": "yes",
+          "isin_no": ISINNoController.text,
+          "nominee": nomineeController.text,
+          "notes": notesController.text,
+          "purchase_price": purchasePriceController.text,
+          "quantity": quantityController.text, // converted to string
+          "scheme_name": schemeNameController.text,
+          "second_holder": secondHolderController.text,
+          "transaction_type": selectedTransactionType,
+          "user_id": sessionManagerPMS.getUserId() ,
+        };
+      }
+    else if (showSection == "add_asset_12")
+      {
+        jsonData = {
+          "amount_invested": amountInvestedController.text, // 10000.00
+          "asset_class": selectedAssetClassController.text, // Equity
+          "bank_details": bankDetailsController.text, // asd
+          "broker_advisor": brokerController.text, // asd
+          "category": categoryController.text, // Equity: Sectoral/ Thematic
+          "current_price": currentPriceController.text, // 35280
+          "current_value": currentValueController.text, // 282240.00
+          "first_holder": selectedFamilyMember, // MUKESH JINDAL
+          "folio_no_account_no": folioNoController.text, // test
+          "investment_type": selectedInvestmentTypeId, // 2
+          "is_from_superapp": "yes",
+          "isin_no": ISINNoController.text, // INF109KC1RG1
+          "nominee": nomineeController.text, // asd
+          "notes": notesController.text, // asd
+          "purchase_price": purchasePriceController.text, // 1250
+          "quantity": quantityController.text, // 8 (string)
+          "scheme_name": schemeNameController.text,
+          "second_holder": secondHolderController.text, // ads
+          "transaction_date": transactionDateController.text, // 2026-03-06
+          "transaction_type": selectedTransactionType, // Sell
+          "user_id": sessionManagerPMS.getUserId(), // 500
+        };
+      }
+
+    return jsonData;
+  }
+  
+  
+  
 }

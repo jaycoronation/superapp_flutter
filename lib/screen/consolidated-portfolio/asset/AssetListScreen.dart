@@ -344,8 +344,8 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
 
     final url = Uri.parse(API_URL_CP + getAssetsList);
     Map<String, String> jsonBody = {
-      // 'user_id': sessionManagerPMS.getUserId().trim(),
-      'user_id': '423',
+      'user_id': sessionManagerPMS.getUserId().trim(),
+      // 'user_id': '423',
       'from_aggrigator': "no",
       'loadArchives': "no",
       'is_from_superapp': "yes",

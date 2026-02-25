@@ -526,7 +526,8 @@ openFileFromURL(String url,BuildContext? context) async {
 
 Widget getCommonButton(String title, bool isLoading, void Function() onPressed, [Color textColor = white,FontWeight weight = FontWeight.w600]){
   return TextButton(
-    onPressed: isLoading ? null : onPressed,
+    // onPressed: isLoading ? null : onPressed,
+    onPressed: onPressed,
     style: ButtonStyle(
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(

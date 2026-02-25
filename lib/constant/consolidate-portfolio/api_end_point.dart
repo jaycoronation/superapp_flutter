@@ -2,6 +2,7 @@
 const String API_DOMAIN_CP = "https://portfolio.alphacapital.in/"; //for live
 
 const String API_URL_CP = "${API_DOMAIN_CP}api/servicesv2/";
+const String API_URL_CP_ASSETS = "${API_DOMAIN_CP}api/services/";
 
 // https://portfolio.alphacapital.in/api/services/settings/get_pdf_bottom_text
 
@@ -66,3 +67,11 @@ String getAssetsList = "assets/list";
 String assetDelete = "assets/delete";
 
 String investmentTypes = "get_investment_type";
+
+String getFamilyMembersApi = "get_family_members";
+
+String getSchemesApi = "assets/get_schemes";
+
+String saveAsset = "https://portfolio.alphacapital.in/api/services/assets/add";
+
+String searchScheme = "assets/search_schemes";
