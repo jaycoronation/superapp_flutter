@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
 import '../model/TaskListResponseModel.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 /*show message to user*/
 showSnackBar(String? message,BuildContext? context) {
@@ -543,6 +548,90 @@ Widget getCommonButton(String title, bool isLoading, void Function() onPressed, 
       ),
     ),
   );
+}
+
+Widget getCommonButtonBorder(String title, bool isLoading, void Function() onPressed, {bool isLoadingBtnLight = false, Color bgColor = white, Color borderColor = blue, Color fontColor = blue, bool isSmallFont = false, EdgeInsets? padding, bool isSemiBold = false}){
+  return TextButton(
+    onPressed: onPressed,
+    style: ButtonStyle(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            side: BorderSide(width: 1, color: borderColor),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        backgroundColor: WidgetStateProperty.all<Color>(isLoadingBtnLight && isLoading ? bgColor.withValues(alpha: 0.6) : bgColor)
+    ),
+    child: isLoading
+        ? Padding(
+      padding: padding ?? const EdgeInsets.only(top: 10,bottom: 10),
+      child: SizedBox(width: 16,height: 16,child: CircularProgressIndicator(color: fontColor,strokeWidth: 2)),
+    )
+        : Padding(
+      padding: padding ?? const EdgeInsets.only(top: 8,bottom: 8),
+      child: Text(
+        title,
+        style: isSemiBold ?
+        getSemiBoldTextStyle(
+            fontSize: isSmallFont ? 12 : 14,
+            color: fontColor
+        ) :
+        TextStyle(fontSize: isSmallFont ? 12 : 14, fontWeight: FontWeight.w500, color: fontColor,),
+      ),
+    ),
+  );
+}
+
+Widget shimmerWidget(Widget child){
+  return Shimmer.fromColors(
+    baseColor: Colors.grey.shade300,
+    highlightColor: Colors.grey.shade100,
+    enabled: true,
+    child: child,
+  );
+}
+
+Color getValueColor(double value) {
+  if (value < 0) return redLight;
+  if (value > 0) return green;
+  return black;
+}
+
+Color getValueColorFundHouse(double value) {
+  if (value == 0 || value == 1) {
+    return redLight;
+  }
+  return black;
+}
+
+showToast(String? message) {
+  try {
+    return
+      Fluttertoast.showToast(
+          msg: message.toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 15
+      );
+
+  } catch (e) {
+    if (kDebugMode) {
+      print(e);
+    }
+  }
+}
+
+Future<String> convertImageToBase64(String imagePath) async {
+  File imageFile = File(imagePath);
+
+  List<int> imageBytes = await imageFile.readAsBytes();
+
+  String base64Image = base64Encode(imageBytes);
+
+  return base64Image;
 }
 
 Widget getBottomSheetHeaderWithoutButton(BuildContext context,String title){

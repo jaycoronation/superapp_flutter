@@ -51,3 +51,27 @@ TextStyle getBoldTextStyle({Color color = black, double fontSize = 14}){
   );
 }
 
+Widget getBottomSheetHeaderWithoutButton2(BuildContext context, String title, {Color titleColor = blue}) {
+  return Container(
+    margin: EdgeInsets.only(top: 4),
+    width: MediaQuery.of(context).size.width,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 2,
+          width: 50,
+          alignment: Alignment.center,
+          color: graySemiDark,
+          margin: const EdgeInsets.only(bottom: 4),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 4, bottom: 16),
+          child: Text(title, style: TextStyle(fontSize: 18, color: titleColor, fontWeight: FontWeight.w600)),
+        ),
+      ],
+    ),
+  );
+}
+

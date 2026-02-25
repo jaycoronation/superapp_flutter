@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/api_end_point.dart';
 import 'package:superapp_flutter/widget/loading.dart';
+import 'package:superapp_flutter/widget/no_data.dart';
 
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
@@ -24,14 +26,56 @@ class SummaryScreen extends StatefulWidget {
 class _SummaryScreenState extends BaseState<SummaryScreen> {
 
   bool isLoading = false;
-  List<SummaryData> listSummary = [];
-  final TextEditingController _summaryController = TextEditingController();
+  bool _isLoadingMore = false;
+  bool _isLastPage = false;
+  bool isScrollingDown = false;
 
+  ScrollController _scrollViewController = ScrollController();
+
+  int _pageIndex = 0;
+  final int _pageResult = 20;
+
+  List<SummaryData> listSummary = [];
 
   @override
   void initState() {
-    getDocuments();
+    fetchSummaryData(true);
+    _scrollViewController = ScrollController();
+    _scrollViewController.addListener(() {
+
+      if (_scrollViewController.position.userScrollDirection == ScrollDirection.reverse)
+      {
+        if (!isScrollingDown)
+        {
+          isScrollingDown = true;
+          setState(() {});
+        }
+      }
+      if (_scrollViewController.position.userScrollDirection == ScrollDirection.forward)
+      {
+        if (isScrollingDown)
+        {
+          isScrollingDown = false;
+          setState(() {});
+        }
+      }
+      pagination();
+    });
     super.initState();
+  }
+
+
+  void pagination() {
+    if (!_isLastPage && !_isLoadingMore)
+    {
+      if ((_scrollViewController.position.pixels == _scrollViewController.position.maxScrollExtent))
+      {
+        setState(() {
+          _isLoadingMore = true;
+          fetchSummaryData(false);
+        });
+      }
+    }
   }
 
   @override
@@ -39,23 +83,19 @@ class _SummaryScreenState extends BaseState<SummaryScreen> {
     return Scaffold(
         backgroundColor: white,
         appBar: AppBar(
-          toolbarHeight: 55,
-          leading: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: getBackArrow(),
-          ),
+          toolbarHeight: 0,
           automaticallyImplyLeading: false,
-          title: getTitle("Summary",),
-          centerTitle: true,
+          title: const Text(""),
+          centerTitle: false,
           elevation: 0,
           backgroundColor: white,
         ),
         body: isLoading
-            ? LoadingWidget()
+            ? LoadingWidget() :
+              listSummary.isEmpty ?
+              MyNoDataWidget(msg: "No data found")
             : ListView.builder(
+            controller: _scrollViewController,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -112,6 +152,82 @@ class _SummaryScreenState extends BaseState<SummaryScreen> {
             },
         )
     );
+  }
+
+  fetchSummaryData(bool isFirstTime) async{
+    if(isOnline)
+    {
+      if(isFirstTime)
+      {
+        setState(() {
+          isLoading = true;
+          _isLoadingMore = false;
+          _pageIndex = 1;
+          _isLastPage = false;
+        });
+      }
+
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+        final url = Uri.parse(summaryLists);
+
+        Map<String, String> jsonBody = {
+          "pan_card": sessionManagerPMS.getPanCard(),
+          "first_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+          "fromdate": '',
+          "todate": '',
+          "pageindex": _pageIndex.toString(),
+          "pagesize": _pageResult.toString()
+        };
+        final response = await http.post(url, body: jsonBody, headers: {"Authorization": authHeader,});
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> data = jsonDecode(body);
+        var dataResponse = SummaryListResponseModel.fromJson(data);
+
+        if (statusCode == 200 && dataResponse.success == true)
+        {
+          if(dataResponse.summaryData?.isNotEmpty ?? false)
+          {
+
+            List<SummaryData>? tempList = [];
+            tempList = dataResponse.summaryData ?? [];
+            listSummary.addAll(tempList);
+
+            if (tempList.isNotEmpty)
+            {
+              _pageIndex += 1;
+              if (tempList.isEmpty || tempList.length % _pageResult != 0)
+              {
+                _isLastPage = true;
+              }
+            }
+          }
+          else
+          {
+            listSummary = [];
+          }
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch summaries data : $e");
+      }
+      finally
+      {
+        setState(() {
+          isLoading = false;
+          _isLoadingMore = false;
+        });
+      }
+    }
+    else
+    {
+      noInterNet(context);
+    }
   }
 
   getDocuments() async {
@@ -197,17 +313,6 @@ class _SummaryScreenState extends BaseState<SummaryScreen> {
                                     color: blue,
                                   ),
                                 ),
-                                // Uncomment to add close icon
-                                /*GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Image.asset(
-                          'assets/images/ic_close.png',
-                          height: 26,
-                          width: 26,
-                        ),
-                      ),*/
                               ],
                             ),
                           ),

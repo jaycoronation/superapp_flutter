@@ -49,12 +49,17 @@ const Color chart_color12= Color(0xfff1f3f4);
 const Color listActionColor = Color(0xff3366ff);
 const Color lightGrey = Color(0xffacbecc);
 const Color red = Color(0xffea1b1b);
+const Color redLight = Color(0xffd9534f);
+const Color green = Color(0xff10b504);
+const Color listBg = Color(0xffeff4fd);
+const Color redDark = Color(0xff6c1b22);
 
-const Color volatileColor = Color(0xFFffc4a3);
-const Color fixedIncomeColor = Color(0xFFa3d5ff);
-const Color realEstateColor = Color(0xFFc2e5d3);
-const Color alternativeColor = Color(0xFFd3c2f5);
-const Color realEstateYellow = Color(0xFFfbe3a3);
+const Color tableLightOrange = Color(0xFFffc4a3);
+const Color tableLightBlue = Color(0xFFa3d5ff);
+const Color tableLightGreen = Color(0xFFc2e5d3);
+const Color tableLightPurple = Color(0xFFd3c2f5);
+const Color tableLightYellow = Color(0xFFfbe3a3);
+const Color tableLightPink = Color(0xFFf5c2e0);
 
 const LinearGradient loginBgGradient = LinearGradient(
     begin: FractionalOffset.bottomCenter,

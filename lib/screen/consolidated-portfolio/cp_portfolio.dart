@@ -47,6 +47,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
         if (listApplicants.isNotEmpty)
           {
+            selectedApplicantName = listApplicants[0] ?? '';
             selectedApplicant = listApplicants[0] ?? '';
           }
       }

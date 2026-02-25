@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:superapp_flutter/model/consolidated-portfolio/XIRRCommonResponseModel.dart';
 
+import '../model/consolidated-portfolio/LatestTransactionResponse.dart';
 import '../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../model/consolidated-portfolio/ApplicantResponseModel.dart';
 import '../model/consolidated-portfolio/PercentageResponse.dart';
@@ -23,6 +24,8 @@ class SessionManagerPMS {
   final String KEY_NETWORTH = "KEY_NETWORTH";
   final String KEY_PERCENTAGE = "KEY_PERCENTAGE";
   final String TOTAL_NETWORTH = "TOTAL_NETWORTH";
+
+  final String LAST_30_DAYS_TRANSACTION = "LAST_30_DAYS_TRANSACTION";
 
   final String LAST_SYNC_DATE = "LAST_SYNC_DATE";
 
@@ -142,6 +145,23 @@ class SessionManagerPMS {
         List<dynamic> jsonDataList = jsonDecode(jsonString);
         listJsonData = jsonDataList.map((jsonData) => Xirr.fromJson(jsonData)).toList();
       }
+    return listJsonData;
+  }
+
+  //last 30 days transaction data
+  Future<void> saveLast30DaysTransactionList(List<TransactionDetails> listItems) async {
+    var json = jsonEncode(listItems);
+    await SessionManagerMethods.setString(LAST_30_DAYS_TRANSACTION, json);
+  }
+
+  List<TransactionDetails> getLast30DaysTransactionList() {
+    List<TransactionDetails> listJsonData = [];
+    String jsonString = checkValidString(SessionManagerMethods.getString(LAST_30_DAYS_TRANSACTION));
+    if (jsonString.isNotEmpty)
+    {
+      List<dynamic> jsonDataList = jsonDecode(jsonString);
+      listJsonData = jsonDataList.map((jsonData) => TransactionDetails.fromJson(jsonData)).toList();
+    }
     return listJsonData;
   }
 

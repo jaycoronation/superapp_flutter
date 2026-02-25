@@ -128,356 +128,368 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
 
   SafeArea _setData() {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                    child: DetectableText(
-                      trimLines: 4,
-                      colorClickableText: Colors.pink,
-                      trimMode: TrimMode.Line,
-                      trimCollapsedText: 'more',
-                      trimExpandedText: '...less',
-                      text: checkValidString(taskData.taskDetail?.taskMessage),
-                      detectionRegExp: RegExp(
-                        "(?!\\n)(?:^|\\s)([#@]([$detectionContentLetters]+))|$urlRegexContent",
-                        multiLine: true,
-                      ),
-                      onTap: (tappedText) async {
-                        print(tappedText);
-                        if (tappedText.startsWith('#')) {
-                          debugPrint('DetectableText >>>>>>> #');
-                        } else if (tappedText.startsWith('@')) {
-                          debugPrint('DetectableText >>>>>>> @');
-                        } else if (tappedText.startsWith('http')) {
-                          debugPrint('DetectableText >>>>>>> http');
-                        }
-                      },
-                      basicStyle: taskData.taskDetail?.taskStatusId == 2
-                          ? const TextStyle(
-                        decoration: TextDecoration.lineThrough,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: black,
-                      )
-                          : const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: black,
-                      ),
-                      detectedStyle: taskData.taskDetail?.taskStatusId == 2
-                          ? const TextStyle(
-                        decoration: TextDecoration.lineThrough,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.5,
-                        color: blue,
-                      )
-                          : const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.5,
-                            color: blue,
-                          ),
-                    )
-                ),
-                Container()
-              ],
-            ),
-            Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-            Visibility(
-              visible: int.parse(openSinceDays) > 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(
-                    TextSpan(
+      child: Column(
+        children: [
+
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        const TextSpan(
-                            text: "Open Since : ",
-                            style: TextStyle(color: black,fontSize: 15,fontWeight: FontWeight.w500)
+                        Expanded(
+                            child: DetectableText(
+                              trimLines: 4,
+                              colorClickableText: Colors.pink,
+                              // trimMode: TrimMode.Line,
+                              trimCollapsedText: 'more',
+                              trimExpandedText: '...less',
+                              text: checkValidString(taskData.taskDetail?.taskMessage),
+                              detectionRegExp: RegExp(
+                                "(?!\\n)(?:^|\\s)([#@]([$detectionContentLetters]+))|$urlRegexContent",
+                                multiLine: true,
+                              ),
+                              onTap: (tappedText) async {
+                                print(tappedText);
+                                if (tappedText.startsWith('#')) {
+                                  debugPrint('DetectableText >>>>>>> #');
+                                } else if (tappedText.startsWith('@')) {
+                                  debugPrint('DetectableText >>>>>>> @');
+                                } else if (tappedText.startsWith('http')) {
+                                  debugPrint('DetectableText >>>>>>> http');
+                                }
+                              },
+                              basicStyle: taskData.taskDetail?.taskStatusId == 2
+                                  ? const TextStyle(
+                                //decoration: TextDecoration.lineThrough,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: black,
+                              )
+                                  : const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: black,
+                              ),
+                              detectedStyle: taskData.taskDetail?.taskStatusId == 2
+                                  ? const TextStyle(
+                                // decoration: TextDecoration.lineThrough,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.5,
+                                color: blue,
+                              )
+                                  : const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.5,
+                                color: blue,
+                              ),
+                            )
                         ),
-                        const TextSpan(
-                            text: "Task open since ",
-                            style: TextStyle(color: black,fontSize: 15,fontWeight: FontWeight.w500)
-                        ),
-                        TextSpan(
-                            text: openSinceDays,
-                            style: const TextStyle(color: Colors.red,fontSize: 15,fontWeight: FontWeight.w500)
-                        ),
-                        const TextSpan(
-                            text: " Days",
-                            style: TextStyle(color: black,fontSize: 15,fontWeight: FontWeight.w500)
-                        ),
+                        Container()
                       ],
                     ),
-                  ),
-                  Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: employeeName.isNotEmpty,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Employee Name : $employeeName",
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                  ),
-                  Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: reminderDate.isNotEmpty,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Due Date : $reminderDate",
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                  ),
-                  Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-                ],
-              ),
-            ),
-            Visibility(
-              visible: taskData.taskDetail?.taskReopenRemark?.isNotEmpty ?? false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Update Remark : ${taskData.taskDetail?.taskReopenRemark} (${taskData.taskDetail?.reopenDate?.isNotEmpty ?? false ? taskData.taskDetail?.reopenDate : taskData.taskDetail?.createdDateOriginalStr})",
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                  ),
-                  Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  taskData.taskDetail?.taskDesc?.isNotEmpty ?? false
-                      ? "Description : ${taskData.taskDetail?.taskDesc}"
-                      : "Description : Not added yet ",
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                ),
-                Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-              ],
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 115,
-              child: Row(
-                children: [
-                  Column(
-                    children: [
-                      const Text(
-                        "Assigned By",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w400),
-                      ),
-                      const Gap(6),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          color: lightGrey,
-                          alignment: Alignment.center,
-                          child: Text(
-                            getSortName(taskData.taskDetail?.employeeName ?? ''),
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w900),
-                          ),
-                        ),
-                      ),
-                      const Gap(6),
-                      Text(
-                        getFirstName(checkValidString(taskData.taskDetail?.employeeName)),
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                  Container(width: 0.5, color: grayLight, margin: const EdgeInsets.only(left: 8, right: 8)),
-                  Expanded(
-                      child: taskData.employeeList?.isNotEmpty ?? false
-                          ? SizedBox(
-                              height: 110,
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    '',
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w400),
-                                  ),
-                                  Expanded(
-                                      child: _taskEmployeeListView()
-                                  )
-                                ],
-                              )
-                          )
-                          : Container()
-                  )
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-                Row(
-                  children: [
-                    Text(
-                      listTaskAttachment.isNotEmpty ? "Attachments : " : "Attachments : Not Added yet",
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                    ),
-                    /*GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        _pickFile();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: blue,
-                            borderRadius: BorderRadius.circular(6)
-                        ),
-                        padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                        child: const Text(
-                          "Add Attachment",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 14, color: white, fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),*/
-                  ],
-                ),
-                Visibility(
-                  visible:  listTaskAttachment.isNotEmpty,
-                    child: const Gap(12)
-                ),
-                ListView.builder(
-                  itemCount: listTaskAttachment.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () async {
-                          if (await canLaunchUrl(Uri.parse(listTaskAttachment[index].imgUrl ?? "")))
-                            {
-                              launchUrl(Uri.parse(listTaskAttachment[index].imgUrl ?? ""));
-                            }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          child: Row(
-                            children: [
-                              listTaskAttachment[index].imgUrl?.isNotEmpty ?? false
-                                  ? Image.asset("assets/images/ic_view.png",width: 28,height: 28,)
-                                  : Container(width: 28,height: 28,child: const CircularProgressIndicator(color: blue,strokeWidth: 3)),
-                              const Gap(8),
-                              Expanded(child: Text(listTaskAttachment[index].fileName ?? '',style: const TextStyle(color: black,fontSize: 16,fontWeight: FontWeight.w500))),
-                              const Gap(12),
-                              Visibility(
-                                visible: listTaskAttachment[index].imgUrl?.isNotEmpty ?? false,
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    _showActionDialog(listTaskAttachment[index]);
-                                  },
-                                    child: Image.asset('assets/images/t_delete.png',color: Colors.red,width: 24,height: 24,)
+                    Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                    Visibility(
+                      visible: int.parse(openSinceDays) > 0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                const TextSpan(
+                                    text: "Open Since : ",
+                                    style: TextStyle(color: black,fontSize: 15,fontWeight: FontWeight.w500)
                                 ),
-                              )
+                                const TextSpan(
+                                    text: "Task open since ",
+                                    style: TextStyle(color: black,fontSize: 15,fontWeight: FontWeight.w500)
+                                ),
+                                TextSpan(
+                                    text: openSinceDays,
+                                    style: const TextStyle(color: Colors.red,fontSize: 15,fontWeight: FontWeight.w500)
+                                ),
+                                const TextSpan(
+                                    text: " Days",
+                                    style: TextStyle(color: black,fontSize: 15,fontWeight: FontWeight.w500)
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: employeeName.isNotEmpty,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Employee Name : $employeeName",
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                          ),
+                          Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: reminderDate.isNotEmpty,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Due Date : $reminderDate",
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                          ),
+                          Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: taskData.taskDetail?.taskReopenRemark?.isNotEmpty ?? false,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Update Remark : ${taskData.taskDetail?.taskReopenRemark} (${taskData.taskDetail?.reopenDate?.isNotEmpty ?? false ? taskData.taskDetail?.reopenDate : taskData.taskDetail?.createdDateOriginalStr})",
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                          ),
+                          Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          taskData.taskDetail?.taskDesc?.isNotEmpty ?? false
+                              ? "Description : ${taskData.taskDetail?.taskDesc}"
+                              : "Description : Not added yet ",
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                        ),
+                        Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 115,
+                      child: Row(
+                        children: [
+                          Column(
+                            children: [
+                              const Text(
+                                "Assigned By",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w400),
+                              ),
+                              const Gap(6),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  color: lightGrey,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    getSortName(taskData.taskDetail?.employeeName ?? ''),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 16, color: black, fontWeight: FontWeight.w900),
+                                  ),
+                                ),
+                              ),
+                              const Gap(6),
+                              Text(
+                                getFirstName(checkValidString(taskData.taskDetail?.employeeName)),
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w400),
+                              ),
                             ],
                           ),
-                        ),
-                      );
-                    },
-                ),
-                Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
-              ],
-            ),
-            isSelfTask
-                ? const Expanded(child: MyNoDataWidget(msg: "Comment feature is not enable for self created task."))
-                : Expanded(
-                  child: listComments.isNotEmpty
-                      ? SingleChildScrollView(
-                        controller: _scrollController,
-                        child: _commentsListView(),
-                      )
-                      : const MyNoDataWidget(msg: "Add Your Comments!")
-                  ),
-            Visibility(
-                visible: !isSelfTask,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 4),
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: grayLight),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: TextField(
-                              controller: _commentController,
-                              keyboardType: TextInputType.multiline,
-                              style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 15),
-                              cursorColor: grayDark,
-                              decoration: InputDecoration(
-                                  hintText: 'Add Comment..',
-                                  fillColor: white,
-                                  hintStyle: const TextStyle(fontWeight: FontWeight.w400, color: grayLight, fontSize: 15),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.transparent),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.transparent),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  contentPadding: EdgeInsets.zero)
-                          ),
-                        )
-                    ),
-                    const Gap(8),
-                    GestureDetector(
-                      onTap: () {
-                        if (_commentController.text.toString().trim().isNotEmpty) {
-                          _addComments(_commentController.text.toString().trim(), false, "", "");
-                        } else {
-                          showSnackBar("Please type a comment.", context);
-                        }
-                      },
-                      child: Image.asset(
-                        'assets/images/t_send_new.png',
-                        width: 42,
-                        height: 42,
+                          Container(width: 0.5, color: grayLight, margin: const EdgeInsets.only(left: 8, right: 8)),
+                          Expanded(
+                              child: taskData.employeeList?.isNotEmpty ?? false
+                                  ? SizedBox(
+                                  height: 110,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        '',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(fontSize: 14, color: blue, fontWeight: FontWeight.w400),
+                                      ),
+                                      Expanded(
+                                          child: _taskEmployeeListView()
+                                      )
+                                    ],
+                                  )
+                              )
+                                  : Container()
+                          )
+                        ],
                       ),
                     ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                        Row(
+                          children: [
+                            Text(
+                              listTaskAttachment.isNotEmpty ? "Attachments : " : "Attachments : Not Added yet",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                            ),
+                            /*GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      _pickFile();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: blue,
+                          borderRadius: BorderRadius.circular(6)
+                      ),
+                      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                      child: const Text(
+                        "Add Attachment",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 14, color: white, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),*/
+                          ],
+                        ),
+                        Visibility(
+                            visible:  listTaskAttachment.isNotEmpty,
+                            child: const Gap(12)
+                        ),
+                        ListView.builder(
+                          itemCount: listTaskAttachment.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () async {
+                                if (await canLaunchUrl(Uri.parse(listTaskAttachment[index].imgUrl ?? "")))
+                                {
+                                  launchUrl(Uri.parse(listTaskAttachment[index].imgUrl ?? ""));
+                                }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  children: [
+                                    listTaskAttachment[index].imgUrl?.isNotEmpty ?? false
+                                        ? Image.asset("assets/images/ic_view.png",width: 24, height: 24, color: black,)
+                                        : SizedBox(width: 28,height: 28,child: const CircularProgressIndicator(color: blue,strokeWidth: 3)),
+                                    const Gap(8),
+                                    Expanded(child: Text(listTaskAttachment[index].fileName ?? '',style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w500))),
+                                    // const Gap(12),
+                                    // Visibility(
+                                    //   visible: listTaskAttachment[index].imgUrl?.isNotEmpty ?? false,
+                                    //   child: GestureDetector(
+                                    //     behavior: HitTestBehavior.opaque,
+                                    //     onTap: () {
+                                    //       _showActionDialog(listTaskAttachment[index]);
+                                    //     },
+                                    //       child: Image.asset('assets/images/img_delete.png',color: Colors.red,width: 24,height: 24,)
+                                    //   ),
+                                    // )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        Container(height: 0.5, color: grayLight, margin: const EdgeInsets.only(top: 8, bottom: 8)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: listComments.isEmpty ? 200 : 400,
+                      child: isSelfTask
+                          ? MyNoDataWidget(msg: "Comment feature is not enable for self created task.")
+                          : listComments.isNotEmpty
+                              ? SingleChildScrollView(
+                            controller: _scrollController,
+                            child: _commentsListView(),
+                          )
+                              : const MyNoDataWidget(msg: "Add Your Comments!"),
+                    ),
+
+                    Visibility(
+                        visible: !isSelfTask,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 4),
+                                  padding: const EdgeInsets.only(left: 12, right: 12),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: grayLight),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: TextField(
+                                      controller: _commentController,
+                                      keyboardType: TextInputType.multiline,
+                                      style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 15),
+                                      cursorColor: grayDark,
+                                      decoration: InputDecoration(
+                                          hintText: 'Add Comment..',
+                                          fillColor: white,
+                                          hintStyle: const TextStyle(fontWeight: FontWeight.w400, color: grayLight, fontSize: 15),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.transparent),
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.transparent),
+                                            borderRadius: BorderRadius.circular(30),
+                                          ),
+                                          contentPadding: EdgeInsets.zero)
+                                  ),
+                                )
+                            ),
+                            const Gap(8),
+                            GestureDetector(
+                              onTap: () {
+                                if (_commentController.text.toString().trim().isNotEmpty) {
+                                  _addComments(_commentController.text.toString().trim(), false, "", "");
+                                } else {
+                                  showSnackBar("Please type a comment.", context);
+                                }
+                              },
+                              child: Image.asset(
+                                'assets/images/t_send_new.png',
+                                width: 42,
+                                height: 42,
+                              ),
+                            ),
+                          ],
+                        )
+                    )
                   ],
-                )
-            )
-          ],
-        ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1000,9 +1012,10 @@ class _TaskDetailPageState extends BaseState<TaskDetailPage> {
         "client_id": sessionManager.getUserId().toString(),
         "task_id": taskIdParam.toString(),
         "msg_txt": msg,
-        "is_image": isImg.toString(),
-        "FileExtension": fileExtension,
-        "img_url": imgUrl
+        "id": ""
+        // "is_image": isImg.toString(),
+        // "FileExtension": fileExtension,
+        // "img_url": imgUrl
       };
 
       final response = await http.post(url, body: jsonBody, headers: {

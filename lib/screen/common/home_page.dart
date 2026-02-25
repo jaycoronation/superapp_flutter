@@ -15,6 +15,7 @@ import 'package:superapp_flutter/constant/global_context.dart';
 import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
+import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
 import 'package:superapp_flutter/screen/common/video_player_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
@@ -36,6 +37,7 @@ import '../e-state-valut/e_state_valut_home_page.dart';
 import 'LoginScreen.dart';
 import 'blog_detail_page.dart';
 import 'blogs_page.dart';
+import 'client_task_list.dart';
 import 'contact_page.dart';
 import 'meeting_page.dart';
 import 'video_list_page.dart';
@@ -202,7 +204,7 @@ class _HomePageState extends BaseState<HomePage> {
             const Gap(10),
             GridView.builder(
               itemCount: listDashboardData.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 160),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 164),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               physics: NeverScrollableScrollPhysics(),
@@ -243,8 +245,6 @@ class _HomePageState extends BaseState<HomePage> {
                             showSnackBar("User name not found", context);
                           }
                         }
-
-
                       }
                     }
                     else if(data.id == "2")
@@ -306,7 +306,7 @@ class _HomePageState extends BaseState<HomePage> {
                       );*/
 
                       //task summary
-
+                      startActivity(context, const TaskAndSummariesScreen());
                     }
                     else if(data.id == "6")
                     {

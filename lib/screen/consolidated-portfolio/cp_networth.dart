@@ -50,7 +50,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
 
       if (listApplicants.isNotEmpty)
       {
-        selectedApplicant = listApplicants[0] ?? '';
+        selectedApplicantName = listApplicants[0];
+        selectedApplicant = listApplicants[0];
       }
 
       print((listApplicants.length));
@@ -522,6 +523,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     );
   }
 
+/*
   void openApplicantSelection() {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -585,6 +587,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
         }
     );
   }
+*/
 
   _getNetworthData() async {
 
@@ -657,7 +660,6 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
           listDataMain = dataResponse.result?.networth ?? [];
           listData = listDataMain;
 
-
           for(int i = 0; i < listDataMain.length; i++)
           {
             listAssetFilter.add(listDataMain[i].asset ?? "");
@@ -687,6 +689,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     else
     {
       setState(() {
+        listDataMain = [];
+        listData = [];
         _isLoading = false;
       });
     }

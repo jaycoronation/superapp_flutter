@@ -26,6 +26,10 @@ String add = "last_used_module/add";
 String documentLists = '${API_URL}manage_documents/list';
 String summaryLists = 'https://demo1.coronation.in/AlphacapitalReportApp/api/Client/GetAllSummaryByClient';
 String RecommendationLists = 'https://demo1.coronation.in/AlphacapitalReportApp/api/Client/GetAllRecommendationByClient';
+String addTaskApi = "https://demo1.coronation.in/AlphacapitalReportApp/api/task/AddTask_Client";
+String updateTask = "https://demo1.coronation.in/AlphacapitalReportApp/api/Task/UpdateTask";
+String getAllTaskStatusApi = "https://demo1.coronation.in/AlphacapitalReportApp/api/Task/GetAllTaskStatus";
+String deleteTaskAPi = "https://demo1.coronation.in/AlphacapitalReportApp/api/task/DeleteTask";
 
 // ========== MINT URLS ============ //
 

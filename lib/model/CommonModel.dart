@@ -11,3 +11,13 @@ class CommonValueModel{
     required this.id
   });
 }
+
+class TabModel{
+  String id;
+  String title;
+
+  TabModel({
+    required this.id,
+    required this.title
+  });
+}
