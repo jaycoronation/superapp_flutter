@@ -12,6 +12,7 @@ import 'package:superapp_flutter/model/consolidated-portfolio/GenerateReportResp
 import 'package:superapp_flutter/screen/common/SuggestedActionsScreen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/asset/AssetListScreen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_movement.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_projection_screen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_capital_gain.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_dashboard.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_fund_house_allocation.dart';
@@ -220,6 +221,32 @@ class CPHomePageState extends BaseState<CPHomePage> {
                                   Container(width: 12),
                                   const Text(
                                     "BS Movement",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CpBsProjectionScreen()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_bs_movement.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "BS Projection",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                                   )

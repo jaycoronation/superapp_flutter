@@ -61,6 +61,8 @@ const Color tableLightPurple = Color(0xFFd3c2f5);
 const Color tableLightYellow = Color(0xFFfbe3a3);
 const Color tableLightPink = Color(0xFFf5c2e0);
 
+const Color lightBlue2 = Color(0xFFd6ecff);
+
 const LinearGradient loginBgGradient = LinearGradient(
     begin: FractionalOffset.bottomCenter,
     end: FractionalOffset.topCenter,

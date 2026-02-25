@@ -76,6 +76,9 @@ dependencies:
   local_auth: ^2.3.0
   encrypt: ^5.0.3
   crypto: ^3.0.7
+  shimmer: ^3.0.0
+  path: ^1.9.1
+  fluttertoast: ^9.0.0
 
 
 dev_dependencies:

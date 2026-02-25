@@ -26,6 +26,9 @@ String networth = "networth_consolidated";
 //bs movement
 String bsMovement = "bs_movement_consolidate";
 
+//bd projection
+String bsProjection = "balance_sheet_projection";
+
 //capital gain
 String capitalGain = "capital_gain_summury";
 //String capitalGain = "capital_gain_summery";

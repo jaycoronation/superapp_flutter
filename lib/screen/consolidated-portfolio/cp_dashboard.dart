@@ -1840,65 +1840,6 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     );
   }
 
-  Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1}) {
-    return Container(
-      width: width,
-      height: maxLine > 1 ? 60 : 40 ,
-      alignment: alignment,
-      padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-        color: index % 2 == 0 ? listBg : white,
-        border: Border(
-          bottom: BorderSide(color: grayLight),
-        ),
-      ),
-      child: isRow ?
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(child: Text(title, style: isBold ? getBoldTextStyle(fontSize: 12, color: titleColor) : getMediumTextStyle(fontSize: 12, color: titleColor), maxLines: 1, overflow: TextOverflow.ellipsis,)),
-          const Gap(2),
-          Text(rowValue, style: getRegularTextStyle(fontSize: 10, color: titleColor),)
-        ],
-      ) :
-      Text(title, style: isBold ? getBoldTextStyle(fontSize: 12, color: titleColor) : getMediumTextStyle(fontSize: 12, color: titleColor), maxLines: maxLine, overflow: TextOverflow.ellipsis,),
-    );
-  }
-
-  Widget rowCellLoading(int index, {double width = 160,}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        shimmerWidget(
-          Container(
-            width: width,
-            height: 40,
-            decoration: BoxDecoration(
-              color: white,
-            ),
-          ),
-        ),
-        Divider(color: grayLight, height: 1,)
-      ],
-    );
-  }
-
-  Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false,}){
-    return Container(
-      width: width,
-      height: 40,
-      alignment: alignment,
-      padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-        color: bgColor,
-        border: Border(
-          bottom: BorderSide(color: grayLight),
-        ),
-      ),
-      child: Text(title, style: getSemiBoldTextStyle(fontSize: 12, color: titleColor),),
-    );
-  }
-
   List<PieChartSectionData> generateAssetAllocationChart() {
     return List.generate(resultData.macroAssetStratagic?.isNotEmpty ?? false ? (resultData.macroAssetStratagic?.length ?? 0) - 1 : 0, (i) {
       final isTouched = i == touchedIndexAsset;
