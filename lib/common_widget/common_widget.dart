@@ -80,7 +80,7 @@ Widget getBottomSheetHeaderWithoutButton2(BuildContext context, String title, {C
 Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1}) {
   return Container(
     width: width,
-    height: maxLine > 1 ? 60 : 40 ,
+    height: maxLine > 1 ? 70 : 40 ,
     alignment: alignment,
     padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.all(0),
     decoration: BoxDecoration(
@@ -132,7 +132,7 @@ Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double wid
         bottom: BorderSide(color: grayLight),
       ),
     ),
-    child: Text(title, style: getSemiBoldTextStyle(fontSize: 12, color: titleColor),),
+    child: Text(title, style: getSemiBoldTextStyle(fontSize: 12, color: titleColor), textAlign: TextAlign.center,),
   );
 }
 

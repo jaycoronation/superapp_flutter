@@ -75,3 +75,5 @@ String getSchemesApi = "assets/get_schemes";
 String saveAsset = "https://portfolio.alphacapital.in/api/services/assets/add";
 
 String searchScheme = "assets/search_schemes";
+
+String assetDetail = "assets/get_details";

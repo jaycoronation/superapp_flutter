@@ -1,0 +1,36 @@
+import 'dart:convert';
+/// search_schemes : ["Amines & Plasticizers Ltd.","DIC India Ltd.","ICICI1INAV","ICICI2INAV","ICICI5INAV","ICICIAINAV","ICICI Prudential Asset Management Company Ltd.","ICICI Bank Ltd.","ICICIBINAV","ICICICINAV","ICICIFINAV","ICICI Lombard General Insurance Company Limited","ICICIGINAV","ICICIKINAV","ICICILINAV","ICICIMINAV","ICICININAV","ICICIOINAV","ICICIPINAV","ICICI Prudential Life Insurance Company Limited","ICICIQINAV","ICICIRINAV","ICICISINAV","ICICITINAV","ICICIXINAV","ICICIYINAV","ICICMOINAV","ICICOMINAV","ICIFININAV","Indo Count Industries Ltd.","ICINFRINAV","ICIQ30INAV","ICISECINAV","ICISENINAV","Insecticides India Ltd.","India Pesticides Ltd.","Life Insurance Corporation of India","PSBKICINAV","ICICI Prudential Nifty Alpha Low Volatility 30 ETF","ICICI Prudential Nifty Auto ETF","ICICIPRAMC - IPRU5008","ICICI Prudential BSE 500 ETF","ICICI Prudential BSE Liquid Rate ETF - Growth","ICICI Prudential Nifty Commodities ETF","ICICI Prudential Nifty India Consumption Fund","ICICI Prudential Nifty Energy Index Fund","ICICI Prudential Nifty Financial Services Ex-Bank ETF","ICICI Prudential Nifty FMCG ETF","ICICI Prudential Gold ETF","ICICI Prudential Nifty 5 Yr G-Sec ETF","ICICI Prudential Nifty Healthcare ETF","Bharat 22 Exchange Traded Fund","ICICI Prudential Infrastructure ETF","ICICI Prudential Nifty IT Exchange Traded Fund","ICICI Prudential BSE Liquid Fund","ICI Nifty 100 Low Vol 30 ETF","ICICI Prudential Nifty Metal ETF","ICICI Prudential Nifty Midcap 150 ETF","ICICI Prudential BSE Midcap Fund","ICICI Prudential Nifty 200 Momentum 30 ETF","ICICI Prudential Nifty Next 50 ETF","ICICI Prudential Nifty 100 ETF","ICICI Prudential Nifty 50 Exchange Traded Fund","ICICI Prudential Nifty50 Value 20 ETF","ICICI Prudential Oil and Gas ETF","ICICI Prudential Nifty PSU Bank ETF","ICICI Prudential Nifty Private Bank ETF","ICICI Prudential Nifty 200 Quality 30 ETF","ICICI Prudential BSE Sensex Index Fund","ICICI Prudential Silver ETF","ICICI Prudential Nifty Top 15 Equal Weight ETF","ICICI Prudential Nifty 200 Value 30 Index Fund","ICICI Bank Limited Sponsored ADR","Nanoviricides Inc.","Ultrapar Participacoes S.A. Sponsored ADR","Vici Properties Inc.","TCW Artificial Intelligence ETF","VistaShares Artificial Intelligence Supercycle ETF","ActivePassive Intermediate Municipal Bond ETF","Allspring Ultra Short Municipal ETF","Avantis Core Municipal Fixed Income ETF","Invesco Taxable Municipal Bond ETF","Bitwise Proficio Currency Debasement ETF","AB California Intermediate Municipal ETF","American Century California Municipal Bond ETF","Capital Group Municipal High-Income ETF","Capital Group Municipal Income ETF","Capital Group Short Duration Municipal Income ETF","Invesco Bloomberg Pricing Power ETF","Dimensional California Municipal Bond ETF","Dimensional National Municipal Bond ETF","Harbor Osmosis Emerging Markets Resource Efficient ETF","Harbor Osmosis International Resource Efficient ETF","Efficient Market Portfolio Plus ETF","Eaton Vance Intermediate Municipal Income ETF","Eaton Vance Short Duration Municipal Opportunities Fund","First Trust Bloomberg Artificial Intelligence ETF","Franklin Municipal Green Bond ETF","Franklin Dynamic Municipal Bond ETF","First Trust New York Municipal High Income ETF","First Trust Short Duration Managed Municipal ETF","Franklin California Municipal Income ETF","Franklin Massachusetts Municipal Income ETF","Franklin Municipal High Yield ETF","Franklin Minnesota Municipal Income ETF","Franklin Short-Term Municipal Income ETF","Franklin Municipal Income ETF","Franklin New Jersey Municipal Income ETF","Franklin New York Municipal Income ETF","Franklin Ohio Municipal Income ETF","First Trust Ultra Short Duration Municipal ETF","Goldman Sachs Dynamic California Municipal Income ETF","Genter Capital Municipal Quality Intermediate ETF","Goldman Sachs Dynamic New York Municipal Income ETF","Goldman Sachs Municipal Income ETF","Goldman Sachs Community Municipal Bond ETF","Goldman Sachs Ultra Short Municipal Income ETF","Hartford Municipal Opportunities ETF","Macquarie National High-Yield Municipal Bond ETF","SPDR Nuveen ICE High Yield Municipal Bond ETF","Horizon Kinetics Inflation Beneficiaries ETF","John Hancock Dynamic Municipal Bond ETF","JPMorgan High Yield Municipal ETF","JPMorgan Sustainable Municipal Income ETF","MFS Active Intermediate Municipal Bond Fund","PIMCO Municipal Income Opportunities Active Exchange-Traded Fund","ALPS Intermediate Municipal Bond ETF","PIMCO Intermediate Municipal Bond Active Exchange-Traded Fund","Columbia Multi-Sector Municipal Income ETF","Nuveen High Yield Municipal Income ETF","WisdomTree Emerging Markets Efficient Core Fund","WisdomTree International Efficient Core Fund","WisdomTree U.S. Efficient Core Fund","Nuveen Municipal Income ETF","AB New York Intermediate Municipal ETF","PGIM Municipal Income Opportunities ETF","PGIM Ultra Short Municipal Bond ETF","Invesco Floating Rate Municipal Income ETF","Invesco California AMT-Free Municipal Bond ETF","Invesco National AMT-Free Municipal Bond ETF","Invesco New York AMT-Free Municipal Bond ETF","RJ Eagle Municipal Income ETF","Rockefeller California Municipal Bond ETF","Rockefeller New York Municipal Bond ETF","Rockefeller Opportunistic Municipal Bond ETF","Xtrackers Municipal Infrastructure Revenue Bond ETF","Schwab Municipal Bond ETF","SPDR Nuveen Bloomberg Short Term Municipal Bond ETF","PIMCO Short Term Municipal Bond Active ETF","AB Active ETFs, Inc. AB Tax-Aware Short Duration Municipal ETF","AB Tax-Aware Long Municipal ETF","AB Tax-Aware Intermediate Municipal ETF","American Century Diversified Municipal Bond ETF","SPDR Nuveen Bloomberg Municipal Bond ETF","Robo Global Artificial Intelligence ETF","Direxion Daily Robotics, Artificial Intelligence & Automation Index Bull 2X Shares","X-Square Municipal Income ETF"]
+/// success : 1
+
+SearchSchemesSharesResponseModel searchSchemesSharesResponseModelFromJson(String str) => SearchSchemesSharesResponseModel.fromJson(json.decode(str));
+String searchSchemesSharesResponseModelToJson(SearchSchemesSharesResponseModel data) => json.encode(data.toJson());
+class SearchSchemesSharesResponseModel {
+  SearchSchemesSharesResponseModel({
+      List<String>? searchSchemesShares, 
+      num? success,}){
+    _searchSchemesShares = searchSchemesShares;
+    _success = success;
+}
+
+  SearchSchemesSharesResponseModel.fromJson(dynamic json) {
+    _searchSchemesShares = json['search_schemes'] != null ? json['search_schemes'].cast<String>() : [];
+    _success = json['success'];
+  }
+  List<String>? _searchSchemesShares;
+  num? _success;
+SearchSchemesSharesResponseModel copyWith({  List<String>? searchSchemesShares,
+  num? success,
+}) => SearchSchemesSharesResponseModel(  searchSchemesShares: searchSchemesShares ?? _searchSchemesShares,
+  success: success ?? _success,
+);
+  List<String>? get searchSchemesShares => _searchSchemesShares;
+  num? get success => _success;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['search_schemes'] = _searchSchemesShares;
+    map['success'] = _success;
+    return map;
+  }
+
+}

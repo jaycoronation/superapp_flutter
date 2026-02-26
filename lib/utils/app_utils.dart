@@ -667,9 +667,9 @@ Column getBottomSheetItemWithoutSelection(String title,bool isSelected,bool isDi
         padding: const EdgeInsets.only(left: 22, right: 22, top: 12, bottom: 12),
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w400,
-            color: black,
+            color: isSelected ? blue : black,
             fontSize: 16,
           ),
         ),

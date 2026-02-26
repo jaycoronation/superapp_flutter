@@ -26,7 +26,7 @@ class EStateAspirationPage extends StatefulWidget {
 
 class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
   List<ListData> listData = List<ListData>.empty();
-
+  Total totalAspiration = Total();
   bool _isLoading = false;
 
   @override
@@ -64,207 +64,234 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
           ? _isLoading
           ? const LoadingWidget()
           : SafeArea(
-            child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-                child: listData.isEmpty
-                    ? const Center(
-                        child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
-                    )
-                    : Column(
-                      children: [
-                        Text("*Target Return may or may not be delivered due to market risk.",style: TextStyle(color: black,fontSize: 16,fontWeight: FontWeight.w500),),
-                        Expanded(
-                          child: AnimationLimiter(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                primary: false,
-                                padding: EdgeInsets.zero,
-                                itemCount: listData.length,
-                                itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
-                                  position: index,
-                                  duration: const Duration(milliseconds: 375),
-                                  child: SlideAnimation(
-                                    verticalOffset: 50.0,
-                                    child: FadeInAnimation(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 5),
-                                        /*decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border:Border.all(color: grayLight, width: 1,)
-                                        ),*/
-                                        child: Card(
-                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                          elevation: 1,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: [
-                                                      InkWell(
-                                                          onTap:(){
-                                                            _redirectToNextPage(context, listData[index], true);
-                                                          },
-                                                          child: Container(
-                                                            width: 36,
-                                                            height: 36,
-                                                            decoration: BoxDecoration(color: grayLight,
-                                                              borderRadius: BorderRadius.circular(20),
-                                                            ),
-                                                            // padding: const EdgeInsets.all(8),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(10.0),
-                                                              child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
-                                                                color: black, ),
-                                                            ),
-                                                          )
-                                                      ),
-                                                      Gap(10),
-                                                      InkWell(
-                                                          onTap:(){
-                                                            deleteListData(listData[index], index);
-                                                          },
-                                                          child: Container(
-                                                            width: 36,
-                                                            height: 36,
-                                                            decoration: BoxDecoration(color: grayLight,
-                                                              borderRadius: BorderRadius.circular(20),
-                                                            ),
-                                                            // padding: const EdgeInsets.all(8),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(7.0),
-                                                              child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
-                                                                  color: black, ),
-                                                            ),
-                                                          )
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Text(checkValidString(listData[index].aspirationType.toString()), textAlign: TextAlign.start,
-                                                    style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
-                                                  ),
-                                                  const Gap(6),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const Expanded(
-                                                        flex:4,
-                                                        child: Text("Amount", textAlign: TextAlign.start,
-                                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                        ),
-                                                      ),
-                                                      const Text("  :  ", textAlign: TextAlign.start,
-                                                        style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                      ),
-                                                      Expanded(
-                                                        flex:6,
-                                                        child: Text(checkValidString(getPrice(listData[index].amount.toString())), textAlign: TextAlign.start,
-                                                          style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const Gap(8),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const Expanded(
-                                                        flex:4,
-                                                        child: Text("Periodicity(In Year)", textAlign: TextAlign.start,
-                                                          style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                        ),
-                                                      ),
-                                                      const Text("  :  ", textAlign: TextAlign.start,
-                                                        style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                      ),
-                                                      Expanded(
-                                                        flex:6,
-                                                        child: Text(checkValidString(listData[index].periodicity), textAlign: TextAlign.start,
-                                                          style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const Gap(8),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          mainAxisSize: MainAxisSize.max,
-                                                          children: [
-                                                            const Expanded(
-                                                              flex:4,
-                                                              child: Text("Start Year", textAlign: TextAlign.start,
-                                                                style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                              ),
-                                                            ),
-                                                            const Text("  :  ", textAlign: TextAlign.start,
-                                                              style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                            ),
-                                                            Expanded(
-                                                              flex:6,
-                                                              child: Text(checkValidString(listData[index].startYear), textAlign: TextAlign.start,
-                                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          mainAxisSize: MainAxisSize.max,
-                                                          children: [
-                                                            const Expanded(
-                                                              flex:4,
-                                                              child: Text("End Year", textAlign: TextAlign.start,
-                                                                style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.bold),
-                                                              ),
-                                                            ),
-                                                            const Text("  :  ", textAlign: TextAlign.start,
-                                                              style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
-                                                            ),
-                                                            Expanded(
-                                                              flex:6,
-                                                              child: Text(checkValidString(listData[index].endYear), textAlign: TextAlign.start,
-                                                                style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  // const Divider(height: 0.5, color: kLightGray, thickness: 1,)
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                            ),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                  child: listData.isEmpty
+                      ? const Center(
+                          child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
+                      )
+                      : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Text("Aspirations", style: getSemiBoldTextStyle(fontSize: 14, color: blue),),
+                          const Gap(4),
+                          Text("Add details of your future expenses here", style: getMediumTextStyle(fontSize: 12, color: black),),
+                          const Gap(20),
+                          aspirationWidget(),
+                          const Gap(20),
+                          Text(
+                            "Aspiration Calculations",
+                            style: getSemiBoldTextStyle(fontSize: 14, color: blue)
                           ),
-                        ),
-                      ],
-                    )
+                          const Gap(20),
+                          aspirationCalculationWidget(),
+                          const Gap(10),
+                          Center(
+                            child: Text(
+                              "*Target Return may or may not be delivered due to market risk.",
+                              style: getMediumTextStyle(fontSize: 14, color: black),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+
+
+                          // Text("*Target Return may or may not be delivered due to market risk.",style: TextStyle(color: black,fontSize: 16,fontWeight: FontWeight.w500),),
+                          // Expanded(
+                          //   child: AnimationLimiter(
+                          //     child: ListView.builder(
+                          //         scrollDirection: Axis.vertical,
+                          //         physics: const AlwaysScrollableScrollPhysics(),
+                          //         shrinkWrap: true,
+                          //         primary: false,
+                          //         padding: EdgeInsets.zero,
+                          //         itemCount: listData.length,
+                          //         itemBuilder: (ctx, index) => AnimationConfiguration.staggeredList(
+                          //           position: index,
+                          //           duration: const Duration(milliseconds: 375),
+                          //           child: SlideAnimation(
+                          //             verticalOffset: 50.0,
+                          //             child: FadeInAnimation(
+                          //               child: Container(
+                          //                 margin: const EdgeInsets.only(top: 5),
+                          //                 /*decoration: BoxDecoration(
+                          //                     borderRadius: BorderRadius.circular(10),
+                          //                     border:Border.all(color: grayLight, width: 1,)
+                          //                 ),*/
+                          //                 child: Card(
+                          //                   clipBehavior: Clip.antiAliasWithSaveLayer,
+                          //                   elevation: 1,
+                          //                   shape: RoundedRectangleBorder(
+                          //                     borderRadius: BorderRadius.circular(10),
+                          //                   ),
+                          //                   child: Padding(
+                          //                     padding: const EdgeInsets.all(10.0),
+                          //                     child: SizedBox(
+                          //                       width: double.infinity,
+                          //                       child: Column(
+                          //                         crossAxisAlignment: CrossAxisAlignment.start,
+                          //                         children: [
+                          //                           Row(
+                          //                             mainAxisAlignment: MainAxisAlignment.end,
+                          //                             crossAxisAlignment: CrossAxisAlignment.end,
+                          //                             children: [
+                          //                               InkWell(
+                          //                                   onTap:(){
+                          //                                     _redirectToNextPage(context, listData[index], true);
+                          //                                   },
+                          //                                   child: Container(
+                          //                                     width: 36,
+                          //                                     height: 36,
+                          //                                     decoration: BoxDecoration(color: grayLight,
+                          //                                       borderRadius: BorderRadius.circular(20),
+                          //                                     ),
+                          //                                     // padding: const EdgeInsets.all(8),
+                          //                                     child: Padding(
+                          //                                       padding: const EdgeInsets.all(10.0),
+                          //                                       child: Image.asset('assets/images/fin_plan_ic_edit_gray.png',
+                          //                                         color: black, ),
+                          //                                     ),
+                          //                                   )
+                          //                               ),
+                          //                               Gap(10),
+                          //                               InkWell(
+                          //                                   onTap:(){
+                          //                                     deleteListData(listData[index], index);
+                          //                                   },
+                          //                                   child: Container(
+                          //                                     width: 36,
+                          //                                     height: 36,
+                          //                                     decoration: BoxDecoration(color: grayLight,
+                          //                                       borderRadius: BorderRadius.circular(20),
+                          //                                     ),
+                          //                                     // padding: const EdgeInsets.all(8),
+                          //                                     child: Padding(
+                          //                                       padding: const EdgeInsets.all(7.0),
+                          //                                       child: Image.asset('assets/images/fin_plan_ic_delete_black.png',
+                          //                                           color: black, ),
+                          //                                     ),
+                          //                                   )
+                          //                               ),
+                          //                             ],
+                          //                           ),
+                          //                           Text(checkValidString(listData[index].aspirationType.toString()), textAlign: TextAlign.start,
+                          //                             style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.bold),
+                          //                           ),
+                          //                           const Gap(6),
+                          //                           Row(
+                          //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //                             mainAxisSize: MainAxisSize.max,
+                          //                             crossAxisAlignment: CrossAxisAlignment.start,
+                          //                             children: [
+                          //                               const Expanded(
+                          //                                 flex:4,
+                          //                                 child: Text("Amount", textAlign: TextAlign.start,
+                          //                                   style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                                 ),
+                          //                               ),
+                          //                               const Text("  :  ", textAlign: TextAlign.start,
+                          //                                 style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                               ),
+                          //                               Expanded(
+                          //                                 flex:6,
+                          //                                 child: Text(checkValidString(getPrice(listData[index].amount.toString())), textAlign: TextAlign.start,
+                          //                                   style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                          //                                 ),
+                          //                               ),
+                          //                             ],
+                          //                           ),
+                          //                           const Gap(8),
+                          //                           Row(
+                          //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //                             mainAxisSize: MainAxisSize.max,
+                          //                             crossAxisAlignment: CrossAxisAlignment.start,
+                          //                             children: [
+                          //                               const Expanded(
+                          //                                 flex:4,
+                          //                                 child: Text("Periodicity(In Year)", textAlign: TextAlign.start,
+                          //                                   style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                                 ),
+                          //                               ),
+                          //                               const Text("  :  ", textAlign: TextAlign.start,
+                          //                                 style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                               ),
+                          //                               Expanded(
+                          //                                 flex:6,
+                          //                                 child: Text(checkValidString(listData[index].periodicity), textAlign: TextAlign.start,
+                          //                                   style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                          //                                 ),
+                          //                               ),
+                          //                             ],
+                          //                           ),
+                          //                           const Gap(8),
+                          //                           Row(
+                          //                             children: [
+                          //                               Expanded(
+                          //                                 child: Row(
+                          //                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //                                   mainAxisSize: MainAxisSize.max,
+                          //                                   children: [
+                          //                                     const Expanded(
+                          //                                       flex:4,
+                          //                                       child: Text("Start Year", textAlign: TextAlign.start,
+                          //                                         style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                                       ),
+                          //                                     ),
+                          //                                     const Text("  :  ", textAlign: TextAlign.start,
+                          //                                       style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                                     ),
+                          //                                     Expanded(
+                          //                                       flex:6,
+                          //                                       child: Text(checkValidString(listData[index].startYear), textAlign: TextAlign.start,
+                          //                                         style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w600),
+                          //                                       ),
+                          //                                     ),
+                          //                                   ],
+                          //                                 ),
+                          //                               ),
+                          //                               Expanded(
+                          //                                 child: Row(
+                          //                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //                                   mainAxisSize: MainAxisSize.max,
+                          //                                   children: [
+                          //                                     const Expanded(
+                          //                                       flex:4,
+                          //                                       child: Text("End Year", textAlign: TextAlign.start,
+                          //                                         style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.bold),
+                          //                                       ),
+                          //                                     ),
+                          //                                     const Text("  :  ", textAlign: TextAlign.start,
+                          //                                       style: TextStyle(fontSize: 14, color: graySemiDark, fontWeight: FontWeight.w600),
+                          //                                     ),
+                          //                                     Expanded(
+                          //                                       flex:6,
+                          //                                       child: Text(checkValidString(listData[index].endYear), textAlign: TextAlign.start,
+                          //                                         style: const TextStyle(fontSize: 14, color: black, fontWeight: FontWeight.w400),
+                          //                                       ),
+                          //                                     ),
+                          //                                   ],
+                          //                                 ),
+                          //                               ),
+                          //                             ],
+                          //                           ),
+                          //                           // const Divider(height: 0.5, color: kLightGray, thickness: 1,)
+                          //                         ],
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         )
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      )
+              ),
             ),
           )
           : NoInternetWidget(() {
@@ -289,6 +316,214 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
   void refreshData() {
     _redirectToNextPage(context, ListData(), false);
   }
+
+  Widget aspirationWidget(){
+    return ListView.builder(
+      itemCount: listData.length,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
+      itemBuilder: (context, index) {
+        final aspirationData = listData[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            color: white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: gray)
+          ),
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${aspirationData.aspirationType} Expense of Rs ${convertCommaSeparatedAmount(aspirationData.amount ?? "")} in ${aspirationData.startYear}  thereafter in every ${aspirationData.periodicity} Year",
+                style: getMediumTextStyle(fontSize: 12, color: blackLight),
+              ),
+              const Gap(4),
+              Divider(color: grayLight,),
+              const Gap(4),
+              Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          _redirectToNextPage(context, aspirationData, true);
+                        },
+                        child: Image.asset(
+                          "assets/images/fin_plan_ic_edit_gray.png",
+                          height: 20,
+                          width: 20,
+                          color: tableLightGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          deleteListData(aspirationData, index);
+                        },
+                        child: Image.asset(
+                          "assets/images/fin_plan_ic_delete_black.png",
+                          height: 24,
+                          width: 24,
+                          color: redLight,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+
+    // return SingleChildScrollView(
+    //   scrollDirection: Axis.horizontal,
+    //   physics: BouncingScrollPhysics(),
+    //   child: Container(
+    //     width: 422,
+    //     decoration: BoxDecoration(
+    //         border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+    //         borderRadius: BorderRadius.circular(4)
+    //     ),
+    //     child: Column(
+    //       children: [
+    //         Row(
+    //           children: [
+    //             rowCellTitle("Aspirations", white, alignment: Alignment.centerLeft, isPadding: true, width: 300),
+    //             rowCellTitle("Actions", white, width: 120),
+    //           ],
+    //         ),
+    //         ListView.builder(
+    //           itemCount: listData.length,
+    //           shrinkWrap: true,
+    //           physics: NeverScrollableScrollPhysics(),
+    //           padding: const EdgeInsets.all(0),
+    //           itemBuilder: (context, index) {
+    //             final aspirationData = listData[index];
+    //             return Row(
+    //               children: [
+    //                 rowCell(index, "${aspirationData.aspirationType} Expense of Rs ${convertCommaSeparatedAmount(aspirationData.amount ?? "")} in ${aspirationData.startYear}  thereafter in every ${aspirationData.periodicity} Year", alignment: Alignment.centerLeft, isPadding: true, width: 300, maxLine: 3),
+    //                 Container(
+    //                   width: 120,
+    //                   height: 70,
+    //                   decoration: BoxDecoration(
+    //                     color: index % 2 == 0 ? listBg : white,
+    //                     border: Border(
+    //                       bottom: BorderSide(color: grayLight),
+    //                     ),
+    //                   ),
+    //                   child: Row(
+    //                     mainAxisAlignment: MainAxisAlignment.center,
+    //                     children: [
+    //                       GestureDetector(
+    //                         behavior: HitTestBehavior.opaque,
+    //                         onTap: () {
+    //                           _redirectToNextPage(context, aspirationData, true);
+    //                         },
+    //                         child: Image.asset(
+    //                           "assets/images/fin_plan_ic_edit_gray.png",
+    //                           height: 24,
+    //                           width: 24,
+    //                           color: tableLightGreen,
+    //                         ),
+    //                       ),
+    //                       const Gap(8),
+    //                       GestureDetector(
+    //                         behavior: HitTestBehavior.opaque,
+    //                         onTap: () {
+    //                           deleteListData(aspirationData, index);
+    //                         },
+    //                         child: Image.asset(
+    //                           "assets/images/fin_plan_ic_delete_black.png",
+    //                           height: 24,
+    //                           width: 24,
+    //                           color: redLight,
+    //                         ),
+    //                       ),
+    //                     ],
+    //                   ),
+    //                 )
+    //               ],
+    //             );
+    //           },
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // );
+  }
+
+  Widget aspirationCalculationWidget(){
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: BouncingScrollPhysics(),
+      child: Container(
+        width: 1002,
+        decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            borderRadius: BorderRadius.circular(4)
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                rowCellTitle("Start-End Year", white, width: 150),
+                rowCellTitle("Total Outflow", white, width: 150),
+                rowCellTitle("Inflation adjusted outflow", white, width: 150),
+                rowCellTitle("Wealth required today", white, width: 150),
+                rowCellTitle("Volatile Component", white, width: 120),
+                rowCellTitle("Target Return", white, width: 120),
+              ],
+            ),
+            ListView.builder(
+              itemCount: listData.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(0),
+              itemBuilder: (context, index) {
+                final aspirationData = listData[index];
+                return Row(
+                  children: [
+                    rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                    rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 150, maxLine: 2),
+                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 150, maxLine: 2),
+                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 2),
+                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 2),
+                    rowCell(index, aspirationData.volatileComponent ?? "", width: 120, maxLine: 2),
+                    rowCell(index, aspirationData.targetReturn ?? "", width: 120, maxLine: 2),
+                  ],
+                );
+              },
+            ),
+            Row(
+              children: [
+                rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true),
+                rowCell(listData.length, "", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalOutflow ?? "")}", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${totalAspiration.volatileComponent}", width: 120, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${totalAspiration.targetReturn}", width: 120, maxLine: 1, isBold: true),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
 
   void deleteListData(ListData listData, int index) {
     showModalBottomSheet<void>(
@@ -320,7 +555,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 15),
                     child: const Text('Are you sure you want to delete this entry?',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black)),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black), textAlign: TextAlign.center,),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 15, right: 15, bottom: 12, top: 20),
@@ -432,6 +667,15 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
 
             listData = dataResponse.aspirations!.listData!;
           }
+        }
+
+        if(dataResponse.aspirations?.total != null)
+        {
+          totalAspiration = dataResponse.aspirations?.total ?? Total();
+        }
+        else
+        {
+          totalAspiration = Total();
         }
 
 

@@ -98,233 +98,253 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
       ),
       // backgroundColor: const Color(0XffEDEDEE),
       backgroundColor: white,
-      body: _isLoading
-          ? LoadingWidget()
-          : Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15), 
-            child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        color: blue,
+        child: _isLoading
+            ? LoadingWidget()
+            : Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: listAssets.length,
+                  controller: _scrollViewController,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(15),
+                      margin: const EdgeInsets.only(top: 8, bottom: 8),
+                      decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: listAssets.length,
-                              controller: _scrollViewController,
-                              physics: BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: const EdgeInsets.all(15),
-                                  margin: const EdgeInsets.only(top: 8, bottom: 8),
-                                  decoration: const BoxDecoration(color: semiBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              listAssets[index].firstHolder ?? '',
-                                              style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                          const Gap(10),
-                                          GestureDetector(
-                                            onTap: (){
-                                            },
-                                            child: Container(
-                                              width: 32,
-                                              height: 32,
-                                              decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8),
-                                                child: Image.asset('assets/images/fin_plan_ic_edit_gray.png', width: 24, height: 24, color: black),
-                                              ),
-                                            ),
-                                          ),
-                                          const Gap(10),
-                                          InkWell(
-                                            onTap: (){
-                                              deleteListData(listAssets[index], index);
-                                            },
-                                            child: Container(
-                                                width: 32,
-                                                height: 32,
-                                                decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(5),
-                                                  child: Image.asset('assets/images/fin_plan_ic_delete_black.png', width: 24, height: 24, color: black),
-                                                )),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                "Current Value",
-                                                maxLines: 3,
-                                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                              )
-                                          ),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(
-                                              flex: 4,
-                                              child: Text(
-                                                convertCommaSeparatedAmount(listAssets[index].currentValue.toString()),
-                                                maxLines: 3,
-                                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                              )
-                                          ),
-                                        ],
-                                      ),
-                                      Gap(4),
-                                      Row(
-                                        children: [
-                                          const Expanded(flex: 2, child: Text(
-                                            "Investment Type",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                          )),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(flex: 4, child: Text(
-                                            listAssets[index].investmentType?.isEmpty ?? true ? "-" :  listAssets[index].investmentType ?? '',
-                                            maxLines: 3,
-                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          )),
-                                        ],
-                                      ),
-                                      Gap(4),
-                                      Row(
-                                        children: [
-                                          const Expanded(flex: 2, child: Text(
-                                            "Asset Class",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                          )),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(flex: 4, child: Text(
-                                            listAssets[index].assetClass?.isEmpty ?? true ? "-" :  listAssets[index].assetClass ?? '',
-                                            maxLines: 3,
-                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          )),
-                                        ],
-                                      ),
-                                      Gap(4),
-                                      Row(
-                                        children: [
-                                          const Expanded(flex: 2, child: Text(
-                                            "Company",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                          )),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(flex: 4, child: Text(
-                                            listAssets[index].companyName?.isEmpty ?? true ? "-" :  listAssets[index].companyName ?? '',
-                                            maxLines: 3,
-                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          )),
-                                        ],
-                                      ),
-                                      Gap(4),
-                                      Row(
-                                        children: [
-                                          const Expanded(flex: 2, child: Text(
-                                            "Broker",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                          )),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(flex: 4, child: Text(
-                                            listAssets[index].brokerAdvisor?.isEmpty ?? true ? "-" :  listAssets[index].brokerAdvisor ?? '',
-                                            maxLines: 3,
-                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          )),
-                                        ],
-                                      ),
-                                      Gap(4),
-                                      Row(
-                                        children: [
-                                          const Expanded(flex: 2, child: Text(
-                                            "Property",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                          )),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(flex: 4, child: Text(
-                                            listAssets[index].propertyName?.isEmpty ?? true ? "-" :  listAssets[index].propertyName ?? '',
-                                            maxLines: 3,
-                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          )),
-                                        ],
-                                      ),
-    
-                                      Gap(4),
-                                      Row(
-                                        children: [
-                                          const Expanded(flex: 2, child: Text(
-                                            "Scheme/Bank Name",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
-                                          )),
-                                          const Text(
-                                            " : ",
-                                            maxLines: 3,
-                                            style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
-                                          ),
-                                          Expanded(flex: 4, child: Text(
-                                            listAssets[index].schemeBankName?.isEmpty ?? true ? "-" : listAssets[index].schemeBankName ?? '',
-                                            maxLines: 3,
-                                            style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
-                                          )),
-                                        ],
-                                      ),
-                                    ],
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  listAssets[index].firstHolder ?? '',
+                                  style: const TextStyle(color: black, fontSize: 16, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              const Gap(10),
+                              GestureDetector(
+                                onTap: (){
+                                  _redirectToAddUpdate(listAssets[index], true);
+                                },
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Image.asset('assets/images/fin_plan_ic_edit_gray.png', width: 24, height: 24, color: black),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              ),
+                              const Gap(10),
+                              InkWell(
+                                onTap: (){
+                                  deleteListData(listAssets[index], index);
+                                },
+                                child: Container(
+                                    width: 32,
+                                    height: 32,
+                                    decoration: const BoxDecoration(color: grayLight, borderRadius: BorderRadius.all(Radius.circular(30))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Image.asset('assets/images/fin_plan_ic_delete_black.png', width: 24, height: 24, color: black),
+                                    )),
+                              ),
+                            ],
                           ),
-                          Visibility(visible: isLoadingMore, child: const LoadingMoreWidget()),
+                          Row(
+                            children: [
+                              const Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    "Current Value",
+                                    maxLines: 3,
+                                    style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                                  )
+                              ),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    convertCommaSeparatedAmount(listAssets[index].currentValue.toString()),
+                                    maxLines: 3,
+                                    style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                                  )
+                              ),
+                            ],
+                          ),
+                          Gap(4),
+                          Row(
+                            children: [
+                              const Expanded(flex: 2, child: Text(
+                                "Investment Type",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                              )),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(flex: 4, child: Text(
+                                listAssets[index].investmentType?.isEmpty ?? true ? "-" :  listAssets[index].investmentType ?? '',
+                                maxLines: 3,
+                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              )),
+                            ],
+                          ),
+                          Gap(4),
+                          Row(
+                            children: [
+                              const Expanded(flex: 2, child: Text(
+                                "Asset Class",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                              )),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(flex: 4, child: Text(
+                                listAssets[index].assetClass?.isEmpty ?? true ? "-" :  listAssets[index].assetClass ?? '',
+                                maxLines: 3,
+                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              )),
+                            ],
+                          ),
+                          Gap(4),
+                          Row(
+                            children: [
+                              const Expanded(flex: 2, child: Text(
+                                "Company",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                              )),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(flex: 4, child: Text(
+                                listAssets[index].companyName?.isEmpty ?? true ? "-" :  listAssets[index].companyName ?? '',
+                                maxLines: 3,
+                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              )),
+                            ],
+                          ),
+                          Gap(4),
+                          Row(
+                            children: [
+                              const Expanded(flex: 2, child: Text(
+                                "Broker",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                              )),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(flex: 4, child: Text(
+                                listAssets[index].brokerAdvisor?.isEmpty ?? true ? "-" :  listAssets[index].brokerAdvisor ?? '',
+                                maxLines: 3,
+                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              )),
+                            ],
+                          ),
+                          Gap(4),
+                          Row(
+                            children: [
+                              const Expanded(flex: 2, child: Text(
+                                "Property",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                              )),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(flex: 4, child: Text(
+                                listAssets[index].propertyName?.isEmpty ?? true ? "-" :  listAssets[index].propertyName ?? '',
+                                maxLines: 3,
+                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              )),
+                            ],
+                          ),
+
+                          Gap(4),
+                          Row(
+                            children: [
+                              const Expanded(flex: 2, child: Text(
+                                "Scheme/Bank Name",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 12, fontWeight: FontWeight.w500),
+                              )),
+                              const Text(
+                                " : ",
+                                maxLines: 3,
+                                style: TextStyle(color: black, fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                              Expanded(flex: 4, child: Text(
+                                listAssets[index].schemeBankName?.isEmpty ?? true ? "-" : listAssets[index].schemeBankName ?? '',
+                                maxLines: 3,
+                                style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
+                              )),
+                            ],
+                          ),
                         ],
                       ),
+                    );
+                  },
+                ),
+              ),
+              Visibility(visible: isLoadingMore, child: const LoadingMoreWidget()),
+            ],
           ),
+        ),
+      ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            startActivity(context, AddAssetScreen());
+            _redirectToAddUpdate(Assets(), false);
           },
           backgroundColor: blue,
           child: const Icon(Icons.add, color: white,),
         )
     );
+  }
+
+  Future<void> _refresh() async{
+    if(isOnline)
+    {
+      getAssetsListApi(true);
+    }
+  }
+
+  _redirectToAddUpdate(Assets getSet, bool isEdit) async{
+    var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(getSet, isEdit)));
+    if (value == "success")
+    {
+      getAssetsListApi(true);
+    }
   }
 
   getAssetsListApi(bool isFirstTime) async {
@@ -342,7 +362,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_CP + getAssetsList);
+    final url = Uri.parse(API_URL_CP_ASSETS + getAssetsList);
     Map<String, String> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
       // 'user_id': '423',
@@ -491,7 +511,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_CP + assetDelete);
+    final url = Uri.parse(API_URL_CP_ASSETS + assetDelete);
 
     Map<String, String> jsonBody = {
       'assets_id': listAssets[index].id ?? '',
