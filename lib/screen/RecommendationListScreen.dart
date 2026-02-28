@@ -276,13 +276,12 @@ class _RecommendationListScreenState extends BaseState<RecommendationListScreen>
       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.80),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14))),
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom,),
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) updateTask) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10,top: 18),
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom,),
+            child: StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) updateTask) {
+                return SingleChildScrollView(
                   child: Wrap(
                     children: [
                       Column(
@@ -295,14 +294,28 @@ class _RecommendationListScreenState extends BaseState<RecommendationListScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  "${listRecommendationData.title} - ${universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM, yyyy", listRecommendationData.addedDate ?? "")}",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blue,
+                                Expanded(
+                                  child: Text(
+                                    "${listRecommendationData.title} - ${universalDateConverter("yyyy-MM-dd'T'HH:mm:ss", "dd MMM, yyyy", listRecommendationData.addedDate ?? "")}",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: blue,
+                                    ),
                                   ),
                                 ),
+                                const Gap(16),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/ic_close.png",
+                                    height: 24,
+                                    width: 24,
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -331,7 +344,9 @@ class _RecommendationListScreenState extends BaseState<RecommendationListScreen>
                               },
                             ),
                           ),
-                          Container(
+                          const Gap(20),
+
+                          /*Container(
                             alignment: Alignment.bottomRight,
                             margin: const EdgeInsets.only(left: 15, right: 15, bottom: 8, top: 8),
                             child: TextButton(
@@ -358,14 +373,14 @@ class _RecommendationListScreenState extends BaseState<RecommendationListScreen>
                               ),
                             ),
                           ),
-                          const Gap(40),
+                          const Gap(40),*/
                         ],
                       ),
                     ],
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         );
       },

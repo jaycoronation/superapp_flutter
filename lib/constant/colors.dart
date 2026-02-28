@@ -15,12 +15,13 @@ bool isVideoReload = false;
 bool isBlogReload = false;
 bool isNewsReload = false;
 
-const Color appBg= Color(0xffffffff);
+const Color appBg = Color(0xffffffff);
 const Color black= Color(0xff000000);
 const Color textFieldBorder= Color(0xff1E1E1E);
 const Color borderGray = Color(0xffF0F0F0);
 const Color blackLight = Color(0xff1E1E1E);
 const Color white= Color(0xffffffff);
+const Color whiteLight = Color(0xfff6f2f2);
 const Color gray = Color(0xffD3DADC);
 const Color grayLight= Color(0xffe0e0e0);
 const Color graySemiDark= Color(0xff9F9F9F);
@@ -53,6 +54,7 @@ const Color redLight = Color(0xffd9534f);
 const Color green = Color(0xff10b504);
 const Color listBg = Color(0xffeff4fd);
 const Color redDark = Color(0xff6c1b22);
+const Color yellow = Color(0xfff3c408);
 
 const Color tableLightOrange = Color(0xFFffc4a3);
 const Color tableLightBlue = Color(0xFFa3d5ff);

@@ -166,6 +166,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                             ],
                           ),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(
                                   flex: 2,
@@ -192,6 +193,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                           ),
                           Gap(4),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(flex: 2, child: Text(
                                 "Investment Type",
@@ -212,6 +214,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                           ),
                           Gap(4),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(flex: 2, child: Text(
                                 "Asset Class",
@@ -232,6 +235,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                           ),
                           Gap(4),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(flex: 2, child: Text(
                                 "Company",
@@ -252,6 +256,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                           ),
                           Gap(4),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(flex: 2, child: Text(
                                 "Broker",
@@ -272,6 +277,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                           ),
                           Gap(4),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(flex: 2, child: Text(
                                 "Property",
@@ -293,6 +299,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
 
                           Gap(4),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Expanded(flex: 2, child: Text(
                                 "Scheme/Bank Name",

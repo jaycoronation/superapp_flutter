@@ -1,5 +1,4 @@
 import 'dart:convert';
-/// $id : "1"
 /// message : ""
 /// success : true
 /// data : [{"Id":1,"task_status":"Open","added_date":"2019-01-22T15:03:58.607","timestamp":"AAAAAAAL9iM="},{"$id":"3","Id":2,"task_status":"Completed","added_date":"2019-01-22T15:03:58.607","timestamp":"AAAAAAAL9iQ="}]
@@ -8,52 +7,44 @@ AllTaskStatusResponseModel allTaskStatusResponseModelFromJson(String str) => All
 String allTaskStatusResponseModelToJson(AllTaskStatusResponseModel data) => json.encode(data.toJson());
 class AllTaskStatusResponseModel {
   AllTaskStatusResponseModel({
-      String? id, 
-      String? message,
+      String? message, 
       bool? success, 
-      List<Data>? data,}){
-    _id = id;
+      List<TaskStatusData>? taskStatusData,}){
     _message = message;
     _success = success;
-    _data = data;
+    _taskStatusData = taskStatusData;
 }
 
   AllTaskStatusResponseModel.fromJson(dynamic json) {
-    _id = json['$id'];
     _message = json['message'];
     _success = json['success'];
     if (json['data'] != null) {
-      _data = [];
+      _taskStatusData = [];
       json['data'].forEach((v) {
-        _data?.add(Data.fromJson(v));
+        _taskStatusData?.add(TaskStatusData.fromJson(v));
       });
     }
   }
-  String? _id;
   String? _message;
   bool? _success;
-  List<Data>? _data;
-AllTaskStatusResponseModel copyWith({  String? id,
-  String? message,
+  List<TaskStatusData>? _taskStatusData;
+AllTaskStatusResponseModel copyWith({  String? message,
   bool? success,
-  List<Data>? data,
-}) => AllTaskStatusResponseModel(  id: id ?? _id,
-  message: message ?? _message,
+  List<TaskStatusData>? taskStatusData,
+}) => AllTaskStatusResponseModel(  message: message ?? _message,
   success: success ?? _success,
-  data: data ?? _data,
+  taskStatusData: taskStatusData ?? _taskStatusData,
 );
-  String? get id => _id;
   String? get message => _message;
   bool? get success => _success;
-  List<Data>? get data => _data;
+  List<TaskStatusData>? get taskStatusData => _taskStatusData;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['$id'] = _id;
     map['message'] = _message;
     map['success'] = _success;
-    if (_data != null) {
-      map['data'] = _data?.map((v) => v.toJson()).toList();
+    if (_taskStatusData != null) {
+      map['data'] = _taskStatusData?.map((v) => v.toJson()).toList();
     }
     return map;
   }
@@ -65,10 +56,10 @@ AllTaskStatusResponseModel copyWith({  String? id,
 /// added_date : "2019-01-22T15:03:58.607"
 /// timestamp : "AAAAAAAL9iM="
 
-Data dataFromJson(String str) => Data.fromJson(json.decode(str));
-String dataToJson(Data data) => json.encode(data.toJson());
-class Data {
-  Data({
+TaskStatusData taskStatusDataFromJson(String str) => TaskStatusData.fromJson(json.decode(str));
+String taskStatusDataToJson(TaskStatusData data) => json.encode(data.toJson());
+class TaskStatusData {
+  TaskStatusData({
       num? id, 
       String? taskStatus, 
       String? addedDate, 
@@ -79,7 +70,7 @@ class Data {
     _timestamp = timestamp;
 }
 
-  Data.fromJson(dynamic json) {
+  TaskStatusData.fromJson(dynamic json) {
     _id = json['Id'];
     _taskStatus = json['task_status'];
     _addedDate = json['added_date'];
@@ -89,11 +80,11 @@ class Data {
   String? _taskStatus;
   String? _addedDate;
   String? _timestamp;
-Data copyWith({  num? id,
+TaskStatusData copyWith({  num? id,
   String? taskStatus,
   String? addedDate,
   String? timestamp,
-}) => Data(  id: id ?? _id,
+}) => TaskStatusData(  id: id ?? _id,
   taskStatus: taskStatus ?? _taskStatus,
   addedDate: addedDate ?? _addedDate,
   timestamp: timestamp ?? _timestamp,

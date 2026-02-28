@@ -681,3 +681,10 @@ Column getBottomSheetItemWithoutSelection(String title,bool isSelected,bool isDi
     ],
   );
 }
+
+String displayOrDash(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return "-";
+  }
+  return value.trim();
+}

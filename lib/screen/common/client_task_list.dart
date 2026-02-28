@@ -16,6 +16,7 @@ import 'package:superapp_flutter/widget/no_data.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
+import '../../model/AllTaskStatusResponseModel.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
@@ -35,20 +36,24 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
   TextEditingController taskController = TextEditingController();
 
   List<TaskList> listTasks = [];
+  List<TaskStatusData> listTaskStatusData = [];
 
   String selectedImageFile = "";
+  String selectedTaskStatusId = "";
+  String selectedTaskStatusName = "";
 
   @override
   void initState(){
     super.initState();
     _getList();
+    fetchAllTaskStatus();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          backgroundColor: dashboardBg,
+          backgroundColor: white,
           appBar: AppBar(
             toolbarHeight: 0,
             automaticallyImplyLeading: false,
@@ -61,224 +66,295 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
               ? const LoadingWidget()
               : listTasks.isNotEmpty
               ? SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    margin: const EdgeInsets.only(left: 15, right: 15, top: 16),
-                    child: const Text('Click on the tasks to see the status : ',style: TextStyle(fontSize: 14, color: blackLight, fontWeight: FontWeight.w600,),)
-                ),
-                const Gap(12),
-                Container(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: ListView.builder(
-                    itemCount: listTasks.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        //color: white,
-                        padding: const EdgeInsets.all(4),
-                        margin: const EdgeInsets.only(top: 8, bottom: 8),
-                        // decoration: BoxDecoration(color: index % 2 == 0 ? semiBlue : white, borderRadius: BorderRadius.all(Radius.circular(10))),
-                        decoration: BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(10))),
-                        child: InkWell(
-                          onTap: () {
-                            _redirectToDetail(context, listTasks[index]);
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(12),
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Click on the tasks to see the status ",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blackLight),
+                              ),
+                            ),
+                            const Gap(10),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                openFilterDialog();
+                              },
+                              child: Icon(
+                                Icons.filter_alt,
+                                size: 24,
+                                color: selectedTaskStatusId.isNotEmpty ? blue : black,
+                              ),
+                            )
+                          ],
+                        )
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: ListView.builder(
+                          itemCount: listTasks.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.only(bottom: 100),
+                          itemBuilder: (context, index) {
+                            final taskData = listTasks[index];
+
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                _redirectToDetail(context, listTasks[index]);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                  color: semiBlue.withValues(alpha: 0.4),
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Row(
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
                                             children: [
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    Visibility(
+                                                      visible: taskData.strTaskPriority?.isNotEmpty ?? false,
+                                                      child: Container(
+                                                        margin: const EdgeInsets.only(right: 8),
+                                                        decoration: BoxDecoration(
+                                                            color: getColorStatus(taskData.strTaskPriority ?? "").withValues(alpha: 0.1),
+                                                            borderRadius: BorderRadius.circular(8)
+                                                        ),
+                                                        padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 6),
+                                                        child: Text(
+                                                          taskData.strTaskPriority ?? "",
+                                                          style: getMediumTextStyle(fontSize: 12, color: getColorStatus(taskData.strTaskPriority ?? "")),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: white,
+                                                        border: Border.all(color: borderGray),
+                                                        borderRadius: BorderRadius.circular(8)
+                                                      ),
+                                                      padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 6),
+                                                      child: Text(
+                                                        taskData.taskStatus ?? "",
+                                                        style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                               Visibility(
-                                                visible: (listTasks[index].strTaskPriority?.isNotEmpty ?? false),
+                                                visible: taskData.isAddedByClient ?? true,
                                                 child: Container(
-                                                  margin: const EdgeInsets.only(right: 8),
-                                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(color: blue),
-                                                      borderRadius: BorderRadius.circular(10)
-                                                  ),
-                                                  child: Text(listTasks[index].strTaskPriority ?? "", style: getMediumTextStyle(fontSize: 12, color: blue),),
+                                                  margin: const EdgeInsets.only(left: 10),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      GestureDetector(
+                                                        behavior: HitTestBehavior.opaque,
+                                                        onTap: () {
+                                                          showAddTaskDialog(true, taskData);
+                                                        },
+                                                        child: Image.asset(
+                                                          "assets/images/img_edit.png",
+                                                          height: 20,
+                                                          width: 20,
+                                                        ),
+                                                      ),
+                                                      const Gap(10),
+                                                      GestureDetector(
+                                                        behavior: HitTestBehavior.opaque,
+                                                        onTap: () {
+                                                          openDeleteTaskDialog(taskData);
+                                                        },
+                                                        child: Image.asset(
+                                                          "assets/images/img_delete.png",
+                                                          height: 20,
+                                                          width: 20,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
                                                 ),
-                                              ),
-                                              Container(
-                                                padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(color: blue),
-                                                    borderRadius: BorderRadius.circular(10)
-                                                ),
-                                                child: Text(listTasks[index].taskStatus ?? "", style: getMediumTextStyle(fontSize: 12, color: blue),),
                                               ),
                                             ],
+                                          ),
+                                          const Gap(8),
+                                          Text(
+                                            taskData.taskMessage ?? "",
+                                            style: getMediumTextStyle(fontSize: 14, color: black),
                                           )
-                                        ),
-                                        Visibility(
-                                          visible: listTasks[index].isAddedByClient ?? true,
-                                          child: PopupMenuButton<int>(
-                                            itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
-                                              PopupMenuItem<int>(
-                                                value: 1,
-                                                height: 18,
-                                                padding: const EdgeInsets.only(left: 12, right: 12, bottom: 10, top: 10),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(height: 1, color: gray,),
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
                                                 child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Edit",
-                                                        style: getRegularTextStyle(color: black, fontSize: 14),
-                                                      ),
-                                                      const Gap(10),
-                                                      Image.asset(
-                                                        "assets/images/img_edit.png",
-                                                        height: 18,
-                                                        width: 18,
-                                                      )
-                                                    ],
-                                                  ),
+                                                  children: [
+                                                    Image.asset(
+                                                      "assets/images/img.png",
+                                                      height: 18,
+                                                      width: 18,
+                                                      color: graySemiDark,
+                                                    ),
+                                                    const Gap(4),
+                                                    Text(
+                                                      "Remark",
+                                                      style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                              PopupMenuItem<int>(
-                                                value: 2,
-                                                padding: const EdgeInsets.only(left: 12, right: 12, top: 10, bottom: 10),
-                                                height: 18,
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Delete",
-                                                        style: getRegularTextStyle(color: red, fontSize: 14),
-                                                      ),
-                                                      const Gap(10),
-                                                      Image.asset(
-                                                        "assets/images/img_delete.png",
-                                                        height: 18,
-                                                        width: 18,
-                                                      )
-                                                    ],
-                                                  ),
-                                              ),
+                                              Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                              const Gap(8),
+                                              Expanded(
+                                                flex: 4,
+                                                child: Text(
+                                                  taskData.taskStatus == "Completed" ? displayOrDash(taskData.taskCompletedRemark ?? "") : displayOrDash(taskData.taskReopenRemark),
+                                                  style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                                ),
+                                              )
                                             ],
-                                            onSelected: (int value) async {
-                                              if(value == 1)
-                                              {
-                                                showAddTaskDialog(true, listTasks[index]);
-                                              }
-                                              else if(value == 2)
-                                              {
-                                                openDeleteTaskDialog(listTasks[index]);
-                                              }
-                                            },
-                                            borderRadius: BorderRadius.circular(12),
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                            position: PopupMenuPosition.under,
-                                            icon: Icon(Icons.more_vert, size: 24, color: black,),
-                                            padding: EdgeInsets.zero,
-                                            iconSize: 24,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    const Gap(8),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: Text(
-                                            listTasks[index].taskMessage ?? "",
-                                            style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                                          const Gap(8),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.calendar_today,
+                                                      size: 18,
+                                                      color: graySemiDark,
+                                                    ),
+                                                    const Gap(4),
+                                                    Text(
+                                                      "Due Date",
+                                                      style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                              const Gap(8),
+                                              Expanded(
+                                                flex: 4,
+                                                child: Text(
+                                                  displayOrDash(taskData.dueDate),
+                                                  style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                        ),
-                                        Visibility(
-                                          visible: listTasks[index].attachmentCount != 0,
-                                          child: Container(
-                                            margin: const EdgeInsets.only(left: 8),
-                                            child: Icon(Icons.attachment, size: 24, color: graySemiDark,),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Visibility(
-                                      visible: listTasks[index].allEmployeeName?.isNotEmpty ?? false,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Gap(4),
-                                          Text(
-                                            "Assigned To",
-                                            style: getSemiBoldTextStyle(fontSize: 12, color: black),
-                                          ),
-                                          const Gap(2),
-                                          Text(
-                                            listTasks[index].allEmployeeName ?? "",
-                                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                          ),
+                                          Visibility(
+                                            visible: listTasks[index].attachmentCount != 0,
+                                            child: Container(
+                                              margin: const EdgeInsets.only(top: 8),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.attachment,
+                                                          size: 18,
+                                                          color: graySemiDark,
+                                                        ),
+                                                        const Gap(4),
+                                                        Text(
+                                                          "Attachment",
+                                                          style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                                  const Gap(8),
+                                                  Expanded(
+                                                    flex: 4,
+                                                    child: Text(
+                                                      "View",
+                                                      style: getMediumTextStyle(fontSize: 12, color: blue),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
-                                    Visibility(
-                                      visible: listTasks[index].taskCompletedRemark?.isNotEmpty ?? false,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Gap(4),
-                                          Text(
-                                            "Remark",
-                                            style: getSemiBoldTextStyle(fontSize: 12, color: black),
-                                          ),
-                                          const Gap(2),
-                                          Text(
-                                            listTasks[index].taskCompletedRemark ?? "",
-                                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: listTasks[index].dueDate.toString().isNotEmpty && (listTasks[index].dueDate != null),
+                                    Divider(height: 1, color: gray,),
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
                                       child: Row(
                                         children: [
-                                          const Expanded(
-                                            flex:1,
-                                            child: Text("Due Date", textAlign: TextAlign.start,
-                                              style:  TextStyle(fontSize: 15, color: grayDark, fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                          const Text(":", textAlign: TextAlign.start,
-                                            style: TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w500),
-                                          ),
                                           Expanded(
-                                            flex:4,
-                                            child: Text(checkValidString(listTasks[index].dueDate.toString()), textAlign: TextAlign.start,
-                                              style: const TextStyle(fontSize: 15, color: black, fontWeight: FontWeight.w600),
+                                            flex: 2,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.person,
+                                                  size: 18,
+                                                  color: graySemiDark,
+                                                ),
+                                                const Gap(4),
+                                                Text(
+                                                  "Assigned By",
+                                                  style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                )
+                                              ],
                                             ),
                                           ),
+                                          Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                          const Gap(8),
+                                          Expanded(
+                                            flex: 4,
+                                            child: Text(
+                                              displayOrDash(taskData.allEmployeeName),
+                                              style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
-                              //Visibility(visible: index != listTasks.length-1,child: Container(color: grayLight, height: 0.5),)
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          )
+                )
               : const MyNoDataWidget(msg: "No Tasks Pending"),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -299,6 +375,103 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
           Navigator.pop(context);
           return Future.value(true);
         },
+    );
+  }
+
+  Color getColorStatus(String priorityName){
+    Color color = black;
+    if(priorityName == "high" || priorityName == "High")
+    {
+      color = red;
+    }
+    else if(priorityName == "low" || priorityName == "Low")
+    {
+      color = green;
+    }
+    else if(priorityName == "medium" || priorityName == "Medium")
+    {
+      color = yellow;
+    }
+    else
+    {
+      color = blue;
+    }
+
+    return color;
+  }
+
+  openFilterDialog(){
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: StatefulBuilder(
+            builder: (context, setStateDialog) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 12,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.85,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      getBottomSheetHeaderWithoutButton(context, "Select Status"),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          setState(() {
+                            selectedTaskStatusId = "";
+                            selectedTaskStatusName = "";
+                          });
+                          _getList();
+                          Navigator.pop(context);
+                        },
+                        child: getBottomSheetItemWithoutSelection("Filter By Status", selectedTaskStatusId == "", false),
+                      ),
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: listTaskStatusData.length,
+                          physics: BouncingScrollPhysics(),
+                          padding: const EdgeInsets.all(0),
+                          itemBuilder: (context, index) {
+          
+                            final bool isLastItem = index == listTaskStatusData.length - 1;
+          
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                setState(() {
+                                  selectedTaskStatusId = "${listTaskStatusData[index].id}";
+                                  selectedTaskStatusName = "${listTaskStatusData[index].taskStatus}";
+                                });
+                                _getList();
+                                Navigator.pop(context);
+                              },
+                              child: getBottomSheetItemWithoutSelection(listTaskStatusData[index].taskStatus ?? "", selectedTaskStatusId == "${listTaskStatusData[index].id}", isLastItem ? true : false),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -706,6 +879,64 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
     }
   }
 
+  fetchAllTaskStatus() async{
+    if (isOnline) {
+
+      setState(() {
+        isLoading = true;
+      });
+
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(ALL_TASK_STATUS);
+        final response = await http.post(url, headers: {
+          "Authorization": authHeader,
+        });
+
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> data = jsonDecode(body);
+        var dataResponse = AllTaskStatusResponseModel.fromJson(data);
+
+        if (statusCode == 200 && dataResponse.success == true)
+        {
+          if(dataResponse.taskStatusData?.isNotEmpty ?? false)
+          {
+            listTaskStatusData = dataResponse.taskStatusData ?? [];
+          }
+          else
+          {
+            listTaskStatusData = [];
+          }
+
+          print("Display list task status data : ${listTaskStatusData.length}");
+        }
+        else
+        {
+          listTaskStatusData = [];
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch task list : $e");
+      }
+      finally
+      {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+    else
+    {
+      noInterNet(context);
+    }
+  }
+
   //API Call Func...
   _getList() async {
     if (isOnline) {
@@ -714,54 +945,63 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
         isLoading = true;
       });
 
-      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-        HttpLogger(logLevel: LogLevel.BODY),
-      ]);
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
 
+        final url = Uri.parse(CHEETAH_TASK_LIST);
 
-      final url = Uri.parse(CHEETAH_TASK_LIST);
+        Map<String, String> jsonBody = {
+          "pan_card": sessionManagerPMS.getPanCard(),
+          // "client_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+          "first_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+          "fromdate": '',
+          "todate": '',
+          "pageindex": _pageIndex.toString(),
+          "pagesize": _pageResult.toString(),
+          "TaskStatusId": selectedTaskStatusId
+        };
 
-      Map<String, String> jsonBody = {
-        "pan_card": sessionManagerPMS.getPanCard(),
-        // "client_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
-        "first_name": "${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
-        "fromdate": '',
-        "todate": '',
-        "pageindex": _pageIndex.toString(),
-        "pagesize": _pageResult.toString()
-      };
-
-      final response = await http.post(url, body: jsonBody, headers: {
-        "Authorization": authHeader,
-      });
-
-      final statusCode = response.statusCode;
-      final body = response.body;
-      Map<String, dynamic> data = jsonDecode(body);
-      var dataResponse = TaskListResponseModel.fromJson(data);
-
-
-      if (statusCode == 200 && dataResponse.success == true) {
-        if (dataResponse.data != null) {
-
-          if (dataResponse.data!.taskList != null) {
-            listTasks = dataResponse.data?.taskList ?? [];
-          }
-
-        }
-        setState(() {
-          isLoading = false;
+        final response = await http.post(url, body: jsonBody, headers: {
+          "Authorization": authHeader,
         });
-      } else {
+
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> data = jsonDecode(body);
+        var dataResponse = TaskListResponseModel.fromJson(data);
+
+        if (statusCode == 200 && dataResponse.success == true)
+        {
+          if (dataResponse.data != null)
+          {
+            if (dataResponse.data!.taskList != null)
+            {
+              listTasks = dataResponse.data?.taskList ?? [];
+            }
+          }
+        }
+        else
+        {
+          listTasks = [];
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch task list : $e");
+      }
+      finally
+      {
         setState(() {
           isLoading = false;
         });
       }
-    } else {
+    }
+    else
+    {
       noInterNet(context);
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
