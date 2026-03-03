@@ -6,6 +6,479 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
+import 'package:superapp_flutter/model/e-state-analysis/FutureInflowListResponseModel.dart';
+import '../../common_widget/common_widget.dart';
+import '../../constant/colors.dart';
+import '../../utils/app_utils.dart';
+import '../../utils/base_class.dart';
+import '../../widget/loading.dart';
+import '../../widget/no_data.dart';
+import '../../widget/no_internet.dart';
+import 'e_state_add_future_inflow_page.dart';
+
+class EStateFutureInflowPage extends StatefulWidget {
+  final bool isFromMainList;
+  const EStateFutureInflowPage(this.isFromMainList, {super.key});
+
+  @override
+  _EStateFutureInflowPageState createState() => _EStateFutureInflowPageState();
+}
+
+class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
+
+  List<FutureInflows> listData = [];
+  FutureInflowsReport futureInflowsReport = FutureInflowsReport();
+
+  bool _isLoading = false;
+  var isAddOrRemoved = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if(isOnline) {
+      getListData();
+    }else{
+      noInterNet(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: white,
+        appBar: AppBar(
+          toolbarHeight: 55,
+          automaticallyImplyLeading: false,
+          leading: GestureDetector(
+            onTap: () {
+              if(isAddOrRemoved) {
+                Navigator.pop(context,"success");
+              }else {
+                Navigator.pop(context);
+              }
+            },
+            child: getBackArrow(),
+          ),
+          title: getTitle("Future Inflow",),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: white,
+        ),
+        body: isOnline
+            ? _isLoading
+            ? const LoadingWidget()
+            : SafeArea(
+            child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: listData.isEmpty ?
+                const Center(
+                  child: MyNoDataWidget(msg: 'No future inflow data found!')
+                )
+                : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text("Future Inflow - Other than asset income", style: getSemiBoldTextStyle(fontSize: 14, color: blue),),
+                    const Gap(20),
+                    futureInflowWidget(),
+                    const Gap(20),
+                    Text(
+                      "Future Inflow Calculation",
+                      style: getSemiBoldTextStyle(fontSize: 14, color: blue)
+                    ),
+                    const Gap(20),
+                    futureInflowCalculationWidget(),
+                    const Gap(10),
+                    Center(
+                      child: Text(
+                        "*There will be future infolow of ₹2,00,00,000",
+                        style: getMediumTextStyle(fontSize: 14, color: black),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                )
+            ),
+          ),
+        )
+        : NoInternetWidget(() {
+          if(isOnline) {
+            getListData();
+          }else{
+            noInterNet(context);
+          }
+        },),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            _redirectToNextPage(context, FutureInflows(), false);
+          },
+          backgroundColor: blue,
+          child: const Icon(Icons.add, color: white,),
+        )
+    );
+  }
+
+  Widget futureInflowWidget(){
+    return ListView.builder(
+      itemCount: listData.length,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
+      itemBuilder: (context, index) {
+        final futureInflowData = listData[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: gray)
+          ),
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${futureInflowData.source} of Rs ${convertCommaSeparatedAmount(futureInflowData.amount ?? "")} per annual from  ${futureInflowData.startYear} to ${futureInflowData.endYear}",
+                style: getMediumTextStyle(fontSize: 12, color: blackLight),
+              ),
+              const Gap(4),
+              Divider(color: grayLight,),
+              const Gap(4),
+              Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          _redirectToNextPage(context, futureInflowData, true);
+                        },
+                        child: Image.asset(
+                          "assets/images/fin_plan_ic_edit_gray.png",
+                          height: 20,
+                          width: 20,
+                          color: tableLightGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          deleteListData(futureInflowData, index);
+                        },
+                        child: Image.asset(
+                          "assets/images/fin_plan_ic_delete_black.png",
+                          height: 24,
+                          width: 24,
+                          color: redLight,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget futureInflowCalculationWidget(){
+
+    double totalAmount = 0;
+
+    double parseAmount(String? value) {
+      if (value == null || value.isEmpty) return 0;
+      return double.tryParse(value.replaceAll(",", "")) ?? 0;
+    }
+    
+    for (var item in (futureInflowsReport.futureInflowList ?? []))
+    {
+      totalAmount += parseAmount(item.amount);
+    }
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: BouncingScrollPhysics(),
+      child: Container(
+        width: 882,
+        decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            borderRadius: BorderRadius.circular(4)
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                rowCellTitle("Duration", white, width: 150),
+                rowCellTitle("Amount", white, width: 150),
+                rowCellTitle("PV of Income", white, width: 120),
+                rowCellTitle("Expected Growth", white, width: 150),
+                rowCellTitle("Inflation Adjusted Income", white, width: 150),
+              ],
+            ),
+            ListView.builder(
+              itemCount: futureInflowsReport.futureInflowList?.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(0),
+              itemBuilder: (context, index) {
+                final reportListData = futureInflowsReport.futureInflowList?[index];
+                return Row(
+                  children: [
+                    rowCell(index, reportListData?.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                    rowCell(index, "${reportListData?.startYear} - ${reportListData?.endYear}", width: 150, maxLine: 2),
+                    rowCell(index, "${convertCommaSeparatedAmount(reportListData?.amount ?? "")}", width: 150, maxLine: 2),
+                    rowCell(index, reportListData?.expectedGrowth ?? "", width: 120, maxLine: 2),
+                    rowCell(index, "${convertCommaSeparatedAmount(reportListData?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 2),
+                    rowCell(index, "${convertCommaSeparatedAmount(reportListData?.pvOfIncome ?? "")}", width: 150, maxLine: 2),
+                  ],
+                );
+              },
+            ),
+            Row(
+              children: [
+                rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true),
+                rowCell(listData.length, "-", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${convertCommaSeparatedAmount("$totalAmount")}", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "-", width: 120, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
+                rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.pvOfIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void refreshData() {
+    _redirectToNextPage(context, FutureInflows(), false);
+  }
+
+  void deleteListData(FutureInflows futureInflows, int index) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(15),
+              decoration:
+              BoxDecoration(borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 2,
+                    width: 40,
+                    alignment: Alignment.center,
+                    color: black,
+                    margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text('Delete?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: black))
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10, bottom: 15),
+                    child: const Text(
+                      'Are you sure you want to delete this entry?',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: black),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 15, right: 15, bottom: 12, top: 20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: getCommonButtonBorder(
+                            "Cancel",
+                            false,
+                            () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                          child: getCommonButton(
+                            "Delete",
+                            false,
+                            () {
+                              Navigator.pop(context);
+                              setState(() {
+                                deleteData( index);
+                              });
+                            },
+                            isUpperCaseText: false
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Gap(30)
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _redirectToNextPage(BuildContext context, FutureInflows futureInflows, bool isFromList) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EStateAddFutureInflowPage(futureInflows, isFromList)),
+    );
+    print("result ===== $result");
+    if (result == "success")
+    {
+      setState(() {
+        isAddOrRemoved = true;
+      });
+      getListData();
+    }
+  }
+
+  //API call func..
+  void getListData() async{
+    if(isOnline)
+    {
+      setState(() {
+        _isLoading = true;
+      });
+
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_ANALYSIS + futureInflowList);
+
+        Map<String, String> jsonBody = {
+          'user_id': sessionManager.getUserId().toString().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = FutureInflowListResponseModel.fromJson(user);
+
+        if(statusCode == 200 && dataResponse.success == 1)
+        {
+          if(dataResponse.futureInflows?.isNotEmpty ?? false)
+          {
+            listData = dataResponse.futureInflows ?? [];
+          }
+
+          if(dataResponse.futureInflowsReport != null)
+          {
+            futureInflowsReport = dataResponse.futureInflowsReport ?? FutureInflowsReport();
+          }
+
+        }
+        else
+        {
+          listData = [];
+          futureInflowsReport = FutureInflowsReport();
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch list data: $e");
+      }
+      finally{
+        if (!mounted) return;
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    else
+    {
+      noInterNet(context);
+    }
+  }
+
+  void deleteData(int index) async {
+    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+
+    final url = Uri.parse(API_URL_ANALYSIS + futureInflowDelete);
+
+    Map<String, String> jsonBody = {
+      'future_inflow_id': listData[index].futureInflowId.toString(),
+    };
+
+    final response = await http.post(url, body: jsonBody);
+    final statusCode = response.statusCode;
+
+    final body = response.body;
+    Map<String, dynamic> user = jsonDecode(body);
+    var dataResponse = CommanResponse.fromJson(user);
+
+    if (statusCode == 200 && dataResponse.success == 1) {
+      showSnackBar(dataResponse.message, context);
+
+      setState(() {
+        isAddOrRemoved = true;
+        listData.removeAt(index);
+        _isLoading = false;
+      });
+
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void castStatefulWidget() {
+    widget is EStateFutureInflowPage;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:gap/gap.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
+import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/e-state-analysis/future_inflow_list_reponse_model.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
@@ -96,10 +569,12 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
                                     child: FadeInAnimation(
                                       child: Container(
                                         margin: const EdgeInsets.only(top: 5),
-                                        /*decoration: BoxDecoration(
+                                        */
+/*decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
                                           border:Border.all(color: grayLight, width: 1,)
-                                      ),*/
+                                      ),*//*
+
                                         child: Card(
                                           clipBehavior: Clip.antiAliasWithSaveLayer,
                                           elevation: 1,
@@ -501,4 +976,4 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
     }
   }
 
-}
+}*/

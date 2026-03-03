@@ -86,3 +86,37 @@ int calculateYearInterval(List list) {
 
   return (yearRange / targetLabelCount).ceil();
 }
+
+
+class ChartScale2 {
+  final double minY;
+  final double maxY;
+  final double interval;
+
+  ChartScale2(this.minY, this.maxY, this.interval);
+}
+
+ChartScale2 calculateChartScale2(double dataMin, double dataMax, {int divisions = 6}) {
+  if (dataMax == dataMin) {
+    return ChartScale2(dataMin, dataMax + 1, 1);
+  }
+
+  // Step 1: calculate raw interval based on exact number of divisions
+  double rawInterval = (dataMax - dataMin) / divisions;
+
+  // Step 2: round the interval to a "nice" number for readability
+  double interval = _niceNum(rawInterval, true);
+
+  // Step 3: calculate minY and maxY exactly using interval so that divisions = 7
+  double minY = dataMin;
+  double maxY = minY + interval * divisions;
+
+  // If maxY is less than actual max, shift minY down to fit all data
+  if (maxY < dataMax) {
+    minY -= (dataMax - maxY);
+    maxY = minY + interval * divisions;
+  }
+
+
+  return ChartScale2(minY, maxY, interval);
+}

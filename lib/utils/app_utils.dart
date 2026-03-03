@@ -524,18 +524,18 @@ openFileFromURL(String url,BuildContext? context) async {
     }
 }
 
-Widget getCommonButton(String title, bool isLoading, void Function() onPressed, [Color textColor = white,FontWeight weight = FontWeight.w600]){
+Widget getCommonButton(String title, bool isLoading, void Function() onPressed, {Color textColor = white,FontWeight weight = FontWeight.w600, bool isUpperCaseText = true}){
   return TextButton(
     // onPressed: isLoading ? null : onPressed,
     onPressed: onPressed,
     style: ButtonStyle(
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
             side: const BorderSide(color: white,width: 0.6)
         ),
       ),
-      backgroundColor: MaterialStateProperty.all<Color>(blue),
+      backgroundColor: WidgetStateProperty.all<Color>(blue),
     ),
     child: isLoading
         ? const Padding(
@@ -544,7 +544,8 @@ Widget getCommonButton(String title, bool isLoading, void Function() onPressed, 
     )
         : Padding(
       padding: const EdgeInsets.only(top: 11,bottom: 11,),
-      child: Text(title.toUpperCase(),
+      child: Text(
+        isUpperCaseText ? title.toUpperCase() : title,
         style: TextStyle(fontSize: 14, fontWeight: weight, color: textColor,),
       ),
     ),

@@ -18,6 +18,7 @@ import 'package:superapp_flutter/screen/e-state-analysis/e_state_existing_liabil
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_future_inflow_main_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_future_inflow_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_risk_profile_page.dart';
+import 'package:superapp_flutter/screen/e-state-analysis/e_state_risk_profile_screen_new.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
@@ -342,6 +343,12 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
       context,
       MaterialPageRoute(builder: (context) => const EStateRiskProfilePage()),
     );
+
+    // // Priyanka changes : create this is new e state risk 03-03-26 (filter is pending)
+    // final result = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const EStateRiskProfileScreenNew()),
+    // );
     print("result ===== $result");
     if (result == "success") {
       setMenuData();

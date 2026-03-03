@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,11 +6,9 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
-import 'package:superapp_flutter/model/e-state-analysis/aspiration_types_response_model.dart';
-import 'package:superapp_flutter/model/e-state-analysis/future_inflow_list_reponse_model.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
-import '../../model/e-state-analysis/aspiration_response_model.dart';
+import '../../model/e-state-analysis/FutureInflowListResponseModel.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
