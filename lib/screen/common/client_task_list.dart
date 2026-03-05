@@ -62,300 +62,306 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
             elevation: 0,
             backgroundColor: white,
           ),
-          body: isLoading
-              ? const LoadingWidget()
-              : listTasks.isNotEmpty
-              ? SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Click on the tasks to see the status ",
-                                style: getSemiBoldTextStyle(fontSize: 14, color: blackLight),
-                              ),
-                            ),
-                            const Gap(10),
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                openFilterDialog();
-                              },
-                              child: Icon(
-                                Icons.filter_alt,
-                                size: 24,
-                                color: selectedTaskStatusId.isNotEmpty ? blue : black,
-                              ),
-                            )
-                          ],
+          body: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Click on the tasks to see the status ",
+                            style: getSemiBoldTextStyle(fontSize: 14, color: blackLight),
+                          ),
+                        ),
+                        const Gap(10),
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            openFilterDialog();
+                          },
+                          child: Icon(
+                            Icons.filter_alt,
+                            size: 24,
+                            color: selectedTaskStatusId.isNotEmpty ? blue : black,
+                          ),
                         )
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 16, right: 16),
-                        child: ListView.builder(
-                          itemCount: listTasks.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.only(bottom: 100),
-                          itemBuilder: (context, index) {
-                            final taskData = listTasks[index];
+                      ],
+                    )
+                  ),
+                  isLoading
+                  ? SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.65,
+                    child: Center(child: const LoadingWidget(),),
+                  )
+                  : listTasks.isEmpty
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.65,
+                      child: Center(child: MyNoDataWidget(msg: "No Tasks Pending"),),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      child: ListView.builder(
+                        itemCount: listTasks.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 100),
+                        itemBuilder: (context, index) {
+                          final taskData = listTasks[index];
 
-                            return GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                _redirectToDetail(context, listTasks[index]);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 10),
-                                decoration: BoxDecoration(
-                                  color: semiBlue.withValues(alpha: 0.4),
-                                  borderRadius: BorderRadius.circular(8)
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Row(
-                                                  children: [
-                                                    Visibility(
-                                                      visible: taskData.strTaskPriority?.isNotEmpty ?? false,
-                                                      child: Container(
-                                                        margin: const EdgeInsets.only(right: 8),
-                                                        decoration: BoxDecoration(
-                                                            color: getColorStatus(taskData.strTaskPriority ?? "").withValues(alpha: 0.1),
-                                                            borderRadius: BorderRadius.circular(8)
-                                                        ),
-                                                        padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 6),
-                                                        child: Text(
-                                                          taskData.strTaskPriority ?? "",
-                                                          style: getMediumTextStyle(fontSize: 12, color: getColorStatus(taskData.strTaskPriority ?? "")),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              _redirectToDetail(context, listTasks[index]);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: semiBlue.withValues(alpha: 0.4),
+                                borderRadius: BorderRadius.circular(8)
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  Visibility(
+                                                    visible: taskData.strTaskPriority?.isNotEmpty ?? false,
+                                                    child: Container(
+                                                      margin: const EdgeInsets.only(right: 8),
                                                       decoration: BoxDecoration(
-                                                        color: white,
-                                                        border: Border.all(color: borderGray),
-                                                        borderRadius: BorderRadius.circular(8)
+                                                          color: getColorStatus(taskData.strTaskPriority ?? "").withValues(alpha: 0.1),
+                                                          borderRadius: BorderRadius.circular(8)
                                                       ),
                                                       padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 6),
                                                       child: Text(
-                                                        taskData.taskStatus ?? "",
-                                                        style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                                        taskData.strTaskPriority ?? "",
+                                                        style: getMediumTextStyle(fontSize: 12, color: getColorStatus(taskData.strTaskPriority ?? "")),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: taskData.isAddedByClient ?? true,
-                                                child: Container(
-                                                  margin: const EdgeInsets.only(left: 10),
-                                                  child: Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: [
-                                                      GestureDetector(
-                                                        behavior: HitTestBehavior.opaque,
-                                                        onTap: () {
-                                                          showAddTaskDialog(true, taskData);
-                                                        },
-                                                        child: Image.asset(
-                                                          "assets/images/img_edit.png",
-                                                          height: 20,
-                                                          width: 20,
-                                                        ),
-                                                      ),
-                                                      const Gap(10),
-                                                      GestureDetector(
-                                                        behavior: HitTestBehavior.opaque,
-                                                        onTap: () {
-                                                          openDeleteTaskDialog(taskData);
-                                                        },
-                                                        child: Image.asset(
-                                                          "assets/images/img_delete.png",
-                                                          height: 20,
-                                                          width: 20,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Gap(8),
-                                          Text(
-                                            taskData.taskMessage ?? "",
-                                            style: getMediumTextStyle(fontSize: 14, color: black),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(height: 1, color: gray,),
-                                    Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Row(
-                                                  children: [
-                                                    Image.asset(
-                                                      "assets/images/img.png",
-                                                      height: 18,
-                                                      width: 18,
-                                                      color: graySemiDark,
-                                                    ),
-                                                    const Gap(4),
-                                                    Text(
-                                                      "Remark",
-                                                      style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
-                                              const Gap(8),
-                                              Expanded(
-                                                flex: 4,
-                                                child: Text(
-                                                  taskData.taskStatus == "Completed" ? displayOrDash(taskData.taskCompletedRemark ?? "") : displayOrDash(taskData.taskReopenRemark),
-                                                  style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          const Gap(8),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.calendar_today,
-                                                      size: 18,
-                                                      color: graySemiDark,
-                                                    ),
-                                                    const Gap(4),
-                                                    Text(
-                                                      "Due Date",
-                                                      style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
-                                              const Gap(8),
-                                              Expanded(
-                                                flex: 4,
-                                                child: Text(
-                                                  displayOrDash(taskData.dueDate),
-                                                  style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Visibility(
-                                            visible: listTasks[index].attachmentCount != 0,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(top: 8),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.attachment,
-                                                          size: 18,
-                                                          color: graySemiDark,
-                                                        ),
-                                                        const Gap(4),
-                                                        Text(
-                                                          "Attachment",
-                                                          style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
-                                                        )
-                                                      ],
                                                     ),
                                                   ),
-                                                  Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
-                                                  const Gap(8),
-                                                  Expanded(
-                                                    flex: 4,
-                                                    child: Text(
-                                                      "View",
-                                                      style: getMediumTextStyle(fontSize: 12, color: blue),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: white,
+                                                      border: Border.all(color: borderGray),
+                                                      borderRadius: BorderRadius.circular(8)
                                                     ),
+                                                    padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 6),
+                                                    child: Text(
+                                                      taskData.taskStatus ?? "",
+                                                      style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: taskData.isAddedByClient ?? true,
+                                              child: Container(
+                                                margin: const EdgeInsets.only(left: 10),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    GestureDetector(
+                                                      behavior: HitTestBehavior.opaque,
+                                                      onTap: () {
+                                                        showAddTaskDialog(true, taskData);
+                                                      },
+                                                      child: Image.asset(
+                                                        "assets/images/img_edit.png",
+                                                        height: 20,
+                                                        width: 20,
+                                                      ),
+                                                    ),
+                                                    const Gap(10),
+                                                    GestureDetector(
+                                                      behavior: HitTestBehavior.opaque,
+                                                      onTap: () {
+                                                        openDeleteTaskDialog(taskData);
+                                                      },
+                                                      child: Image.asset(
+                                                        "assets/images/img_delete.png",
+                                                        height: 20,
+                                                        width: 20,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Gap(8),
+                                        Text(
+                                          taskData.taskMessage ?? "",
+                                          style: getMediumTextStyle(fontSize: 14, color: black),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(height: 1, color: gray,),
+                                  Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: Row(
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/images/img.png",
+                                                    height: 18,
+                                                    width: 18,
+                                                    color: graySemiDark,
+                                                  ),
+                                                  const Gap(4),
+                                                  Text(
+                                                    "Remark",
+                                                    style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
                                                   )
                                                 ],
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(height: 1, color: gray,),
-                                    Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
+                                            Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                            const Gap(8),
+                                            Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                taskData.taskStatus == "Completed" ? displayOrDash(taskData.taskCompletedRemark ?? "") : displayOrDash(taskData.taskReopenRemark),
+                                                style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const Gap(8),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.calendar_today,
+                                                    size: 18,
+                                                    color: graySemiDark,
+                                                  ),
+                                                  const Gap(4),
+                                                  Text(
+                                                    "Due Date",
+                                                    style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                            const Gap(8),
+                                            Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                displayOrDash(taskData.dueDate),
+                                                style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: listTasks[index].attachmentCount != 0,
+                                          child: Container(
+                                            margin: const EdgeInsets.only(top: 8),
                                             child: Row(
                                               children: [
-                                                Icon(
-                                                  Icons.person,
-                                                  size: 18,
-                                                  color: graySemiDark,
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.attachment,
+                                                        size: 18,
+                                                        color: graySemiDark,
+                                                      ),
+                                                      const Gap(4),
+                                                      Text(
+                                                        "Attachment",
+                                                        style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                                const Gap(4),
-                                                Text(
-                                                  "Assigned By",
-                                                  style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                                Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                                const Gap(8),
+                                                Expanded(
+                                                  flex: 4,
+                                                  child: Text(
+                                                    "View",
+                                                    style: getMediumTextStyle(fontSize: 12, color: blue),
+                                                  ),
                                                 )
                                               ],
                                             ),
                                           ),
-                                          Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
-                                          const Gap(8),
-                                          Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              displayOrDash(taskData.allEmployeeName),
-                                              style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(height: 1, color: gray,),
+                                  Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.person,
+                                                size: 18,
+                                                color: graySemiDark,
+                                              ),
+                                              const Gap(4),
+                                              Text(
+                                                "Assigned By",
+                                                style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Text(":", style: getMediumTextStyle(fontSize: 12, color: graySemiDark),),
+                                        const Gap(8),
+                                        Expanded(
+                                          flex: 4,
+                                          child: Text(
+                                            displayOrDash(taskData.allEmployeeName),
+                                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
-                )
-              : const MyNoDataWidget(msg: "No Tasks Pending"),
+                    ),
+                ],
+              ),
+            ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (isOnline)
