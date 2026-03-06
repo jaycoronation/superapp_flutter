@@ -35,5 +35,6 @@ String getRiskProfile = "get_risk_profile";
 
 String returnOfRisk = "return_of_risk";
 String riskProfileAllocation = "risk_profile_allocation";
+String riskStatusChange = "user/risk_status_change";
 
 String generateFinalReport = "generateReport/";

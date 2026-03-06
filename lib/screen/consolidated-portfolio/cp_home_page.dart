@@ -465,12 +465,12 @@ class CPHomePageState extends BaseState<CPHomePage> {
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
-    final url = Uri.parse(API_URL_CP + generatePortfolioReport);
+    final url = Uri.parse(API_URL_CP_ASSETS + generatePortfolioReport);
 
     Map<String, String> jsonBody = {
-      'logged_in_id' : sessionManagerPMS.getUserId(),
+      // 'logged_in_id' : sessionManagerPMS.getUserId(),
+      // 'send_mail' : "",
       'set_no_password' : "yes",
-      'send_mail' : "",
       'user_id' : sessionManagerPMS.getUserId()
     };
 

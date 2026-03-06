@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/e-state-analysis/ReturnOfRiskResponseModel.dart';
 import 'package:superapp_flutter/model/e-state-analysis/RiskProfileAllocationResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
@@ -14,6 +15,7 @@ import '../../common_widget/chart_scale.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/analysis_api_end_point.dart';
 import '../../constant/colors.dart';
+import '../../model/e-state-analysis/UserProfileResponseModel.dart';
 import 'e_state_risk_profile_page.dart';
 
 class EStateRiskProfileScreenNew extends StatefulWidget {
@@ -32,7 +34,7 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
   final List<Color> colorMainAll = [tableLightOrange, tableLightBlue, tableLightGreen, tableLightYellow, tableLightPurple, tableLightPink];
   List<String> listRiskProfileType = ["Conservative", "Moderate", "Aggressive"];
 
-  String selectedRiskProfileType = "Aggressive";
+  String selectedRiskProfileType = "";
 
   double maxY = 0.0;
   double minY = 0.0;
@@ -40,8 +42,10 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
 
   @override
   void initState() {
-    fetchReturnOfRiskData();
-    fetchRiskProfileAllocation();
+    fetchUserProfile();
+
+    // fetchReturnOfRiskData();
+    // fetchRiskProfileAllocation();
     super.initState();
   }
 
@@ -336,6 +340,13 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
     );
   }
 
+  Future<void> _refresh() async{
+    if(isOnline)
+    {
+      fetchUserProfile();
+    }
+  }
+
   Widget wrapValueItem(Color color, String title) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -465,9 +476,10 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
                           return GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () {
-                              setState(() {
-                                selectedRiskProfileType = listRiskProfileType[index];
-                              });
+                              // setState(() {
+                              //   selectedRiskProfileType = listRiskProfileType[index];
+                              // });
+                              changeRiskStatus(listRiskProfileType[index]);
                               Navigator.pop(context);
                             },
                             child: Column(
@@ -495,6 +507,58 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
           });
         }
     );
+  }
+
+  fetchUserProfile() async{
+    if(isOnline)
+    {
+      setState(() {
+        isLoading = true;
+      });
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_ANALYSIS + userProfile);
+
+        Map<String, String> jsonBody = {
+          'user_id': sessionManager.getUserId().toString().trim(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = UserProfileResponseModel.fromJson(user);
+
+        if(statusCode == 200 && dataResponse.success == 1)
+        {
+          if(dataResponse.profile != null)
+          {
+           selectedRiskProfileType = dataResponse.profile?.riskProfile ?? "";
+          }
+          fetchReturnOfRiskData();
+          fetchRiskProfileAllocation();
+        }
+
+      }
+      catch(e)
+      {
+        print("Failed to fetch user detail : $e");
+      }
+      finally
+      {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+    else
+    {
+      noInterNet(context);
+    }
   }
 
   fetchReturnOfRiskData() async{
@@ -611,6 +675,64 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
       }
       finally
       {
+        if(mounted)
+        {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    }
+    else
+    {
+      noInterNet(context);
+    }
+  }
+
+  changeRiskStatus(String riskProfile) async{
+    if(isOnline)
+    {
+      setState(() {
+        isLoading = true;
+      });
+
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+        final url = Uri.parse(API_URL_ANALYSIS + riskStatusChange);
+        Map<String, String> jsonBody = {
+          "risk_profile": riskProfile,
+          'user_id': sessionManager.getUserId(),
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = CommanResponse.fromJson(user);
+
+        if(statusCode == 200 && dataResponse.success == 1)
+        {
+          showToast(dataResponse.message);
+          _refresh();
+        }
+        else
+        {
+          if(dataResponse.message?.isNotEmpty ?? false)
+          {
+            showToast(dataResponse.message);
+          }
+          if(mounted)
+          {
+            isLoading = false;
+          }
+        }
+      }
+      catch(e)
+      {
+        print("Failed to change risk status : $e");
         if(mounted)
         {
           setState(() {

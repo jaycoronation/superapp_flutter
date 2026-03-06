@@ -26,6 +26,7 @@ class CPPortfolioPage extends StatefulWidget {
 class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   bool _isLoading = false;
   List<TempResponse> listData = [];
+  List<TempResponse> listDataMain = [];
   List<String> listApplicants = [];
   List<String> listBrokerFilter = [];
   String selectedApplicant = "";
@@ -33,6 +34,9 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
   String selectedBroker = "";
   String selectedApplicantName = "";
+
+  String searchQuery = "";
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -73,94 +77,129 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
               margin: const EdgeInsets.only(top: 8),
             child: Padding(
                 padding: const EdgeInsets.only(left: 6, right: 6),
-                child: Stack(
-                  children: [
-                    listData.isNotEmpty
-                        ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                              SizedBox(
-                                height: 50,
-                                child: SingleChildScrollView(
+                      SizedBox(
+                        height: 45,
+                        child: SingleChildScrollView(
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  openFilterDialog(1);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                                  decoration: BoxDecoration(
+                                      color: white,
+                                      borderRadius: BorderRadius.circular(12)
+                                  ),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          openFilterDialog(1);
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                          decoration: BoxDecoration(
-                                              color: white,
-                                              borderRadius: BorderRadius.circular(12)
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                selectedApplicantName.isEmpty ? "Select Applicant" : selectedApplicantName,
-                                                style: getMediumTextStyle(fontSize: 12, color: selectedApplicantName == "" ? gray : blue),
-                                              ),
-                                              const Gap(4),
-                                              selectedApplicantName.isEmpty ?
-                                              const Icon(Icons.keyboard_arrow_down_outlined) :
-                                              GestureDetector(
-                                                behavior: HitTestBehavior.opaque,
-                                                onTap: () {
-                                                  setState(() {
-                                                    selectedApplicantName = "";
-                                                  });
-                                                  _getPortfolioDataNew();
-                                                },
-                                                child: const Icon(Icons.close, size: 24, color: black,),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                      Text(
+                                        selectedApplicantName.isEmpty ? "Select Applicant" : selectedApplicantName,
+                                        style: getMediumTextStyle(fontSize: 12, color: selectedApplicantName == "" ? gray : blue),
                                       ),
-                                      const Gap(10),
+                                      const Gap(4),
+                                      selectedApplicantName.isEmpty ?
+                                      const Icon(Icons.keyboard_arrow_down_outlined) :
                                       GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
                                         onTap: () {
-                                          openFilterDialog(2);
+                                          setState(() {
+                                            selectedApplicantName = "";
+                                          });
+                                          _getPortfolioDataNew();
                                         },
-                                        child: Container(
-                                          padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                          decoration: BoxDecoration(
-                                              color: white,
-                                              borderRadius: BorderRadius.circular(12)
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                selectedBroker.isEmpty ? "Select Brokers" : selectedBroker,
-                                                style: getMediumTextStyle(fontSize: 12, color: selectedBroker == "" ? gray : blue),
-                                              ),
-                                              const Gap(4),
-                                              selectedBroker.isEmpty ?
-                                              const Icon(Icons.keyboard_arrow_down_outlined) :
-                                              GestureDetector(
-                                                behavior: HitTestBehavior.opaque,
-                                                onTap: () {
-                                                  setState(() {
-                                                    selectedBroker = "";
-                                                  });
-                                                  _getPortfolioDataNew();
-                                                },
-                                                child: const Icon(Icons.close, size: 24, color: black,),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
+                                        child: const Icon(Icons.close, size: 24, color: black,),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
+                              const Gap(10),
+                              GestureDetector(
+                                onTap: () {
+                                  openFilterDialog(2);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                                  decoration: BoxDecoration(
+                                      color: white,
+                                      borderRadius: BorderRadius.circular(12)
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        selectedBroker.isEmpty ? "Select Brokers" : selectedBroker,
+                                        style: getMediumTextStyle(fontSize: 12, color: selectedBroker == "" ? gray : blue),
+                                      ),
+                                      const Gap(4),
+                                      selectedBroker.isEmpty ?
+                                      const Icon(Icons.keyboard_arrow_down_outlined) :
+                                      GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          setState(() {
+                                            selectedBroker = "";
+                                          });
+                                          _getPortfolioDataNew();
+                                        },
+                                        child: const Icon(Icons.close, size: 24, color: black,),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Gap(4),
+                      TextField(
+                        cursorColor: black,
+                        controller: searchController,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.search,
+                        style: getRegularTextStyle(fontSize: 14, color: black),
+                        onSubmitted: (value) {
+                          _displaySearchResult(value);
+                        },
+                        onChanged: (value) {
+                          _displaySearchResult(value);
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: white,
+                          hintText: 'Search here...',
+                          contentPadding: const EdgeInsets.only(left: 12, right: 12),
+                          prefixIcon: const InkWell(
+                            onTap: null,
+                            child: Icon(Icons.search_rounded, size: 26, color: black),
+                          ),
+                          suffixIcon: searchController.text.isNotEmpty
+                              ? GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              hideKeyboard(context);
+                              _displaySearchResult("");
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
+                            ),
+                          )
+                              : null,
+                        ),
+                      ),
+                      const Gap(10),
 
-                              /*Visibility(
+                      /*Visibility(
                                 visible: listApplicants.length > 1,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -201,102 +240,70 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                 ),
                               ),*/
 
-                                Container(
-                                  padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                  decoration: const BoxDecoration(
-                                      color:white,
-                                      borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                  child: const Row(
-                                    children: [
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text('Fund Name',
-                                              style: TextStyle(
-                                                  color: blue,
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                      FontWeight.w600))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text('Amount\nInvested',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: blue,
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                      FontWeight.w600))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text('Current\nValue',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: blue,
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                      FontWeight.w600))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Text('Gain/Loss\nCAGR%',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: blue,
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                  FontWeight.w600))),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: _assetList(),
-                                ),
-                              ]
-                        )
-                        : Column(
-                          children: [
-                            Visibility(
-                              visible: listApplicants.length > 1,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Text("Select Holder - ",style: TextStyle(color: black,fontWeight: FontWeight.w600,fontSize: 16),),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 12,bottom: 12),
-                                    decoration: BoxDecoration(
-                                        color: white,
-                                        borderRadius: BorderRadius.circular(12)
-                                    ),
-                                    child: Wrap(
-                                      children: [
-                                        GestureDetector(
-                                          behavior: HitTestBehavior.opaque,
-                                          onTap: () {
-                                            openApplicantSelection();
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(selectedApplicant,style: const TextStyle(color: blue,fontSize: 16,fontWeight: FontWeight.w600),),
-                                                const Icon(Icons.keyboard_arrow_down_outlined),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Expanded(child: MyNoDataWidget(msg: "No data found.")),
-                          ],
+                      listData.isEmpty ?
+                      Expanded(
+                        child: Center(
+                          child: MyNoDataWidget(msg: "No data found."),
                         ),
-                  ],
-                )),
+                      ) :
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                                decoration: const BoxDecoration(
+                                    color:white,
+                                    borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
+                                child: const Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Fund Name',
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Amount\nInvested',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Current\nValue',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Text('Gain/Loss\nCAGR%',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: blue,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                FontWeight.w600))),
+                                  ],
+                                ),
+                              ),
+                              _assetList(),
+                            ],
+                          ),
+                        ),
+                      )
+                    ]
+                )
+            ),
           ),
     );
   }
@@ -341,11 +348,32 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         )));
   }*/
 
+  _displaySearchResult(String query) {
+    searchQuery = query.toLowerCase();
+    if (query.isEmpty)
+    {
+      searchController.clear();
+      listData = listDataMain;
+    }
+    else
+    {
+      listData = listDataMain.where((asset) {
+        return asset.objectives?.any((objective) {
+          return objective.schemes?.any((scheme) {
+            return (scheme.schemeName ?? "").toLowerCase().contains(searchQuery);
+          }) ?? false;
+        }) ?? false;
+      }).toList();
+    }
+
+    setState(() {});
+  }
+
   ListView _assetList() {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         primary: false,
         padding: EdgeInsets.zero,
         itemCount: listData.length,
@@ -372,7 +400,16 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                 color: blue,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900))),
-                    Container(child: _objectiveList(listData[index].objectives ?? [])),
+                    Container(
+                      // child: _objectiveList(listData[index].objectives ?? [])
+                      child: _objectiveList(
+                        (listData[index].objectives ?? []).where((objective) {
+                        if (searchQuery.isEmpty) return true;
+
+                        return objective.schemes?.any((scheme) => (scheme.schemeName ?? "").toLowerCase().contains(searchQuery)) ?? false;
+                      }).toList(),
+                      )
+                    ),
                   ],
                 ),
               )
@@ -412,7 +449,18 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                 color: blue,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w900))),
-                    Container(child: _schemeList(objectives[index].schemes!)),
+                    Container(
+                      //child: _schemeList(objectives[index].schemes!)
+                      child: _schemeList(
+                        (objectives[index].schemes ?? []).where((scheme) {
+                          if (searchQuery.isEmpty) return true;
+
+                          return (scheme.schemeName ?? "")
+                              .toLowerCase()
+                              .contains(searchQuery);
+                        }).toList(),
+                      ),
+                    ),
                   ],
                 ),
               )
@@ -526,6 +574,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                   selectedApplicant = listApplicants[index] ?? '';
 
                                   listData = [];
+                                  listDataMain = [];
 
                                   final result = userData['result'];
                                   final parsedJson = result['portfolio'];
@@ -544,7 +593,8 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                           });
                                           print("USER DATA ADDING IN IF == ${tpp.length}");
                                           print("USER DATA ADDING IN IF == ${jsonEncode(tpp)}");
-                                          listData.addAll(tpp);
+                                          listDataMain.addAll(tpp);
+                                          listData = listData;
                                         }
                                       }
                                     });
@@ -622,6 +672,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                               setState(() {
                                 selectedApplicant = listApplicants[index] ?? '';
 
+                                listDataMain = [];
                                 listData = [];
 
                                 final result = userData['result'];
@@ -641,7 +692,8 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                           });
                                           print("USER DATA ADDING IN IF == ${tpp.length}");
                                           print("USER DATA ADDING IN IF == ${jsonEncode(tpp)}");
-                                          listData.addAll(tpp);
+                                          listDataMain.addAll(tpp);
+                                          listData = listDataMain;
                                         }
                                     }
                                   });
@@ -762,11 +814,14 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
               value.forEach((v) {
                 tpp.add(TempResponse.fromJson(v));
               });
-              listData.addAll(tpp);
+              listDataMain.addAll(tpp);
+              listData = listDataMain;
             }
           }
         });
       });
+      print("Display list length : ${listData.length}");
+      print("Display list main length : ${listDataMain.length}");
     }
     else
     {

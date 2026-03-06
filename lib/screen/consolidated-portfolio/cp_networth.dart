@@ -38,6 +38,9 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
   String selectedBroker = "";
   String selectedAsset = "";
 
+  String searchQuery = "";
+  TextEditingController searchController = TextEditingController();
+
   @override
   void initState(){
     super.initState();
@@ -74,9 +77,8 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
             padding: const EdgeInsets.only(left: 6, right: 6),
             child: Column(
               children: [
-
                 SizedBox(
-                  height: 50,
+                  height: 45,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
@@ -191,6 +193,44 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                     ),
                   ),
                 ),
+                const Gap(4),
+                TextField(
+                  cursorColor: black,
+                  controller: searchController,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.search,
+                  style: getRegularTextStyle(fontSize: 14, color: black),
+                  onSubmitted: (value) {
+                    _displaySearchResult(value);
+                  },
+                  onChanged: (value) {
+                    _displaySearchResult(value);
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: white,
+                    hintText: 'Search here...',
+                    contentPadding: const EdgeInsets.only(left: 12, right: 12),
+                    prefixIcon: const InkWell(
+                      onTap: null,
+                      child: Icon(Icons.search_rounded, size: 26, color: black),
+                    ),
+                    suffixIcon: searchController.text.isNotEmpty
+                        ? GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        hideKeyboard(context);
+                        _displaySearchResult("");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
+                      ),
+                    )
+                        : null,
+                  ),
+                ),
+                const Gap(10),
 
 
                 // Visibility(
@@ -296,6 +336,25 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     );
   }
 
+  _displaySearchResult(String query) {
+    searchQuery = query.toLowerCase();
+    if (query.isEmpty)
+    {
+      searchController.clear();
+      listData = listDataMain;
+    }
+    else
+    {
+      listData = listDataMain.where((element) {
+        return element.objectives?.any((obj) {
+          return (obj.objective ?? "").toLowerCase().contains(query.toLowerCase());
+        }) ?? false;
+      }).toList();
+    }
+
+    setState(() {});
+  }
+
   ListView _itemList() {
     return ListView.builder(
         scrollDirection: Axis.vertical,
@@ -335,7 +394,14 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                           )
                       ),
                       Container(
-                          child: _subItemList(listData[index].objectives ?? [],index)
+                          // child: _subItemList(listData[index].objectives ?? [],index)
+                          child: _subItemList(
+                              (listData[index].objectives ?? []).where((obj) {
+                                if (searchQuery.isEmpty) return true;
+                                return (obj.objective ?? "").toLowerCase().contains(searchQuery);
+                              }).toList(),
+                              index
+                          )
                       ),
                     ],
                   ),

@@ -37,6 +37,7 @@ class EStateAnalysisHomePage extends StatefulWidget {
 
 class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
   final bool _isLoading = false;
+  bool isLoadingReport = false;
   List<AnalysisMenuGetSet> menuList = List<AnalysisMenuGetSet>.empty(growable: true);
   ScrollController _scrollController = ScrollController();
 
@@ -230,18 +231,33 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                             decoration: const BoxDecoration(color: blue, borderRadius: BorderRadius.all(Radius.circular(10))),
                             child: Row(
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 10,),
-                                  child: Image.asset("assets/images/ic_final_report_new.png", height: 38, width: 38,)
+
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          margin: const EdgeInsets.only(right: 10,),
+                                          child: Image.asset("assets/images/ic_final_report_new.png", height: 38, width: 38,)
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(right: 10,),
+                                        alignment: Alignment.topLeft,
+                                        child: const Text("Generate Final Report",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(fontWeight: FontWeight.w600,
+                                              color: white, fontSize: 15.0),),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 10,),
-                                  alignment: Alignment.topLeft,
-                                  child: const Text("Generate Final Report",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(fontWeight: FontWeight.w600,
-                                        color: white, fontSize: 15.0),),
-                                ),
+                                Visibility(
+                                  visible: isLoadingReport,
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(color: white,),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -286,6 +302,11 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
   }
 
   Future<void> _downloadFile(String downloadPath, String fileUrlServer) async {
+
+    setState(() {
+      isLoadingReport = true;
+    });
+
     // Example using `http` package
     String fileUrl = fileUrlServer;
     String fileName = '${sessionManagerPMS.getFirstName()}_${sessionManagerPMS.getLastName()}_${DateTime.now().millisecondsSinceEpoch / 1000}.pdf';
@@ -334,6 +355,12 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
         var openResult = "type=${result.type}  message=${result.message}";
         print("openResult === $openResult");
       }
+
+      setState(() {
+        isLoadingReport = false;
+      });
+
+
     });
   }
 

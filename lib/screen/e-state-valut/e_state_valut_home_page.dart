@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
+import 'package:superapp_flutter/model/e-state-vault/GenerateVaultReportResponseModel.dart';
 import 'package:superapp_flutter/screen/e-state-valut/advisors_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/bank_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/constitution_value_page_list.dart';
@@ -19,7 +20,6 @@ import 'package:superapp_flutter/screen/e-state-valut/death_notification_page_li
 import 'package:superapp_flutter/screen/e-state-valut/real_estate_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/safe_deposite_box_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/share_bonds_page_list.dart';
-import 'package:superapp_flutter/screen/e-state-valut/share_report_page.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -59,6 +59,7 @@ class EStateVaultHomePage extends StatefulWidget {
 
 class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   bool _isLoading = false;
+  bool isLoadingReport = false;
   bool isReportDownloading = false;
   List<HeaderGetSet> menuList = List<HeaderGetSet>.empty(growable: true);
   List<String> holderList = List<String>.empty(growable: true);
