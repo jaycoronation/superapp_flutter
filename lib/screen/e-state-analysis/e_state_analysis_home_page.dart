@@ -178,8 +178,8 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                                   }else if (menuList[index].id == 4) {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateFutureInflowPage(true)));
                                   }else if (menuList[index].id == 5) {
-                                    _redirectToNextPage(context);
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateRiskProfilePage()));
+                                    // _redirectToNextPage(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateRiskProfileScreenNew()));
                                   }
 
                                 },

@@ -14,6 +14,7 @@ import '../../common_widget/chart_scale.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/analysis_api_end_point.dart';
 import '../../constant/colors.dart';
+import 'e_state_risk_profile_page.dart';
 
 class EStateRiskProfileScreenNew extends StatefulWidget {
   const EStateRiskProfileScreenNew({super.key});
@@ -120,21 +121,27 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
                     ),
                     const Gap(10),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Don't know your risk profile ?",
-                            style: getMediumTextStyle(fontSize: 14, color: black),
-                            textAlign: TextAlign.end,
-                          ),
-                          const Gap(4),
-                          Text(
-                            "find here",
-                            style: getMediumTextStyle(fontSize: 14, color: blue),
-                            textAlign: TextAlign.end,
-                          )
-                        ],
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          startActivity(context, EStateRiskProfilePage());
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Don't know your risk profile ?",
+                              style: getMediumTextStyle(fontSize: 14, color: black),
+                              textAlign: TextAlign.end,
+                            ),
+                            const Gap(4),
+                            Text(
+                              "find here",
+                              style: getMediumTextStyle(fontSize: 14, color: blue),
+                              textAlign: TextAlign.end,
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],
