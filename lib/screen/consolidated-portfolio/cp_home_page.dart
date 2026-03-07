@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/GenerateReportResponseModel.dart';
@@ -28,6 +32,7 @@ import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
+import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
 class CPHomePage extends StatefulWidget {
@@ -485,7 +490,10 @@ class CPHomePageState extends BaseState<CPHomePage> {
         setState(() async {
           isLoading = false;
 
-          _showAlertDialog(context,dataResponse);
+          // _showAlertDialog(context,dataResponse);
+          var reportURL = "${API_DOMAIN_CP}assets/saved_pdf/${dataResponse.pdfFileName}?ver=${DateTime.now().millisecondsSinceEpoch}";
+
+          _getDownloadDirectory(context,reportURL);
         });
       } catch (e) {
         setState(() {
@@ -501,6 +509,92 @@ class CPHomePageState extends BaseState<CPHomePage> {
       });
     }
 
+  }
+
+  Future<String> _getDownloadDirectory(BuildContext context, String fileUrlServer) async {
+    String? directory;
+    try {
+
+      if (Platform.isIOS)
+      {
+        var pathMain = await getApplicationDocumentsDirectory();
+        directory = pathMain.path;
+      }
+      else
+      {
+        directory = await FilePicker.platform.getDirectoryPath();
+      }
+
+      _downloadFile(directory ?? '',fileUrlServer);
+    } catch (e) {
+      print("Error while picking directory: $e");
+    }
+
+    if (directory == null)
+    {
+      showSnackBar("No directory selected!", context);
+      return "";
+    }
+    return directory;
+  }
+
+  Future<void> _downloadFile(String downloadPath, String fileUrlServer) async {
+
+    setState(() {
+      isLoading = true;
+    });
+
+    // Example using `http` package
+    String fileUrl = fileUrlServer;
+    String fileName = '${sessionManagerPMS.getFirstName()}_${sessionManagerPMS.getLastName()}_${DateTime.now().millisecondsSinceEpoch / 1000}.pdf';
+
+    if (Platform.isIOS)
+    {
+      var permissionStatus = await Permission.storage.status;
+      if (permissionStatus.isDenied)
+      {
+        await Permission.storage.request();
+      }
+    }
+
+    HttpClient().getUrl(Uri.parse(fileUrl))
+        .then((HttpClientRequest request) {
+      return request.close(); // Return the result of request.close()
+    })
+        .catchError((error, stackTrace) {
+      print("error === ${error}");
+      print("stackTrace === ${stackTrace}");
+      return error;
+    },)
+        .then((HttpClientResponse response) async {
+      File file = File('$downloadPath/$fileName');
+
+      await response.pipe(file.openWrite(mode: FileMode.write));
+
+      print('File Path ==== ${file.path}');
+      setState(() {
+        isLoading = false;
+      });
+      if (Platform.isAndroid)
+      {
+        final result = await OpenFile.open(file.path);
+        setState(() {
+          var openResult = "type=${result.type}  message=${result.message}";
+          print("openResult === $openResult");
+        });
+        //Navigator.pop(context);
+      }
+      else
+      {
+        final result = await OpenFile.open(file.path);
+        var openResult = "type=${result.type}  message=${result.message}";
+        print("openResult === $openResult");
+      }
+
+
+
+
+    });
   }
 
   void _showAlertDialog(BuildContext context, GenerateReportResponseModel dataResponse) {
