@@ -7,6 +7,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/AssetDetailResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/AssetListResponseModel.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/assets/GetCurrentRateResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/SchemesResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/SearchSchemeResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/SearchSchemesSharesResponseModel.dart';
@@ -118,6 +119,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
   TextEditingController loadAmountController = TextEditingController();
 
   Timer? _debounce;
+  Timer? debounce2;
 
   @override
   void initState() {
@@ -557,7 +559,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                   Container(
                     constraints: const BoxConstraints(maxHeight: 250),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: white,
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -577,6 +579,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                               schemeNameController.text = item;
                               listSearchSchemeShares.clear();
                             });
+                            verifyNotEmpty(schemeNameController.text, quantityController.text);
                           },
                         );
                       },
@@ -677,6 +680,14 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               ),
               onChanged: (value) {
                 calculateValues();
+
+                if (selectedInvestmentTypeId == "1")
+                {
+                  if (debounce2?.isActive ?? false) debounce2?.cancel();
+                  debounce2 = Timer(const Duration(milliseconds: 500), () {
+                    verifyNotEmpty(schemeNameController.text, value);
+                  });
+                }
               },
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
@@ -710,6 +721,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               keyboardType: TextInputType.number,
               cursorColor: black,
               controller: currentPriceController,
+              readOnly: selectedInvestmentTypeId == "1" ? true : false,
               onChanged: (value) {
                 calculateValues();
                 // if (quantityController.value.text.isNotEmpty)
@@ -2494,7 +2506,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
           Container(
             margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
             child: TextField(
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
               cursorColor: black,
               controller: quantityController,
               decoration: InputDecoration(
@@ -2507,7 +2519,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
           Container(
             margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
             child: TextField(
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
               cursorColor: black,
               controller: marketValueController,
               decoration: InputDecoration(
@@ -2598,8 +2610,18 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
     amountInvestedController.text = (qty * purchasePrice).toString();
 
     // Current Value = qty * current price
-    currentValueController.text = (qty * currentPrice).toString();
+    if(selectedInvestmentTypeId != "1")
+    {
+      currentValueController.text = (qty * currentPrice).toString();
+    }
     setState(() {});
+  }
+
+  void verifyNotEmpty(String schemeName, String quantityName) {
+    if(schemeName.isNotEmpty && quantityName.isNotEmpty)
+    {
+      getCurrentValue(schemeName, quantityName);
+    }
   }
 
   void openInvestmentTypeBottomSheet() {
@@ -2896,6 +2918,51 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
     }
   }
 
+  getCurrentValue(String schemeName, String quantity) async{
+    if(isOnline)
+    {
+      try
+      {
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+
+        final url = Uri.parse(API_URL_CP + getCurrentRateApi);
+        Map<String, String> jsonBody = {
+          "investment_type": selectedInvestmentTypeId,
+          "quantity": quantity,
+          "search_schemes": schemeName
+        };
+
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = GetCurrentRateResponseModel.fromJson(user);
+
+        if(statusCode == 200 && dataResponse.success == 1)
+        {
+          if(dataResponse.currentRates != null)
+          {
+            setState(() {
+              currentValueController.text = dataResponse.currentRates?.currentValue ?? "";
+              currentPriceController.text = dataResponse.currentRates?.currentPrice ?? "";
+              ISINNoController.text = dataResponse.currentRates?.isinNo ?? "";
+            });
+          }
+        }
+      }
+      catch(e)
+      {
+        print("Failed to fetch current value : $e");
+      }
+    }
+    else
+    {
+      print("No Internet");
+    }
+  }
+
   getInvestmentType() async {
     setState(() {
       isLoading = true;
@@ -2950,7 +3017,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
           HttpLogger(logLevel: LogLevel.BODY),
         ]);
 
-        final url = Uri.parse(API_URL_CP_ASSETS + assetDetail);
+        final url = Uri.parse(API_URL_CP + assetDetail);
         Map<String, String> jsonBody = {
           "assets_id" : assetId
         };
@@ -2999,7 +3066,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             bankDetailsController.text = data.bankDetails ?? "";
             notesController.text = data.notes ?? "";
             interestRateController.text = data.interestRate ?? "";
-            maturityDateController.text = data.maturityDate ?? "";
+            maturityDateController.text = (data.maturityDate?.isEmpty ?? true) ? "" : universalDateConverter("MM-dd-yyyy", "dd MMM,yyyy", data.maturityDate ?? "");
             interestPayoutController.text = data.payoutCumulative ?? "";
             propertyNameController.text = data.propertyName ?? "";
             areaController.text = data.area ?? "";

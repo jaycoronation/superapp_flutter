@@ -383,6 +383,38 @@ convertCommaSeparatedAmount (String value) {
   }
 }
 
+String convertCommaSeparatedAmountWithPoint(String value) {
+  try {
+    if (value.isEmpty) return "₹ 0";
+
+    double number = double.parse(value);
+
+    String formatted;
+
+    if (value.contains("."))
+    {
+      int decimalLength = value.split(".")[1].length;
+
+      if (decimalLength == 1)
+      {
+        formatted = NumberFormat('#,##,##0.0', 'en_IN').format(number);
+      }
+      else
+      {
+        formatted = NumberFormat('#,##,##0.##', 'en_IN').format(number);
+      }
+    }
+    else
+    {
+      formatted = NumberFormat('#,##,##0', 'en_IN').format(number);
+    }
+
+    return "₹ $formatted";
+  } catch (e) {
+    return value;
+  }
+}
+
 final numberFormatter = NumberFormat(
   "##,##,###",
   "en_US",     // local US

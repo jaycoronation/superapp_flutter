@@ -184,7 +184,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
                               Expanded(
                                   flex: 4,
                                   child: Text(
-                                    convertCommaSeparatedAmount(listAssets[index].currentValue.toString()),
+                                    convertCommaSeparatedAmountWithPoint(listAssets[index].currentValue.toString()),
                                     maxLines: 3,
                                     style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w500),
                                   )

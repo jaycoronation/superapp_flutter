@@ -199,7 +199,7 @@ class AssetsDetails {
     _quantity = json['quantity'] is int ? json['quantity'].toString() : json['quantity'];
     _purchasePrice = json['purchase_price'];
     _currentPrice = json['current_price'];
-    _currentValue = json['current_value']is int ? json['current_value'].toString() : json['current_value'];
+    _currentValue = json['current_value']is int || json['current_value']is double ? json['current_value'].toString() : json['current_value'];
     _folioNoAccountNo = json['folio_no_account_no'];
     _interestRate = json['interest_rate'];
     _payoutCumulative = json['payout_cumulative'];

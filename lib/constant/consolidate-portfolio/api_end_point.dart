@@ -77,3 +77,5 @@ String saveAsset = "https://portfolio.alphacapital.in/api/services/assets/add";
 String searchScheme = "assets/search_schemes";
 
 String assetDetail = "assets/get_details";
+
+String getCurrentRateApi = "assets/get_current_rate";
