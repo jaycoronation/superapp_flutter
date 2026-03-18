@@ -19,6 +19,7 @@ import 'package:superapp_flutter/screen/e-state-analysis/e_state_future_inflow_m
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_future_inflow_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_risk_profile_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_risk_profile_screen_new.dart';
+import 'package:superapp_flutter/screen/e-state-analysis/e_state_summary_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
@@ -55,6 +56,11 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
 
   void setMenuData() {
     menuList = [
+      AnalysisMenuGetSet(
+          idStatic : 6,
+          itemPrefixIconStatic: 'assets/images/ic_aspiration.png',
+          nameStatic: "Summary",
+          itemPostIconStatic: "assets/images/ic_arrow_double_right.png"),
       AnalysisMenuGetSet(
           idStatic : 1,
           itemPrefixIconStatic: 'assets/images/ic_aspiration.png',
@@ -181,6 +187,10 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                                   }else if (menuList[index].id == 5) {
                                     // _redirectToNextPage(context);
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateRiskProfileScreenNew()));
+                                  }
+                                  else if(menuList[index].id == 6)
+                                  {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateSummaryScreen()));
                                   }
 
                                 },

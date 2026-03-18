@@ -32,7 +32,7 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
   List<ReturnOfRisk> listReturnOfRisk = [];
   List<RiskProfileAllocation> listRiskProfileAllocation = [];
   final List<Color> colorMainAll = [tableLightOrange, tableLightBlue, tableLightGreen, tableLightYellow, tableLightPurple, tableLightPink];
-  List<String> listRiskProfileType = ["Conservative", "Moderate", "Aggressive"];
+  List<String> listRiskProfileType = ["Conservative", "Moderately Conservative", "Moderate", "Moderately Aggressive", "Aggressive", "Highly Aggressive"];
 
   String selectedRiskProfileType = "";
 
@@ -105,10 +105,12 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    selectedRiskProfileType,
-                                    style: getMediumTextStyle(fontSize: 12, color: blue),
-                                    textAlign: TextAlign.start,
+                                  Flexible(
+                                    child: Text(
+                                      selectedRiskProfileType,
+                                      style: getMediumTextStyle(fontSize: 12, color: blue),
+                                      textAlign: TextAlign.start,
+                                    ),
                                   ),
                                   const Gap(8),
                                   Icon(

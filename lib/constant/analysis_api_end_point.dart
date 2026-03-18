@@ -38,3 +38,6 @@ String riskProfileAllocation = "risk_profile_allocation";
 String riskStatusChange = "user/risk_status_change";
 
 String generateFinalReport = "generateReport/";
+
+//summary data
+String summaryDataApi = "getSuperappData";

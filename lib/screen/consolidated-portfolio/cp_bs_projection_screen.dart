@@ -77,6 +77,32 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
             child: getBackArrow(),
           ),
           title: getTitle('BS Projection'),
+          actions: [
+            Visibility(
+              visible: isShowFullScreenCart == true,
+              child: Container(
+                margin: const EdgeInsets.only(right: 12),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    setState(() {
+                      isShowFullScreenCart = !isShowFullScreenCart;
+                    });
+
+                    if(isShowFullScreenCart)
+                    {
+                      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+                    }
+                    else
+                    {
+                      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+                    }
+                  },
+                  child: Icon(Icons.fullscreen_exit, size: 24, color: blue,),
+                ),
+              ),
+            )
+          ],
         ),
         body: SafeArea(
           child: isLoading ? LoadingWidget() : listBalanceSheetData.isEmpty ? MyNoDataWidget(msg: "No Data Found") :

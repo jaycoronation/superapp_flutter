@@ -721,3 +721,29 @@ String displayOrDash(String? value) {
   }
   return value.trim();
 }
+
+double parseAmount(String? value) {
+  if (value == null || value.isEmpty) return 0;
+  return double.tryParse(value.replaceAll(",", "")) ?? 0;
+}
+
+int dateToApiTimestamp(String dateStr, {String format = "dd MMM, yyyy",}) {
+  try {
+    final dateTime = DateFormat(format).parse(dateStr);
+    return dateTime.toUtc().millisecondsSinceEpoch ~/ 1000;
+  } catch (e) {
+    print("Error date to timestamp : $e");
+    return 0;
+  }
+}
+
+String timestampToDate(String timestamp) {
+  final ts = int.tryParse(timestamp) ?? 0;
+
+  final date = DateTime.fromMillisecondsSinceEpoch(
+    ts * 1000,
+    isUtc: true,
+  ).toLocal();
+
+  return DateFormat('dd MMM, yyyy').format(date);
+}

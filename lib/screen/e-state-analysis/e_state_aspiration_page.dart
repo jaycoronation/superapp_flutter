@@ -447,7 +447,6 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
     );
   }
 
-
   void deleteListData(ListData listData, int index) {
     showModalBottomSheet<void>(
       context: context,

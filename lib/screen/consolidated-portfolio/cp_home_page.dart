@@ -389,32 +389,32 @@ class CPHomePageState extends BaseState<CPHomePage> {
                               ),
                             ),
                           ),
-                          const Gap(12),
-                          const Divider(
-                            height: 0.5,
-                            thickness: 0.5,
-                            color: divider_color,
-                          ),
-                          const Gap(12),
-                          InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const SuggestedActionsScreen()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
-                                  Container(width: 12),
-                                  const Text(
-                                    "Suggested Actions",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const SuggestedActionsScreen()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Suggested Actions",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           const Gap(12),
                           const Divider(
                             height: 0.5,

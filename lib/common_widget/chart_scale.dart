@@ -112,3 +112,22 @@ ChartScale2 calculateChartScale2(double dataMin, double dataMax, {int divisions 
 
   return ChartScale2(minY, maxY, interval);
 }
+
+class ChartAmountFormatter {
+  final double divisor;
+  final String suffix;
+
+  ChartAmountFormatter(this.divisor, this.suffix);
+}
+
+ChartAmountFormatter getFormatter(double maxValue) {
+  if (maxValue >= 10000000) {
+    return ChartAmountFormatter(10000000, "Cr"); // Crore
+  } else if (maxValue >= 100000) {
+    return ChartAmountFormatter(100000, "L"); // Lakh
+  } else if (maxValue >= 1000) {
+    return ChartAmountFormatter(1000, "K"); // Thousand
+  } else {
+    return ChartAmountFormatter(1, ""); // Normal
+  }
+}

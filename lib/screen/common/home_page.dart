@@ -4,19 +4,16 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:superapp_flutter/constant/global_context.dart';
 import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
 import 'package:superapp_flutter/screen/common/video_player_page.dart';
+import 'package:superapp_flutter/screen/insurance_data/insurance_list_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/app_utils.dart';
@@ -35,11 +32,10 @@ import '../consolidated-portfolio/cp_home_page.dart';
 import '../e-state-analysis/e_state_analysis_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
 import 'LoginScreen.dart';
+import 'SuggestedActionsScreen.dart';
 import 'blog_detail_page.dart';
 import 'blogs_page.dart';
-import 'client_task_list.dart';
 import 'contact_page.dart';
-import 'meeting_page.dart';
 import 'video_list_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -96,6 +92,8 @@ class _HomePageState extends BaseState<HomePage> {
       CommonValueModel(title: "Contact", description: "Get in Touch", image: "assets/images/ic_contact.png", id: "6"),
       // CommonValueModel(title: "Blogs", description: "Blogs", image: "assets/images/ic_blog.png", id: "7"),
       // CommonValueModel(title: "Videos", description: "Videos", image: "assets/images/ic_videos.png", id: "8"),
+      CommonValueModel(title: "Insurance", description: "My Insurance", image: "assets/images/img.png", id: "9"),
+      CommonValueModel(title: "Suggested Actions", description: "Suggested Actions", image: "assets/images/portfolio_ic_capital_gain.png", id: "10"),
     ];
     print("Display list data length : ${listDashboardData.length}");
   }
@@ -334,6 +332,16 @@ class _HomePageState extends BaseState<HomePage> {
                         MaterialPageRoute(
                             builder: (context) => const VideoListPage()),
                       );
+                    }
+                    else if(data.id == "9")
+                    {
+                      //insurance
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const InsuranceListScreen()),);
+                    }
+                    else if(data.id == "10")
+                    {
+                      //suggested actions
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SuggestedActionsScreen()));
                     }
                   },
                   child: Container(

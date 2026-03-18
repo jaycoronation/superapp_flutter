@@ -196,11 +196,6 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
 
     double totalAmount = 0;
 
-    double parseAmount(String? value) {
-      if (value == null || value.isEmpty) return 0;
-      return double.tryParse(value.replaceAll(",", "")) ?? 0;
-    }
-    
     for (var item in (futureInflowsReport.futureInflowList ?? []))
     {
       totalAmount += parseAmount(item.amount);
