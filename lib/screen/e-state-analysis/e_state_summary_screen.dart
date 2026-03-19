@@ -975,7 +975,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       child: Container(
         width: 452,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            border: listLiabilities.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
             borderRadius: BorderRadius.circular(4)
         ),
         child: Column(
@@ -987,6 +987,17 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("Current Value", white, width: 150),
               ],
             ),
+            listLiabilities.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listLiabilities.length,
               shrinkWrap: true,
@@ -1003,6 +1014,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 );
               },
             ),
+            if(listLiabilities.isNotEmpty)
             Row(
               children: [
                 rowCell(listLiabilities.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true),
@@ -1026,7 +1038,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       child: Container(
         width: 902,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            border: listFutureInflow.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
             borderRadius: BorderRadius.circular(4)
         ),
         child: Column(
@@ -1041,6 +1053,17 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("PV of Income", white, width: 150),
               ],
             ),
+            listFutureInflow.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listFutureInflow.length,
               shrinkWrap: true,
@@ -1060,6 +1083,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 );
               },
             ),
+            if(listFutureInflow.isNotEmpty)
             Row(
               children: [
                 rowCell(listFutureInflow.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true),
