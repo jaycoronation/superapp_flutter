@@ -715,7 +715,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                         if(isFor == isForAsset)
                                         {
                                           setStateDialog((){
-                                            if (isSelectedAsset)
+                                            if(listSelectedAsset.contains(listAssetFilter[index]))
                                             {
                                               listSelectedAsset.remove(listAssetFilter[index]);
                                             }
@@ -728,7 +728,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                         else if(isFor == isForApplicant)
                                         {
                                           setStateDialog((){
-                                            if (isSelectedApplicant)
+                                            if (listSelectedApplicant.contains(listApplicants[index]))
                                             {
                                               listSelectedApplicant.remove(listApplicants[index]);
                                             }
@@ -741,7 +741,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                         else if(isFor == isForBroker)
                                         {
                                           setStateDialog((){
-                                            if (isSelectedBroker)
+                                            if (listSelectedBroker.contains(listBrokerFilter[index]))
                                             {
                                               listSelectedBroker.remove(listBrokerFilter[index]);
                                             }

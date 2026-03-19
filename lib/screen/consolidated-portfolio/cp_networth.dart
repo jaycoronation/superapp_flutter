@@ -138,9 +138,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0XffEDEDEE),
-      body: _isLoading
-          ? const LoadingWidget()
-          : Container(
+      body: Container(
         margin: const EdgeInsets.only(top: 8,bottom: 8),
         child: Padding(
             padding: const EdgeInsets.only(left: 6, right: 6),
@@ -347,7 +345,6 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                 ),
                 const Gap(10),
 
-
                 // Visibility(
                 //   visible: listApplicants.length > 1,
                 //   // visible: false,
@@ -389,61 +386,71 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                 //   ),
                 // ),
 
+                _isLoading
+                    ? Expanded(
+                  child: Center(
+                    child: const LoadingWidget(),
+                  ),
+                ) :
+                listData.isEmpty ?
+                    Expanded(
+                      child: Center(
+                        child: const MyNoDataWidget(msg: "No data found."),
+                      ),
+                    ) :
                 Expanded(
-                  child: listData.isNotEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                              decoration: const BoxDecoration(
-                                  color:white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft:Radius.circular(8),
-                                      topRight: Radius.circular(8)
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                          decoration: const BoxDecoration(
+                              color:white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft:Radius.circular(8),
+                                  topRight: Radius.circular(8)
+                              )
+                          ),
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                      'Asset Type',
+                                      style: TextStyle(
+                                          color: blue,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600
+                                      )
                                   )
                               ),
-                              child: const Row(
-                                children: [
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          'Asset Type',
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600
-                                          )
-                                      )
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text('Amount',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.w600)
-                                      )
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text('Allocation',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: blue,
-                                              fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.w600))),
-                                ],
+                              Expanded(
+                                  flex: 1,
+                                  child: Text('Amount',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: blue,
+                                          fontSize: 16,
+                                          fontWeight:
+                                          FontWeight.w600)
+                                  )
                               ),
-                            ),
-                            Expanded(child: _itemList()),
-                          ]
-                      )
-                      : const MyNoDataWidget(msg: "No data found."),
+                              Expanded(
+                                  flex: 1,
+                                  child: Text('Allocation',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: blue,
+                                          fontSize: 16,
+                                          fontWeight:
+                                          FontWeight.w600))),
+                            ],
+                          ),
+                        ),
+                        Expanded(child: _itemList()),
+                      ]
+                  )
                 ),
               ],
             )),
@@ -505,7 +512,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                         if(isFor == isForAsset)
                                         {
                                           setStateDialog((){
-                                            if (isSelectedAsset)
+                                            if (listSelectedAsset.contains(listAssetFilter[index]))
                                             {
                                               listSelectedAsset.remove(listAssetFilter[index]);
                                             }
@@ -518,7 +525,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                         else if(isFor == isForApplicant)
                                         {
                                           setStateDialog((){
-                                            if (isSelectedApplicant)
+                                            if (listSelectedApplicant.contains(listApplicants[index]))
                                             {
                                               listSelectedApplicant.remove(listApplicants[index]);
                                             }
@@ -531,7 +538,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                                         else if(isFor == isForBroker)
                                         {
                                           setStateDialog((){
-                                            if (isSelectedBroker)
+                                            if (listSelectedBroker.contains(listBrokerFilter[index]))
                                             {
                                               listSelectedBroker.remove(listBrokerFilter[index]);
                                             }
@@ -950,6 +957,12 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
 
   _getNetworthData() async {
 
+    setState(() {
+      listDataMain = [];
+      listData = [];
+      _isLoading = true;
+    });
+
     listAssetFilter = [];
 
     if ((sessionManagerPMS.getNetworthData() != null))
@@ -973,13 +986,6 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
     {
       listData = [];
     }
-
-    if (listData.isEmpty)
-      {
-        setState(() {
-          _isLoading = true;
-        });
-      }
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
