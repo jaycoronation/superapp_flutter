@@ -23,7 +23,6 @@ import 'e_state_add_future_expense_page.dart';
 import 'e_state_add_future_inflow_page.dart';
 import '../../model/e-state-analysis/FutureInflowListResponseModel.dart';
 
-
 class EStateSummaryScreen extends StatefulWidget {
   const EStateSummaryScreen({super.key});
 
@@ -34,12 +33,25 @@ class EStateSummaryScreen extends StatefulWidget {
 class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
 
   bool isLoading = false;
+  bool isExpandedBalanceSheet =  false;
 
- SummaryData summaryData = SummaryData();
- List<RiskProfileAllocation> listRiskProfileAllocation = [];
- List<RangeOfReturn> listReturnOfRisk = [];
- final List<Color> colorMainAll = [tableLightOrange, tableLightBlue, tableLightGreen, tableLightYellow, tableLightPurple, tableLightPink];
- List<String> listRiskProfileType = ["Conservative", "Moderately Conservative", "Moderate", "Moderately Aggressive", "Aggressive", "Highly Aggressive"];
+  int balanceSheetCount = 0;
+
+  SummaryData summaryData = SummaryData();
+  List<RiskProfileAllocation> listRiskProfileAllocation = [];
+  List<RangeOfReturn> listReturnOfRisk = [];
+  final List<Color> colorMainAll = [tableLightOrange, tableLightBlue, tableLightGreen, tableLightYellow, tableLightPurple, tableLightPink];
+  List<String> listRiskProfileType = ["Conservative", "Moderately Conservative", "Moderate", "Moderately Aggressive", "Aggressive", "Highly Aggressive"];
+  List<BalanceSheet> listBalanceSheetData = [];
+  List<MacroAllocation> listMacroAllocation = [];
+  List<Components> listOurRecommendation = [];
+  List<FutureInflowsList> listFutureInflow = [];
+  FutureInflowsTotal futureInflowTotal = FutureInflowsTotal();
+  List<LiabilitiesList> listLiabilities = [];
+  List<AspirationsSummaryList> listAspirationSummary = [];
+  AspirationsSummaryTotal aspirationsSummaryTotal = AspirationsSummaryTotal();
+  List<NetworthList> listNetWorth = [];
+  NetworthTotal listNetWorthTotal = NetworthTotal();
 
   String selectedRiskProfileType = "";
 
@@ -755,8 +767,8 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                   const Gap(20),
                   Container(
                     decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(8)
+                      color: white,
+                      borderRadius: BorderRadius.circular(8)
                     ),
                     padding: const EdgeInsets.all(12),
                     child: Column(
@@ -768,6 +780,48 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         ),
                         const Gap(16),
                         balanceSheetDataWidget(),
+                        Visibility(
+                          visible: listBalanceSheetData.isNotEmpty && listBalanceSheetData.length > 25,
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              setState(() {
+                                isExpandedBalanceSheet = !isExpandedBalanceSheet;
+                                if(isExpandedBalanceSheet)
+                                {
+                                  balanceSheetCount = listBalanceSheetData.length;
+                                }
+                                else
+                                {
+                                  balanceSheetCount = 25;
+                                }
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                              decoration: BoxDecoration(
+                                color: blue,
+                                borderRadius: BorderRadius.circular(8)
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    isExpandedBalanceSheet ? Icons.remove : Icons.add,
+                                    size: 18,
+                                    color: white,
+                                  ),
+                                  const Gap(2),
+                                  Text(
+                                    isExpandedBalanceSheet ? "Show less" : "Show more",
+                                    style: getMediumTextStyle(fontSize: 12, color: white),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                         const Gap(10),
                         Center(
                           child: Column(
@@ -850,9 +904,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget aspirationCalculationWidget(){
-    final List<AspirationsSummaryList> listAspirationSummary = summaryData.aspirationsSummary?.aspirationsSummaryList ?? [];
-    final AspirationsSummaryTotal aspirationsSummaryTotal = summaryData.aspirationsSummary?.aspirationsSummaryTotal ?? AspirationsSummaryTotal();
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -916,9 +967,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget existingAssetWidget() {
-    final List<NetworthList> listNetWorth = summaryData.networth?.networthList ?? [];
-    final NetworthTotal listNetWorthTotal = summaryData.networth?.networthTotal ?? NetworthTotal();
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -967,8 +1015,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget existingLiabilitiesWidget(){
-    final List<LiabilitiesList> listLiabilities = summaryData.liabilitiesData?.liabilitiesList ?? [];
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -1029,9 +1075,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget futureInflowWidget(){
-    final List<FutureInflowsList> listFutureInflow = summaryData.futureInflows?.futureInflowsList ?? [];
-    final FutureInflowsTotal futureInflowTotal = summaryData.futureInflows?.futureInflowsTotal ?? FutureInflowsTotal();
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -1230,9 +1273,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget ourRecommendationWidget(){
-
-    final List<Components> listOurRecommendation = summaryData.recommendationTable?.components ?? [];
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -1293,9 +1333,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget balanceSheetDataWidget(){
-
-    final List<BalanceSheet> listBalanceSheetData = summaryData.balanceSheet ?? [];
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -1331,7 +1368,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               ),
             ) :
             ListView.builder(
-              itemCount: listBalanceSheetData.length,
+              itemCount: balanceSheetCount,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(0),
@@ -1357,8 +1394,6 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   }
 
   Widget suggestedChangeAssetWidget(){
-    final List<MacroAllocation> listMacroAllocation = summaryData.macroAllocation ?? [];
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -1578,6 +1613,19 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
         if(statusCode == 200 && dataResponse.success == 1)
         {
           summaryData = dataResponse.summaryData ?? SummaryData();
+
+          listBalanceSheetData = summaryData.balanceSheet ?? [];
+          balanceSheetCount = listBalanceSheetData.length > 25 ? 25 : listBalanceSheetData.length;
+
+          listMacroAllocation = summaryData.macroAllocation ?? [];
+          listOurRecommendation = summaryData.recommendationTable?.components ?? [];
+          listFutureInflow = summaryData.futureInflows?.futureInflowsList ?? [];
+          futureInflowTotal = summaryData.futureInflows?.futureInflowsTotal ?? FutureInflowsTotal();
+          listLiabilities = summaryData.liabilitiesData?.liabilitiesList ?? [];
+          listAspirationSummary = summaryData.aspirationsSummary?.aspirationsSummaryList ?? [];
+          aspirationsSummaryTotal = summaryData.aspirationsSummary?.aspirationsSummaryTotal ?? AspirationsSummaryTotal();
+          listNetWorth = summaryData.networth?.networthList ?? [];
+          listNetWorthTotal = summaryData.networth?.networthTotal ?? NetworthTotal();
 
           selectedRiskProfileType = summaryData.userDetails?.riskProfile ?? "";
           listRiskProfileAllocation = summaryData.riskProfileAllocation ?? [];
