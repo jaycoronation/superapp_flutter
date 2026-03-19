@@ -92,7 +92,7 @@ class _HomePageState extends BaseState<HomePage> {
       CommonValueModel(title: "Contact", description: "Get in Touch", image: "assets/images/ic_contact.png", id: "6"),
       // CommonValueModel(title: "Blogs", description: "Blogs", image: "assets/images/ic_blog.png", id: "7"),
       // CommonValueModel(title: "Videos", description: "Videos", image: "assets/images/ic_videos.png", id: "8"),
-      CommonValueModel(title: "Insurance", description: "My Insurance", image: "assets/images/img.png", id: "9"),
+      CommonValueModel(title: "Insurance", description: "My Insurance", image: "assets/images/ic_insurance.png", id: "9"),
       CommonValueModel(title: "Suggested Actions", description: "Suggested Actions", image: "assets/images/portfolio_ic_capital_gain.png", id: "10"),
     ];
     print("Display list data length : ${listDashboardData.length}");

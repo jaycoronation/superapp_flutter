@@ -21,3 +21,22 @@ class TabModel{
     required this.title
   });
 }
+
+class MonthlyTransaction {
+  final String schemeName;
+  final String folioNo;
+  final String applicant;
+  final Map<String, double> monthlyAmounts;
+
+  final bool isHeader;
+  final bool isTotal;
+
+  MonthlyTransaction({
+    required this.schemeName,
+    required this.folioNo,
+    required this.applicant,
+    required this.monthlyAmounts,
+    this.isHeader = false,
+    this.isTotal = false,
+  });
+}

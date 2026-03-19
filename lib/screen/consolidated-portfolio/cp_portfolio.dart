@@ -25,12 +25,26 @@ class CPPortfolioPage extends StatefulWidget {
 
 class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   bool _isLoading = false;
+  bool isSelectedAsset = false;
+  bool isSelectedApplicant = false;
+  bool isSelectedBroker = false;
+
   List<TempResponse> listData = [];
   List<TempResponse> listDataMain = [];
   List<String> listApplicants = [];
   List<String> listBrokerFilter = [];
+  List<String> listAssetFilter = [];
   String selectedApplicant = "";
   Map<String, dynamic> userData = {};
+
+  List<String> listSelectedAsset = [];
+  String isForAsset = "Asset";
+
+  List<String> listSelectedApplicant = [];
+  String isForApplicant = "Applicant";
+
+  List<String> listSelectedBroker = [];
+  String isForBroker = "Broker";
 
   String selectedBroker = "";
   String selectedApplicantName = "";
@@ -51,7 +65,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
         if (listApplicants.isNotEmpty)
           {
-            selectedApplicantName = listApplicants[0] ?? '';
+            //selectedApplicantName = listApplicants[0] ?? '';
             selectedApplicant = listApplicants[0] ?? '';
           }
       }
@@ -67,13 +81,67 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     _getPortfolioDataNew();
   }
 
+  String getDisplayName(String isFor) {
+
+    if(isFor == isForAsset)
+    {
+      if (listSelectedAsset.isEmpty)
+      {
+        return "All Asset";
+      }
+      final firstSelected = listAssetFilter.firstWhere((value) => value == listSelectedAsset.first, orElse: () => "All Asset",);
+
+      if(listSelectedAsset.length >= 2)
+      {
+        return "$firstSelected+${listSelectedAsset.length - 1}";
+      }
+      else
+      {
+        return firstSelected;
+      }
+    }
+    else if(isFor == isForApplicant)
+    {
+      if (listSelectedApplicant.isEmpty)
+      {
+        return "Select Applicant";
+      }
+      final firstSelected = listApplicants.firstWhere((value) => value == listSelectedApplicant.first, orElse: () => "Select Applicant",);
+
+      if(listSelectedApplicant.length >= 2)
+      {
+        return "$firstSelected+${listSelectedApplicant.length - 1}";
+      }
+      else
+      {
+        return firstSelected;
+      }
+    }
+    else if(isFor == isForBroker)
+    {
+      if (listSelectedBroker.isEmpty)
+      {
+        return "Select Broker";
+      }
+      final firstSelected = listBrokerFilter.firstWhere((value) => value == listSelectedBroker.first, orElse: () => "Select Broker",);
+
+      if(listSelectedBroker.length >= 2)
+      {
+        return "$firstSelected+${listSelectedBroker.length - 1}";
+      }
+      else
+      {
+        return firstSelected;
+      }
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0XffEDEDEE),
-      body: _isLoading
-          ? const LoadingWidget()
-          : Container(
+      body: Container(
               margin: const EdgeInsets.only(top: 8),
             child: Padding(
                 padding: const EdgeInsets.only(left: 6, right: 6),
@@ -85,82 +153,130 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                       SizedBox(
                         height: 45,
                         child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  openFilterDialog(1);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      borderRadius: BorderRadius.circular(12)
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        selectedApplicantName.isEmpty ? "Select Applicant" : selectedApplicantName,
-                                        style: getMediumTextStyle(fontSize: 12, color: selectedApplicantName == "" ? gray : blue),
-                                      ),
-                                      const Gap(4),
-                                      selectedApplicantName.isEmpty ?
-                                      const Icon(Icons.keyboard_arrow_down_outlined) :
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          setState(() {
-                                            selectedApplicantName = "";
-                                          });
-                                          _getPortfolioDataNew();
-                                        },
-                                        child: const Icon(Icons.close, size: 24, color: black,),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    if(listAssetFilter.isNotEmpty)
+                                    {
+                                      openFilterDialogMultiple(isForAsset);
+                                    }
+                                    else
+                                    {
+                                      showSnackBar("Asset Data Not Found", context);
+                                    }
+                                  },
+                                  child: getDisplayFilterCategory(getDisplayName(isForAsset), listSelectedAsset)
                               ),
-                              const Gap(10),
+
                               GestureDetector(
-                                onTap: () {
-                                  openFilterDialog(2);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-                                  decoration: BoxDecoration(
-                                      color: white,
-                                      borderRadius: BorderRadius.circular(12)
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        selectedBroker.isEmpty ? "Select Brokers" : selectedBroker,
-                                        style: getMediumTextStyle(fontSize: 12, color: selectedBroker == "" ? gray : blue),
-                                      ),
-                                      const Gap(4),
-                                      selectedBroker.isEmpty ?
-                                      const Icon(Icons.keyboard_arrow_down_outlined) :
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          setState(() {
-                                            selectedBroker = "";
-                                          });
-                                          _getPortfolioDataNew();
-                                        },
-                                        child: const Icon(Icons.close, size: 24, color: black,),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    if(listApplicants.isNotEmpty)
+                                    {
+                                      openFilterDialogMultiple(isForApplicant);
+                                    }
+                                    else
+                                    {
+                                      showSnackBar("Applicant Data Not Found", context);
+                                    }
+                                  },
+                                  child: getDisplayFilterCategory(getDisplayName(isForApplicant), listSelectedApplicant)
+                              ),
+
+                              GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    if(listBrokerFilter.isNotEmpty)
+                                    {
+                                      openFilterDialogMultiple(isForBroker);
+                                    }
+                                    else
+                                    {
+                                      showSnackBar("Broker Data Not Found", context);
+                                    }
+                                  },
+                                  child: getDisplayFilterCategory(getDisplayName(isForBroker), listSelectedBroker)
+                              ),
+
+
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     openFilterDialog(1);
+                              //   },
+                              //   child: Container(
+                              //     padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                              //     decoration: BoxDecoration(
+                              //         color: white,
+                              //         borderRadius: BorderRadius.circular(12)
+                              //     ),
+                              //     child: Row(
+                              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         Text(
+                              //           selectedApplicantName.isEmpty ? "Select Applicant" : selectedApplicantName,
+                              //           style: getMediumTextStyle(fontSize: 12, color: selectedApplicantName == "" ? gray : blue),
+                              //         ),
+                              //         const Gap(4),
+                              //         selectedApplicantName.isEmpty ?
+                              //         const Icon(Icons.keyboard_arrow_down_outlined) :
+                              //         GestureDetector(
+                              //           behavior: HitTestBehavior.opaque,
+                              //           onTap: () {
+                              //             setState(() {
+                              //               selectedApplicantName = "";
+                              //             });
+                              //             _getPortfolioDataNew();
+                              //           },
+                              //           child: const Icon(Icons.close, size: 24, color: black,),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              // const Gap(10),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     openFilterDialog(2);
+                              //   },
+                              //   child: Container(
+                              //     padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+                              //     decoration: BoxDecoration(
+                              //         color: white,
+                              //         borderRadius: BorderRadius.circular(12)
+                              //     ),
+                              //     child: Row(
+                              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         Text(
+                              //           selectedBroker.isEmpty ? "Select Brokers" : selectedBroker,
+                              //           style: getMediumTextStyle(fontSize: 12, color: selectedBroker == "" ? gray : blue),
+                              //         ),
+                              //         const Gap(4),
+                              //         selectedBroker.isEmpty ?
+                              //         const Icon(Icons.keyboard_arrow_down_outlined) :
+                              //         GestureDetector(
+                              //           behavior: HitTestBehavior.opaque,
+                              //           onTap: () {
+                              //             setState(() {
+                              //               selectedBroker = "";
+                              //             });
+                              //             _getPortfolioDataNew();
+                              //           },
+                              //           child: const Icon(Icons.close, size: 24, color: black,),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
                       ),
-                      const Gap(4),
+                      const Gap(8),
                       TextField(
                         cursorColor: black,
                         controller: searchController,
@@ -240,6 +356,13 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                 ),
                               ),*/
 
+                      _isLoading
+                          ? Expanded(
+                        child: Center(
+                          child: const LoadingWidget(),
+                        ),
+                      )
+                          :
                       listData.isEmpty ?
                       Expanded(
                         child: Center(
@@ -538,6 +661,184 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     );
   }
 
+  void openFilterDialogMultiple(String isFor) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      elevation: 5,
+      isDismissible: true,
+      builder: (context) {
+        return SafeArea(
+          child: StatefulBuilder(
+            builder: (context, setStateDialog) {
+              return ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: getBottomSheetHeaderWithoutButton(
+                            context,
+                            isFor == isForAsset ? "Select Asset" :
+                            isFor == isForApplicant ? "Select Applicant" :
+                            isFor == isForBroker ? "Select Broker" : ""
+                        ),
+                      ),
+                      Flexible(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return SingleChildScrollView(
+                              child: ListView.builder(
+                                itemCount: isFor == isForAsset ? listAssetFilter.length : isFor == isForApplicant ? listApplicants.length : isFor == isForBroker ? listBrokerFilter.length : 0,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  if(isFor == isForAsset)
+                                  {
+                                    isSelectedAsset = listSelectedAsset.contains(listAssetFilter[index]);
+                                  }
+                                  else if(isFor == isForApplicant)
+                                  {
+                                    isSelectedApplicant = listSelectedApplicant.contains(listApplicants[index]);
+                                  }
+                                  else if(isFor == isForBroker)
+                                  {
+                                    isSelectedBroker = listSelectedBroker.contains(listBrokerFilter[index]);
+                                  }
+                                  return GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        if(isFor == isForAsset)
+                                        {
+                                          setStateDialog((){
+                                            if (isSelectedAsset)
+                                            {
+                                              listSelectedAsset.remove(listAssetFilter[index]);
+                                            }
+                                            else
+                                            {
+                                              listSelectedAsset.add(listAssetFilter[index]);
+                                            }
+                                          });
+                                        }
+                                        else if(isFor == isForApplicant)
+                                        {
+                                          setStateDialog((){
+                                            if (isSelectedApplicant)
+                                            {
+                                              listSelectedApplicant.remove(listApplicants[index]);
+                                            }
+                                            else
+                                            {
+                                              listSelectedApplicant.add(listApplicants[index]);
+                                            }
+                                          });
+                                        }
+                                        else if(isFor == isForBroker)
+                                        {
+                                          setStateDialog((){
+                                            if (isSelectedBroker)
+                                            {
+                                              listSelectedBroker.remove(listBrokerFilter[index]);
+                                            }
+                                            else
+                                            {
+                                              listSelectedBroker.add(listBrokerFilter[index]);
+                                            }
+                                          });
+                                        }
+                                        setState(() {});
+                                      },
+                                      child: isFor == isForAsset ? getBottomSheetItemWithSelection(listAssetFilter[index], isSelectedAsset, false) :
+                                      isFor == isForApplicant ? getBottomSheetItemWithSelection(listApplicants[index], isSelectedApplicant, false) :
+                                      isFor == isForBroker ? getBottomSheetItemWithSelection(listBrokerFilter[index], isSelectedBroker, false)
+                                          : Container()
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                if(isFor == isForAsset)
+                                {
+                                  listSelectedAsset.clear();
+                                }
+                                else if(isFor == isForApplicant)
+                                {
+                                  listSelectedApplicant.clear();
+                                }
+                                else if(isFor == isForBroker)
+                                {
+                                  listSelectedBroker.clear();
+                                }
+
+                                _getPortfolioDataNew();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: blue,
+                                    borderRadius: BorderRadius.circular(4)
+                                ),
+                                padding: const EdgeInsets.only(top: 16, bottom: 16,),
+                                child: Center(
+                                  child: Text(
+                                    "Clear",
+                                    style: getMediumTextStyle(color: white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Gap(8),
+                          Expanded(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                _getPortfolioDataNew();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: blue,
+                                    borderRadius: BorderRadius.circular(4)
+                                ),
+                                padding: const EdgeInsets.only(top: 16, bottom: 16,),
+                                child: Center(
+                                  child: Text(
+                                    "Apply",
+                                    style: getMediumTextStyle(color: white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Gap(10),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void openFilterDialog(int isFor) {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -698,8 +999,6 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                                     }
                                   });
                                 });
-
-
                               });
                             },
                             child: Column(
@@ -772,20 +1071,26 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   _getPortfolioDataNew() async {
     setState(() {
       _isLoading = true;
+      listDataMain = [];
+      listData = [];
     });
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
       HttpLogger(logLevel: LogLevel.BODY),
     ]);
 
     final url = Uri.parse(API_URL_CP + portfolio);
-    Map<String, String> jsonBody = {
+    Map<String, dynamic> jsonBody = {
       'user_id': sessionManagerPMS.getUserId().trim(),
       'from_app': 'true',
-      "broker": selectedBroker,
-      "applicant": selectedApplicantName
+      "broker": listSelectedBroker,
+      "applicant": listSelectedApplicant,
+      "asset": listSelectedAsset
+      // "broker": selectedBroker,
+      // "applicant": selectedApplicantName,
+      
     };
 
-    final response = await http.post(url, body: jsonBody);
+    final response = await http.post(url, body: jsonEncode(jsonBody));
 
     print("USER DATA Body == ${jsonEncode(jsonBody)}");
     print("USER DATA response == $response");
@@ -799,6 +1104,9 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
 
       listBrokerFilter = List<String>.from(userData['broker_filter'] ?? []);
       print("Display broker filter data : $listBrokerFilter");
+
+      listAssetFilter = List<String>.from(userData['assets_filter'] ?? []);
+      print("Display asset filter data : $listAssetFilter");
 
       final result = userData['result'];
       final parsedJson = result['portfolio'];

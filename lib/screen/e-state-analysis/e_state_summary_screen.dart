@@ -12,12 +12,17 @@ import '../../common_widget/common_widget.dart';
 import '../../constant/analysis_api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/CommanResponse.dart';
-import '../../model/e-state-analysis/FPSummaryDataResponseModel.dart';
+import '../../model/e-state-analysis/FPSummaryDataResponseModel.dart' hide FutureInflows;
 import '../../model/e-state-analysis/aspiration_response_model.dart';
 import '../../model/e-state-analysis/existing_assets_response_model.dart';
+import '../../model/e-state-analysis/existing_liabilities_response_model.dart';
 import '../../widget/loading.dart';
 import 'e_state_add_existing_assets_page.dart';
+import 'e_state_add_existing_liabilities_page.dart';
 import 'e_state_add_future_expense_page.dart';
+import 'e_state_add_future_inflow_page.dart';
+import '../../model/e-state-analysis/FutureInflowListResponseModel.dart';
+
 
 class EStateSummaryScreen extends StatefulWidget {
   const EStateSummaryScreen({super.key});
@@ -46,16 +51,15 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   double minYCurrent = 0.0;
   double intervalCurrent = 0.0;
   String currentRsValue = "";
-  Color currentColor = green;
+  double difference = 0.0;
 
   double maxYFuture = 0.0;
   double minYFuture = 0.0;
   double intervalFuture = 0.0;
   String futureRsValue = "";
-  Color futureColor = green;
+  double differenceFuture = 0.0;
 
-  ChartAmountFormatter formatter = ChartAmountFormatter(1, "");
-  ChartAmountFormatter formatterFuture = ChartAmountFormatter(1, "");
+  ChartAmountFormatter amountFormatter = ChartAmountFormatter(1, "");
 
   double requiredWealthCurrent = 0;
   double existingWealthCurrent = 0;
@@ -92,721 +96,745 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
         Center(
           child: LoadingWidget(),
         ):
-        SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.only(top: 16, bottom: 16, left: 10, right: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Aspiration Calculations :",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                            ),
-                          ),
-                          const Gap(8),
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () async{
-                              final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EStateAddFutureExpensePage(ListData(), false)),);
-                              print("result ===== $result");
-                              if (result == "success") {
-                                _refresh();
-                              }
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: blue,
-                                borderRadius: BorderRadius.circular(8)
-                              ),
-                              padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-                              child: Text("+ Add Aspiration", style: getMediumTextStyle(fontSize: 12, color: white),),
-                            ),
-                          )
-                        ],
-                      ),
-                      const Gap(16),
-                      aspirationCalculationWidget(),
-                      const Gap(16),
-                      Center(
-                        child: Text(
-                          "*Target Return may or may not be delivered due to market risk.",
-                          style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Gap(10),
-                    ],
-                  ),
-                ),
-                const Gap(20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Existing Assets :",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                            ),
-                          ),
-                          const Gap(8),
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () async{
-                              final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EStateAddExistingAssetsPage(ExistingAssets(), false)),);
-                              print("result ===== $result");
-                              if (result == "success") {
-                                _refresh();
-                              }
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: blue,
-                                  borderRadius: BorderRadius.circular(8)
-                              ),
-                              padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-                              child: Text("+ Add Assets", style: getMediumTextStyle(fontSize: 12, color: white),),
-                            ),
-                          )
-                        ],
-                      ),
-                      const Gap(16),
-                      existingAssetWidget(),
-                      const Gap(16),
-                      Center(
-                        child: Text(
-                          "*Expected return may or may not come in future due to market risk",
-                          style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Gap(10),
-                    ],
-                  ),
-                ),
-                const Gap(20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Existing Liabilities :",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                            ),
-                          ),
-                          const Gap(8),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: blue,
-                                borderRadius: BorderRadius.circular(8)
-                            ),
-                            padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-                            child: Text("+ Add Liabilities", style: getMediumTextStyle(fontSize: 12, color: white),),
-                          )
-                        ],
-                      ),
-                      const Gap(16),
-                      existingLiabilitiesWidget(),
-                      const Gap(10),
-                    ],
-                  ),
-                ),
-                const Gap(20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Future Inflow Calculation :",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                            ),
-                          ),
-                          const Gap(8),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: blue,
-                                borderRadius: BorderRadius.circular(8)
-                            ),
-                            padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-                            child: Text("+ Add Future Inflow", style: getMediumTextStyle(fontSize: 12, color: white),),
-                          )
-                        ],
-                      ),
-                      const Gap(16),
-                      futureInflowWidget(),
-                      const Gap(10),
-                      Center(
-                        child: Text(
-                          "*There will be future infolow of ${convertCommaSeparatedAmount(summaryData.futureInflows?.futureInflowsTotal?.pvOfIncome ?? "")}",
-                          style: getRegularTextStyle(fontSize: 12, color: blackLight),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Gap(10),
-                    ],
-                  ),
-                ),
-                const Gap(20),
-                Container(
-                  decoration: BoxDecoration(
+        RefreshIndicator(
+          onRefresh: _refresh,
+          color: blue,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.only(top: 16, bottom: 16, left: 10, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
                       color: white,
                       borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Risk Profile :",
-                            style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                          ),
-                          const Gap(8),
-                          GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              openRiskProfileOptionDialog();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: blue),
-                                  borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Aspiration Calculations :",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      selectedRiskProfileType,
-                                      style: getMediumTextStyle(fontSize: 12, color: blue),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    size: 20,
+                            ),
+                            const Gap(8),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () async{
+                                final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EStateAddFutureExpensePage(ListData(), false)),);
+                                print("result ===== $result");
+                                if (result == "success") {
+                                  _refresh();
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
                                     color: blue,
-                                  ),
-                                ],
+                                    borderRadius: BorderRadius.circular(8)
+                                ),
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                                child: Text("+ Add Aspiration", style: getMediumTextStyle(fontSize: 12, color: white),),
+                              ),
+                            )
+                          ],
+                        ),
+                        const Gap(16),
+                        aspirationCalculationWidget(),
+                        const Gap(16),
+                        Center(
+                          child: Text(
+                            "*Target Return may or may not be delivered due to market risk.",
+                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Gap(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Existing Assets :",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
                               ),
                             ),
+                            const Gap(8),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () async{
+                                final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EStateAddExistingAssetsPage(ExistingAssets(), false)),);
+                                print("result ===== $result");
+                                if (result == "success") {
+                                  _refresh();
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: blue,
+                                    borderRadius: BorderRadius.circular(8)
+                                ),
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                                child: Text("+ Add Assets", style: getMediumTextStyle(fontSize: 12, color: white),),
+                              ),
+                            )
+                          ],
+                        ),
+                        const Gap(16),
+                        existingAssetWidget(),
+                        const Gap(16),
+                        Center(
+                          child: Text(
+                            "*Expected return may or may not come in future due to market risk",
+                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                            textAlign: TextAlign.center,
                           ),
-                        ],
-                      ),
-                      const Gap(16),
-                      Text(
-                        "Suggested Asset Allocation",
-                        style: getSemiBoldTextStyle(fontSize: 12, color: blue),
-                      ),
-                      const Gap(12),
-                      listRiskProfileAllocation.isEmpty ?
-                      SizedBox(
-                        height: 300,
-                        child: Center(
-                          child: Text("No Data Found"),
                         ),
-                      ) :
-                      suggestedAssetAllocationWidget(),
-                      const Gap(16),
-                      Text(
-                        "Range of Return with 95% Probability",
-                        style: getSemiBoldTextStyle(fontSize: 12, color: blue),
-                      ),
-                      const Gap(12),
-                      listReturnOfRisk.isEmpty ?
-                      SizedBox(
-                        height: 300,
-                        child: Center(
-                          child: Text("No Data Found"),
-                        ),
-                      ) :
-                      rangeOfReturnWidget(),
-                      Container(
-                        height: 350,
-                        margin: const EdgeInsets.only(top: 24, bottom: 16),
-                        child: BarChart(
-                          BarChartData(
-                            alignment: BarChartAlignment.spaceAround,
-                            minY: minY,
-                            maxY: maxY,
-                            gridData: FlGridData(
-                              show: true,
-                              horizontalInterval: listReturnOfRisk.isNotEmpty ? interval : null,
+                        const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Gap(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Existing Liabilities :",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                              ),
                             ),
-                            borderData: FlBorderData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  interval: listReturnOfRisk.isNotEmpty ? interval : null,
-                                  reservedSize: 45,
-                                  getTitlesWidget: (value, meta) {
-                                    final isTopValue = value == meta.max;
-                                    return Padding(
-                                      padding: EdgeInsets.only(top: isTopValue ? 10 : 0, left: 10),
+                            const Gap(8),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () async{
+                                final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EStateAddExistingLiabilitiesPage(ExistingLiabilities(), false)),);
+                                print("result ===== $result");
+                                if (result == "success") {
+                                  _refresh();
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: blue,
+                                    borderRadius: BorderRadius.circular(8)
+                                ),
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                                child: Text("+ Add Liabilities", style: getMediumTextStyle(fontSize: 12, color: white),),
+                              ),
+                            )
+                          ],
+                        ),
+                        const Gap(16),
+                        existingLiabilitiesWidget(),
+                        const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Gap(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Future Inflow Calculation :",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                              ),
+                            ),
+                            const Gap(8),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () async{
+                                final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => EStateAddFutureInflowPage(FutureInflows(), false)),);
+                                print("result ===== $result");
+                                if (result == "success") {
+                                  _refresh();
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: blue,
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                                child: Text("+ Add Future Inflow", style: getMediumTextStyle(fontSize: 12, color: white),),
+                              ),
+                            )
+                          ],
+                        ),
+                        const Gap(16),
+                        futureInflowWidget(),
+                        const Gap(10),
+                        Center(
+                          child: Text(
+                            "*There will be future infolow of ${convertCommaSeparatedAmount(summaryData.futureInflows?.futureInflowsTotal?.pvOfIncome ?? "")}",
+                            style: getRegularTextStyle(fontSize: 12, color: blackLight),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Gap(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Risk Profile :",
+                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                            ),
+                            const Gap(8),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                openRiskProfileOptionDialog();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: blue),
+                                    borderRadius: BorderRadius.circular(8)
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
                                       child: Text(
-                                        value.toStringAsFixed(0),
-                                        style: getMediumTextStyle(fontSize: 12, color: black),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                        selectedRiskProfileType,
+                                        style: getMediumTextStyle(fontSize: 12, color: blue),
+                                        textAlign: TextAlign.start,
                                       ),
-                                    );
-                                  },
+                                    ),
+                                    const Gap(8),
+                                    Icon(
+                                      Icons.keyboard_arrow_down,
+                                      size: 20,
+                                      color: blue,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              rightTitles: AxisTitles(),
-                              topTitles: AxisTitles(),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    if (value.toInt() >= listReturnOfRisk.length)
-                                    {
-                                      return const SizedBox();
-                                    }
+                            ),
+                          ],
+                        ),
+                        const Gap(16),
+                        Text(
+                          "Suggested Asset Allocation",
+                          style: getSemiBoldTextStyle(fontSize: 12, color: blue),
+                        ),
+                        const Gap(12),
+                        listRiskProfileAllocation.isEmpty ?
+                        SizedBox(
+                          height: 300,
+                          child: Center(
+                            child: Text("No Data Found"),
+                          ),
+                        ) :
+                        suggestedAssetAllocationWidget(),
+                        const Gap(16),
+                        Text(
+                          "Range of Return with 95% Probability",
+                          style: getSemiBoldTextStyle(fontSize: 12, color: blue),
+                        ),
+                        const Gap(12),
+                        listReturnOfRisk.isEmpty ?
+                        SizedBox(
+                          height: 300,
+                          child: Center(
+                            child: Text("No Data Found"),
+                          ),
+                        ) :
+                        rangeOfReturnWidget(),
+                        Container(
+                          height: 350,
+                          margin: const EdgeInsets.only(top: 24, bottom: 16),
+                          child: BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.spaceAround,
+                              minY: minY,
+                              maxY: maxY,
+                              gridData: FlGridData(
+                                show: true,
+                                horizontalInterval: listReturnOfRisk.isNotEmpty ? interval : null,
+                              ),
+                              borderData: FlBorderData(show: false),
+                              titlesData: FlTitlesData(
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    interval: listReturnOfRisk.isNotEmpty ? interval : null,
+                                    reservedSize: 45,
+                                    getTitlesWidget: (value, meta) {
+                                      final isTopValue = value == meta.max;
+                                      return Padding(
+                                        padding: EdgeInsets.only(top: isTopValue ? 10 : 0, left: 10),
+                                        child: Text(
+                                          value.toStringAsFixed(0),
+                                          style: getMediumTextStyle(fontSize: 12, color: black),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                rightTitles: AxisTitles(),
+                                topTitles: AxisTitles(),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (value, meta) {
+                                      if (value.toInt() >= listReturnOfRisk.length)
+                                      {
+                                        return const SizedBox();
+                                      }
 
-                                    return Padding(
-                                      padding: const EdgeInsets.only(bottom: 4),
-                                      child: Text(
-                                        "${listReturnOfRisk[value.toInt()].rangeOfReturn}",
-                                        style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    );
-                                  },
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 4),
+                                        child: Text(
+                                          "${listReturnOfRisk[value.toInt()].rangeOfReturn}",
+                                          style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
+                              barGroups: List.generate(listReturnOfRisk.length, (index) {
+                                final item = listReturnOfRisk[index];
+                                return BarChartGroupData(
+                                  x: index,
+                                  barsSpace: 6,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: item.oneYearValue,
+                                      width: 24,
+                                      color: tableLightOrange,
+                                      borderRadius: BorderRadius.circular(0),
+                                      rodStackItems: [
+                                        BarChartRodStackItem(
+                                            0,
+                                            item.oneYearValue,
+                                            tableLightOrange,
+                                            label: "${item.oneYearValue}",
+                                            labelStyle: getMediumTextStyle(fontSize: 6, color: black)
+                                        ),
+                                      ],
+                                    ),
+                                    BarChartRodData(
+                                      toY: item.threeYearValue,
+                                      width: 24,
+                                      color: tableLightBlue,
+                                      borderRadius: BorderRadius.circular(0),
+                                      rodStackItems: [
+                                        BarChartRodStackItem(
+                                            0,
+                                            item.threeYearValue,
+                                            tableLightBlue,
+                                            label: "${item.threeYearValue}",
+                                            labelStyle: getMediumTextStyle(fontSize: 6, color: black)
+                                        ),
+                                      ],
+                                    ),
+                                    BarChartRodData(
+                                      toY: item.fiveYearValue,
+                                      width: 24,
+                                      color: tableLightGreen,
+                                      borderRadius: BorderRadius.circular(0),
+                                      rodStackItems: [
+                                        BarChartRodStackItem(
+                                            0,
+                                            item.fiveYearValue,
+                                            tableLightGreen,
+                                            label: "${item.fiveYearValue}",
+                                            labelStyle: getMediumTextStyle(fontSize: 6, color: black)
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }),
                             ),
-                            barGroups: List.generate(listReturnOfRisk.length, (index) {
-                              final item = listReturnOfRisk[index];
-                              return BarChartGroupData(
-                                x: index,
-                                barsSpace: 6,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: item.oneYearValue,
-                                    width: 24,
-                                    color: tableLightOrange,
-                                    borderRadius: BorderRadius.circular(0),
-                                    rodStackItems: [
-                                      BarChartRodStackItem(
-                                          0,
-                                          item.oneYearValue,
-                                          tableLightOrange,
-                                          label: "${item.oneYearValue}",
-                                          labelStyle: getMediumTextStyle(fontSize: 6, color: black)
-                                      ),
-                                    ],
-                                  ),
-                                  BarChartRodData(
-                                    toY: item.threeYearValue,
-                                    width: 24,
-                                    color: tableLightBlue,
-                                    borderRadius: BorderRadius.circular(0),
-                                    rodStackItems: [
-                                      BarChartRodStackItem(
-                                          0,
-                                          item.threeYearValue,
-                                          tableLightBlue,
-                                          label: "${item.threeYearValue}",
-                                          labelStyle: getMediumTextStyle(fontSize: 6, color: black)
-                                      ),
-                                    ],
-                                  ),
-                                  BarChartRodData(
-                                    toY: item.fiveYearValue,
-                                    width: 24,
-                                    color: tableLightGreen,
-                                    borderRadius: BorderRadius.circular(0),
-                                    rodStackItems: [
-                                      BarChartRodStackItem(
-                                          0,
-                                          item.fiveYearValue,
-                                          tableLightGreen,
-                                          label: "${item.fiveYearValue}",
-                                          labelStyle: getMediumTextStyle(fontSize: 6, color: black)
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            }),
                           ),
                         ),
-                      ),
-                      Center(
-                        child: Wrap(
-                          spacing: 16,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            wrapValueItem(tableLightOrange, "One Year"),
-                            wrapValueItem(tableLightBlue, "Three Year"),
-                            wrapValueItem(tableLightGreen, "Five Year"),
-                          ],
+                        Center(
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              wrapValueItem(tableLightOrange, "One Year"),
+                              wrapValueItem(tableLightBlue, "Three Year"),
+                              wrapValueItem(tableLightGreen, "Five Year"),
+                            ],
+                          ),
                         ),
-                      ),
-                      const Gap(10),
-                      Center(
-                        child: Text(
-                          "*Expected profit growth may or may not happen in future",
-                          style: getRegularTextStyle(fontSize: 12, color: blackLight),
-                          textAlign: TextAlign.center,
+                        const Gap(10),
+                        Center(
+                          child: Text(
+                            "*Expected profit growth may or may not happen in future",
+                            style: getRegularTextStyle(fontSize: 12, color: blackLight),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      const Gap(10),
-                    ],
+                        const Gap(10),
+                      ],
+                    ),
                   ),
-                ),
-                const Gap(20),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Need Gap Analysis - Current :",
-                        style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                      ),
-                      Container(
-                        height: 350,
-                        margin: const EdgeInsets.only(top: 24, bottom: 16),
-                        child: BarChart(
-                          BarChartData(
-                            alignment: BarChartAlignment.spaceAround,
-                            minY: minYCurrent,
-                            maxY: maxYCurrent,
-                            gridData: FlGridData(
-                              show: true,
-                              horizontalInterval: intervalCurrent != 0.0 ? intervalCurrent : null,
-                            ),
-                            borderData: FlBorderData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  interval: intervalCurrent != 0.0 ? intervalCurrent : null,
-                                  reservedSize: 45,
-                                  getTitlesWidget: (value, meta) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Text(
-                                        "${value.toStringAsFixed(0)} ${formatter.suffix}",
-                                        style: getMediumTextStyle(fontSize: 12, color: black),
-                                      ),
-                                    );
-                                  },
-                                ),
+                  const Gap(20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Need Gap Analysis - Current :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        Container(
+                          height: 350,
+                          margin: const EdgeInsets.only(top: 24, bottom: 16),
+                          child: BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.spaceAround,
+                              minY: minYCurrent,
+                              maxY: maxYCurrent,
+                              gridData: FlGridData(
+                                show: true,
+                                horizontalInterval: intervalCurrent != 0.0 ? intervalCurrent : null,
                               ),
-                              rightTitles: AxisTitles(),
-                              topTitles: AxisTitles(),
-                              bottomTitles: AxisTitles(),
-                            ),
-                            barGroups: List.generate(1, (index) {
-                              return BarChartGroupData(
-                                x: index,
-                                barsSpace: 0,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: requiredWealthCurrent,
-                                    width: 120,
-                                    color: tableMediumBlue,
-                                    borderRadius: BorderRadius.circular(0),
+                              borderData: FlBorderData(show: false),
+                              titlesData: FlTitlesData(
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    interval: intervalCurrent != 0.0 ? intervalCurrent : null,
+                                    reservedSize: 45,
+                                    getTitlesWidget: (value, meta) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Text(
+                                          "${value.toStringAsFixed(0)} ${amountFormatter.suffix}",
+                                          style: getMediumTextStyle(fontSize: 12, color: black),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  BarChartRodData(
-                                    toY: existingWealthCurrent,
-                                    width: 120,
-                                    color: tableDarkBlue,
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Wrap(
-                          spacing: 16,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            wrapValueItem(tableMediumBlue, "Wealth Required"),
-                            wrapValueItem(tableDarkBlue, "Existing Wealth"),
-                          ],
-                        ),
-                      ),
-                      const Gap(10),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "There will be a deficit of",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Gap(8),
-                            Text(
-                              currentRsValue,
-                              style: getSemiBoldTextStyle(fontSize: 14, color: currentColor),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                      const Gap(16),
-                      Text(
-                        "Need Gap Analysis - Future :",
-                        style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                      ),
-                      Container(
-                        height: 350,
-                        margin: const EdgeInsets.only(top: 24, bottom: 16),
-                        child: BarChart(
-                          BarChartData(
-                            alignment: BarChartAlignment.spaceAround,
-                            minY: minYFuture,
-                            maxY: maxYFuture,
-                            gridData: FlGridData(
-                              show: true,
-                              horizontalInterval: intervalFuture != 0.0 ? intervalFuture : null,
-                            ),
-                            borderData: FlBorderData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  interval: intervalFuture != 0.0 ? intervalFuture : null,
-                                  reservedSize: 45,
-                                  getTitlesWidget: (value, meta) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Text(
-                                        "${value.toStringAsFixed(0)} ${formatterFuture.suffix}",
-                                        style: getMediumTextStyle(fontSize: 12, color: black),
-                                      ),
-                                    );
-                                  },
                                 ),
+                                rightTitles: AxisTitles(),
+                                topTitles: AxisTitles(),
+                                bottomTitles: AxisTitles(),
                               ),
-                              rightTitles: AxisTitles(),
-                              topTitles: AxisTitles(),
-                              bottomTitles: AxisTitles(),
+                              barGroups: List.generate(1, (index) {
+                                return BarChartGroupData(
+                                  x: index,
+                                  barsSpace: 0,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: requiredWealthCurrent,
+                                      width: 120,
+                                      color: tableMediumBlue,
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    BarChartRodData(
+                                      toY: existingWealthCurrent,
+                                      width: 120,
+                                      color: tableDarkBlue,
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                  ],
+                                );
+                              }),
                             ),
-                            barGroups: List.generate(1, (index) {
-                              return BarChartGroupData(
-                                x: index,
-                                barsSpace: 0,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: requiredWealthFuture,
-                                    width: 120,
-                                    color: tableMediumBlue,
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                  BarChartRodData(
-                                    toY: totalWealthFuture,
-                                    width: 120,
-                                    color: tableDarkBlue,
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                ],
-                              );
-                            }),
                           ),
                         ),
-                      ),
-                      Center(
-                        child: Wrap(
-                          spacing: 16,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            wrapValueItem(tableMediumBlue, "Wealth Required"),
-                            wrapValueItem(tableDarkBlue, "Total Wealth"),
-                          ],
+                        Center(
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              wrapValueItem(tableMediumBlue, "Wealth Required"),
+                              wrapValueItem(tableDarkBlue, "Existing Wealth"),
+                            ],
+                          ),
                         ),
-                      ),
-                      const Gap(10),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "There will be a surplus of",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                              textAlign: TextAlign.center,
+                        const Gap(10),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                difference > 0 ? "There will be a deficit of" : "There will be a surplus of",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                textAlign: TextAlign.center,
+                              ),
+                              const Gap(8),
+                              Text(
+                                currentRsValue,
+                                style: getSemiBoldTextStyle(fontSize: 14, color: difference > 0 ? red : green),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
+                        ),
+                        const Gap(16),
+                        Text(
+                          "Need Gap Analysis - Future :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        Container(
+                          height: 350,
+                          margin: const EdgeInsets.only(top: 24, bottom: 16),
+                          child: BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.spaceAround,
+                              minY: minYFuture,
+                              maxY: maxYFuture,
+                              gridData: FlGridData(
+                                show: true,
+                                horizontalInterval: intervalFuture != 0.0 ? intervalFuture : null,
+                              ),
+                              borderData: FlBorderData(show: false),
+                              titlesData: FlTitlesData(
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    interval: intervalFuture != 0.0 ? intervalFuture : null,
+                                    reservedSize: 45,
+                                    getTitlesWidget: (value, meta) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Text(
+                                          "${value.toStringAsFixed(0)} ${amountFormatter.suffix}",
+                                          style: getMediumTextStyle(fontSize: 12, color: black),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                rightTitles: AxisTitles(),
+                                topTitles: AxisTitles(),
+                                bottomTitles: AxisTitles(),
+                              ),
+                              barGroups: List.generate(1, (index) {
+                                return BarChartGroupData(
+                                  x: index,
+                                  barsSpace: 0,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: requiredWealthFuture,
+                                      width: 120,
+                                      color: tableMediumBlue,
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    BarChartRodData(
+                                      toY: totalWealthFuture,
+                                      width: 120,
+                                      color: tableDarkBlue,
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                  ],
+                                );
+                              }),
                             ),
-                            const Gap(8),
-                            Text(
-                              futureRsValue,
-                              style: getSemiBoldTextStyle(fontSize: 14, color: futureColor),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                      const Gap(10),
-                    ],
-                  ),
-                ),
-                const Gap(20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Our Recommendation :",
-                        style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                      ),
-                      const Gap(16),
-                      ourRecommendationWidget(),
-                      const Gap(10),
-                      Center(
-                        child: Text(
-                          "*Expected return may or may not come in future due to market risk",
-                          style: getRegularTextStyle(fontSize: 12, color: blackLight),
-                          textAlign: TextAlign.center,
+                        Center(
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              wrapValueItem(tableMediumBlue, "Wealth Required"),
+                              wrapValueItem(tableDarkBlue, "Total Wealth"),
+                            ],
+                          ),
                         ),
-                      ),
-                      const Gap(10),
-                    ],
-                  ),
-                ),
-                const Gap(20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Balance Sheet Projection :",
-                        style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                      ),
-                      const Gap(16),
-                      balanceSheetDataWidget(),
-                      const Gap(10),
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("*Inflation is assumed at 6%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
-                            const Gap(2),
-                            Text("**Expected profit growth is 12%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
-                            const Gap(2),
-                            Text("***Expected growth in fresh inflow is 10%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
-                            const Gap(2),
-                            Text("**Expected profit growth may or may not happen in future due to market risk.", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
-                          ],
+                        const Gap(10),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                differenceFuture > 0 ? "There will be a surplus of" : "There will be a deficit of",
+                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                textAlign: TextAlign.center,
+                              ),
+                              const Gap(8),
+                              Text(
+                                futureRsValue,
+                                style: getSemiBoldTextStyle(fontSize: 14, color: differenceFuture > 0 ? green : red),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      const Gap(10),
-                    ],
+                        const Gap(10),
+                      ],
+                    ),
                   ),
-                ),
-                const Gap(20),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
+                  const Gap(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Our Recommendation :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        const Gap(16),
+                        ourRecommendationWidget(),
+                        const Gap(10),
+                        Center(
+                          child: Text(
+                            "*Expected return may or may not come in future due to market risk",
+                            style: getRegularTextStyle(fontSize: 12, color: blackLight),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Gap(10),
+                      ],
+                    ),
                   ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Suggested Change in Asset Allocation :",
-                        style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                      ),
-                      const Gap(16),
-                      suggestedChangeAssetWidget(),
-                      const Gap(10),
-                    ],
+                  const Gap(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Balance Sheet Projection :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        const Gap(16),
+                        balanceSheetDataWidget(),
+                        const Gap(10),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("*Inflation is assumed at 6%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              const Gap(2),
+                              Text("**Expected profit growth is 12%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              const Gap(2),
+                              Text("***Expected growth in fresh inflow is 10%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              const Gap(2),
+                              Text("**Expected profit growth may or may not happen in future due to market risk.", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                            ],
+                          ),
+                        ),
+                        const Gap(10),
+                      ],
+                    ),
                   ),
-                ),
-                const Gap(20),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(8)
+                  const Gap(20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Suggested Change in Asset Allocation :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        const Gap(16),
+                        suggestedChangeAssetWidget(),
+                        const Gap(10),
+                      ],
+                    ),
                   ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Action points :",
-                        style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                      ),
-                      const Gap(16),
-                      actionPointWidget("We can efficiently attain our goals within the stipulated timeframe."),
-                      actionPointWidget("We are overexposed in volatile asset class and need to decrease exposure"),
-                      actionPointWidget("Suggested to increase the SIP in alignment with monthly savings."),
-                      actionPointWidget("Suggesting to take enough Life and Health Insurance coverage for protecting against unwanted risk. Our Advisor will help you with recommended amounts."),
-                      actionPointWidget("This Financial Plan is initial draft and machine generated. Plan needs to be verified by our advisor before taking any action."),
-                      const Gap(8),
-                    ],
+                  const Gap(20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Action points :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        const Gap(16),
+                        actionPointWidget("We can efficiently attain our goals within the stipulated timeframe."),
+                        actionPointWidget("We are overexposed in volatile asset class and need to decrease exposure"),
+                        actionPointWidget("Suggested to increase the SIP in alignment with monthly savings."),
+                        actionPointWidget("Suggesting to take enough Life and Health Insurance coverage for protecting against unwanted risk. Our Advisor will help you with recommended amounts."),
+                        actionPointWidget("This Financial Plan is initial draft and machine generated. Plan needs to be verified by our advisor before taking any action."),
+                        const Gap(8),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -1076,7 +1104,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       child: Container(
         width: 352,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            border: listRiskProfileAllocation.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
             borderRadius: BorderRadius.circular(4)
         ),
         child: Column(
@@ -1088,6 +1116,17 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("Expected Return", white, width: 120),
               ],
             ),
+            listRiskProfileAllocation.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listRiskProfileAllocation.length,
               shrinkWrap: true,
@@ -1118,7 +1157,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       child: Container(
         width: 502,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            border: listReturnOfRisk.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
             borderRadius: BorderRadius.circular(4)
         ),
         child: Column(
@@ -1131,6 +1170,18 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("5 Years", white, width: 120),
               ],
             ),
+
+            listReturnOfRisk.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listReturnOfRisk.length,
               shrinkWrap: true,
@@ -1164,7 +1215,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       child: Container(
         width: 452,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            border: listOurRecommendation.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
             borderRadius: BorderRadius.circular(4)
         ),
         child: Column(
@@ -1176,6 +1227,18 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("Expected Returns", white, width: 150),
               ],
             ),
+
+            listOurRecommendation.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listOurRecommendation.length,
               shrinkWrap: true,
@@ -1215,7 +1278,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       child: Container(
         width: 1002,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
+            border: listBalanceSheetData.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
             borderRadius: BorderRadius.circular(4)
         ),
         child: Column(
@@ -1231,6 +1294,18 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("Present Value", white, width: 150),
               ],
             ),
+
+            listBalanceSheetData.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listBalanceSheetData.length,
               shrinkWrap: true,
@@ -1279,6 +1354,18 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                 rowCellTitle("Variance", white, width: 150),
               ],
             ),
+
+            listMacroAllocation.isEmpty ?
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Center(
+                child: Text(
+                  "No Data Found",
+                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
+                ),
+              ),
+            ) :
             ListView.builder(
               itemCount: listMacroAllocation.length,
               shrinkWrap: true,
@@ -1498,16 +1585,15 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
             final existingRawCurrent = summaryData.wealthMetrics?.existingAmount ?? 0;
             final maxRawCurrent = [requiredRawCurrent, existingRawCurrent].reduce((a, b) => a > b ? a : b);
 
-            formatter = getFormatter(double.tryParse("$maxRawCurrent") ?? 0);
+            amountFormatter = getFormatter(double.tryParse("$maxRawCurrent") ?? 0);
 
-            double difference = requiredRawCurrent - existingRawCurrent;
-            double diffValue = difference / formatter.divisor;
-            currentRsValue = "${diffValue.abs().toStringAsFixed(2)} ${formatter.suffix}";
-            currentColor = difference > 0 ? red : green;
+            difference = requiredRawCurrent - existingRawCurrent;
+            double diffValue = difference / amountFormatter.divisor;
+            currentRsValue = "${diffValue.abs().toStringAsFixed(2)} ${amountFormatter.suffix}";
 
-            requiredWealthCurrent = requiredRawCurrent / formatter.divisor;
-            existingWealthCurrent = existingRawCurrent / formatter.divisor;
-            final maxValueCurrent = maxRawCurrent / formatter.divisor;
+            requiredWealthCurrent = requiredRawCurrent / amountFormatter.divisor;
+            existingWealthCurrent = existingRawCurrent / amountFormatter.divisor;
+            final maxValueCurrent = maxRawCurrent / amountFormatter.divisor;
 
             final scaleCurrent = calculateChartScale2(0, maxValueCurrent, divisions: 6);
 
@@ -1521,16 +1607,15 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
             final totalRawFuture = summaryData.wealthMetrics?.totalAmount ?? 0;
             final maxRawFuture = [requiredRawFuture, totalRawFuture].reduce((a, b) => a > b ? a : b);
 
-            formatterFuture = getFormatter(double.tryParse("$maxRawFuture") ?? 0);
+            amountFormatter = getFormatter(double.tryParse("$maxRawFuture") ?? 0);
 
-            double differenceFuture = totalRawFuture - requiredRawFuture;
-            double diffValueFuture = differenceFuture / formatterFuture.divisor;
-            futureRsValue = "${diffValueFuture.toStringAsFixed(2)} ${formatterFuture.suffix}";
-            futureColor = differenceFuture > 0 ? green : red;
+            differenceFuture = totalRawFuture - requiredRawFuture;
+            double diffValueFuture = differenceFuture / amountFormatter.divisor;
+            futureRsValue = "${diffValueFuture.toStringAsFixed(2)} ${amountFormatter.suffix}";
 
-            requiredWealthFuture = requiredRawFuture / formatterFuture.divisor;
-            totalWealthFuture = totalRawFuture / formatterFuture.divisor;
-            final maxValueFuture = maxRawFuture / formatterFuture.divisor;
+            requiredWealthFuture = requiredRawFuture / amountFormatter.divisor;
+            totalWealthFuture = totalRawFuture / amountFormatter.divisor;
+            final maxValueFuture = maxRawFuture / amountFormatter.divisor;
 
             final scaleFuture = calculateChartScale2(0, maxValueFuture, divisions: 6);
 

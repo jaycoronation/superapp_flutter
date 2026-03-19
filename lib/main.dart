@@ -104,6 +104,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) {
+        final mediaQueryData = MediaQuery.of(context);
+        final scale = mediaQueryData.textScaler.clamp(
+          minScaleFactor: 1,
+          maxScaleFactor:1,
+        );
+
+        final updatedMediaQuery = mediaQueryData.copyWith(textScaler: scale);
+
+        final isKeyboardOpen = mediaQueryData.viewInsets.bottom > 0;
+
+        return MediaQuery(
+          data: updatedMediaQuery,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: isKeyboardOpen ? 0 : mediaQueryData.viewPadding.bottom,
+            ),
+            child: child ?? const SizedBox.shrink(),
+          ),
+        );
+      },
         title: 'AlphaCapital Super App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

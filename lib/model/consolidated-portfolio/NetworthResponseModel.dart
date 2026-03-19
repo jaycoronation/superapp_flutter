@@ -7,11 +7,13 @@ NetworthResponseModel networthResponseModelFromJson(String str) => NetworthRespo
 String networthResponseModelToJson(NetworthResponseModel data) => json.encode(data.toJson());
 class NetworthResponseModel {
   NetworthResponseModel({
+    List<String>? assetsFilter,
     List<String>? applicantsFilter,
     List<String>? brokerFilter,
     Result? result,
       num? success, 
       String? message,}){
+    _assetsFilter = assetsFilter;
     _applicantsFilter = applicantsFilter;
     _brokerFilter = brokerFilter;
     _result = result;
@@ -20,6 +22,7 @@ class NetworthResponseModel {
 }
 
   NetworthResponseModel.fromJson(dynamic json) {
+    _assetsFilter = json['assets_filter'] != null ? json['assets_filter'].cast<String>() : [];
     _brokerFilter = json['broker_filter'] != null ? json['broker_filter'].cast<String>() : [];
     _applicantsFilter = json['applicants_filter'] != null ? json['applicants_filter'].cast<String>() : [];
     _result = json['result'] != null ? Result.fromJson(json['result']) : null;
@@ -27,23 +30,28 @@ class NetworthResponseModel {
     _message = json['message'];
   }
   Result? _result;
+  List<String>? _assetsFilter;
   List<String>? _applicantsFilter;
   List<String>? _brokerFilter;
   num? _success;
   String? _message;
 NetworthResponseModel copyWith({  Result? result,
   List<String>? applicantsFilter,
+  List<String>? brokerFilter,
+  List<String>? assetsFilter,
   num? success,
   String? message,
 }) => NetworthResponseModel(  result: result ?? _result,
   applicantsFilter: applicantsFilter ?? _applicantsFilter,
   brokerFilter: brokerFilter ?? _brokerFilter,
+  assetsFilter: assetsFilter ?? _assetsFilter,
   success: success ?? _success,
   message: message ?? _message,
 );
   Result? get result => _result;
   List<String>? get applicantsFilter => _applicantsFilter;
   List<String>? get brokerFilter => _brokerFilter;
+  List<String>? get assetsFilter => _assetsFilter;
   num? get success => _success;
   String? get message => _message;
 
@@ -51,6 +59,7 @@ NetworthResponseModel copyWith({  Result? result,
     final map = <String, dynamic>{};
     map['applicants_filter'] = _applicantsFilter;
     map['broker_filter'] = _brokerFilter;
+    map['assets_filter'] = _assetsFilter;
     if (_result != null) {
       map['result'] = _result?.toJson();
     }

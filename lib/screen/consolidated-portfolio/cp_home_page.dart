@@ -25,6 +25,7 @@ import 'package:superapp_flutter/screen/consolidated-portfolio/cp_latest_transac
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_networth.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_portfolio.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_scheme_allocation.dart';
+import 'package:superapp_flutter/screen/consolidated-portfolio/cp_sip_and_stp_screen.dart';
 import 'package:superapp_flutter/service/UpdateData.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -259,110 +260,110 @@ class CPHomePageState extends BaseState<CPHomePage> {
                               ),
                             ),
                           ),
-                          const Gap(12),
-                          const Divider(
-                            height: 0.5,
-                            thickness: 0.5,
-                            color: divider_color,
-                          ),
-                          const Gap(12),
-                          InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestTransactionPage()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/portfolio_ic_transaction.png', width: 24, height: 24,color: blue),
-                                  Container(width: 12),
-                                  const Text(
-                                    "Last Month Transactions",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Gap(12),
-                          const Divider(
-                            height: 0.5,
-                            thickness: 0.5,
-                            color: divider_color,
-                          ),
-                          const Gap(12),
-                          InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestSIPPage()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/portfolio_ic_sip_stp.png', width: 24, height: 24,color: blue),
-                                  Container(width: 12),
-                                  const Text(
-                                    "Last Month SIP",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Gap(12),
-                          const Divider(
-                            height: 0.5,
-                            thickness: 0.5,
-                            color: divider_color,
-                          ),
-                          const Gap(12),
-                          InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPSchemeAllocationPage()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/portfolio_ic_scheme_name.png', width: 24, height: 24,color: blue),
-                                  Container(width: 12),
-                                  const Text(
-                                    "Scheme Allocation",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Gap(12),
-                          const Divider(
-                            height: 0.5,
-                            thickness: 0.5,
-                            color: divider_color,
-                          ),
-                          const Gap(12),
-                          InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPFundHouseAllocationPage()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
-                                  Container(width: 12),
-                                  const Text(
-                                    "Fund House Allocation",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestTransactionPage()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_transaction.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Last Month Transactions",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestSIPPage()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_sip_stp.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Last Month SIP",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CPSchemeAllocationPage()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_scheme_name.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Scheme Allocation",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CPFundHouseAllocationPage()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Fund House Allocation",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           const Gap(12),
                           const Divider(
                             height: 0.5,
@@ -382,6 +383,32 @@ class CPHomePageState extends BaseState<CPHomePage> {
                                   Container(width: 12),
                                   const Text(
                                     "Capital Gain",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CpSipAndStpScreen()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_sip_stp.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "SIP & STP",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                                   )

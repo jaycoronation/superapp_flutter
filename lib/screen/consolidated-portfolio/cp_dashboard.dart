@@ -3778,6 +3778,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
 
         final url = Uri.parse(API_URL_CP + latestTransaction);
         Map<String, String> jsonBody = {
+          "type": "last_four_month",
           'user_id': sessionManagerPMS.getUserId().trim(),
         };
 

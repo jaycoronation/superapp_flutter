@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -746,4 +747,41 @@ String timestampToDate(String timestamp) {
   ).toLocal();
 
   return DateFormat('dd MMM, yyyy').format(date);
+}
+
+Widget getBottomSheetItemWithSelection(String title, bool isSelected, bool isDividerVisible) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+              size: 20,
+              color: blue,
+            ),
+            Gap(14),
+            Flexible(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: black,
+                  fontSize: 14,
+                ),
+                overflow: TextOverflow.clip,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Container(
+        height: 1,
+        color: isDividerVisible ? white : borderGray,
+      ),
+    ],
+  );
 }

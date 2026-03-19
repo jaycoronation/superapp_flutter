@@ -80,7 +80,7 @@ Widget getBottomSheetHeaderWithoutButton2(BuildContext context, String title, {C
 Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1}) {
   return Container(
     width: width,
-    height: maxLine > 1 ? 70 : 40 ,
+    height: maxLine > 1 ? 60 : 40 ,
     alignment: alignment,
     padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.all(0),
     decoration: BoxDecoration(
@@ -136,4 +136,40 @@ Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double wid
   );
 }
 
+Widget getArrowDown({double iconPadding = 18, Color iconColor = grayDark}){
+  return Padding(
+    padding: EdgeInsets.all(iconPadding),
+    child: Icon(Icons.keyboard_arrow_down, size: 16, color: iconColor,),
+  );
+}
 
+Widget getArrowClose({double iconPadding = 18, Color iconColor = grayDark}){
+  return Padding(
+    padding: EdgeInsets.all(iconPadding),
+    child: Icon(Icons.close, size: 16, color: iconColor,),
+  );
+}
+
+Widget getDisplayFilterCategory(String title, List<String> listData){
+  return Container(
+    alignment: Alignment.center,
+    margin: const EdgeInsets.only(right: 10),
+    padding: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+    decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(12)
+    ),
+    child: Row(
+      children: [
+        Text(
+          title,
+          style: getMediumTextStyle(fontSize: 12, color: listData.isNotEmpty ? blue : grayDark),
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+        ),
+        const Gap(8),
+        Icon(Icons.keyboard_arrow_down_outlined, size: 24, color: black),
+      ],
+    ),
+  );
+}
