@@ -839,191 +839,6 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
     );
   }
 
-  void openFilterDialog(int isFor) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: white,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter setStateNew) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
-              child: Wrap(
-                children: <Widget>[
-
-                  Column(
-                    children: [
-                      Center(
-                        child: Text(isFor == 1 ? "Select Applicant" : "Select Broker",style: TextStyle(color: blue,fontSize: 18,fontWeight: FontWeight.w600),),
-                      ),
-                      const Gap(22),
-
-                      ListView.builder(
-                        itemCount: isFor == 1 ?  listApplicants.length : listBrokerFilter.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              if(isFor == 1)
-                              {
-                                setState(() {
-                                  selectedApplicantName = listApplicants[index];
-
-                                  selectedApplicant = listApplicants[index] ?? '';
-
-                                  listData = [];
-                                  listDataMain = [];
-
-                                  final result = userData['result'];
-                                  final parsedJson = result['portfolio'];
-                                  parsedJson.forEach((value){
-                                    Map<String,dynamic> valueData = value;
-                                    valueData.forEach((key, value) {
-                                      if(key == (selectedApplicant))
-                                      {
-                                        print("USER DATA ADDING IN IF == $key === $value");
-
-                                        var tpp = List<TempResponse>.empty(growable: true);
-                                        if(value !=null)
-                                        {
-                                          value.forEach((v) {
-                                            tpp.add(TempResponse.fromJson(v));
-                                          });
-                                          print("USER DATA ADDING IN IF == ${tpp.length}");
-                                          print("USER DATA ADDING IN IF == ${jsonEncode(tpp)}");
-                                          listDataMain.addAll(tpp);
-                                          listData = listData;
-                                        }
-                                      }
-                                    });
-                                  });
-                                });
-                              }
-                              else
-                              {
-                                setState(() {
-                                  selectedBroker = listBrokerFilter[index];
-                                });
-                              }
-                              _getPortfolioDataNew();
-                              Navigator.pop(context);
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                                  child: Text(
-                                    isFor == 1 ? listApplicants[index] : listBrokerFilter[index],
-                                    style: getMediumTextStyle(fontSize: 14, color: isFor == 1 ? (selectedApplicantName == listApplicants[index] ? blue : black) : (selectedBroker == listBrokerFilter[index] ? blue : black)),
-                                  ),
-                                ),
-                                const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          });
-        }
-    );
-  }
-
-  void openApplicantSelection() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: white,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 22),
-              child: Wrap(
-                children: <Widget>[
-                  
-                  Column(
-                    children: [
-                       const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text("Select Holder",style: TextStyle(color: blue,fontSize: 18,fontWeight: FontWeight.w600),)
-                        ],
-                      ),
-                      const Gap(22),
-                      ListView.builder(
-                        itemCount: listApplicants.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              Navigator.pop(context);
-                              setState(() {
-                                selectedApplicant = listApplicants[index] ?? '';
-
-                                listDataMain = [];
-                                listData = [];
-
-                                final result = userData['result'];
-                                final parsedJson = result['portfolio'];
-                                parsedJson.forEach((value){
-                                  Map<String,dynamic> valueData = value;
-                                  valueData.forEach((key, value) {
-                                    if(key == (selectedApplicant))
-                                    {
-                                      print("USER DATA ADDING IN IF == $key === $value");
-
-                                      var tpp = List<TempResponse>.empty(growable: true);
-                                      if(value !=null)
-                                        {
-                                          value.forEach((v) {
-                                            tpp.add(TempResponse.fromJson(v));
-                                          });
-                                          print("USER DATA ADDING IN IF == ${tpp.length}");
-                                          print("USER DATA ADDING IN IF == ${jsonEncode(tpp)}");
-                                          listDataMain.addAll(tpp);
-                                          listData = listDataMain;
-                                        }
-                                    }
-                                  });
-                                });
-                              });
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                                  child: Text(listApplicants[index] ?? '',style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16,color: blue),),
-                                ),
-                                const Divider(color: graySemiDark,thickness: 0.6,height: 0.6,)
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          });
-        }
-    );
-  }
 
   /*_getPortfolioData() async {
     setState(() {
@@ -1114,17 +929,14 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
       parsedJson.forEach((value){
         Map<String,dynamic> valueData = value;
         valueData.forEach((key, value) {
-          if(key == (selectedApplicant))
+          var tpp = List<TempResponse>.empty(growable: true);
+          if(value !=null)
           {
-            var tpp = List<TempResponse>.empty(growable: true);
-            if(value !=null)
-            {
-              value.forEach((v) {
-                tpp.add(TempResponse.fromJson(v));
-              });
-              listDataMain.addAll(tpp);
-              listData = listDataMain;
-            }
+            value.forEach((v) {
+              tpp.add(TempResponse.fromJson(v));
+            });
+            listDataMain.addAll(tpp);
+            listData = listDataMain;
           }
         });
       });
