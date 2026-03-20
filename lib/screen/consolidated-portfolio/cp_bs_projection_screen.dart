@@ -27,6 +27,7 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
 
   bool isLoading = false;
   bool isShowFullScreenCart = false;
+  bool isExpandedBalanceSheet =  false;
 
   List<BalanceSheetData> listBalanceSheetData = [];
   Inflows inflowsData = Inflows();
@@ -38,6 +39,8 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
   double chartWidth = 0.0;
 
   int bottomYearInterval = 0;
+
+  int balanceSheetCount = 0;
 
   @override
   void initState() {
@@ -379,8 +382,42 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
                         Divider(color: gray,),
                         const Gap(8),
                         Visibility(
-                            visible: (listBalanceSheetData.isNotEmpty),
-                            child: balanceSheetDataWidget()
+                          visible: (listBalanceSheetData.isNotEmpty),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              balanceSheetDataWidget(),
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  setState(() {
+                                    isExpandedBalanceSheet = !isExpandedBalanceSheet;
+                                    if(isExpandedBalanceSheet)
+                                    {
+                                      balanceSheetCount = listBalanceSheetData.length;
+                                    }
+                                    else
+                                    {
+                                      balanceSheetCount = 25;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                                  decoration: BoxDecoration(
+                                      color: blue,
+                                      borderRadius: BorderRadius.circular(8)
+                                  ),
+                                  child: Icon(
+                                    isExpandedBalanceSheet ? Icons.remove : Icons.add,
+                                    size: 18,
+                                    color: white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
                         ),
                         const Gap(10),
                         Center(
@@ -439,7 +476,7 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
               ],
             ),
             ListView.builder(
-              itemCount: listBalanceSheetData.length,
+              itemCount: balanceSheetCount,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(0),
@@ -481,6 +518,7 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
         final url = Uri.parse("https://portfolio.alphacapital.in/api/services/balance_sheet_projection");
         Map<String, String> jsonBody = {
           'user_id': sessionManagerPMS.getUserId().trim(),
+          "view_more": "1"
         };
 
         final response = await http.post(url, body: jsonBody);
@@ -494,6 +532,8 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
           if(dataResponse.balanceSheetData?.isNotEmpty ?? false)
           {
             listBalanceSheetData = dataResponse.balanceSheetData ?? [];
+            balanceSheetCount = listBalanceSheetData.length > 25 ? 25 : listBalanceSheetData.length;
+
             chartWidth  = listBalanceSheetData.length * pointWidth;
 
             final double rawMaxY = listBalanceSheetData.isNotEmpty ? listBalanceSheetData

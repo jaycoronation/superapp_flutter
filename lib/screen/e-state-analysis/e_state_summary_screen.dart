@@ -804,20 +804,10 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                                 color: blue,
                                 borderRadius: BorderRadius.circular(8)
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    isExpandedBalanceSheet ? Icons.remove : Icons.add,
-                                    size: 18,
-                                    color: white,
-                                  ),
-                                  const Gap(2),
-                                  Text(
-                                    isExpandedBalanceSheet ? "Show less" : "Show more",
-                                    style: getMediumTextStyle(fontSize: 12, color: white),
-                                  )
-                                ],
+                              child: Icon(
+                                isExpandedBalanceSheet ? Icons.remove : Icons.add,
+                                size: 18,
+                                color: white,
                               ),
                             ),
                           ),
