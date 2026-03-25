@@ -130,7 +130,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                             Expanded(
                               child: Text(
                                 "Aspiration Calculations :",
-                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                style: getBoldTextStyle(fontSize: 14, color: blue),
                               ),
                             ),
                             const Gap(8),
@@ -182,7 +182,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                             Expanded(
                               child: Text(
                                 "Existing Assets :",
-                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                style: getBoldTextStyle(fontSize: 14, color: blue),
                               ),
                             ),
                             const Gap(8),
@@ -234,7 +234,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                             Expanded(
                               child: Text(
                                 "Existing Liabilities :",
-                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                style: getBoldTextStyle(fontSize: 14, color: blue),
                               ),
                             ),
                             const Gap(8),
@@ -279,7 +279,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                             Expanded(
                               child: Text(
                                 "Future Inflow Calculation :",
-                                style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                                style: getBoldTextStyle(fontSize: 14, color: blue),
                               ),
                             ),
                             const Gap(8),
@@ -331,7 +331,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                           children: [
                             Text(
                               "Risk Profile :",
-                              style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                              style: getBoldTextStyle(fontSize: 14, color: blue),
                             ),
                             const Gap(8),
                             GestureDetector(
@@ -547,7 +547,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                       children: [
                         Text(
                           "Need Gap Analysis - Current :",
-                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                          style: getBoldTextStyle(fontSize: 14, color: blue),
                         ),
                         Container(
                           height: 350,
@@ -748,7 +748,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                       children: [
                         Text(
                           "Our Recommendation :",
-                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                          style: getBoldTextStyle(fontSize: 14, color: blue),
                         ),
                         const Gap(16),
                         ourRecommendationWidget(),
@@ -776,7 +776,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                       children: [
                         Text(
                           "Balance Sheet Projection :",
-                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                          style: getBoldTextStyle(fontSize: 14, color: blue),
                         ),
                         const Gap(16),
                         balanceSheetDataWidget(),
@@ -898,24 +898,33 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 1122,
+        width: 1129,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
-                rowCellTitle("Start-End Year", white, width: 150),
-                rowCellTitle("Total Outflow", white, width: 150),
-                rowCellTitle("Inflation adjusted outflow", white, width: 150),
-                rowCellTitle("Wealth required today", white, width: 150),
-                rowCellTitle("Volatile Component", white, width: 120),
-                rowCellTitle("Target Return", white, width: 120),
-                rowCellTitle("Monthly SIP", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                  showLineDivider(),
+                  rowCellTitle("Start-End Year", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Total Outflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Inflation adjusted outflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Wealth required today", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Volatile Component", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Target Return", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Monthly SIP", white, width: 120),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: listAspirationSummary.length,
@@ -924,31 +933,50 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final aspirationData = listAspirationSummary[index];
-                return Row(
-                  children: [
-                    rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
-                    rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, aspirationData.volatileComponent ?? "", width: 120, maxLine: 2),
-                    rowCell(index, aspirationData.targetReturn ?? "", width: 120, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount("${aspirationData.requiredSip}")}", width: 120, maxLine: 2),
-                  ],
+                bool isLastIndex = index == listAspirationSummary.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, aspirationData.volatileComponent ?? "", width: 120, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, aspirationData.targetReturn ?? "", width: 120, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount("${aspirationData.requiredSip}")}", width: 120, maxLine: 2),
+                    ],
+                  ),
                 );
               },
             ),
-            Row(
-              children: [
-                rowCell(listAspirationSummary.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "", width: 150, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount(aspirationsSummaryTotal.totalOutflow ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount(aspirationsSummaryTotal.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount(aspirationsSummaryTotal.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "${aspirationsSummaryTotal.volatileComponent}", width: 120, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "${aspirationsSummaryTotal.targetReturn}", width: 120, maxLine: 1, isBold: true),
-                rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount("${aspirationsSummaryTotal.requiredSip}")}", width: 120, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listAspirationSummary.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount(aspirationsSummaryTotal.totalOutflow ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount(aspirationsSummaryTotal.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount(aspirationsSummaryTotal.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "${aspirationsSummaryTotal.volatileComponent}", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "${aspirationsSummaryTotal.targetReturn}", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listAspirationSummary.length, "${convertCommaSeparatedAmount("${aspirationsSummaryTotal.requiredSip}")}", width: 120, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             )
           ],
         ),
@@ -961,19 +989,23 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 452,
+        width: 454,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Investment Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
-                rowCellTitle("Asset Type", white, width: 120),
-                rowCellTitle("Current Value", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Investment Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
+                  showLineDivider(),
+                  rowCellTitle("Asset Type", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Current Value", white, width: 150),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: listNetWorth.length,
@@ -982,21 +1014,29 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final existingNetWorthData = listNetWorth[index];
-                return Row(
-                  children: [
-                    rowCell(index, existingNetWorthData.investmentType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
-                    rowCell(index, "${existingNetWorthData.assetType}", width: 120, maxLine: 1),
-                    rowCell(index, "${convertCommaSeparatedAmount(existingNetWorthData.currentValue ?? "")}", width: 150, maxLine: 1),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, existingNetWorthData.investmentType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${existingNetWorthData.assetType}", width: 120, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(existingNetWorthData.currentValue ?? "")}", width: 150, maxLine: 1),
+                    ],
+                  ),
                 );
               },
             ),
-            Row(
-              children: [
-                rowCell(listNetWorth.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true),
-                rowCell(listNetWorth.length, "", width: 120, maxLine: 1, isBold: true),
-                rowCell(listNetWorth.length, "${convertCommaSeparatedAmount(listNetWorthTotal.currentValue ?? "")}", width: 150, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listNetWorth.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listNetWorth.length, "", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listNetWorth.length, "${convertCommaSeparatedAmount(listNetWorthTotal.currentValue ?? "")}", width: 150, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             )
           ],
         ),
@@ -1009,19 +1049,23 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 452,
+        width: 454,
         decoration: BoxDecoration(
-            border: listLiabilities.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: listLiabilities.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Liability Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
-                rowCellTitle("Asset Type", white, width: 120),
-                rowCellTitle("Current Value", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Liability Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
+                  showLineDivider(),
+                  rowCellTitle("Asset Type", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Current Value", white, width: 150),
+                ],
+              ),
             ),
             listLiabilities.isEmpty ?
             Container(
@@ -1041,22 +1085,30 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final existingLiabilitiesData = listLiabilities[index];
-                return Row(
-                  children: [
-                    rowCell(index, existingLiabilitiesData.liabilityType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
-                    rowCell(index, "${existingLiabilitiesData.assetType}", width: 120, maxLine: 1),
-                    rowCell(index, "${convertCommaSeparatedAmount(existingLiabilitiesData.currentValue ?? "")}", width: 150, maxLine: 1),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, existingLiabilitiesData.liabilityType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${existingLiabilitiesData.assetType}", width: 120, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(existingLiabilitiesData.currentValue ?? "")}", width: 150, maxLine: 1),
+                    ],
+                  ),
                 );
               },
             ),
             if(listLiabilities.isNotEmpty)
-            Row(
-              children: [
-                rowCell(listLiabilities.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true),
-                rowCell(listLiabilities.length, "", width: 120, maxLine: 1, isBold: true),
-                rowCell(listLiabilities.length, "${convertCommaSeparatedAmount(summaryData.liabilitiesData?.totalLiabilities ?? "")}", width: 150, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listLiabilities.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listLiabilities.length, "", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listLiabilities.length, "${convertCommaSeparatedAmount(summaryData.liabilitiesData?.totalLiabilities ?? "")}", width: 150, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             )
           ],
         ),
@@ -1069,22 +1121,29 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 902,
+        width: 907,
         decoration: BoxDecoration(
-            border: listFutureInflow.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: listFutureInflow.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
-                rowCellTitle("Duration", white, width: 120),
-                rowCellTitle("Amount", white, width: 150),
-                rowCellTitle("Expected Growth", white, width: 150),
-                rowCellTitle("Inflation Adjusted Income", white, width: 150),
-                rowCellTitle("PV of Income", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
+                  showLineDivider(),
+                  rowCellTitle("Duration", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Amount", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Expected Growth", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Inflation Adjusted Income", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("PV of Income", white, width: 150),
+                ],
+              ),
             ),
             listFutureInflow.isEmpty ?
             Container(
@@ -1104,28 +1163,42 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final futureInflowData = listFutureInflow[index];
-                return Row(
-                  children: [
-                    rowCell(index, futureInflowData.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
-                    rowCell(index, "${futureInflowData.startYear} - ${futureInflowData.endYear}", width: 120, maxLine: 1),
-                    rowCell(index, "${convertCommaSeparatedAmount(futureInflowData.amount ?? "")}", width: 150, maxLine: 1),
-                    rowCell(index, futureInflowData.expectedGrowth ?? "", width: 150, maxLine: 1),
-                    rowCell(index, "${convertCommaSeparatedAmount(futureInflowData.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1),
-                    rowCell(index, "${convertCommaSeparatedAmount(futureInflowData.pvOfIncome ?? "")}", width: 150, maxLine: 1),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, futureInflowData.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${futureInflowData.startYear} - ${futureInflowData.endYear}", width: 120, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(futureInflowData.amount ?? "")}", width: 150, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, futureInflowData.expectedGrowth ?? "", width: 150, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(futureInflowData.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(futureInflowData.pvOfIncome ?? "")}", width: 150, maxLine: 1),
+                    ],
+                  ),
                 );
               },
             ),
             if(listFutureInflow.isNotEmpty)
-            Row(
-              children: [
-                rowCell(listFutureInflow.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true),
-                rowCell(listFutureInflow.length, "", width: 120, maxLine: 1, isBold: true),
-                rowCell(listFutureInflow.length, "${convertCommaSeparatedAmount(futureInflowTotal.amount ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listFutureInflow.length, "", width: 150, maxLine: 1, isBold: true),
-                rowCell(listFutureInflow.length, "${convertCommaSeparatedAmount(futureInflowTotal.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listFutureInflow.length, "${convertCommaSeparatedAmount(futureInflowTotal.pvOfIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listFutureInflow.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listFutureInflow.length, "", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listFutureInflow.length, "${convertCommaSeparatedAmount(futureInflowTotal.amount ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listFutureInflow.length, "", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listFutureInflow.length, "${convertCommaSeparatedAmount(futureInflowTotal.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listFutureInflow.length, "${convertCommaSeparatedAmount(futureInflowTotal.pvOfIncome ?? "")}", width: 150, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             ),
           ],
         ),
@@ -1159,19 +1232,23 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 352,
+        width: 354,
         decoration: BoxDecoration(
-            border: listRiskProfileAllocation.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: listRiskProfileAllocation.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 120),
-                rowCellTitle("Allocation", white, width: 110),
-                rowCellTitle("Expected Return", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Allocation", white, width: 110),
+                  showLineDivider(),
+                  rowCellTitle("Expected Return", white, width: 120),
+                ],
+              ),
             ),
             listRiskProfileAllocation.isEmpty ?
             Container(
@@ -1192,12 +1269,17 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               itemBuilder: (context, index) {
                 final suggestedData = listRiskProfileAllocation[index];
                 final isTotal = (suggestedData.assetClass ?? "") == "Total";
-                return Row(
-                  children: [
-                    rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 120, isBold: isTotal),
-                    rowCell(index, "${suggestedData.allocation}", width: 110, isBold: isTotal),
-                    rowCell(index, suggestedData.expectedReturn ?? "", width: 120, isBold: isTotal),
-                  ],
+                final bool isLastItem = index == listRiskProfileAllocation.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 120, isBold: isTotal, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, "${suggestedData.allocation}", width: 110, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, suggestedData.expectedReturn ?? "", width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
+                    ],
+                  ),
                 );
               },
             ),
@@ -1212,20 +1294,25 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 502,
+        width: 505,
         decoration: BoxDecoration(
-            border: listReturnOfRisk.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: listReturnOfRisk.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Range of Return", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
-                rowCellTitle("1 Year", white, width: 120),
-                rowCellTitle("3 Years", white, width: 120),
-                rowCellTitle("5 Years", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Range of Return", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
+                  showLineDivider(),
+                  rowCellTitle("1 Year", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("3 Years", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("5 Years", white, width: 120),
+                ],
+              ),
             ),
 
             listReturnOfRisk.isEmpty ?
@@ -1246,13 +1333,19 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final returnOfRiskData = listReturnOfRisk[index];
-                return Row(
-                  children: [
-                    rowCell(index, returnOfRiskData.rangeOfReturn ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 140),
-                    rowCell(index, returnOfRiskData.oneYear ?? "", width: 120),
-                    rowCell(index, returnOfRiskData.threeYear ?? "", width: 120),
-                    rowCell(index, returnOfRiskData.fiveYear ?? "", width: 120),
-                  ],
+                final bool isLastItem = index == listReturnOfRisk.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, returnOfRiskData.rangeOfReturn ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 140, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, returnOfRiskData.oneYear ?? "", width: 120),
+                      showLineDivider(),
+                      rowCell(index, returnOfRiskData.threeYear ?? "", width: 120),
+                      showLineDivider(),
+                      rowCell(index, returnOfRiskData.fiveYear ?? "", width: 120, isLastIndexRight: isLastItem),
+                    ],
+                  ),
                 );
               },
             ),
@@ -1267,19 +1360,23 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 452,
+        width: 454,
         decoration: BoxDecoration(
-            border: listOurRecommendation.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: listOurRecommendation.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
-                rowCellTitle("Allocation", white, width: 120),
-                rowCellTitle("Expected Returns", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
+                  showLineDivider(),
+                  rowCellTitle("Allocation", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Expected Returns", white, width: 150),
+                ],
+              ),
             ),
 
             listOurRecommendation.isEmpty ?
@@ -1300,21 +1397,29 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final ourRecommendationData = listOurRecommendation[index];
-                return Row(
-                  children: [
-                    rowCell(index, ourRecommendationData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
-                    rowCell(index, "${ourRecommendationData.allocationPct}%", width: 120, maxLine: 1),
-                    rowCell(index, "${ourRecommendationData.expectedReturn}%", width: 150, maxLine: 1),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, ourRecommendationData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${ourRecommendationData.allocationPct}%", width: 120, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${ourRecommendationData.expectedReturn}%", width: 150, maxLine: 1),
+                    ],
+                  ),
                 );
               },
             ),
-            Row(
-              children: [
-                rowCell(listOurRecommendation.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true),
-                rowCell(listOurRecommendation.length, "${summaryData.recommendationTable?.summary?.totalAllocationPct ?? ""}%", width: 120, maxLine: 1, isBold: true),
-                rowCell(listOurRecommendation.length, "${summaryData.recommendationTable?.summary?.overallExpectedReturn ?? ""}%", width: 150, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listOurRecommendation.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listOurRecommendation.length, "${summaryData.recommendationTable?.summary?.totalAllocationPct ?? ""}%", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listOurRecommendation.length, "${summaryData.recommendationTable?.summary?.overallExpectedReturn ?? ""}%", width: 150, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             )
           ],
         ),
@@ -1327,23 +1432,31 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 1002,
+        width: 1008,
         decoration: BoxDecoration(
-            border: listBalanceSheetData.isEmpty ? Border.all(color: gray) : Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+          border: listBalanceSheetData.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Year", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
-                rowCellTitle("Opening Balance", white, width: 150),
-                rowCellTitle("Outflow", white, width: 150),
-                rowCellTitle("Fresh Inflow", white, width: 150),
-                rowCellTitle("Expected Profit", white, width: 150),
-                rowCellTitle("Closing Balance", white, width: 150),
-                rowCellTitle("Present Value", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Year", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
+                  showLineDivider(),
+                  rowCellTitle("Opening Balance", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Outflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Fresh Inflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Expected Profit", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Closing Balance", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Present Value", white, width: 150),
+                ],
+              ),
             ),
 
             listBalanceSheetData.isEmpty ?
@@ -1364,16 +1477,25 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final balanceData = listBalanceSheetData[index];
-                return Row(
-                  children: [
-                    rowCell(index, "${balanceData.year}", alignment: Alignment.centerLeft, isPadding: true, width: 100),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.openingBalance}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.outflow}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.freshInflow}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.expectedProfit}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.closingBalance}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.presentValue}") , width: 150),
-                  ],
+                final bool isLastIndex = index == balanceSheetCount - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, "${balanceData.year}", alignment: Alignment.centerLeft, isPadding: true, width: 100, isLastIndexLeft: isLastIndex),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.openingBalance}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.outflow}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.freshInflow}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.expectedProfit}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.closingBalance}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.presentValue}") , width: 150, isLastIndexRight: isLastIndex),
+                    ],
+                  ),
                 );
               },
             )
@@ -1388,20 +1510,25 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 602,
+        width: 605,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
-                rowCellTitle("Suggested Allocation", white, width: 120),
-                rowCellTitle("Existing Allocation", white, width: 150),
-                rowCellTitle("Variance", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 180),
+                  showLineDivider(),
+                  rowCellTitle("Suggested Allocation", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Existing Allocation", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Variance", white, width: 150),
+                ],
+              ),
             ),
 
             listMacroAllocation.isEmpty ?
@@ -1423,13 +1550,19 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
               itemBuilder: (context, index) {
                 final macroAllocationData = listMacroAllocation[index];
                 final variationValue = double.tryParse("${macroAllocationData.variation}") ?? 0;
-                return Row(
-                  children: [
-                    rowCell(index, macroAllocationData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1),
-                    rowCell(index, "${macroAllocationData.recommendedAllocation}%", width: 120, maxLine: 1),
-                    rowCell(index, "${macroAllocationData.allocation ?? ""}%", width: 150, maxLine: 1),
-                    rowCell(index, "${macroAllocationData.variation ?? ""}%", titleColor: getValueColor(variationValue), width: 150, maxLine: 1),
-                  ],
+                final bool isLastIndex = index == listMacroAllocation.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, macroAllocationData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 180, maxLine: 1, isLastIndexLeft: isLastIndex),
+                      showLineDivider(),
+                      rowCell(index, "${macroAllocationData.recommendedAllocation}%", width: 120, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${macroAllocationData.allocation ?? ""}%", width: 150, maxLine: 1),
+                      showLineDivider(),
+                      rowCell(index, "${macroAllocationData.variation ?? ""}%", titleColor: getValueColor(variationValue), width: 150, maxLine: 1, isLastIndexRight: isLastIndex),
+                    ],
+                  ),
                 );
               },
             ),
@@ -1585,21 +1718,21 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
         isLoading = true;
       });
 
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
+      final url = Uri.parse(API_URL_ANALYSIS + summaryDataApi);
+      Map<String, String> jsonBody = {
+        'user_id': sessionManager.getUserId().toString().trim(),
+      };
+      final response = await http.post(url, body: jsonBody);
+      final statusCode = response.statusCode;
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = FpSummaryDataResponseModel.fromJson(user);
+
       try
       {
-        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-          HttpLogger(logLevel: LogLevel.BODY),
-        ]);
-        final url = Uri.parse(API_URL_ANALYSIS + summaryDataApi);
-        Map<String, String> jsonBody = {
-          'user_id': sessionManager.getUserId().toString().trim(),
-        };
-        final response = await http.post(url, body: jsonBody);
-        final statusCode = response.statusCode;
-        final body = response.body;
-        Map<String, dynamic> user = jsonDecode(body);
-        var dataResponse = FpSummaryDataResponseModel.fromJson(user);
-
         if(statusCode == 200 && dataResponse.success == 1)
         {
           summaryData = dataResponse.summaryData ?? SummaryData();
@@ -1644,7 +1777,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
             //================ Current Wealth ================
 
             final requiredRawCurrent = double.tryParse(summaryData.wealthMetrics?.requiredAmount?.trim() ?? "0",) ?? 0;
-            final existingRawCurrent = summaryData.wealthMetrics?.existingAmount ?? 0;
+            final existingRawCurrent = double.tryParse(summaryData.wealthMetrics?.existingAmount ?? "") ?? 0;
             final maxRawCurrent = [requiredRawCurrent, existingRawCurrent].reduce((a, b) => a > b ? a : b);
 
             amountFormatter = getFormatter(double.tryParse("$maxRawCurrent") ?? 0);
@@ -1666,7 +1799,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
             //================ Future Wealth ================
 
             final requiredRawFuture = double.tryParse(summaryData.wealthMetrics?.requiredAmount?.trim() ?? "0",) ?? 0;
-            final totalRawFuture = summaryData.wealthMetrics?.totalAmount ?? 0;
+            final totalRawFuture = double.tryParse(summaryData.wealthMetrics?.totalAmount ?? "") ?? 0;
             final maxRawFuture = [requiredRawFuture, totalRawFuture].reduce((a, b) => a > b ? a : b);
 
             amountFormatter = getFormatter(double.tryParse("$maxRawFuture") ?? 0);
@@ -1688,7 +1821,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
         }
         else
         {
-         showToast("${dataResponse.message}");
+          showToast("${dataResponse.message}");
         }
       }
       catch(e)

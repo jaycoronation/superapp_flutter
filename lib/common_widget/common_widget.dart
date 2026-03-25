@@ -77,17 +77,19 @@ Widget getBottomSheetHeaderWithoutButton2(BuildContext context, String title, {C
   );
 }
 
-Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1}) {
+Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1, double radius = 14, bool isLastIndexLeft = false, bool isLastIndexRight = false}) {
   return Container(
     width: width,
     height: maxLine > 1 ? 60 : 40 ,
     alignment: alignment,
-    padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.all(0),
+    padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.only(left: 4, right: 4),
     decoration: BoxDecoration(
-      color: index % 2 == 0 ? listBg : white,
+     // color: index % 2 == 0 ? listBg : white,
+      color: white,
       border: Border(
-        bottom: BorderSide(color: grayLight),
+        bottom: BorderSide(color: blue),
       ),
+      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(isLastIndexLeft ? radius : 0), bottomRight: Radius.circular(isLastIndexRight ? radius : 0))
     ),
     child: isRow ?
     Row(
@@ -120,20 +122,25 @@ Widget rowCellLoading(int index, {double width = 160,}) {
   );
 }
 
-Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false,}){
+Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, double radius = 14}){
   return Container(
     width: width,
     height: 40,
     alignment: alignment,
-    padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.all(0),
+    padding: const EdgeInsets.only(top: 10, bottom: 10, left: 8, right: 8),
     decoration: BoxDecoration(
       color: bgColor,
       border: Border(
-        bottom: BorderSide(color: grayLight),
+        bottom: BorderSide(color: blue),
       ),
+      borderRadius: BorderRadius.only(topLeft: Radius.circular(radius), topRight: Radius.circular(radius))
     ),
     child: Text(title, style: getSemiBoldTextStyle(fontSize: 12, color: titleColor), textAlign: TextAlign.center,),
   );
+}
+
+Widget showLineDivider(){
+  return VerticalDivider(color: blue, width: 1, thickness: 1,);
 }
 
 Widget getArrowDown({double iconPadding = 18, Color iconColor = grayDark}){

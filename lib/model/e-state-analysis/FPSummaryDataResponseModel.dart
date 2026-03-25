@@ -1055,31 +1055,31 @@ String wealthMetricsToJson(WealthMetrics data) => json.encode(data.toJson());
 class WealthMetrics {
   WealthMetrics({
       String? requiredAmount, 
-      num? existingAmount, 
-      num? totalAmount,}){
+      String? existingAmount,
+      String? totalAmount,}){
     _requiredAmount = requiredAmount;
     _existingAmount = existingAmount;
     _totalAmount = totalAmount;
 }
 
   WealthMetrics.fromJson(dynamic json) {
-    _requiredAmount = json['required_amount'];
-    _existingAmount = json['existing_amount'];
-    _totalAmount = json['total_amount'];
+    _requiredAmount = json['required_amount']is int || json['required_amount']is double ? json['required_amount'].toString() : json['required_amount'];
+    _existingAmount = json['existing_amount']is int || json['existing_amount']is double ? json['existing_amount'].toString() : json['existing_amount'];
+    _totalAmount = json['total_amount'] is int ? json['total_amount'].toString() : json['total_amount'];
   }
   String? _requiredAmount;
-  num? _existingAmount;
-  num? _totalAmount;
+  String? _existingAmount;
+  String? _totalAmount;
 WealthMetrics copyWith({  String? requiredAmount,
-  num? existingAmount,
-  num? totalAmount,
+  String? existingAmount,
+  String? totalAmount,
 }) => WealthMetrics(  requiredAmount: requiredAmount ?? _requiredAmount,
   existingAmount: existingAmount ?? _existingAmount,
   totalAmount: totalAmount ?? _totalAmount,
 );
   String? get requiredAmount => _requiredAmount;
-  num? get existingAmount => _existingAmount;
-  num? get totalAmount => _totalAmount;
+  String? get existingAmount => _existingAmount;
+  String? get totalAmount => _totalAmount;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -1741,7 +1741,7 @@ class AspirationsSummaryList {
     _userId = json['user_id'];
     _startYear = json['start_year'];
     _endYear = json['end_year'];
-    _periodicity = json['periodicity'];
+    _periodicity = json['periodicity'] is int ? json['periodicity'].toString() : json['periodicity'];
     _amount = json['amount'];
     _aspirationType = json['aspiration_type'];
     _classification = json['classification'];
@@ -2103,7 +2103,7 @@ class AspirationsClassified {
     _userId = json['user_id'];
     _startYear = json['start_year'];
     _endYear = json['end_year'];
-    _periodicity = json['periodicity'];
+    _periodicity = json['periodicity'] is int ? json['periodicity'].toString() : json['periodicity'];
     _amount = json['amount'];
     _aspirationType = json['aspiration_type'];
     _classification = json['classification'];

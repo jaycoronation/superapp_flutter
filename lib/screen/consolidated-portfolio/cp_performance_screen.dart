@@ -137,35 +137,29 @@ class _CpPerformanceScreenState extends BaseState<CpPerformanceScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 672,
+        width: 676,
         decoration: BoxDecoration(
-            border: ((isFor == 1 && listSinceInceptionNew.isEmpty) || (isFor == 2 && listCurrentYearXIRRNew.isEmpty) || (isFor == 3 && listPreviousYearXIRRNew.isEmpty)) ? Border.all(color: gray) :
-            Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Assets", white, alignment: Alignment.centerLeft, isPadding: true, width: 130),
-                rowCellTitle("Invested Amount", white, width: 140),
-                rowCellTitle("Current Value", white, width: 140),
-                rowCellTitle("Gain", white, width: 140),
-                rowCellTitle("XIRR", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Assets", white, alignment: Alignment.centerLeft, isPadding: true, width: 130),
+                  showLineDivider(),
+                  rowCellTitle("Invested Amount", white, width: 140),
+                  showLineDivider(),
+                  rowCellTitle("Current Value", white, width: 140),
+                  showLineDivider(),
+                  rowCellTitle("Gain", white, width: 140),
+                  showLineDivider(),
+                  rowCellTitle("XIRR", white, width: 120),
+                ],
+              ),
             ),
             isFor == 1 ?
-            listSinceInceptionNew.isEmpty ?
-            Container(
-              height: 100,
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Center(
-                child: Text(
-                  "No Data Found",
-                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
-                ),
-              ),
-            ) :
             ListView.builder(
               itemCount: listSinceInceptionNew.length,
               shrinkWrap: true,
@@ -175,29 +169,25 @@ class _CpPerformanceScreenState extends BaseState<CpPerformanceScreen> {
                 final performanceData = listSinceInceptionNew[index];
                 final isTotal = (performanceData.asset ?? "") == "Overall";
                 final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
-                return Row(
-                  children: [
-                    rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
-                    rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal),
-                  ],
+                final bool isLastItem = index == listSinceInceptionNew.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, "${performanceData.asset}", width: 130, isBold: isTotal, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}"), width: 140, isBold: isTotal,),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}"), width: 140, isBold: isTotal,),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}"), width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
+                    ],
+                  ),
                 );
               },
             ) :
             isFor == 2 ?
-            listCurrentYearXIRRNew.isEmpty ?
-            Container(
-              height: 100,
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Center(
-                child: Text(
-                  "No Data Found",
-                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
-                ),
-              ),
-            ) :
             ListView.builder(
               itemCount: listCurrentYearXIRRNew.length,
               shrinkWrap: true,
@@ -207,27 +197,23 @@ class _CpPerformanceScreenState extends BaseState<CpPerformanceScreen> {
                 final performanceData = listCurrentYearXIRRNew[index];
                 final isTotal = (performanceData.asset ?? "") == "Overall";
                 final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
-                return Row(
-                  children: [
-                    rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
-                    rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal),
-                  ],
+                final bool isLastItem = index == listCurrentYearXIRRNew.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
+                    ],
+                  ),
                 );
               },
-            ) :
-            listPreviousYearXIRRNew.isEmpty ?
-            Container(
-              height: 100,
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Center(
-                child: Text(
-                  "No Data Found",
-                  style: getMediumTextStyle(fontSize: 14, color: blackLight),
-                ),
-              ),
             ) :
             ListView.builder(
               itemCount: listPreviousYearXIRRNew.length,
@@ -238,14 +224,21 @@ class _CpPerformanceScreenState extends BaseState<CpPerformanceScreen> {
                 final performanceData = listPreviousYearXIRRNew[index];
                 final isTotal = (performanceData.asset ?? "") == "Overall";
                 final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
-                return Row(
-                  children: [
-                    rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
-                    rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal),
-                  ],
+                final bool isLastItem = index == listPreviousYearXIRRNew.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
+                    ],
+                  ),
                 );
               },
             )

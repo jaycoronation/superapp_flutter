@@ -1,22 +1,19 @@
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:superapp_flutter/screen/common/about_app.dart';
-import 'package:superapp_flutter/screen/common/client_task_list.dart';
-import 'package:superapp_flutter/screen/common/edit_profile_page.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/screen/common/locate_us.dart';
+import 'package:superapp_flutter/screen/common/video_list_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/colors.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
-import '../RecommendationListScreen.dart';
+import '../insurance_data/insurance_list_screen.dart';
 import 'DocumentsScreen.dart';
-import 'SummaryScreen.dart';
+import 'SuggestedActionsScreen.dart';
+import 'blogs_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -115,45 +112,6 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () async {
-                        startActivity(context, const ClientTaskListScreen());
-                      },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Open Tasks – Status",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async {
                         startActivity(context, const DocumentsScreen());
                       },
                       child: Column(
@@ -192,81 +150,31 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        startActivity(context, const SummaryScreen());
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const InsuranceListScreen()),);
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Summary",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("Insurance")
+                    ),
+                    GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SuggestedActionsScreen()),);
+                        },
+                        child: optionWidget("Suggested Actions")
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        startActivity(context, const RecommendationListScreen());
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Recommendation",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("Videos")
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()));
+                      },
+                      child: optionWidget("Blogs")
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -503,6 +411,31 @@ class _ProfilePageState extends BaseState<ProfilePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget optionWidget(String title){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(title, style: getMediumTextStyle(fontSize: 16, color: black),),
+              ),
+              Image.asset(
+                'assets/images/ic_arrow_right.png',
+                width: 16,
+                height: 16,
+              ),
+              const Gap(12)
+            ],
+          ),
+        ),
+        const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+      ],
     );
   }
 

@@ -217,7 +217,7 @@ class ListData {
     _userId = json['user_id'];
     _startYear = json['start_year'];
     _endYear = json['end_year'];
-    _periodicity = json['periodicity'];
+    _periodicity = json['periodicity'] is int ? json['periodicity'].toString() : json['periodicity'];
     _amount = json['amount'];
     _aspirationType = json['aspiration_type'];
     _classification = json['classification'];

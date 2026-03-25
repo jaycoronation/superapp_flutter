@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
@@ -18,7 +17,7 @@ import '../../widget/no_data.dart';
 import '../../widget/no_internet.dart';
 
 class EStateAspirationPage extends StatefulWidget {
-  const EStateAspirationPage({Key? key}) : super(key: key);
+  const EStateAspirationPage({super.key});
 
   @override
   _EStateAspirationPageState createState() => _EStateAspirationPageState();
@@ -392,23 +391,31 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 1002,
+        width: 1008,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
-                rowCellTitle("Start-End Year", white, width: 150),
-                rowCellTitle("Total Outflow", white, width: 150),
-                rowCellTitle("Inflation adjusted outflow", white, width: 150),
-                rowCellTitle("Wealth required today", white, width: 150),
-                rowCellTitle("Volatile Component", white, width: 120),
-                rowCellTitle("Target Return", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                  showLineDivider(),
+                  rowCellTitle("Start-End Year", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Total Outflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Inflation adjusted outflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Wealth required today", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Volatile Component", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Target Return", white, width: 120),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: listData.length,
@@ -417,29 +424,45 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final aspirationData = listData[index];
-                return Row(
-                  children: [
-                    rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
-                    rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, aspirationData.volatileComponent ?? "", width: 120, maxLine: 2),
-                    rowCell(index, aspirationData.targetReturn ?? "", width: 120, maxLine: 2),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, aspirationData.volatileComponent ?? "", width: 120, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, aspirationData.targetReturn ?? "", width: 120, maxLine: 2),
+                    ],
+                  ),
                 );
               },
             ),
-            Row(
-              children: [
-                rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true),
-                rowCell(listData.length, "", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalOutflow ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${totalAspiration.volatileComponent}", width: 120, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${totalAspiration.targetReturn}", width: 120, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalOutflow ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${totalAspiration.volatileComponent}", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${totalAspiration.targetReturn}", width: 120, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             )
           ],
         ),

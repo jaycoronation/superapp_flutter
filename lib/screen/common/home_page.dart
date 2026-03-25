@@ -12,7 +12,6 @@ import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
-import 'package:superapp_flutter/screen/common/video_player_page.dart';
 import 'package:superapp_flutter/screen/insurance_data/insurance_list_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
@@ -33,7 +32,6 @@ import '../e-state-analysis/e_state_analysis_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
 import 'LoginScreen.dart';
 import 'SuggestedActionsScreen.dart';
-import 'blog_detail_page.dart';
 import 'blogs_page.dart';
 import 'contact_page.dart';
 import 'video_list_page.dart';
@@ -77,8 +75,8 @@ class _HomePageState extends BaseState<HomePage> {
     print("<><> SESS :: ${sessionManager.getUserId()} <><> ${sessionManagerPMS.getUserId()} <><> ${sessionManagerVault.getUserId()}");
     print("<><> SESS :: ${sessionManagerPMS.getFirstName()} <><> ${sessionManagerPMS.getLastName()}");
     print("<><> userType :: ${userType}");
-    fetchYoutubeVideosList();
-    fetchBlogList();
+    // fetchYoutubeVideosList();
+    // fetchBlogList();
   }
 
   setData(){
@@ -92,8 +90,8 @@ class _HomePageState extends BaseState<HomePage> {
       CommonValueModel(title: "Contact", description: "Get in Touch", image: "assets/images/ic_contact.png", id: "6"),
       // CommonValueModel(title: "Blogs", description: "Blogs", image: "assets/images/ic_blog.png", id: "7"),
       // CommonValueModel(title: "Videos", description: "Videos", image: "assets/images/ic_videos.png", id: "8"),
-      CommonValueModel(title: "Insurance", description: "My Insurance", image: "assets/images/ic_insurance.png", id: "9"),
-      CommonValueModel(title: "Suggested Actions", description: "Suggested Actions", image: "assets/images/portfolio_ic_capital_gain.png", id: "10"),
+      // CommonValueModel(title: "Insurance", description: "My Insurance", image: "assets/images/ic_insurance.png", id: "9"),
+      // CommonValueModel(title: "Suggested Actions", description: "Suggested Actions", image: "assets/images/portfolio_ic_capital_gain.png", id: "10"),
     ];
     print("Display list data length : ${listDashboardData.length}");
   }
@@ -202,7 +200,7 @@ class _HomePageState extends BaseState<HomePage> {
             const Gap(10),
             GridView.builder(
               itemCount: listDashboardData.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 164),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 166),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               physics: NeverScrollableScrollPhysics(),
@@ -807,7 +805,7 @@ class _HomePageState extends BaseState<HomePage> {
             // const Gap(15),
 
             const Gap(16),
-            Row(
+            /*Row(
               children: [
                 Expanded(
                   child: Text(
@@ -980,7 +978,7 @@ class _HomePageState extends BaseState<HomePage> {
                   ),
                 );
               },
-            ),
+            ),*/
             Container(
               alignment: Alignment.center,
               child: Image.asset(

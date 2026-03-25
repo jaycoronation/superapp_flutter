@@ -1,17 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestTransactionResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
-import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
@@ -313,6 +310,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
 
     final url = Uri.parse(API_URL_CP + latestTransaction);
     Map<String, String> jsonBody = {
+      "type": "last_four_month",
       'user_id': sessionManagerPMS.getUserId().trim(),
     };
 

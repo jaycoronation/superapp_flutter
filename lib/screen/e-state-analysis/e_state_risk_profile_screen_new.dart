@@ -375,19 +375,23 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 352,
+        width: 354,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 120),
-                rowCellTitle("Allocation", white, width: 110),
-                rowCellTitle("Expected Return", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Allocation", white, width: 110),
+                  showLineDivider(),
+                  rowCellTitle("Expected Return", white, width: 120),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: listRiskProfileAllocation.length,
@@ -397,12 +401,17 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
               itemBuilder: (context, index) {
                 final suggestedData = listRiskProfileAllocation[index];
                 final isTotal = (suggestedData.assetClass ?? "") == "Total";
-                return Row(
-                  children: [
-                    rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 120, isBold: isTotal),
-                    rowCell(index, "${suggestedData.allocation}", width: 110, isBold: isTotal),
-                    rowCell(index, suggestedData.expectedReturn ?? "", width: 120, isBold: isTotal),
-                  ],
+                final bool isLastIndex = index == listRiskProfileAllocation.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 120, isBold: isTotal, isLastIndexLeft: isLastIndex),
+                      showLineDivider(),
+                      rowCell(index, "${suggestedData.allocation}", width: 110, isBold: isTotal),
+                      showLineDivider(),
+                      rowCell(index, suggestedData.expectedReturn ?? "", width: 120, isBold: isTotal, isLastIndexRight: isLastIndex),
+                    ],
+                  ),
                 );
               },
             ),
@@ -417,20 +426,25 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 502,
+        width: 505,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Range of Return", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
-                rowCellTitle("1 Year", white, width: 120),
-                rowCellTitle("3 Years", white, width: 120),
-                rowCellTitle("5 Years", white, width: 120),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Range of Return", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
+                  showLineDivider(),
+                  rowCellTitle("1 Year", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("3 Years", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("5 Years", white, width: 120),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: listReturnOfRisk.length,
@@ -439,13 +453,19 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final returnOfRiskData = listReturnOfRisk[index];
-                return Row(
-                  children: [
-                    rowCell(index, returnOfRiskData.rangeOfReturn ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 140),
-                    rowCell(index, returnOfRiskData.oneYear ?? "", width: 120),
-                    rowCell(index, returnOfRiskData.threeYear ?? "", width: 120),
-                    rowCell(index, returnOfRiskData.fiveYear ?? "", width: 120),
-                  ],
+                final bool isLastIndex = index == listReturnOfRisk.length - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, returnOfRiskData.rangeOfReturn ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 140, isLastIndexLeft: isLastIndex),
+                      showLineDivider(),
+                      rowCell(index, returnOfRiskData.oneYear ?? "", width: 120),
+                      showLineDivider(),
+                      rowCell(index, returnOfRiskData.threeYear ?? "", width: 120),
+                      showLineDivider(),
+                      rowCell(index, returnOfRiskData.fiveYear ?? "", width: 120, isLastIndexRight: isLastIndex),
+                    ],
+                  ),
                 );
               },
             ),

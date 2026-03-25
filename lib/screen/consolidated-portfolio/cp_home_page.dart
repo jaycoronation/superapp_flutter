@@ -5,35 +5,28 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:provider/provider.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/GenerateReportResponseModel.dart';
-import 'package:superapp_flutter/screen/common/SuggestedActionsScreen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/asset/AssetListScreen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_movement.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_projection_screen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_capital_gain.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_dashboard.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_fund_house_allocation.dart';
-import 'package:superapp_flutter/screen/consolidated-portfolio/cp_latest_sip.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_latest_transaction.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_networth.dart';
-import 'package:superapp_flutter/screen/consolidated-portfolio/cp_performance_screen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_portfolio.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_scheme_allocation.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_sip_and_stp_screen.dart';
-import 'package:superapp_flutter/service/UpdateData.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
-import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
@@ -178,16 +171,18 @@ class CPHomePageState extends BaseState<CPHomePage> {
           unselectedLabelStyle: const TextStyle(color: black, fontSize: 13, height: 1.5, fontWeight: FontWeight.w400),
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          onTap: _onItemTapped,
+          onTap: (value) {
+            _onItemTapped(context, value);
+          },
         ),
       ),
     );
   }
 
-  void _onItemTapped(int value) {
+  void _onItemTapped(BuildContext context, int value) {
     if (value == 3)
       {
-        openDocumentShareSheet();
+        openDocumentShareSheet(context);
       }
     else
       {
@@ -197,7 +192,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
       }
   }
 
-  void openDocumentShareSheet() {
+  void openDocumentShareSheet(BuildContext context,) {
     showModalBottomSheet(
         constraints: const BoxConstraints(
           maxWidth: 600,
@@ -206,8 +201,8 @@ class CPHomePageState extends BaseState<CPHomePage> {
         backgroundColor: white,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
         context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (BuildContext context, StateSetter setStatenew) {
+        builder: (ctx) {
+          return StatefulBuilder(builder: (BuildContext ctx, StateSetter setStatenew) {
             return Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 25),
               child: Wrap(
@@ -218,7 +213,8 @@ class CPHomePageState extends BaseState<CPHomePage> {
                         children: [
                           InkWell(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPBsMovementPage()));
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPBsMovementPage()),);
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
@@ -244,6 +240,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                           const Gap(12),
                           InkWell(
                             onTap: (){
+                              Navigator.pop(context);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const CpBsProjectionScreen()));
                             },
                             child: Container(
@@ -313,58 +310,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                           //     ),
                           //   ),
                           // ),
-                          // const Gap(12),
-                          // const Divider(
-                          //   height: 0.5,
-                          //   thickness: 0.5,
-                          //   color: divider_color,
-                          // ),
-                          // const Gap(12),
-                          // InkWell(
-                          //   onTap: (){
-                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CPSchemeAllocationPage()));
-                          //   },
-                          //   child: Container(
-                          //     padding: const EdgeInsets.all(8),
-                          //     child: Row(
-                          //       children: [
-                          //         Image.asset('assets/images/portfolio_ic_scheme_name.png', width: 24, height: 24,color: blue),
-                          //         Container(width: 12),
-                          //         const Text(
-                          //           "Scheme Allocation",
-                          //           textAlign: TextAlign.start,
-                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          // const Gap(12),
-                          // const Divider(
-                          //   height: 0.5,
-                          //   thickness: 0.5,
-                          //   color: divider_color,
-                          // ),
-                          // const Gap(12),
-                          // InkWell(
-                          //   onTap: (){
-                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CPFundHouseAllocationPage()));
-                          //   },
-                          //   child: Container(
-                          //     padding: const EdgeInsets.all(8),
-                          //     child: Row(
-                          //       children: [
-                          //         Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
-                          //         Container(width: 12),
-                          //         const Text(
-                          //           "Fund House Allocation",
-                          //           textAlign: TextAlign.start,
-                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
+
 
                           const Gap(12),
                           const Divider(
@@ -375,16 +321,17 @@ class CPHomePageState extends BaseState<CPHomePage> {
                           const Gap(12),
                           InkWell(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CpPerformanceScreen()));
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPLatestTransactionPage()));
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               child: Row(
                                 children: [
-                                  Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
+                                  Image.asset('assets/images/portfolio_ic_transaction.png', width: 24, height: 24,color: blue),
                                   Container(width: 12),
                                   const Text(
-                                    "Performance",
+                                    "Last 30 Days Transactions",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
                                   )
@@ -401,6 +348,89 @@ class CPHomePageState extends BaseState<CPHomePage> {
                           const Gap(12),
                           InkWell(
                             onTap: (){
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPSchemeAllocationPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_scheme_name.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Scheme Allocation",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CPFundHouseAllocationPage()));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
+                                  Container(width: 12),
+                                  const Text(
+                                    "Fund House Allocation",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.pop(context);
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CpPerformanceScreen()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_performance.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Performance",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          const Gap(12),
+                          const Divider(
+                            height: 0.5,
+                            thickness: 0.5,
+                            color: divider_color,
+                          ),
+                          const Gap(12),
+                          InkWell(
+                            onTap: (){
+                              Navigator.pop(context);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const CPCapitalGainPage()));
                             },
                             child: Container(
@@ -427,6 +457,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                           const Gap(12),
                           InkWell(
                             onTap: (){
+                              Navigator.pop(context);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const CpSipAndStpScreen()));
                             },
                             child: Container(
@@ -479,6 +510,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                           const Gap(12),
                           InkWell(
                             onTap: (){
+                              Navigator.pop(context);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const AssetListScreen()));
                             },
                             child: Container(

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/analysis_api_end_point.dart';
@@ -205,22 +204,29 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 882,
+        width: 887,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
-                rowCellTitle("Duration", white, width: 150),
-                rowCellTitle("Amount", white, width: 150),
-                rowCellTitle("PV of Income", white, width: 120),
-                rowCellTitle("Expected Growth", white, width: 150),
-                rowCellTitle("Inflation Adjusted Income", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                  showLineDivider(),
+                  rowCellTitle("Duration", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Amount", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("PV of Income", white, width: 120),
+                  showLineDivider(),
+                  rowCellTitle("Expected Growth", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Inflation Adjusted Income", white, width: 150),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: futureInflowsReport.futureInflowList?.length,
@@ -229,27 +235,41 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final reportListData = futureInflowsReport.futureInflowList?[index];
-                return Row(
-                  children: [
-                    rowCell(index, reportListData?.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
-                    rowCell(index, "${reportListData?.startYear} - ${reportListData?.endYear}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(reportListData?.amount ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, reportListData?.expectedGrowth ?? "", width: 120, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(reportListData?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 2),
-                    rowCell(index, "${convertCommaSeparatedAmount(reportListData?.pvOfIncome ?? "")}", width: 150, maxLine: 2),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, reportListData?.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${reportListData?.startYear} - ${reportListData?.endYear}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.amount ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, reportListData?.expectedGrowth ?? "", width: 120, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 2),
+                      showLineDivider(),
+                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.pvOfIncome ?? "")}", width: 150, maxLine: 2),
+                    ],
+                  ),
                 );
               },
             ),
-            Row(
-              children: [
-                rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true),
-                rowCell(listData.length, "-", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${convertCommaSeparatedAmount("$totalAmount")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "-", width: 120, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
-                rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.pvOfIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "-", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount("$totalAmount")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "-", width: 120, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  showLineDivider(),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.pvOfIncome ?? "")}", width: 150, maxLine: 1, isBold: true, isLastIndexRight: true),
+                ],
+              ),
             )
           ],
         ),

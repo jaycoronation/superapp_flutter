@@ -148,21 +148,37 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 992,
+        width: 998,
         decoration: BoxDecoration(
             border:  listData.isEmpty ?
-            Border.all(color: gray) :
-            Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            Border.all(color: blue) :
+            Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Fund Name", white, alignment: Alignment.centerLeft, isPadding: true, width: 240),
-                rowCellTitle("Folio No", white, width: 150),
-                ...lastFourMonths.map((m) => rowCellTitle(m, white, width: 150)),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Fund Name", white, alignment: Alignment.centerLeft, isPadding: true, width: 240),
+                  showLineDivider(),
+                  rowCellTitle("Folio No", white, width: 150),
+                  showLineDivider(),
+                  // ...lastFourMonths.map((m) => rowCellTitle(m, white, width: 150)),
+                  ...List.generate(lastFourMonths.length * 2 - 1, (i) {
+                    if (i.isOdd)
+                    {
+                      return showLineDivider();
+                    }
+                    else
+                    {
+                      final monthIndex = i ~/ 2;
+                      final month = lastFourMonths[monthIndex];
+                      return rowCellTitle(month, white, width: 150);
+                    }
+                  }),
+                ],
+              ),
             ),
             listData.isEmpty ?
             Container(
@@ -183,7 +199,10 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
               itemBuilder: (context, index) {
                 final transactionData = listData[index];
 
-                if (transactionData.isHeader) {
+                final bool isLastItem = index == listData.length - 1;
+
+                if (transactionData.isHeader)
+                {
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(8),
@@ -195,15 +214,39 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
                   );
                 }
 
-                return Row(
-                  children: [
-                    rowCell(index, transactionData.schemeName, alignment: Alignment.centerLeft, isPadding: true, width: 240,  maxLine: 2, isBold: transactionData.isTotal == true),
-                    rowCell(index, transactionData.folioNo, width: 150, maxLine: 2, isBold: transactionData.isTotal == true),
-                    ...lastFourMonths.map((m) {
-                      final value = transactionData.monthlyAmounts[m] ?? 0.0;
-                      return rowCell(index, convertCommaSeparatedAmount(value.toString()), width: 150, maxLine: 2, isBold: transactionData.isTotal == true);
-                    }),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, transactionData.schemeName, alignment: Alignment.centerLeft, isPadding: true, width: 240,  maxLine: 2, isBold: transactionData.isTotal == true, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, transactionData.folioNo, width: 150, maxLine: 2, isBold: transactionData.isTotal == true),
+                      showLineDivider(),
+                      ...List.generate(lastFourMonths.length * 2 - 1, (i) {
+                        if (i.isOdd)
+                        {
+                          return showLineDivider();
+                        }
+                        else
+                        {
+                          final monthIndex = i ~/ 2;
+                          final month = lastFourMonths[monthIndex];
+                          final value = transactionData.monthlyAmounts[month] ?? 0.0;
+                          return rowCell(
+                            index,
+                            convertCommaSeparatedAmount(value.toString()),
+                            width: 150,
+                            maxLine: 2,
+                            isBold: transactionData.isTotal == true,
+                            isLastIndexRight: isLastItem && monthIndex == lastFourMonths.length - 1,
+                          );
+                        }
+                      }),
+                      // ...lastFourMonths.map((m) {
+                      //   final value = transactionData.monthlyAmounts[m] ?? 0.0;
+                      //   return rowCell(index, convertCommaSeparatedAmount(value.toString()), width: 150, maxLine: 2, isBold: transactionData.isTotal == true, isLastIndexRight: isLastItem);
+                      // }),
+                    ],
+                  ),
                 );
               },
             ),

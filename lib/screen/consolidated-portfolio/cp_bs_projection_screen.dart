@@ -457,23 +457,31 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 1002,
+        width: 1008,
         decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: gray), left: BorderSide(color: gray), right: BorderSide(color: gray)),
-            borderRadius: BorderRadius.circular(4)
+            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+            borderRadius: BorderRadius.circular(14)
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                rowCellTitle("Year", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
-                rowCellTitle("Opening Balance", white, width: 150),
-                rowCellTitle("Outflow", white, width: 150),
-                rowCellTitle("Fresh Inflow", white, width: 150),
-                rowCellTitle("Expected Profit", white, width: 150),
-                rowCellTitle("Closing Balance", white, width: 150),
-                rowCellTitle("Present Value", white, width: 150),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                children: [
+                  rowCellTitle("Year", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
+                  showLineDivider(),
+                  rowCellTitle("Opening Balance", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Outflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Fresh Inflow", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Expected Profit", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Closing Balance", white, width: 150),
+                  showLineDivider(),
+                  rowCellTitle("Present Value", white, width: 150),
+                ],
+              ),
             ),
             ListView.builder(
               itemCount: balanceSheetCount,
@@ -482,16 +490,25 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
               padding: const EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 final balanceData = listBalanceSheetData[index];
-                return Row(
-                  children: [
-                    rowCell(index, "${balanceData.year}", alignment: Alignment.centerLeft, isPadding: true, width: 100),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.openingBalance}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.outflow}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.freshInflow}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.expectedProfit}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.closingBalance}") , width: 150),
-                    rowCell(index, convertCommaSeparatedAmount("${balanceData.presentValue}") , width: 150),
-                  ],
+                final bool isLastItem = index == balanceSheetCount - 1;
+                return IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      rowCell(index, "${balanceData.year}", alignment: Alignment.centerLeft, isPadding: true, width: 100, isLastIndexLeft: isLastItem),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.openingBalance}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.outflow}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.freshInflow}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.expectedProfit}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.closingBalance}") , width: 150),
+                      showLineDivider(),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.presentValue}") , width: 150, isLastIndexRight: isLastItem),
+                    ],
+                  ),
                 );
               },
             )
