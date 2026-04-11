@@ -25,6 +25,7 @@ const Color whiteLight = Color(0xfff6f2f2);
 const Color gray = Color(0xffD3DADC);
 const Color grayLight= Color(0xffe0e0e0);
 const Color graySemiDark= Color(0xff9F9F9F);
+const Color bgFpLead= Color(0xfff9f9f9);
 const Color grayDark= Color(0xff72716d);
 const Color blue= Color(0xff2042FE);
 const Color divider_color = Color(0xffbec7ff);

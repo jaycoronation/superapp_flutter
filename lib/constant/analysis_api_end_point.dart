@@ -41,3 +41,10 @@ String generateFinalReport = "generateReport/";
 
 //summary data
 String summaryDataApi = "getSuperappData";
+
+//fp leads
+String fPUserLeadAPI = "user/direct_user_list";
+String addFPUserLead = "user/direct_user_save";
+String deleteFPUserLead = "user/direct_user_delete";
+String linkFPUserLead = "user/direct_user_link";
+String unLinkFPUserLead = "user/direct_user_unlink";

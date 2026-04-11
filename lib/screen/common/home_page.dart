@@ -12,6 +12,7 @@ import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
+import 'package:superapp_flutter/screen/e-state-analysis/rm_fp_lead_screen.dart';
 import 'package:superapp_flutter/screen/insurance_data/insurance_list_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constant/colors.dart';
@@ -248,10 +249,7 @@ class _HomePageState extends BaseState<HomePage> {
                       //consolidated portfolio
                       if(userType == "client")
                       {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CPHomePage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
                       }
                       else
                       {
@@ -263,16 +261,14 @@ class _HomePageState extends BaseState<HomePage> {
                       //financial planning
                       if(userType == "client")
                       {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EStateAnalysisHomePage()),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
                         lastInsertedModule("login-estate-analysis");
                       }
                       else
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+                        //RM(broker) user
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RmFpLeadScreen()));
+                        //Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
                       }
                     }
                     else if(data.id == "4")
@@ -280,11 +276,7 @@ class _HomePageState extends BaseState<HomePage> {
                       //estate value
                       if(sessionManager.getUserType() == "client")
                       {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const EStateVaultHomePage()),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()),);
                         lastInsertedModule("login-estate-vault");
                       }
                       else
@@ -307,29 +299,17 @@ class _HomePageState extends BaseState<HomePage> {
                     else if(data.id == "6")
                     {
                       //contact
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ContactPage()),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactPage()),);
                     }
                     else if(data.id == "7")
                     {
                       //blogs
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const BlogsPage()),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()),);
                     }
                     else if(data.id == "8")
                     {
                       //videos
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const VideoListPage()),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
                     }
                     else if(data.id == "9")
                     {

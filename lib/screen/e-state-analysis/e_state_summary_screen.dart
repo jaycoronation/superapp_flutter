@@ -24,7 +24,8 @@ import 'e_state_add_future_inflow_page.dart';
 import '../../model/e-state-analysis/FutureInflowListResponseModel.dart';
 
 class EStateSummaryScreen extends StatefulWidget {
-  const EStateSummaryScreen({super.key});
+  final String userId;
+  const EStateSummaryScreen(this.userId, {super.key});
 
   @override
   BaseState<EStateSummaryScreen> createState() => _EStateSummaryScreenState();
@@ -79,8 +80,12 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   double requiredWealthFuture = 0;
   double totalWealthFuture = 0;
 
+  String userId = "";
+
   @override
   void initState() {
+    userId = (widget as EStateSummaryScreen).userId;
+    //userId = sessionManager.getUserId().toString().trim();
     fetchFPSummaryData();
     super.initState();
   }
@@ -755,7 +760,8 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         const Gap(10),
                         Center(
                           child: Text(
-                            "*Expected return may or may not come in future due to market risk",
+                            "*Expected return may or may not come in future due to marke"
+                                "t risk",
                             style: getRegularTextStyle(fontSize: 12, color: blackLight),
                             textAlign: TextAlign.center,
                           ),
@@ -1718,21 +1724,22 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
         isLoading = true;
       });
 
-      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-        HttpLogger(logLevel: LogLevel.BODY),
-      ]);
-      final url = Uri.parse(API_URL_ANALYSIS + summaryDataApi);
-      Map<String, String> jsonBody = {
-        'user_id': sessionManager.getUserId().toString().trim(),
-      };
-      final response = await http.post(url, body: jsonBody);
-      final statusCode = response.statusCode;
-      final body = response.body;
-      Map<String, dynamic> user = jsonDecode(body);
-      var dataResponse = FpSummaryDataResponseModel.fromJson(user);
-
       try
       {
+
+        HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+          HttpLogger(logLevel: LogLevel.BODY),
+        ]);
+        final url = Uri.parse(API_URL_ANALYSIS + summaryDataApi);
+        Map<String, String> jsonBody = {
+          'user_id': userId,
+        };
+        final response = await http.post(url, body: jsonBody);
+        final statusCode = response.statusCode;
+        final body = response.body;
+        Map<String, dynamic> user = jsonDecode(body);
+        var dataResponse = FpSummaryDataResponseModel.fromJson(user);
+
         if(statusCode == 200 && dataResponse.success == 1)
         {
           summaryData = dataResponse.summaryData ?? SummaryData();
@@ -1777,6 +1784,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
             //================ Current Wealth ================
 
             final requiredRawCurrent = double.tryParse(summaryData.wealthMetrics?.requiredAmount?.trim() ?? "0",) ?? 0;
+            // final existingRawCurrent = summaryData.wealthMetrics?.existingAmount ?? 0;
             final existingRawCurrent = double.tryParse(summaryData.wealthMetrics?.existingAmount ?? "") ?? 0;
             final maxRawCurrent = [requiredRawCurrent, existingRawCurrent].reduce((a, b) => a > b ? a : b);
 
@@ -1799,6 +1807,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
             //================ Future Wealth ================
 
             final requiredRawFuture = double.tryParse(summaryData.wealthMetrics?.requiredAmount?.trim() ?? "0",) ?? 0;
+            // final totalRawFuture = summaryData.wealthMetrics?.totalAmount ?? 0;
             final totalRawFuture = double.tryParse(summaryData.wealthMetrics?.totalAmount ?? "") ?? 0;
             final maxRawFuture = [requiredRawFuture, totalRawFuture].reduce((a, b) => a > b ? a : b);
 

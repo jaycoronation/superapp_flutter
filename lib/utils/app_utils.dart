@@ -692,6 +692,71 @@ Widget getBottomSheetHeaderWithoutButton(BuildContext context,String title){
   );
 }
 
+Widget getBottomSheetHeaderWithCloseIcon(BuildContext context, String title, VoidCallback onCloseTap, {Color titleColor = blue, double fontSize = 18}) {
+  return Container(
+    margin: EdgeInsets.only(top: 4),
+    width: MediaQuery.of(context).size.width,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 2,
+          width: 50,
+          alignment: Alignment.center,
+          color: textFieldBorder,
+          margin: const EdgeInsets.only(bottom: 4),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 10, bottom: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(title, style: TextStyle(fontSize: fontSize, color: titleColor, fontWeight: FontWeight.w600)),
+              ),
+              const Gap(12),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  onCloseTap();
+                },
+                child: Image.asset("assets/images/ic_close.png", height: 24, width: 24, color: black,),
+              )
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget commonSearchTextField(TextEditingController controller, String hintText, Function(String)? onChanged, Function(String)? onFieldSubmitted, VoidCallback? closeTap, {FocusNode? focusNode}){
+  return TextFormField(
+    cursorColor: black,
+    focusNode: focusNode,
+    controller: controller,
+    textInputAction: TextInputAction.search,
+    onChanged: onChanged,
+    onFieldSubmitted: onFieldSubmitted,
+    decoration: InputDecoration(
+      filled: true,
+      fillColor: white,
+      hintText: hintText,
+      contentPadding: const EdgeInsets.only(top: 16, bottom: 16),
+      prefixIcon: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Icon(Icons.search),
+      ),
+      suffixIcon: controller.text.isNotEmpty
+          ? GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: ()  => closeTap?.call(),
+        child: getArrowClose(iconColor: black),
+      ) : null,
+    ),
+  );
+}
+
 Column getBottomSheetItemWithoutSelection(String title,bool isSelected,bool isDividerVisible) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,

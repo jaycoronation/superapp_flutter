@@ -7,13 +7,13 @@ AspirationResponseModel aspirationResponseModelFromJson(String str) => Aspiratio
 String aspirationResponseModelToJson(AspirationResponseModel data) => json.encode(data.toJson());
 class AspirationResponseModel {
   AspirationResponseModel({
-      Aspirations? aspirations, 
-      String? message, 
-      num? success,}){
+    Aspirations? aspirations,
+    String? message,
+    num? success,}){
     _aspirations = aspirations;
     _message = message;
     _success = success;
-}
+  }
 
   AspirationResponseModel.fromJson(dynamic json) {
     _aspirations = json['aspirations'] != null ? Aspirations.fromJson(json['aspirations']) : null;
@@ -23,13 +23,13 @@ class AspirationResponseModel {
   Aspirations? _aspirations;
   String? _message;
   num? _success;
-AspirationResponseModel copyWith({  Aspirations? aspirations,
-  String? message,
-  num? success,
-}) => AspirationResponseModel(  aspirations: aspirations ?? _aspirations,
-  message: message ?? _message,
-  success: success ?? _success,
-);
+  AspirationResponseModel copyWith({  Aspirations? aspirations,
+    String? message,
+    num? success,
+  }) => AspirationResponseModel(  aspirations: aspirations ?? _aspirations,
+    message: message ?? _message,
+    success: success ?? _success,
+  );
   Aspirations? get aspirations => _aspirations;
   String? get message => _message;
   num? get success => _success;
@@ -53,11 +53,11 @@ Aspirations aspirationsFromJson(String str) => Aspirations.fromJson(json.decode(
 String aspirationsToJson(Aspirations data) => json.encode(data.toJson());
 class Aspirations {
   Aspirations({
-      List<ListData>? listData, 
-      Total? total,}){
+    List<ListData>? listData,
+    Total? total,}){
     _listData = listData;
     _total = total;
-}
+  }
 
   Aspirations.fromJson(dynamic json) {
     if (json['list'] != null) {
@@ -70,11 +70,11 @@ class Aspirations {
   }
   List<ListData>? _listData;
   Total? _total;
-Aspirations copyWith({  List<ListData>? listData,
-  Total? total,
-}) => Aspirations(  listData: listData ?? _listData,
-  total: total ?? _total,
-);
+  Aspirations copyWith({  List<ListData>? listData,
+    Total? total,
+  }) => Aspirations(  listData: listData ?? _listData,
+    total: total ?? _total,
+  );
   List<ListData>? get listData => _listData;
   Total? get total => _total;
 
@@ -102,19 +102,19 @@ Total totalFromJson(String str) => Total.fromJson(json.decode(str));
 String totalToJson(Total data) => json.encode(data.toJson());
 class Total {
   Total({
-      String? aspirationType, 
-      String? totalOutflow, 
-      String? totalInflationAdjustedExpense, 
-      String? wealthRequiredTodayTotal, 
-      String? volatileComponent, 
-      String? targetReturn,}){
+    String? aspirationType,
+    String? totalOutflow,
+    String? totalInflationAdjustedExpense,
+    String? wealthRequiredTodayTotal,
+    String? volatileComponent,
+    String? targetReturn,}){
     _aspirationType = aspirationType;
     _totalOutflow = totalOutflow;
     _totalInflationAdjustedExpense = totalInflationAdjustedExpense;
     _wealthRequiredTodayTotal = wealthRequiredTodayTotal;
     _volatileComponent = volatileComponent;
     _targetReturn = targetReturn;
-}
+  }
 
   Total.fromJson(dynamic json) {
     _aspirationType = json['aspiration_type'];
@@ -130,19 +130,19 @@ class Total {
   String? _wealthRequiredTodayTotal;
   String? _volatileComponent;
   String? _targetReturn;
-Total copyWith({  String? aspirationType,
-  String? totalOutflow,
-  String? totalInflationAdjustedExpense,
-  String? wealthRequiredTodayTotal,
-  String? volatileComponent,
-  String? targetReturn,
-}) => Total(  aspirationType: aspirationType ?? _aspirationType,
-  totalOutflow: totalOutflow ?? _totalOutflow,
-  totalInflationAdjustedExpense: totalInflationAdjustedExpense ?? _totalInflationAdjustedExpense,
-  wealthRequiredTodayTotal: wealthRequiredTodayTotal ?? _wealthRequiredTodayTotal,
-  volatileComponent: volatileComponent ?? _volatileComponent,
-  targetReturn: targetReturn ?? _targetReturn,
-);
+  Total copyWith({  String? aspirationType,
+    String? totalOutflow,
+    String? totalInflationAdjustedExpense,
+    String? wealthRequiredTodayTotal,
+    String? volatileComponent,
+    String? targetReturn,
+  }) => Total(  aspirationType: aspirationType ?? _aspirationType,
+    totalOutflow: totalOutflow ?? _totalOutflow,
+    totalInflationAdjustedExpense: totalInflationAdjustedExpense ?? _totalInflationAdjustedExpense,
+    wealthRequiredTodayTotal: wealthRequiredTodayTotal ?? _wealthRequiredTodayTotal,
+    volatileComponent: volatileComponent ?? _volatileComponent,
+    targetReturn: targetReturn ?? _targetReturn,
+  );
   String? get aspirationType => _aspirationType;
   String? get totalOutflow => _totalOutflow;
   String? get totalInflationAdjustedExpense => _totalInflationAdjustedExpense;
@@ -182,20 +182,20 @@ ListData listDataFromJson(String str) => ListData.fromJson(json.decode(str));
 String listDataToJson(ListData data) => json.encode(data.toJson());
 class ListData {
   ListData({
-      String? aspirationId, 
-      String? userId, 
-      String? startYear, 
-      String? endYear, 
-      String? periodicity, 
-      String? amount, 
-      String? aspirationType, 
-      String? classification, 
-      String? otherAspiration, 
-      String? totalOutflow, 
-      String? totalInflationAdjustedExpense, 
-      String? wealthRequiredTodayTotal, 
-      String? volatileComponent, 
-      String? targetReturn,}){
+    String? aspirationId,
+    String? userId,
+    String? startYear,
+    String? endYear,
+    String? periodicity,
+    String? amount,
+    String? aspirationType,
+    String? classification,
+    String? otherAspiration,
+    String? totalOutflow,
+    String? totalInflationAdjustedExpense,
+    String? wealthRequiredTodayTotal,
+    String? volatileComponent,
+    String? targetReturn,}){
     _aspirationId = aspirationId;
     _userId = userId;
     _startYear = startYear;
@@ -210,14 +210,14 @@ class ListData {
     _wealthRequiredTodayTotal = wealthRequiredTodayTotal;
     _volatileComponent = volatileComponent;
     _targetReturn = targetReturn;
-}
+  }
 
   ListData.fromJson(dynamic json) {
     _aspirationId = json['aspiration_id'];
     _userId = json['user_id'];
     _startYear = json['start_year'];
     _endYear = json['end_year'];
-    _periodicity = json['periodicity'] is int ? json['periodicity'].toString() : json['periodicity'];
+    _periodicity = json['periodicity'];
     _amount = json['amount'];
     _aspirationType = json['aspiration_type'];
     _classification = json['classification'];
@@ -242,35 +242,35 @@ class ListData {
   String? _wealthRequiredTodayTotal;
   String? _volatileComponent;
   String? _targetReturn;
-ListData copyWith({  String? aspirationId,
-  String? userId,
-  String? startYear,
-  String? endYear,
-  String? periodicity,
-  String? amount,
-  String? aspirationType,
-  String? classification,
-  String? otherAspiration,
-  String? totalOutflow,
-  String? totalInflationAdjustedExpense,
-  String? wealthRequiredTodayTotal,
-  String? volatileComponent,
-  String? targetReturn,
-}) => ListData(  aspirationId: aspirationId ?? _aspirationId,
-  userId: userId ?? _userId,
-  startYear: startYear ?? _startYear,
-  endYear: endYear ?? _endYear,
-  periodicity: periodicity ?? _periodicity,
-  amount: amount ?? _amount,
-  aspirationType: aspirationType ?? _aspirationType,
-  classification: classification ?? _classification,
-  otherAspiration: otherAspiration ?? _otherAspiration,
-  totalOutflow: totalOutflow ?? _totalOutflow,
-  totalInflationAdjustedExpense: totalInflationAdjustedExpense ?? _totalInflationAdjustedExpense,
-  wealthRequiredTodayTotal: wealthRequiredTodayTotal ?? _wealthRequiredTodayTotal,
-  volatileComponent: volatileComponent ?? _volatileComponent,
-  targetReturn: targetReturn ?? _targetReturn,
-);
+  ListData copyWith({  String? aspirationId,
+    String? userId,
+    String? startYear,
+    String? endYear,
+    String? periodicity,
+    String? amount,
+    String? aspirationType,
+    String? classification,
+    String? otherAspiration,
+    String? totalOutflow,
+    String? totalInflationAdjustedExpense,
+    String? wealthRequiredTodayTotal,
+    String? volatileComponent,
+    String? targetReturn,
+  }) => ListData(  aspirationId: aspirationId ?? _aspirationId,
+    userId: userId ?? _userId,
+    startYear: startYear ?? _startYear,
+    endYear: endYear ?? _endYear,
+    periodicity: periodicity ?? _periodicity,
+    amount: amount ?? _amount,
+    aspirationType: aspirationType ?? _aspirationType,
+    classification: classification ?? _classification,
+    otherAspiration: otherAspiration ?? _otherAspiration,
+    totalOutflow: totalOutflow ?? _totalOutflow,
+    totalInflationAdjustedExpense: totalInflationAdjustedExpense ?? _totalInflationAdjustedExpense,
+    wealthRequiredTodayTotal: wealthRequiredTodayTotal ?? _wealthRequiredTodayTotal,
+    volatileComponent: volatileComponent ?? _volatileComponent,
+    targetReturn: targetReturn ?? _targetReturn,
+  );
   String? get aspirationId => _aspirationId;
   String? get userId => _userId;
   String? get startYear => _startYear;
