@@ -164,7 +164,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                 padding: const EdgeInsets.all(0),
                 itemBuilder: (context, index) {
 
-                  final listData = listUserLead[index];
+                  final getSetData = listUserLead[index];
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 10),
@@ -180,7 +180,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                           children: [
                             Expanded(
                               child: Text(
-                                "${listData.name ?? ""} (${listData.age}Yrs)",
+                                "${getSetData.name ?? ""} (${getSetData.age}Yrs)",
                                 style: getMediumTextStyle(fontSize: 14, color: black),
                               ),
                             ),
@@ -188,7 +188,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                _redirectToNextPage(context, listData, true);
+                                _redirectToNextPage(context, getSetData, true);
                               },
                               child: Image.asset(
                                 "assets/images/fin_plan_ic_edit_gray.png",
@@ -201,7 +201,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                             GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                deleteListData(1, listData, index);
+                                deleteListData(1, getSetData, index);
                               },
                               child: Image.asset(
                                 "assets/images/fin_plan_ic_delete_black.png",
@@ -223,7 +223,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                                 children: [
                                   Text("RM", style: getMediumTextStyle(fontSize: 12, color: black),),
                                   const Gap(2),
-                                  Text("${listData.portfolioRmName}", style: getMediumTextStyle(fontSize: 12, color: blue),)
+                                  Text("${getSetData.portfolioRmName}", style: getMediumTextStyle(fontSize: 12, color: blue),)
                                 ],
                               ),
                             ),
@@ -234,7 +234,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                                 children: [
                                   Text("City", style: getMediumTextStyle(fontSize: 12, color: black),),
                                   const Gap(2),
-                                  Text("${listData.city}", style: getMediumTextStyle(fontSize: 12, color: blue),)
+                                  Text("${getSetData.city}", style: getMediumTextStyle(fontSize: 12, color: blue),)
                                 ],
                               ),
                             ),
@@ -253,7 +253,8 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                                   GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => EStateSummaryScreen(listData.userId ?? "")));
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => EStateSummaryScreen(listData.userId ?? "")));
+                                      openPage(getSetData);
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(8),
@@ -277,11 +278,11 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                                 children: [
                                   Text("Linked With Client", style: getMediumTextStyle(fontSize: 12, color: black),),
                                   const Gap(2),
-                                  (listData.isLinked != "1") ?
+                                  (getSetData.isLinked != "1") ?
                                   GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () {
-                                      openLinkClientDialog(listData);
+                                      openLinkClientDialog(getSetData);
                                     },
                                     child: Text(
                                       "Link",
@@ -298,14 +299,14 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${listData.linkedPortfolioName ?? ""} (${listData.linkedPortfolioUsername ?? ""})",
+                                        "${getSetData.linkedPortfolioName ?? ""} (${getSetData.linkedPortfolioUsername ?? ""})",
                                         style: getMediumTextStyle(fontSize: 12, color: blackLight),
                                       ),
                                       const Gap(10),
                                       GestureDetector(
                                         behavior: HitTestBehavior.opaque,
                                         onTap: () {
-                                          deleteListData(2, listData, index);
+                                          deleteListData(2, getSetData, index);
                                         },
                                         child: Text(
                                           "UnLink",
@@ -445,9 +446,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    getBottomSheetHeaderWithCloseIcon(context, "Link Client - ${getSet.name}", fontSize: 14, () {
-                      Navigator.pop(context);
-                    },),
+                    getBottomSheetHeaderWithoutButton(context, "Link Client - ${getSet.name}"),
                     Text("Client*", style: getMediumTextStyle(fontSize: 14, color: blackLight),),
                     const Gap(8),
                     TextField(
@@ -478,7 +477,8 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                           Navigator.pop(context);
                         },
                       ),
-                    )
+                    ),
+                    const Gap(20),
                   ],
                 ),
               ),
@@ -869,6 +869,18 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
     {
       noInterNet(context);
     }
+  }
+
+  Future<void> openPage(UserLeadData getSetData) async {
+    await sessionManager.createLoginSession(
+        getSetData.userId ?? '',
+        getSetData.firstName ?? '',
+        getSetData.email ?? '',
+        getSetData.mobile ?? '',
+        '',
+        false);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+
   }
 
   @override

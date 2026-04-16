@@ -80,7 +80,6 @@ class _RmFpAddLeadScreenState extends BaseState<RmFpAddLeadScreen> {
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
-        toolbarHeight: 55,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
           onTap: () {
@@ -90,11 +89,11 @@ class _RmFpAddLeadScreenState extends BaseState<RmFpAddLeadScreen> {
         ),
         title: getTitle("Add Financial Lead",),
         centerTitle: true,
-        elevation: 2,
+        elevation: 0,
         backgroundColor: white,
       ),
       body: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,6 +102,7 @@ class _RmFpAddLeadScreenState extends BaseState<RmFpAddLeadScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Gap(12),
                     TextField(
                       cursorColor: black,
                       controller: nameController,

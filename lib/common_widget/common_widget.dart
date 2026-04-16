@@ -80,11 +80,9 @@ Widget getBottomSheetHeaderWithoutButton2(BuildContext context, String title, {C
 Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1, double radius = 14, bool isLastIndexLeft = false, bool isLastIndexRight = false}) {
   return Container(
     width: width,
-    height: maxLine > 1 ? 60 : 40 ,
     alignment: alignment,
-    padding: isPadding ? EdgeInsets.only(left: 8, right: 8) : const EdgeInsets.only(left: 4, right: 4),
+    padding: isPadding ? EdgeInsets.only(left: 8, right: 8,top: 8,bottom: 8) : const EdgeInsets.only(left: 4, right: 4,top: 8,bottom: 8),
     decoration: BoxDecoration(
-     // color: index % 2 == 0 ? listBg : white,
       color: white,
       border: Border(
         bottom: BorderSide(color: blue),

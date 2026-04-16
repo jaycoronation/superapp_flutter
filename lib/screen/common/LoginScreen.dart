@@ -194,7 +194,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
-                              color: gray
+                              color: blue
                           ),
                             child: const Text("Sign In", style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,color: white),),
                         ),
