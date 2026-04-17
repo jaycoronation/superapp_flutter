@@ -77,7 +77,7 @@ Widget getBottomSheetHeaderWithoutButton2(BuildContext context, String title, {C
   );
 }
 
-Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1, double radius = 14, bool isLastIndexLeft = false, bool isLastIndexRight = false}) {
+Widget rowCell(int index, String title, {Color titleColor = blackLight, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, bool isRow = false, String rowValue = "", bool isBold = false, int maxLine = 1, double radius = 14, bool isLastIndexLeft = false, bool isLastIndexRight = false, double fontSize = 10}) {
   return Container(
     width: width,
     alignment: alignment,
@@ -93,12 +93,12 @@ Widget rowCell(int index, String title, {Color titleColor = blackLight, double w
     Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Flexible(child: Text(title, style: isBold ? getBoldTextStyle(fontSize: 12, color: titleColor) : getMediumTextStyle(fontSize: 12, color: titleColor), maxLines: 1, overflow: TextOverflow.ellipsis,)),
+        Flexible(child: Text(title, style: isBold ? getBoldTextStyle(fontSize: fontSize, color: titleColor) : getMediumTextStyle(fontSize: fontSize, color: titleColor), maxLines: 1, overflow: TextOverflow.ellipsis,)),
         const Gap(2),
         Text(rowValue, style: getRegularTextStyle(fontSize: 10, color: titleColor),)
       ],
     ) :
-    Text(title, style: isBold ? getBoldTextStyle(fontSize: 12, color: titleColor) : getMediumTextStyle(fontSize: 12, color: titleColor), maxLines: maxLine, overflow: TextOverflow.ellipsis,),
+    Text(title, style: isBold ? getBoldTextStyle(fontSize: fontSize, color: titleColor) : getMediumTextStyle(fontSize: fontSize, color: titleColor), maxLines: maxLine, overflow: TextOverflow.ellipsis,),
   );
 }
 
@@ -120,10 +120,17 @@ Widget rowCellLoading(int index, {double width = 160,}) {
   );
 }
 
-Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, double radius = 14}){
+Widget expandedCell(Widget child, {int flex = 1}) {
+  return Expanded(
+    flex: flex,
+    child: child,
+  );
+}
+
+Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double width = 160, Alignment alignment = Alignment.center, bool isPadding = false, double radius = 14, double fontSize = 10, int maxLine = 1}){
   return Container(
     width: width,
-    height: 40,
+    // height: 40,
     alignment: alignment,
     padding: const EdgeInsets.only(top: 10, bottom: 10, left: 8, right: 8),
     decoration: BoxDecoration(
@@ -133,7 +140,7 @@ Widget rowCellTitle(String title, bgColor, {Color titleColor = black, double wid
       ),
       borderRadius: BorderRadius.only(topLeft: Radius.circular(radius), topRight: Radius.circular(radius))
     ),
-    child: Text(title, style: getSemiBoldTextStyle(fontSize: 12, color: titleColor), textAlign: TextAlign.center,),
+    child: Text(title, style: getSemiBoldTextStyle(fontSize: fontSize, color: titleColor), textAlign: TextAlign.center, maxLines: maxLine,),
   );
 }
 

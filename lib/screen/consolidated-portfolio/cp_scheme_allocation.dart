@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/LatestTransactionResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
@@ -43,7 +42,7 @@ class CPSchemeAllocationPageState extends BaseState<CPSchemeAllocationPage> {
           ),
           title: getTitle("Scheme Allocation",)
       ),
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: _isLoading
           ? const LoadingWidget()
           : Container(

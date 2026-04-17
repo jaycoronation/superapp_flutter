@@ -12,6 +12,7 @@ import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
+import 'package:superapp_flutter/screen/e-state-analysis/fp_home_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/rm_fp_lead_screen.dart';
 import 'package:superapp_flutter/screen/insurance_data/insurance_list_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,7 +30,6 @@ import '../../utils/Utils.dart';
 import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
-import '../e-state-analysis/e_state_analysis_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
 import 'LoginScreen.dart';
 import 'SuggestedActionsScreen.dart';
@@ -85,7 +85,7 @@ class _HomePageState extends BaseState<HomePage> {
       CommonValueModel(title: "Alpha Portfolio", description: "Investments by Alpha Capital", image: "assets/images/ic_portfolio.png", id: "1"),
       CommonValueModel(title: "Consolidated Portfolio", description: "Complete Financial Snapshot", image: "assets/images/ic_consolidated.png", id: "2"),
       CommonValueModel(title: "Financial Planning", description: "Strategic Roadmap for Future Investments", image: "assets/images/ic_estate_a.png", id: "3"),
-      CommonValueModel(title: "Estate Vault", description: "Digital Locker for Legacy Documents", image: "assets/images/ic_vault.png", id: "4"),
+      CommonValueModel(title: "Legacy Planning", description: "Smooth Succession of Wealth", image: "assets/images/ic_vault.png", id: "4"),
       // CommonValueModel(title: "Fix Meeting", description: "Fix Meeting", image: "assets/images/ic_meeting.png", id: "5"),
       CommonValueModel(title: "Tasks & Summaries", description: "Track Your Financial To-Dos", image: "assets/images/img_task_summary.png", id: "5"),
       CommonValueModel(title: "Contact", description: "Get in Touch", image: "assets/images/ic_contact.png", id: "6"),
@@ -161,7 +161,8 @@ class _HomePageState extends BaseState<HomePage> {
           bottom: Platform.isIOS ? false : true,
           child: _isLoading
               ? const LoadingWidget()
-              : homePageBlocks()
+              : homePageBlocksNew()
+              // : homePageBlocks()
         ),
         floatingActionButton: Container(
           margin: EdgeInsets.only(bottom: 22),
@@ -184,24 +185,21 @@ class _HomePageState extends BaseState<HomePage> {
             ),
           ),
         ),
+
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }
 
-  Widget homePageBlocks() {
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Gap(10),
-            GridView.builder(
+  Widget homePageBlocksNew() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Expanded(
+            child: GridView.builder(
               itemCount: listDashboardData.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 166),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 8, mainAxisSpacing: 8, ),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               physics: NeverScrollableScrollPhysics(),
@@ -261,7 +259,8 @@ class _HomePageState extends BaseState<HomePage> {
                       //financial planning
                       if(userType == "client")
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const FpHomePage()));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
                         lastInsertedModule("login-estate-analysis");
                       }
                       else
@@ -323,31 +322,260 @@ class _HomePageState extends BaseState<HomePage> {
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.only(left: 15, right: 15, top: 16, bottom: 16),
+                    decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          data.image,
+                          width: 40, height: 40
+                        ),
+                        const Spacer(),
+                        Text(
+                          data.title,
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const Gap(4),
+                        Text(
+                          data.description,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: grayDark,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // child: Container(
+                  //   padding: const EdgeInsets.only(left: 15, right: 15, top: 16, bottom: 16),
+                  //   decoration: BoxDecoration(
+                  //     color: white,
+                  //     borderRadius: BorderRadius.circular(15)
+                  //   ),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Align(
+                  //         alignment: Alignment.centerLeft,
+                  //         child: Image.asset(
+                  //           data.image,
+                  //           height: 40,
+                  //           width: 40,
+                  //         ),
+                  //       ),
+                  //
+                  //       Spacer(),
+                  //       Column(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             data.title,
+                  //             maxLines: 2,
+                  //             style: TextStyle(
+                  //                 color: black,
+                  //                 fontSize: 18,
+                  //                 fontWeight: FontWeight.w600),
+                  //           ),
+                  //           const Gap(4),
+                  //           Text(
+                  //             data.description,
+                  //             style: getMediumTextStyle(fontSize: 12, color: grayDark),
+                  //             maxLines: 2,
+                  //             overflow: TextOverflow.ellipsis,
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                );
+              },
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Image.asset(
+                'assets/images/ic_login_logo.png',
+                width: 200,
+                height: 80,
+                color: blue
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget homePageBlocks() {
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Gap(10),
+            GridView.builder(
+              itemCount: listDashboardData.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, mainAxisExtent: 175),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+
+                var data = listDashboardData[index];
+
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async{
+                    if(data.id == "1")
+                    {
+                      //alpha portfolio
+                      final result = await _checkNativeLibrary();
+                      if (!result) {
+
+                        if(sessionManager.getUserType() == "client")
+                        {
+                          // call SSOToken API
+                          if (sessionManagerVault.getUserName().isNotEmpty)
+                          {
+                            generateAuth("");
+                          }
+                          else
+                          {
+                            showSnackBar("User name not found", context);
+                          }
+                        }
+                        else
+                        {
+                          // call SSOToken API
+                          if (sessionManager.getRMIUserName().isNotEmpty)
+                          {
+                            generateAuth("");
+                          }
+                          else
+                          {
+                            showSnackBar("User name not found", context);
+                          }
+                        }
+                      }
+                    }
+                    else if(data.id == "2")
+                    {
+                      //consolidated portfolio
+                      if(userType == "client")
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CPHomePage()));
+                      }
+                      else
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
+                      }
+                    }
+                    else if(data.id == "3")
+                    {
+                      //financial planning
+                      if(userType == "client")
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const FpHomePage()));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+                        lastInsertedModule("login-estate-analysis");
+                      }
+                      else
+                      {
+                        //RM(broker) user
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RmFpLeadScreen()));
+                        //Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+                      }
+                    }
+                    else if(data.id == "4")
+                    {
+                      //estate value
+                      if(sessionManager.getUserType() == "client")
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()),);
+                        lastInsertedModule("login-estate-vault");
+                      }
+                      else
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
+                      }
+                    }
+                    else if(data.id == "5")
+                    {
+                      /*//fix meeting
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MeetingPage()),
+                      );*/
+
+                      //task summary
+                      startActivity(context, const TaskAndSummariesScreen());
+                    }
+                    else if(data.id == "6")
+                    {
+                      //contact
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactPage()),);
+                    }
+                    else if(data.id == "7")
+                    {
+                      //blogs
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()),);
+                    }
+                    else if(data.id == "8")
+                    {
+                      //videos
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
+                    }
+                    else if(data.id == "9")
+                    {
+                      //insurance
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const InsuranceListScreen()),);
+                    }
+                    else if(data.id == "10")
+                    {
+                      //suggested actions
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SuggestedActionsScreen()));
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 15, right: 15, top: 16, bottom: 16),
                     decoration: BoxDecoration(
                       color: white,
-                      borderRadius: BorderRadius.circular(10)
+                      borderRadius: BorderRadius.circular(15)
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Align(
-                          alignment: Alignment.centerRight,
+                          alignment: Alignment.centerLeft,
                           child: Image.asset(
                             data.image,
                             height: 40,
                             width: 40,
                           ),
                         ),
-                        const Gap(10),
+
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               data.title,
-                              style: getSemiBoldTextStyle(fontSize: 16, color: blue),
+                              style: getSemiBoldTextStyle(fontSize: 14, color: black),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),

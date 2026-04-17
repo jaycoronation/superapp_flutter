@@ -65,6 +65,9 @@ const Color tableLightYellow = Color(0xFFfbe3a3);
 const Color tableLightPink = Color(0xFFf5c2e0);
 const Color tableMediumBlue = Color(0xFF5482b5);
 const Color tableDarkBlue = Color(0xFF26397e);
+const Color bgLightBlue = Color(0xFFeef2ff);
+const Color bgColor = Color(0xFFEDEDEE);
+const Color chooseFileBg = Color(0xFFefefef);
 
 const Color lightBlue2 = Color(0xFFd6ecff);
 

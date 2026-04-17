@@ -78,7 +78,7 @@ class CPLatestTransactionPageState extends BaseState<CPLatestTransactionPage> {
           titleSpacing: 0,
           title: getTitle("Last Month Transactions",)
       ),
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: SafeArea(
         bottom: false,
         child: _isLoading

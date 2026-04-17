@@ -457,7 +457,7 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 1008,
+        width: 758,
         decoration: BoxDecoration(
             border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
             borderRadius: BorderRadius.circular(14)
@@ -467,19 +467,19 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCellTitle("Year", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
+                  rowCellTitle("Year", white, alignment: Alignment.centerLeft, isPadding: true, width: 60),
                   showLineDivider(),
-                  rowCellTitle("Opening Balance", white, width: 150),
+                  rowCellTitle("Opening Balance", white, width: 120),
                   showLineDivider(),
-                  rowCellTitle("Outflow", white, width: 150),
+                  rowCellTitle("Outflow", white, width: 100),
                   showLineDivider(),
-                  rowCellTitle("Fresh Inflow", white, width: 150),
+                  rowCellTitle("Fresh Inflow", white, width: 110),
                   showLineDivider(),
-                  rowCellTitle("Expected Profit", white, width: 150),
+                  rowCellTitle("Expected Profit", white, width: 120),
                   showLineDivider(),
-                  rowCellTitle("Closing Balance", white, width: 150),
+                  rowCellTitle("Closing Balance", white, width: 120),
                   showLineDivider(),
-                  rowCellTitle("Present Value", white, width: 150),
+                  rowCellTitle("Present Value", white, width: 120),
                 ],
               ),
             ),
@@ -494,19 +494,19 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
                 return IntrinsicHeight(
                   child: Row(
                     children: [
-                      rowCell(index, "${balanceData.year}", alignment: Alignment.centerLeft, isPadding: true, width: 100, isLastIndexLeft: isLastItem),
+                      rowCell(index, "${balanceData.year}", alignment: Alignment.centerLeft, isPadding: true, width: 60, isLastIndexLeft: isLastItem),
                       showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${balanceData.openingBalance}") , width: 150),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.openingBalance}") , width: 120),
                       showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${balanceData.outflow}") , width: 150),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.outflow}") , width: 100),
                       showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${balanceData.freshInflow}") , width: 150),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.freshInflow}") , width: 110),
                       showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${balanceData.expectedProfit}") , width: 150),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.expectedProfit}") , width: 120),
                       showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${balanceData.closingBalance}") , width: 150),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.closingBalance}") , width: 120),
                       showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${balanceData.presentValue}") , width: 150, isLastIndexRight: isLastItem),
+                      rowCell(index, convertCommaSeparatedAmount("${balanceData.presentValue}") , width: 120, isLastIndexRight: isLastItem),
                     ],
                   ),
                 );

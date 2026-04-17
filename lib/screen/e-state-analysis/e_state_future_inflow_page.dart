@@ -112,6 +112,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
           }
         },),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'future_inflow',
           onPressed: (){
             _redirectToNextPage(context, FutureInflows(), false);
           },
@@ -160,7 +161,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
                           "assets/images/fin_plan_ic_edit_gray.png",
                           height: 20,
                           width: 20,
-                          color: tableLightGreen,
+                          color: chart_color3,
                         ),
                       ),
                     ),
@@ -204,7 +205,7 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 887,
+        width: 647,
         decoration: BoxDecoration(
             border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
             borderRadius: BorderRadius.circular(14)
@@ -214,15 +215,15 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                  rowCellTitle("Source", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
                   showLineDivider(),
-                  rowCellTitle("Duration", white, width: 150),
+                  rowCellTitle("Duration", white, width: 80),
                   showLineDivider(),
-                  rowCellTitle("Amount", white, width: 150),
+                  rowCellTitle("Amount", white, width: 100),
                   showLineDivider(),
-                  rowCellTitle("PV of Income", white, width: 120),
+                  rowCellTitle("PV of Income", white, width: 100),
                   showLineDivider(),
-                  rowCellTitle("Expected Growth", white, width: 150),
+                  rowCellTitle("Expected Growth", white, width: 110),
                   showLineDivider(),
                   rowCellTitle("Inflation Adjusted Income", white, width: 150),
                 ],
@@ -238,15 +239,15 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
                 return IntrinsicHeight(
                   child: Row(
                     children: [
-                      rowCell(index, reportListData?.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                      rowCell(index, reportListData?.source ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 100, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, "${reportListData?.startYear} - ${reportListData?.endYear}", width: 150, maxLine: 2),
+                      rowCell(index, "${reportListData?.startYear} - ${reportListData?.endYear}", width: 80, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.amount ?? "")}", width: 150, maxLine: 2),
+                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.amount ?? "")}", width: 100, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, reportListData?.expectedGrowth ?? "", width: 120, maxLine: 2),
+                      rowCell(index, reportListData?.expectedGrowth ?? "", width: 100, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 2),
+                      rowCell(index, "${convertCommaSeparatedAmount(reportListData?.inflationAdjustedIncome ?? "")}", width: 110, maxLine: 2),
                       showLineDivider(),
                       rowCell(index, "${convertCommaSeparatedAmount(reportListData?.pvOfIncome ?? "")}", width: 150, maxLine: 2),
                     ],
@@ -257,15 +258,15 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 100, maxLine: 1, isBold: true, isLastIndexLeft: true),
                   showLineDivider(),
-                  rowCell(listData.length, "-", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "-", width: 80, maxLine: 1, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${convertCommaSeparatedAmount("$totalAmount")}", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount("$totalAmount")}", width: 100, maxLine: 2, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "-", width: 120, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "-", width: 100, maxLine: 1, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.inflationAdjustedIncome ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.inflationAdjustedIncome ?? "")}", width: 110, maxLine: 1, isBold: true),
                   showLineDivider(),
                   rowCell(listData.length, "${convertCommaSeparatedAmount(futureInflowsReport.total?.pvOfIncome ?? "")}", width: 150, maxLine: 1, isBold: true, isLastIndexRight: true),
                 ],

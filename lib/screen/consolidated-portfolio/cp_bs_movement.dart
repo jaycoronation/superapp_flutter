@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
+import '../../common_widget/chart_scale.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/BSMovementResponse.dart';
@@ -29,11 +30,18 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
   List<GraphData> listGraphData =
   List<GraphData>.empty(growable: true);
 
-  List<FlSpot> spotsData = List<FlSpot>.empty(growable: true);
+  //List<FlSpot> spotsData = List<FlSpot>.empty(growable: true);
   List<Color> gradientColors = [
     blue,
     divider_color,
   ];
+
+  double maxY = 0.0;
+  double interval = 0.0;
+  final double pointWidth = 120;
+  double chartWidth = 0.0;
+
+  int bottomYearInterval = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +95,115 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
       body: _isLoading
           ? const LoadingWidget()
           : Container(
-              margin: const EdgeInsets.only(top: 8,bottom: 50),
+              margin: EdgeInsets.only(top: 8,bottom: _isShowChart ? 0 : 50),
             child: _isShowChart
-                ? Container(
-                    margin: const EdgeInsets.only(top: 32, right: 22,),
-                    height: kIsWeb ? 800 : 300 ,
-                    child: LineChart(
-                        generatedLineChart(),
-                      duration: Duration(milliseconds: 150), // Optional
-                      curve: Curves.linear,
-                    )
-                )
+                ?
+                  Container(
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(color: white),
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(top: 8),
+              child: LineChart(
+                LineChartData(
+                  minX: 0,
+                  maxX: (listGraphData.length - 1).toDouble(),
+                  minY: 0,
+                  maxY:  maxY <= 0 ? 10 : maxY,
+                  gridData: FlGridData(
+                    show: true,
+                    horizontalInterval: listGraphData.isNotEmpty ? interval : null,
+                  ),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: interval <= 0 ? 1 : interval,
+                        reservedSize: 80,
+                        getTitlesWidget: (value, meta) {
+                          final isTopValue = value == meta.max;
+                          return Padding(
+                            padding: EdgeInsets.only(top: isTopValue ? 10 : 0,),
+                            child: Text(
+                              value.toStringAsFixed(0),
+                              style: getMediumTextStyle(fontSize: 10, color: black),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: bottomYearInterval <= 0 ? 1 : bottomYearInterval.toDouble(),
+                        reservedSize: 70,
+                        getTitlesWidget: (value, meta) {
+                          int index = value.round();
+
+                          if (index >= 0 && index < listGraphData.length) {
+                            return SideTitleWidget(
+                              meta: meta,
+                              space: 8,
+                              child: Transform.rotate(
+                                angle: -0.5,
+                                child: Text(
+                                  listGraphData[index].timestamp.toString(),
+                                  style: getRegularTextStyle(fontSize: 12, color: black),
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                    rightTitles: AxisTitles(),
+                    topTitles: AxisTitles(),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  lineBarsData: [
+                    LineChartBarData(
+                      isCurved: true,
+                      barWidth: 3,
+                      color: tableLightBlue,
+                      dotData: FlDotData(show: true),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        gradient: LinearGradient(
+                          colors: [white, lightBlue2],
+                        ),
+                      ),
+                      spots: listGraphData.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), double.tryParse("${entry.value.total}") ?? 0.0,),).toList(),
+                    ),
+                  ],
+                  lineTouchData: LineTouchData(
+                    touchTooltipData: LineTouchTooltipData(
+                      getTooltipColor: (_) => grayDark,
+                      getTooltipItems: (touchedSpots) {
+                        return touchedSpots.map((spot) {
+                          final data =
+                          listGraphData[spot.x.toInt()];
+                          return LineTooltipItem(
+                            "${data.timestamp}\nTotal Profit: ${convertCommaSeparatedAmount("${data.total?.toStringAsFixed(0)}")}",
+                            getMediumTextStyle(
+                                fontSize: 12, color: white),
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            )
+
+                // ? Container(
+                //     margin: const EdgeInsets.only(top: 32, right: 22,),
+                //     height: kIsWeb ? 800 : 300 ,
+                //     child: LineChart(
+                //         generatedLineChart(),
+                //       duration: Duration(milliseconds: 150), // Optional
+                //       curve: Curves.linear,
+                //     )
+                // )
                 : Column(
                 children: [
                   Expanded(
@@ -208,7 +314,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
             )));
   }
 
-  LineChartData generatedLineChart() {
+/*  LineChartData generatedLineChart() {
     final lineBarsData = [
       LineChartBarData(
         spots: spotsData,
@@ -312,7 +418,7 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
         ),
       ),
     );
-  }
+  }*/
 
   @override
   void initState() {
@@ -343,15 +449,38 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
     if (statusCode == 200 && dataResponse.success == 1) {
       try {
         if (dataResponse.sheetData != null) {
-          listSheetData = dataResponse.sheetData!.reversed.toList();
+          // listSheetData = dataResponse.sheetData!.reversed.toList();
+          listSheetData = dataResponse.sheetData ?? [];
         }
 
         if(dataResponse.graphData != null){
           listGraphData = dataResponse.graphData ?? [];
 
-          for(int i = 0;i<listGraphData.length;i++){
-            spotsData.add(FlSpot(i.toDouble(), double.parse(listGraphData[i].total!.toString())));
+          chartWidth  = listGraphData.length * pointWidth;
+
+          final double rawMaxY = listGraphData.isNotEmpty ? listGraphData
+              .map((e) => double.tryParse("${e.total}") ?? 0)
+              .reduce((a, b) => (a) > (b) ? a : b)
+              .toDouble()
+              : 0;
+          final scale = calculateChartScale(rawMaxY, divisions: 7);
+          maxY = scale.maxY;
+          interval = scale.interval;
+
+          if (interval <= 0) {
+            interval = 1;
           }
+
+          bottomYearInterval = listGraphData.isNotEmpty ? (listGraphData.length / 6).ceil() : 1;
+
+          if (bottomYearInterval <= 0)
+          {
+            bottomYearInterval = 1;
+          }
+
+          // for(int i = 0;i<listGraphData.length;i++){
+          //   spotsData.add(FlSpot(i.toDouble(), double.parse(listGraphData[i].total!.toString())));
+          // }
         }
 
         setState(() {

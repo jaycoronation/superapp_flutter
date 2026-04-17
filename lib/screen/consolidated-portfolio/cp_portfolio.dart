@@ -1,20 +1,20 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponseModel.dart' as networth;
 import 'package:superapp_flutter/model/consolidated-portfolio/TempResponse.dart';
+import 'package:superapp_flutter/model/consolidated-portfolio/assets/AssetListResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
+import '../../utils/MessageHandler.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
+import 'asset/AddAssetScreen.dart';
 
 class CPPortfolioPage extends StatefulWidget {
   const CPPortfolioPage({super.key});
@@ -28,6 +28,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   bool isSelectedAsset = false;
   bool isSelectedApplicant = false;
   bool isSelectedBroker = false;
+  bool isSearchOpen = false;
 
   List<TempResponse> listData = [];
   List<TempResponse> listDataMain = [];
@@ -52,9 +53,26 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   String searchQuery = "";
   TextEditingController searchController = TextEditingController();
 
+  StreamSubscription<Message>? _subscription;
+  final MessageHandler _handler = MessageHandler();
+
   @override
   void initState() {
     super.initState();
+
+    _subscription = _handler.stream.listen((message) async {
+      if(message.what == 101)
+      {
+        setState(() {
+          if(searchController.text != "" && isSearchOpen == true)
+          {
+            _displaySearchResult("");
+          }
+          isSearchOpen = !isSearchOpen;
+        });
+        _handler.sendMessage(Message(104,""));
+      }
+    });
 
     if ((sessionManagerPMS.getApplicantsList() != null))
     {
@@ -140,7 +158,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: Container(
         margin: const EdgeInsets.only(top: 8),
         child: Padding(
@@ -202,41 +220,46 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                       ),
                     ),
                   ),
-                  const Gap(8),
-                  TextField(
-                    cursorColor: black,
-                    controller: searchController,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.search,
-                    style: getRegularTextStyle(fontSize: 14, color: black),
-                    onSubmitted: (value) {
-                      _displaySearchResult(value);
-                    },
-                    onChanged: (value) {
-                      _displaySearchResult(value);
-                    },
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: white,
-                      hintText: 'Search here...',
-                      contentPadding: const EdgeInsets.only(left: 12, right: 12),
-                      prefixIcon: const InkWell(
-                        onTap: null,
-                        child: Icon(Icons.search_rounded, size: 26, color: black),
-                      ),
-                      suffixIcon: searchController.text.isNotEmpty
-                          ? GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          hideKeyboard(context);
-                          _displaySearchResult("");
+                  Visibility(
+                    visible: isSearchOpen,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      child: TextField(
+                        cursorColor: black,
+                        controller: searchController,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.search,
+                        style: getRegularTextStyle(fontSize: 14, color: black),
+                        onSubmitted: (value) {
+                          _displaySearchResult(value);
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
+                        onChanged: (value) {
+                          _displaySearchResult(value);
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: white,
+                          hintText: 'Search here...',
+                          contentPadding: const EdgeInsets.only(left: 12, right: 12),
+                          prefixIcon: const InkWell(
+                            onTap: null,
+                            child: Icon(Icons.search_rounded, size: 26, color: black),
+                          ),
+                          suffixIcon: searchController.text.isNotEmpty
+                              ? GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              hideKeyboard(context);
+                              _displaySearchResult("");
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
+                            ),
+                          )
+                              : null,
                         ),
-                      )
-                          : null,
+                      ),
                     ),
                   ),
                   const Gap(10),
@@ -463,13 +486,37 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                         children: [
                           Expanded(
                               flex: 1,
-                              child: Text(
-                                  schemes[index].schemeName ?? '',
-                                  style: const TextStyle(
-                                      color: black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                        schemes[index].schemeName ?? '',
+                                        style: const TextStyle(
+                                            color: black,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w700
+                                        )
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: (schemes[index].mfId?.isNotEmpty ?? false) && (schemes[index].itId != "NA" && schemes[index].itId != ""),
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        _redirectToEdit(schemes[index]);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 4),
+                                        child: Image.asset(
+                                          "assets/images/fin_plan_ic_edit_gray.png",
+                                          height: 18,
+                                          width: 18,
+                                          color: chart_color3,
+                                        ),
+                                      ),
+                                    )
                                   )
+                                ],
                               )
                           ),
                           Expanded(
@@ -503,6 +550,22 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
           );
         },
     );
+  }
+
+  _redirectToEdit(SchemesTemp schemeData) async{
+    Assets getSet = Assets(
+      quantity: "",
+      id: schemeData.mfId,
+      userId: schemeData.userId,
+      itId: schemeData.itId,
+      investmentType: schemeData.objective
+    );
+
+    var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(getSet, true)));
+    if (value == "success")
+    {
+      _getPortfolioDataNew();
+    }
   }
 
   void openFilterDialogMultiple(String isFor) {

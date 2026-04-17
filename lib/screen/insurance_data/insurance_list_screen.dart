@@ -231,6 +231,7 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
         )
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'insurance_list',
         onPressed: (){
           _redirectToAddUpdate(Insurances(), false);
         },

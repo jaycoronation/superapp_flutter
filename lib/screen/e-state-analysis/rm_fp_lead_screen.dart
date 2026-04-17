@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
 import 'package:superapp_flutter/model/e-state-analysis/RMFpUserLeadResponseModel.dart';
+import 'package:superapp_flutter/screen/e-state-analysis/fp_home_page.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/rm_fp_add_lead_screen.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/base_class.dart';
@@ -194,7 +195,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
                                 "assets/images/fin_plan_ic_edit_gray.png",
                                 height: 20,
                                 width: 20,
-                                color: tableLightGreen,
+                                color: chart_color3,
                               ),
                             ),
                             const Gap(10),
@@ -338,6 +339,7 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'rm_fp_lead',
         onPressed: (){
           _redirectToNextPage(context, UserLeadData(), false);
         },
@@ -879,7 +881,8 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
         getSetData.mobile ?? '',
         '',
         false);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+   // Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const FpHomePage()),);
 
   }
 

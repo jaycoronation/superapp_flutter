@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/LatestTransactionResponse.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/FundHouseAllocationResponse.dart';
-import '../../model/consolidated-portfolio/SchemeAllocationResponse.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
@@ -44,7 +42,7 @@ class CPFundHouseAllocationPageState extends BaseState<CPFundHouseAllocationPage
           ),
           title: getTitle("Fund House Allocation",)
       ),
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: _isLoading
           ? const LoadingWidget()
           : Container(

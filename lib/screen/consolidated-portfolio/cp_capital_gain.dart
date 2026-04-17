@@ -55,7 +55,7 @@ class CPCapitalGainPageState extends BaseState<CPCapitalGainPage> {
           ),
           title: getTitle("Capital Gain",)
       ),
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: _isLoading
           ? const LoadingWidget()
           : Container(

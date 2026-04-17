@@ -373,6 +373,7 @@ class _EStateFutureInflowMainPageState extends BaseState<EStateFutureInflowMainP
           }
             },),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'future_inflow_main',
           onPressed: (){
             _redirectToNextPage(context, true);
           },

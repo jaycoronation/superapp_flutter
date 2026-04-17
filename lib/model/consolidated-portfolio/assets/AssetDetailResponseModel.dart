@@ -85,6 +85,7 @@ AssetDetailResponseModel copyWith({  AssetsDetails? assetsDetails,
 /// transactions : []
 /// update_history : ""
 /// history : [{"message":"Added by   on 26-02-2026 02:47 PM"}]
+/// documents : [{"doc_id":"9","file_name":"1775836191_living_will_unnamed.jpg","file_url":"https://vault.alphacapital.in/api/assets/uploads/softcopy/1775836191_living_will_unnamed.jpg","document_type":"living_will","uploaded_at":"1775836191"},{"doc_id":"12","file_name":"1776261344_trust_file-sample_150kB.pdf","file_url":"https://vault.alphacapital.in/api/assets/uploads/softcopy/1776261344_trust_file-sample_150kB.pdf","document_type":"trust","uploaded_at":"1776261344"},{"doc_id":"13","file_name":"1776261465_will_unnamed.jpg","file_url":"https://vault.alphacapital.in/api/assets/uploads/softcopy/1776261465_will_unnamed.jpg","document_type":"will","uploaded_at":"1776261465"},{"doc_id":"14","file_name":"1776261465_will_file-sample_150kB.pdf","file_url":"https://vault.alphacapital.in/api/assets/uploads/softcopy/1776261465_will_file-sample_150kB.pdf","document_type":"will","uploaded_at":"1776261465"}]
 
 AssetsDetails assetsDetailsFromJson(String str) => AssetsDetails.fromJson(json.decode(str));
 String assetsDetailsToJson(AssetsDetails data) => json.encode(data.toJson());
@@ -137,7 +138,9 @@ class AssetsDetails {
       String? amountPending, 
       List<dynamic>? transactions, 
       String? updateHistory, 
-      List<History>? history,}){
+      List<History>? history,
+      List<Documents>? documents,
+  }){
     _investmentType = investmentType;
     _category = category;
     _assetClass = assetClass;
@@ -186,6 +189,7 @@ class AssetsDetails {
     _transactions = transactions;
     _updateHistory = updateHistory;
     _history = history;
+    _documents = documents;
 }
 
   AssetsDetails.fromJson(dynamic json) {
@@ -247,6 +251,12 @@ class AssetsDetails {
         _history?.add(History.fromJson(v));
       });
     }
+    if (json['documents'] != null) {
+      _documents = [];
+      json['documents'].forEach((v) {
+        _documents?.add(Documents.fromJson(v));
+      });
+    }
   }
   String? _investmentType;
   String? _category;
@@ -296,6 +306,7 @@ class AssetsDetails {
   List<dynamic>? _transactions;
   String? _updateHistory;
   List<History>? _history;
+  List<Documents>? _documents;
 AssetsDetails copyWith({  String? investmentType,
   String? category,
   String? assetClass,
@@ -344,6 +355,7 @@ AssetsDetails copyWith({  String? investmentType,
   List<dynamic>? transactions,
   String? updateHistory,
   List<History>? history,
+  List<Documents>? documents,
 }) => AssetsDetails(  investmentType: investmentType ?? _investmentType,
   category: category ?? _category,
   assetClass: assetClass ?? _assetClass,
@@ -392,6 +404,7 @@ AssetsDetails copyWith({  String? investmentType,
   transactions: transactions ?? _transactions,
   updateHistory: updateHistory ?? _updateHistory,
   history: history ?? _history,
+  documents: documents ?? _documents,
 );
   String? get investmentType => _investmentType;
   String? get category => _category;
@@ -441,6 +454,7 @@ AssetsDetails copyWith({  String? investmentType,
   List<dynamic>? get transactions => _transactions;
   String? get updateHistory => _updateHistory;
   List<History>? get history => _history;
+  List<Documents>? get documents => _documents;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -496,6 +510,9 @@ AssetsDetails copyWith({  String? investmentType,
     if (_history != null) {
       map['history'] = _history?.map((v) => v.toJson()).toList();
     }
+    if (_documents != null) {
+      map['documents'] = _documents?.map((v) => v.toJson()).toList();
+    }
     return map;
   }
 
@@ -523,6 +540,61 @@ History copyWith({  String? message,
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = _message;
+    return map;
+  }
+
+}
+
+/// doc_id : "7"
+/// file_name : "1776428186_file-sample_150kB.pdf"
+/// file_url : "http:\/\/portfolio.alphacapital.in\/api\/assets\/upload\/assets\/1776428186_file-sample_150kB.pdf"
+/// uploaded_at : "1776428186"
+
+Documents documentsFromJson(String str) => Documents.fromJson(json.decode(str));
+String documentsToJson(Documents data) => json.encode(data.toJson());
+class Documents {
+  Documents({
+    String? docId,
+    String? fileName,
+    String? fileUrl,
+    String? uploadedAt,}){
+    _docId = docId;
+    _fileName = fileName;
+    _fileUrl = fileUrl;
+    _uploadedAt = uploadedAt;
+  }
+
+  Documents.fromJson(dynamic json) {
+    _docId = json['doc_id'];
+    _fileName = json['file_name'];
+    _fileUrl = json['file_url'];
+    _uploadedAt = json['uploaded_at'];
+  }
+  String? _docId;
+  String? _fileName;
+  String? _fileUrl;
+  String? _uploadedAt;
+  Documents copyWith({  String? docId,
+    String? fileName,
+    String? fileUrl,
+    String? documentType,
+    String? uploadedAt,
+  }) => Documents(  docId: docId ?? _docId,
+    fileName: fileName ?? _fileName,
+    fileUrl: fileUrl ?? _fileUrl,
+    uploadedAt: uploadedAt ?? _uploadedAt,
+  );
+  String? get docId => _docId;
+  String? get fileName => _fileName;
+  String? get fileUrl => _fileUrl;
+  String? get uploadedAt => _uploadedAt;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['doc_id'] = _docId;
+    map['file_name'] = _fileName;
+    map['file_url'] = _fileUrl;
+    map['uploaded_at'] = _uploadedAt;
     return map;
   }
 

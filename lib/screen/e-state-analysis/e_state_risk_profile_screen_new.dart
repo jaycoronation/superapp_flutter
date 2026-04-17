@@ -375,7 +375,7 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 354,
+        width: 294,
         decoration: BoxDecoration(
             border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
             borderRadius: BorderRadius.circular(14)
@@ -385,11 +385,11 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 120),
+                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 90),
                   showLineDivider(),
-                  rowCellTitle("Allocation", white, width: 110),
+                  rowCellTitle("Allocation", white, width: 90),
                   showLineDivider(),
-                  rowCellTitle("Expected Return", white, width: 120),
+                  rowCellTitle("Expected Return", white, width: 110),
                 ],
               ),
             ),
@@ -405,11 +405,11 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
                 return IntrinsicHeight(
                   child: Row(
                     children: [
-                      rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 120, isBold: isTotal, isLastIndexLeft: isLastIndex),
+                      rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 90, maxLine: 2, isBold: isTotal, isLastIndexLeft: isLastIndex),
                       showLineDivider(),
-                      rowCell(index, "${suggestedData.allocation}", width: 110, isBold: isTotal),
+                      rowCell(index, "${suggestedData.allocation}", width: 90, maxLine: 2, isBold: isTotal),
                       showLineDivider(),
-                      rowCell(index, suggestedData.expectedReturn ?? "", width: 120, isBold: isTotal, isLastIndexRight: isLastIndex),
+                      rowCell(index, suggestedData.expectedReturn ?? "", width: 110, maxLine: 2, isBold: isTotal, isLastIndexRight: isLastIndex),
                     ],
                   ),
                 );
@@ -426,7 +426,7 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 505,
+        width: 325,
         decoration: BoxDecoration(
             border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
             borderRadius: BorderRadius.circular(14)
@@ -436,13 +436,13 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCellTitle("Range of Return", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
+                  rowCellTitle("Range of Return", white, width: 80, maxLine: 2),
                   showLineDivider(),
-                  rowCellTitle("1 Year", white, width: 120),
+                  rowCellTitle("1 Year", white, width: 80, maxLine: 2),
                   showLineDivider(),
-                  rowCellTitle("3 Years", white, width: 120),
+                  rowCellTitle("3 Years", white, width: 80, maxLine: 2),
                   showLineDivider(),
-                  rowCellTitle("5 Years", white, width: 120),
+                  rowCellTitle("5 Years", white, width: 80, maxLine: 2),
                 ],
               ),
             ),
@@ -457,13 +457,13 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
                 return IntrinsicHeight(
                   child: Row(
                     children: [
-                      rowCell(index, returnOfRiskData.rangeOfReturn ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 140, isLastIndexLeft: isLastIndex),
+                      rowCell(index, returnOfRiskData.rangeOfReturn ?? "", maxLine: 2, width: 80, isLastIndexLeft: isLastIndex),
                       showLineDivider(),
-                      rowCell(index, returnOfRiskData.oneYear ?? "", width: 120),
+                      rowCell(index, returnOfRiskData.oneYear ?? "", maxLine: 2, width: 80),
                       showLineDivider(),
-                      rowCell(index, returnOfRiskData.threeYear ?? "", width: 120),
+                      rowCell(index, returnOfRiskData.threeYear ?? "", maxLine: 2, width: 80),
                       showLineDivider(),
-                      rowCell(index, returnOfRiskData.fiveYear ?? "", width: 120, isLastIndexRight: isLastIndex),
+                      rowCell(index, returnOfRiskData.fiveYear ?? "", maxLine: 2, width: 80, isLastIndexRight: isLastIndex),
                     ],
                   ),
                 );

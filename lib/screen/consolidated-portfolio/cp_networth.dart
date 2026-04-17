@@ -1,17 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
 import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
-import '../../model/consolidated-portfolio/TempResponse.dart';
+import '../../utils/MessageHandler.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
 import '../../widget/no_data.dart';
@@ -29,6 +28,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
   bool isSelectedAsset = false;
   bool isSelectedApplicant = false;
   bool isSelectedBroker = false;
+  bool isSearchOpen = false;
 
   List<Networth> listData = [];
   List<Networth> listDataMain = [];
@@ -54,10 +54,27 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
   String searchQuery = "";
   TextEditingController searchController = TextEditingController();
 
+  StreamSubscription<Message>? _subscription;
+  final MessageHandler _handler = MessageHandler();
+
   @override
   void initState(){
     super.initState();
     _getNetworthData();
+
+    _subscription = _handler.stream.listen((message) async {
+      if(message.what == 100)
+      {
+        setState(() {
+          if(searchController.text != "" && isSearchOpen == true)
+          {
+            _displaySearchResult("");
+          }
+          isSearchOpen = !isSearchOpen;
+        });
+        _handler.sendMessage(Message(103,""));
+      }
+    });
 
     if (sessionManagerPMS.getApplicantsList()?.isNotEmpty ?? false)
     {
@@ -137,7 +154,7 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: Container(
         margin: const EdgeInsets.only(top: 8,bottom: 8),
         child: Padding(
@@ -306,41 +323,46 @@ class CPNetworthPageState extends BaseState<CPNetworthPage> {
                     ),
                   ),
                 ),
-                const Gap(8),
-                TextField(
-                  cursorColor: black,
-                  controller: searchController,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.search,
-                  style: getRegularTextStyle(fontSize: 14, color: black),
-                  onSubmitted: (value) {
-                    _displaySearchResult(value);
-                  },
-                  onChanged: (value) {
-                    _displaySearchResult(value);
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: white,
-                    hintText: 'Search here...',
-                    contentPadding: const EdgeInsets.only(left: 12, right: 12),
-                    prefixIcon: const InkWell(
-                      onTap: null,
-                      child: Icon(Icons.search_rounded, size: 26, color: black),
-                    ),
-                    suffixIcon: searchController.text.isNotEmpty
-                        ? GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        hideKeyboard(context);
-                        _displaySearchResult("");
+                Visibility(
+                  visible: isSearchOpen,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    child: TextField(
+                      cursorColor: black,
+                      controller: searchController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.search,
+                      style: getRegularTextStyle(fontSize: 14, color: black),
+                      onSubmitted: (value) {
+                        _displaySearchResult(value);
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
+                      onChanged: (value) {
+                        _displaySearchResult(value);
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: white,
+                        hintText: 'Search here...',
+                        contentPadding: const EdgeInsets.only(left: 12, right: 12),
+                        prefixIcon: const InkWell(
+                          onTap: null,
+                          child: Icon(Icons.search_rounded, size: 26, color: black),
+                        ),
+                        suffixIcon: searchController.text.isNotEmpty
+                            ? GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            hideKeyboard(context);
+                            _displaySearchResult("");
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
+                          ),
+                        )
+                            : null,
                       ),
-                    )
-                        : null,
+                    ),
                   ),
                 ),
                 const Gap(10),

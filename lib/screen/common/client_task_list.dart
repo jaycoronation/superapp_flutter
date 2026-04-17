@@ -363,6 +363,7 @@ class _ClientTaskListScreenState extends BaseState<ClientTaskListScreen> {
               ),
             ),
           floatingActionButton: FloatingActionButton(
+            heroTag: 'client_task',
             onPressed: () {
               if (isOnline)
               {

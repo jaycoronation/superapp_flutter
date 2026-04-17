@@ -190,7 +190,7 @@ class _EStateAnalysisHomePageState extends BaseState<EStateAnalysisHomePage> {
                                   }
                                   else if(menuList[index].id == 6)
                                   {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => EStateSummaryScreen(sessionManager.getUserId().toString().trim())));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => EStateSummaryScreen()));
                                   }
 
                                 },

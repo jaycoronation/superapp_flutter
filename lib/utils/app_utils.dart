@@ -384,6 +384,15 @@ convertCommaSeparatedAmount (String value) {
   }
 }
 
+convertCommaSeparatedAmountWithoutSymbol(String value) {
+  try {
+    var formatter = NumberFormat('#,##,###');
+    return checkValidString(value).toString().isNotEmpty ? formatter.format(double.parse(value)) : "0";
+  } catch (e) {
+    return value;
+  }
+}
+
 String convertCommaSeparatedAmountWithPoint(String value) {
   try {
     if (value.isEmpty) return "₹ 0";

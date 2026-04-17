@@ -148,7 +148,7 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 998,
+        width: 458,
         decoration: BoxDecoration(
             border:  listData.isEmpty ?
             Border.all(color: blue) :
@@ -160,9 +160,9 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCellTitle("Fund Name", white, alignment: Alignment.centerLeft, isPadding: true, width: 240),
+                  rowCellTitle("Fund Name", white, alignment: Alignment.centerLeft, isPadding: true, width: 100),
                   showLineDivider(),
-                  rowCellTitle("Folio No", white, width: 150),
+                  rowCellTitle("Folio No", white, width: 70),
                   showLineDivider(),
                   // ...lastFourMonths.map((m) => rowCellTitle(m, white, width: 150)),
                   ...List.generate(lastFourMonths.length * 2 - 1, (i) {
@@ -174,7 +174,7 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
                     {
                       final monthIndex = i ~/ 2;
                       final month = lastFourMonths[monthIndex];
-                      return rowCellTitle(month, white, width: 150);
+                      return rowCellTitle(month, white, width: 70);
                     }
                   }),
                 ],
@@ -209,7 +209,7 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
                     color: tableLightBlue,
                     child: Text(
                       transactionData.applicant,
-                      style: getBoldTextStyle(fontSize: 14, color: black),
+                      style: getBoldTextStyle(fontSize: 12, color: black),
                     ),
                   );
                 }
@@ -217,9 +217,9 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
                 return IntrinsicHeight(
                   child: Row(
                     children: [
-                      rowCell(index, transactionData.schemeName, alignment: Alignment.centerLeft, isPadding: true, width: 240,  maxLine: 2, isBold: transactionData.isTotal == true, isLastIndexLeft: isLastItem),
+                      rowCell(index, transactionData.schemeName, alignment: Alignment.centerLeft, isPadding: true, width: 100,  maxLine: 4, isBold: transactionData.isTotal == true, isLastIndexLeft: isLastItem),
                       showLineDivider(),
-                      rowCell(index, transactionData.folioNo, width: 150, maxLine: 2, isBold: transactionData.isTotal == true),
+                      rowCell(index, transactionData.folioNo, width: 70, maxLine: 4, isBold: transactionData.isTotal == true),
                       showLineDivider(),
                       ...List.generate(lastFourMonths.length * 2 - 1, (i) {
                         if (i.isOdd)
@@ -234,8 +234,8 @@ class _CpSipAndStpScreenState extends BaseState<CpSipAndStpScreen> {
                           return rowCell(
                             index,
                             convertCommaSeparatedAmount(value.toString()),
-                            width: 150,
-                            maxLine: 2,
+                            width: 70,
+                            maxLine: 4,
                             isBold: transactionData.isTotal == true,
                             isLastIndexRight: isLastItem && monthIndex == lastFourMonths.length - 1,
                           );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -27,6 +28,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../constant/consolidate-portfolio/api_end_point.dart';
+import '../../utils/MessageHandler.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
@@ -44,12 +46,30 @@ class CPHomePageState extends BaseState<CPHomePage> {
   late TabController tabController;
   bool isLoading = false;
 
+  StreamSubscription<Message>? _subscription;
+  final MessageHandler _handler = MessageHandler();
+
+  bool isSearchNetWorth = true;
+  bool isSearchPortfolio = true;
+
   @override
   void initState() {
     super.initState();
-
     _currentIndex = 0;
-
+    _subscription = _handler.stream.listen((message) {
+      if(message.what == 103)
+      {
+        setState(() {
+          isSearchNetWorth = !isSearchNetWorth;
+        });
+      }
+      else if(message.what == 104)
+      {
+        setState(() {
+          isSearchPortfolio = !isSearchPortfolio;
+        });
+      }
+    });
     _pages = [
       const CPDashboardPage(),
       const CPNetworthPage(),
@@ -129,6 +149,32 @@ class CPHomePageState extends BaseState<CPHomePage> {
                   : "Portfolio",
             ),
             actions: [
+              Visibility(
+                visible: _currentIndex == 1,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 12),
+                  child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async{
+                        _handler.sendMessage(Message(100,""));
+                      },
+                      child: Image.asset(isSearchNetWorth ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: black,)
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: _currentIndex == 2,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 12),
+                  child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async{
+                        _handler.sendMessage(Message(101,""));
+                      },
+                      child: Image.asset(isSearchPortfolio ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: black,)
+                  ),
+                ),
+              ),
               GestureDetector(
                 onTap: () {
                   generateReport();

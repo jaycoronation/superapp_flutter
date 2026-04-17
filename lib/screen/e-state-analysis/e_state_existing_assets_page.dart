@@ -45,9 +45,9 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: white,
+        backgroundColor: dashboardBg,
         appBar: AppBar(
-          toolbarHeight: 55,
+          toolbarHeight: 0,
           automaticallyImplyLeading: false,
           leading: GestureDetector(
             onTap: () {
@@ -65,7 +65,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
             ? const LoadingWidget()
             : SafeArea(
               child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                  padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
                   child: listData.isEmpty
                       ? const Center(
                           child: MyNoDataWidget(msg: 'No existing assets found!')
@@ -367,6 +367,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
             },),
         floatingActionButton: //listData.isNotEmpty ?
         FloatingActionButton(
+          heroTag: 'existing_asset',
           onPressed: (){
             _redirectToNextPage(context, ExistingAssets(), false);
           },

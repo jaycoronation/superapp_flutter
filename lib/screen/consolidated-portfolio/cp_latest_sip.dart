@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/constant/consolidate-portfolio/api_end_point.dart';
-import 'package:superapp_flutter/model/consolidated-portfolio/ApplicantResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/LatestSIPResponse.dart';
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
-import '../../model/consolidated-portfolio/NetworthResponseModel.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 import '../../widget/loading.dart';
@@ -78,7 +76,7 @@ class CPLatestSIPPageState extends BaseState<CPLatestSIPPage> {
           title: getTitle(
             "Last Month SIP",
           )),
-      backgroundColor: const Color(0XffEDEDEE),
+      backgroundColor: bgColor,
       body: SafeArea(
         top: false,
         child:  _isLoading

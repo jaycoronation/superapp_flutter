@@ -44,9 +44,9 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
+      backgroundColor: dashboardBg,
       appBar: AppBar(
-        toolbarHeight: 55,
+        toolbarHeight: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
           onTap: () {
@@ -66,7 +66,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+                  padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
                   child: listData.isEmpty
                       ? const Center(
                           child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
@@ -303,6 +303,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
         }
           },),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'aspiration_page',
         onPressed: (){
           _redirectToNextPage(context, ListData(), false);
         },
@@ -355,7 +356,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                           "assets/images/fin_plan_ic_edit_gray.png",
                           height: 20,
                           width: 20,
-                          color: tableLightGreen,
+                          color: chart_color3,
                         ),
                       ),
                     ),
@@ -391,7 +392,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       child: Container(
-        width: 1008,
+        width: 683,
         decoration: BoxDecoration(
             border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
             borderRadius: BorderRadius.circular(14)
@@ -401,19 +402,19 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 160),
+                  rowCellTitle("Aspiration Type", white, alignment: Alignment.centerLeft, isPadding: true, width: 120, maxLine: 3),
                   showLineDivider(),
-                  rowCellTitle("Start-End Year", white, width: 150),
+                  rowCellTitle("Start-End Year", white, width: 95, maxLine: 3),
                   showLineDivider(),
-                  rowCellTitle("Total Outflow", white, width: 150),
+                  rowCellTitle("Total Outflow", white, width: 100, maxLine: 3),
                   showLineDivider(),
-                  rowCellTitle("Inflation adjusted outflow", white, width: 150),
+                  rowCellTitle("Inflation adjusted outflow", white, width: 100, maxLine: 3),
                   showLineDivider(),
-                  rowCellTitle("Wealth required today", white, width: 150),
+                  rowCellTitle("Wealth required today", white, width: 100, maxLine: 3),
                   showLineDivider(),
-                  rowCellTitle("Volatile Component", white, width: 120),
+                  rowCellTitle("Volatile Component", white, width: 80, maxLine: 3),
                   showLineDivider(),
-                  rowCellTitle("Target Return", white, width: 120),
+                  rowCellTitle("Target Return", white, width: 80, maxLine: 3),
                 ],
               ),
             ),
@@ -427,19 +428,19 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                 return IntrinsicHeight(
                   child: Row(
                     children: [
-                      rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 2),
+                      rowCell(index, aspirationData.aspirationType ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 120, maxLine: 3),
                       showLineDivider(),
-                      rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 150, maxLine: 2),
+                      rowCell(index, "${aspirationData.startYear} - ${aspirationData.endYear}", width: 95, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 150, maxLine: 2),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalOutflow ?? "")}", width: 100, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 2),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.totalInflationAdjustedExpense ?? "")}", width: 100, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 2),
+                      rowCell(index, "${convertCommaSeparatedAmount(aspirationData.wealthRequiredTodayTotal ?? "")}", width: 100, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, aspirationData.volatileComponent ?? "", width: 120, maxLine: 2),
+                      rowCell(index, aspirationData.volatileComponent ?? "", width: 80, maxLine: 2),
                       showLineDivider(),
-                      rowCell(index, aspirationData.targetReturn ?? "", width: 120, maxLine: 2),
+                      rowCell(index, aspirationData.targetReturn ?? "", width: 80, maxLine: 2),
                     ],
                   ),
                 );
@@ -448,19 +449,19 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
             IntrinsicHeight(
               child: Row(
                 children: [
-                  rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 160, maxLine: 1, isBold: true, isLastIndexLeft: true),
+                  rowCell(listData.length, "Total", alignment: Alignment.centerLeft, isPadding: true, width: 120, maxLine: 1, isBold: true, isLastIndexLeft: true),
                   showLineDivider(),
-                  rowCell(listData.length, "", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "", width: 95, maxLine: 1, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalOutflow ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalOutflow ?? "")}", width: 100, maxLine: 2, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalInflationAdjustedExpense ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.totalInflationAdjustedExpense ?? "")}", width: 100, maxLine: 2, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.wealthRequiredTodayTotal ?? "")}", width: 150, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "${convertCommaSeparatedAmount(totalAspiration.wealthRequiredTodayTotal ?? "")}", width: 100, maxLine: 2, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${totalAspiration.volatileComponent}", width: 120, maxLine: 1, isBold: true),
+                  rowCell(listData.length, "${totalAspiration.volatileComponent}", width: 80, maxLine: 2, isBold: true),
                   showLineDivider(),
-                  rowCell(listData.length, "${totalAspiration.targetReturn}", width: 120, maxLine: 1, isBold: true, isLastIndexRight: true),
+                  rowCell(listData.length, "${totalAspiration.targetReturn}", width: 80, maxLine: 2, isBold: true, isLastIndexRight: true),
                 ],
               ),
             )

@@ -140,3 +140,8 @@ String deleteFiduciaryObligations = "fiduciary_obligations/delete";
 String otherDebtsList = "other_debts/list";
 String saveOtherDebts = "other_debts/save";
 String deleteOtherDebts = "other_debts/delete";
+
+//will and trust detail
+String willAndTrustDetailUrl = "will/detail_new";
+String saveWillAndTrustUrl = "will/save_new";
+String sendRequestWillAndTrustUrl = "https://portfolio.alphacapital.in/api/services/send_will_mail";

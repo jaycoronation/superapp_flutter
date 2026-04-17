@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gap/gap.dart';
@@ -330,6 +329,7 @@ class AssetListScreenState extends BaseState<AssetListScreen> {
         ),
       ),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'asset_list',
           onPressed: (){
             _redirectToAddUpdate(Assets(), false);
           },

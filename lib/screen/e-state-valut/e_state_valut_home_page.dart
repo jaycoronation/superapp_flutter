@@ -20,6 +20,7 @@ import 'package:superapp_flutter/screen/e-state-valut/death_notification_page_li
 import 'package:superapp_flutter/screen/e-state-valut/real_estate_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/safe_deposite_box_page_list.dart';
 import 'package:superapp_flutter/screen/e-state-valut/share_bonds_page_list.dart';
+import 'package:superapp_flutter/screen/e-state-valut/will_and_trust_screen.dart';
 import '../../../constant/colors.dart';
 import '../../../utils/base_class.dart';
 import '../../constant/e-state-valut/api_end_point.dart';
@@ -64,7 +65,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   List<HeaderGetSet> menuList = List<HeaderGetSet>.empty(growable: true);
   List<String> holderList = List<String>.empty(growable: true);
   List<Holders> accountHolder = List<Holders>.empty(growable: true);
-  int headerPosition = 0;
+  int headerPosition = -1;
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -102,7 +103,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               child:  getBackArrow(),
             ),
           ),
-          title: getTitle("Estate Vault",),
+          title: getTitle("Legacy Planning",),
         actions: [
           GestureDetector(
             onTap: () {
@@ -167,6 +168,12 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
               setState(() {
                 headerPosition = index;
               });
+
+              if(headerPosition == 0)
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const WillAndTrustScreen()));
+              }
+
             },
             child: Container(
               alignment: Alignment.center,
@@ -196,7 +203,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
                   Visibility(
                       visible: headerPosition == index,
                       child: Container(
-                        margin: const EdgeInsets.only(top: 6, bottom: 6),
+                        margin: menuList[index].menuItems.isNotEmpty ? const EdgeInsets.only(top: 6, bottom: 6) : EdgeInsets.zero,
                         child: _menuList(menuList[index].menuItems),
                       ))
                 ],
@@ -352,6 +359,10 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
   }
 
   void setListData() {
+    HeaderGetSet headerGetSet0 = HeaderGetSet();
+    headerGetSet0.setName = "Will & Trust";
+    menuList.add(headerGetSet0);
+
     HeaderGetSet headerGetSet = HeaderGetSet();
     headerGetSet.setName = "General Information";
     List<MenuGetSet> temp1 = List<MenuGetSet>.empty(growable: true);
@@ -372,7 +383,7 @@ class _EStateVaultHomePageState extends BaseState<EStateVaultHomePage> {
     temp2 = [
       MenuGetSet(idStatic: 7, nameStatic: "Medical & Funeral", itemIconStatic: "assets/images/vault_ic_generally.png"),
       MenuGetSet(idStatic: 8, nameStatic: "Dependent Children", itemIconStatic: "assets/images/vault_ic_dependant.png"),
-      MenuGetSet(idStatic: 9, nameStatic: "Will", itemIconStatic: "assets/images/vault_ic_will.png"),
+      //MenuGetSet(idStatic: 9, nameStatic: "Will", itemIconStatic: "assets/images/vault_ic_will.png"),
       MenuGetSet(idStatic: 10, nameStatic: "Business(es)", itemIconStatic: "assets/images/vault_ic_business.png"),
       MenuGetSet(idStatic: 11, nameStatic: "Domestic Employees", itemIconStatic: "assets/images/vault_ic_domestic_employee.png")
     ];

@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/CommanResponse.dart';
@@ -13,6 +16,7 @@ import 'package:superapp_flutter/model/consolidated-portfolio/assets/SearchSchem
 import 'package:superapp_flutter/model/consolidated-portfolio/assets/SearchSchemesSharesResponseModel.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
 import 'package:superapp_flutter/utils/base_class.dart';
+import 'package:superapp_flutter/widget/loading.dart';
 
 import '../../../common_widget/common_widget.dart';
 import '../../../constant/colors.dart';
@@ -33,6 +37,7 @@ class AddAssetScreen extends StatefulWidget {
 class _AddAssetScreenState extends BaseState<AddAssetScreen> {
 
   bool isLoading = false;
+  bool isLoadingData = false;
   bool isFromEdit = false;
 
   Assets getSet = Assets();
@@ -121,6 +126,11 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
   Timer? _debounce;
   Timer? debounce2;
 
+  PlatformFile? selectedFile;
+
+  List<Documents> listDocuments = [];
+  List<String> listRemoveId = [];
+
   @override
   void initState() {
     getSet = (widget as AddAssetScreen).getSet;
@@ -193,7 +203,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       ),
       backgroundColor: white,
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: isLoadingData ? LoadingWidget() :
+        SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,12 +217,15 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                   controller: selectInvestmentTypeController,
                   readOnly: true,
                   onTap: () {
-                    openInvestmentTypeBottomSheet();
+                    if(!isFromEdit)
+                    {
+                      openInvestmentTypeBottomSheet();
+                    }
                   },
                   decoration: InputDecoration(
                     counterText: "",
                     labelText: 'Select Investment Type * ',
-                    suffixIcon: Icon(Icons.keyboard_arrow_down_outlined, size: 24, color: blackLight,),
+                    suffixIcon: Icon(Icons.keyboard_arrow_down_outlined, size: 24, color: isFromEdit ? graySemiDark : blackLight,),
                   ),
                   style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
                 ),
@@ -862,6 +876,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -1229,6 +1245,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -1488,6 +1505,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -1754,7 +1772,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
-
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -2074,6 +2092,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -2247,6 +2266,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -2427,6 +2447,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+          uploadDocumentWidget(),
         ],
       );
     }
@@ -2594,11 +2615,144 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
               style: const TextStyle(fontWeight: FontWeight.w600, color: black, fontSize: 16),
             ),
           ),
+          uploadDocumentWidget(),
         ],
       );
     }
-
+    
     return getDataView;
+  }
+
+  Widget uploadDocumentWidget(){
+    return Container(
+      margin: const EdgeInsets.only(top: 12, left: 8, right: 8, bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Upload Documents", style: getMediumTextStyle(fontSize: 14, color: black),),
+          Container(
+            margin: const EdgeInsets.only(top: 14),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                border: Border.all(color: grayDark)
+            ),
+            child: Row(
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    chooseFile();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: chooseFileBg,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(2), bottomLeft: Radius.circular(2)),
+                        border: Border(right: BorderSide(color: grayDark))
+                    ),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 14, bottom: 14),
+                    child: Text(
+                      "Choose Files",
+                      style: getMediumTextStyle(fontSize: 12, color: black),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: white,
+                    padding: const EdgeInsets.only(left: 16, right: 8, top: 14, bottom: 14),
+                    child: Text(
+                      selectedFile == null ? "No file chosen" : "${selectedFile?.name}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                    ),
+                  ),
+                ),
+                Visibility(
+                    visible: selectedFile != null,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedFile = null;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 8),
+                        child: Image.asset("assets/images/ic_close.png", height: 18, width: 18,),
+                      ),
+                    )
+                )
+              ],
+            ),
+          ),
+          Visibility(
+            visible: listDocuments.isNotEmpty,
+            child: Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: ListView.builder(
+                itemCount: listDocuments.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              if(listDocuments[index].fileUrl != "")
+                              {
+                                openFileFromURL(listDocuments[index].fileUrl ?? "", context);
+                              }
+                            },
+                            child: Text(
+                              "${listDocuments[index].fileName}",
+                              style: getMediumTextStyle(fontSize: 12, color: blue),
+                            ),
+                          ),
+                        ),
+                        const Gap(10),
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            setState(() {
+                              if(listDocuments[index].docId != "")
+                              {
+                                listRemoveId.add(listDocuments[index].docId ?? "");
+                              }
+                              listDocuments.removeAt(index);
+                            });
+                          },
+                          child: Image.asset("assets/images/fin_plan_ic_delete_black.png", color: red, height: 20, width: 20,),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> chooseFile() async{
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+    );
+
+    if (result != null)
+    {
+      PlatformFile file = result.files.first;
+
+      setState(() {
+        selectedFile = file;
+      });
+    }
   }
 
   void calculateValues() {
@@ -2701,6 +2855,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
                               selectedInvestmentTypeId = listInvestmentType[index].itId ?? '';
                               selectedInvestmentTypeName = listInvestmentType[index].name ?? '';
                               selectInvestmentTypeController.text = listInvestmentType[index].name ?? '';
+                              selectedFile = null;
                               selectInvestmentForm();
                             });
                           },
@@ -2965,41 +3120,40 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
 
   getInvestmentType() async {
     setState(() {
-      isLoading = true;
+      isLoadingData = true;
     });
 
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
+    try
+    {
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
 
-    final url = Uri.parse(API_URL_CP + investmentTypes);
-    Map<String, String> jsonBody = {
-    };
+      final url = Uri.parse(API_URL_CP + investmentTypes);
+      Map<String, String> jsonBody = {
+      };
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = InvestmentTypeResponseModel.fromJson(user);
+      final response = await http.post(url, body: jsonBody);
+      final statusCode = response.statusCode;
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = InvestmentTypeResponseModel.fromJson(user);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try
+      if (statusCode == 200 && dataResponse.success == 1)
       {
         listInvestmentType = dataResponse.investmentTypeList ?? [];
         listInvestmentTypeMain = listInvestmentType;
         listInvestmentType.sort((a, b) => a.name!.compareTo(b.name ?? ''),);
       }
-      catch(error)
-      {
-        print("display error : $error");
-      }
-
+    }
+    catch(e)
+    {
+      print("display error invetment type: $e");
+    }
+    finally
+    {
       setState(() {
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
+        isLoadingData = false;
       });
     }
   }
@@ -3008,7 +3162,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
     if(isOnline)
     {
       setState(() {
-        isLoading = true;
+        isLoadingData = true;
       });
 
       try
@@ -3017,7 +3171,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
           HttpLogger(logLevel: LogLevel.BODY),
         ]);
 
-        final url = Uri.parse(API_URL_CP + assetDetail);
+        final url = Uri.parse(API_URL_CP_ASSETS + assetDetail);
         Map<String, String> jsonBody = {
           "assets_id" : assetId
         };
@@ -3099,6 +3253,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
             loadDateController.text = (data.date?.isEmpty ?? true) ? "" : universalDateConverter("MM-dd-yyyy", "dd MMM,yyyy", data.date ?? "");
             loadAmountController.text = data.loanAmount ?? "";
 
+            listDocuments = data.documents ?? [];
+
             selectInvestmentForm();
             setState(() {});
           }
@@ -3111,7 +3267,7 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       finally
       {
         setState(() {
-          isLoading = false;
+          isLoadingData = false;
         });
       }
     }
@@ -3122,46 +3278,52 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
   }
 
   getFamilyMembers() async {
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
 
-    final url = Uri.parse(API_URL_CP_ASSETS + getFamilyMembersApi);
-    Map<String, String> jsonBody = {
-      "user_id" : sessionManagerPMS.getUserId()
-    };
+    setState(() {
+      isLoadingData = true;
+    });
 
-    final response = await http.post(url, body: jsonBody);
-    final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
-    var dataResponse = FamilyMembersResponseModel.fromJson(user);
+    try
+    {
+      HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+        HttpLogger(logLevel: LogLevel.BODY),
+      ]);
 
-    if (statusCode == 200 && dataResponse.success == 1) {
-      try
+      final url = Uri.parse(API_URL_CP_ASSETS + getFamilyMembersApi);
+      Map<String, String> jsonBody = {
+        "user_id" : sessionManagerPMS.getUserId()
+      };
+
+      final response = await http.post(url, body: jsonBody);
+      final statusCode = response.statusCode;
+      final body = response.body;
+      Map<String, dynamic> user = jsonDecode(body);
+      var dataResponse = FamilyMembersResponseModel.fromJson(user);
+
+      if(statusCode == 200 && dataResponse.success == 1)
       {
-        setState(() {
-          listFamilyMember = dataResponse.members ?? [];
-        });
+        listFamilyMember = dataResponse.members ?? [];
       }
-      catch(error)
+      else
       {
-        print("display error : $error");
+        listFamilyMember = [];
       }
-
+    }
+    catch(e)
+    {
+      print("display error family member: $e");
+    }
+    finally
+    {
       setState(() {
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
+        isLoadingData = false;
       });
     }
   }
 
   getSchemeApi() async {
     setState(() {
-      isLoading = true;
+      isLoadingData = true;
     });
 
     HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
@@ -3189,11 +3351,11 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       }
 
       setState(() {
-        isLoading = false;
+        isLoadingData = false;
       });
     } else {
       setState(() {
-        isLoading = false;
+        isLoadingData = false;
       });
     }
   }
@@ -3313,19 +3475,38 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
       isLoading = true;
     });
     print("IS IN SAVE $saveAsset");
-    HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
-      HttpLogger(logLevel: LogLevel.BODY),
-    ]);
+    // HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [
+    //   HttpLogger(logLevel: LogLevel.BODY),
+    // ]);
 
-    final url = Uri.parse(isFromEdit ? "https://portfolio.alphacapital.in/api/services/assets/update" : "https://portfolio.alphacapital.in/api/services/assets/add");
+    // final url = Uri.parse(isFromEdit ? "https://portfolio.alphacapital.in/api/services/assets/update" : "https://portfolio.alphacapital.in/api/services/assets/add");
 
     Map<String, String> jsonBody = getPayloads();
 
-    final response = await http.post(url, body: jsonBody);
+    final url = Uri.parse(isFromEdit ? "https://portfolio.alphacapital.in/api/services/assets/update" : "https://portfolio.alphacapital.in/api/services/assets/add");
+    http.MultipartRequest request = http.MultipartRequest('POST', url,);
+
+    if (selectedFile != null)
+    {
+      request.files.add(await http.MultipartFile.fromPath('upload_doc[]', selectedFile?.path ?? ""));
+    }
+
+    print("Display json body : $jsonBody");
+
+    request.fields.addAll(jsonBody);
+    http.StreamedResponse response = await request.send();
+    var responseBytes = await response.stream.toBytes();
+    var responseString = utf8.decode(responseBytes);
+
     final statusCode = response.statusCode;
-    final body = response.body;
-    Map<String, dynamic> user = jsonDecode(body);
+    Map<String, dynamic> user = jsonDecode(responseString);
     var dataResponse = CommanResponse.fromJson(user);
+
+    // final response = await http.post(url, body: jsonBody);
+    // final statusCode = response.statusCode;
+    // final body = response.body;
+    // Map<String, dynamic> user = jsonDecode(body);
+    // var dataResponse = CommanResponse.fromJson(user);
 
     if (statusCode == 200 && dataResponse.success == 1) {
       try
@@ -3382,7 +3563,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
           "second_holder": secondHolderController.text,
           "transaction_type": selectedTransactionType,
           "user_id": sessionManagerPMS.getUserId(),
-          if(isFromEdit) "assets_id": "${getSet.id}"
+          if(isFromEdit) "assets_id": "${getSet.id}",
+          if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
         };
       }
     else if (showSection == "add_asset_12")
@@ -3409,7 +3591,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
           "transaction_date": transactionDateController.text, // 2026-03-06
           "transaction_type": selectedTransactionType, // Sell
           "user_id": sessionManagerPMS.getUserId(), // 500
-          if(isFromEdit) "assets_id": "${getSet.id}"
+          if(isFromEdit) "assets_id": "${getSet.id}",
+          if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
         };
       }
     else if(showSection == "add_asset_2")
@@ -3434,7 +3617,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         "transaction_date": transactionDateController.text.isEmpty ? "" : universalDateConverter("dd MMM,yyyy", "yyyy-MM-dd", transactionDateController.text),
         "transaction_type": transactionTypeController.text,
         "user_id": sessionManagerPMS.getUserId(),
-        if(isFromEdit) "assets_id": "${getSet.id}"
+        if(isFromEdit) "assets_id": "${getSet.id}",
+        if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
       };
     }
     else if(showSection == "add_asset_3")
@@ -3461,7 +3645,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         "transaction_date": transactionDateController.text.isEmpty ? "" : universalDateConverter("dd MMM,yyyy", "yyyy-MM-dd", transactionDateController.text),
         "transaction_type": transactionTypeController.text,
         "user_id": sessionManagerPMS.getUserId(),
-        if(isFromEdit) "assets_id": "${getSet.id}"
+        if(isFromEdit) "assets_id": "${getSet.id}",
+        if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
       };
     }
     else if(showSection == "add_asset_4")
@@ -3491,7 +3676,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         "transaction_date": transactionDateController.text.isEmpty ? "" : universalDateConverter("dd MMM,yyyy", "yyyy-MM-dd", transactionDateController.text),
         "transaction_type": transactionTypeController.text,
         "user_id": sessionManagerPMS.getUserId(),
-        if(isFromEdit) "assets_id": "${getSet.id}"
+        if(isFromEdit) "assets_id": "${getSet.id}",
+        if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
       };
     }
     else if(showSection == "add_asset_5")
@@ -3512,7 +3698,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         "maturity_date": maturityDateController.text.isEmpty ? "" : universalDateConverter("dd MMM,yyyy", "yyyy-MM-dd", maturityDateController.text),
         "notes": notesController.text,
         "user_id": sessionManagerPMS.getUserId(),
-        if(isFromEdit) "assets_id": "${getSet.id}"
+        if(isFromEdit) "assets_id": "${getSet.id}",
+        if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
       };
     }
     else if(showSection == "add_asset_6")
@@ -3534,7 +3721,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         "number_of_shares": numberofsharesController.text,
         "vested_unvested": vestedController.text,
         "user_id": sessionManagerPMS.getUserId(),
-        if(isFromEdit) "assets_id": "${getSet.id}"
+        if(isFromEdit) "assets_id": "${getSet.id}",
+        if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
       };
     }
     else if(showSection == "add_asset_7")
@@ -3555,7 +3743,8 @@ class _AddAssetScreenState extends BaseState<AddAssetScreen> {
         "scheme_name": schemeNameController.text,
         "transaction_type": selectedTransactionType,
         "user_id": sessionManagerPMS.getUserId(),
-        if(isFromEdit) "assets_id": "${getSet.id}"
+        if(isFromEdit) "assets_id": "${getSet.id}",
+        if(listRemoveId.isNotEmpty)"remove_doc_id" : listRemoveId.join(",")
       };
     }
     return jsonData;
