@@ -371,106 +371,98 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
   }
 
   suggestedAssetAllocationWidget() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 294,
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-            borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 90),
-                  showLineDivider(),
-                  rowCellTitle("Allocation", white, width: 90),
-                  showLineDivider(),
-                  rowCellTitle("Expected Return", white, width: 110),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Allocation", white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Expected Return", white, maxLine: 2)),
+              ],
             ),
-            ListView.builder(
-              itemCount: listRiskProfileAllocation.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final suggestedData = listRiskProfileAllocation[index];
-                final isTotal = (suggestedData.assetClass ?? "") == "Total";
-                final bool isLastIndex = index == listRiskProfileAllocation.length - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, width: 90, maxLine: 2, isBold: isTotal, isLastIndexLeft: isLastIndex),
-                      showLineDivider(),
-                      rowCell(index, "${suggestedData.allocation}", width: 90, maxLine: 2, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, suggestedData.expectedReturn ?? "", width: 110, maxLine: 2, isBold: isTotal, isLastIndexRight: isLastIndex),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+          ListView.builder(
+            itemCount: listRiskProfileAllocation.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final suggestedData = listRiskProfileAllocation[index];
+              final isTotal = (suggestedData.assetClass ?? "") == "Total";
+              final bool isLastIndex = index == listRiskProfileAllocation.length - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(rowCell(index, suggestedData.assetClass ?? "", alignment: Alignment.centerLeft, isPadding: true, maxLine: 2, isBold: isTotal, isLastIndexLeft: isLastIndex)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${suggestedData.allocation}", maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, suggestedData.expectedReturn ?? "", maxLine: 2, isBold: isTotal, isLastIndexRight: isLastIndex)),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
   rangeOfReturnWidget() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 325,
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-            borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Range of Return", white, width: 80, maxLine: 2),
-                  showLineDivider(),
-                  rowCellTitle("1 Year", white, width: 80, maxLine: 2),
-                  showLineDivider(),
-                  rowCellTitle("3 Years", white, width: 80, maxLine: 2),
-                  showLineDivider(),
-                  rowCellTitle("5 Years", white, width: 80, maxLine: 2),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(flex: 2, rowCellTitle("Range of Return",  alignment: Alignment.centerLeft, isPadding: true, white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("1 Year", white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("3 Years", white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("5 Years", white, maxLine: 2)),
+              ],
             ),
-            ListView.builder(
-              itemCount: listReturnOfRisk.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final returnOfRiskData = listReturnOfRisk[index];
-                final bool isLastIndex = index == listReturnOfRisk.length - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, returnOfRiskData.rangeOfReturn ?? "", maxLine: 2, width: 80, isLastIndexLeft: isLastIndex),
-                      showLineDivider(),
-                      rowCell(index, returnOfRiskData.oneYear ?? "", maxLine: 2, width: 80),
-                      showLineDivider(),
-                      rowCell(index, returnOfRiskData.threeYear ?? "", maxLine: 2, width: 80),
-                      showLineDivider(),
-                      rowCell(index, returnOfRiskData.fiveYear ?? "", maxLine: 2, width: 80, isLastIndexRight: isLastIndex),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+          ListView.builder(
+            itemCount: listReturnOfRisk.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final returnOfRiskData = listReturnOfRisk[index];
+              final bool isLastIndex = index == listReturnOfRisk.length - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(index, returnOfRiskData.rangeOfReturn ?? "", alignment: Alignment.centerLeft, isPadding: true, maxLine: 2, width: 80, isLastIndexLeft: isLastIndex)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, returnOfRiskData.oneYear ?? "", maxLine: 2)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, returnOfRiskData.threeYear ?? "", maxLine: 2)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, returnOfRiskData.fiveYear ?? "", maxLine: 2, isLastIndexRight: isLastIndex)),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

@@ -312,7 +312,8 @@ class _WillAndTrustScreenState extends BaseState<WillAndTrustScreen> {
                               )
                             ],
                           ) :
-                          requestSendWidget(1)
+                          haveWill == 0 ?
+                          requestSendWidget(1) : Container()
                         ],
                       ),
                     ),
@@ -554,8 +555,8 @@ class _WillAndTrustScreenState extends BaseState<WillAndTrustScreen> {
                               )
                             ],
                           ) :
-                          requestSendWidget(2)
-
+                          haveLivingWill == 0 ?
+                          requestSendWidget(2) : Container()
                         ],
                       ),
                     ),
@@ -796,7 +797,8 @@ class _WillAndTrustScreenState extends BaseState<WillAndTrustScreen> {
                               )
                             ],
                           ) :
-                          requestSendWidget(3)
+                          haveTrust == 0 ?
+                          requestSendWidget(3) : Container()
                         ],
                       ),
                     ),
@@ -1028,6 +1030,9 @@ class _WillAndTrustScreenState extends BaseState<WillAndTrustScreen> {
         }
         else
         {
+          haveWill = -1;
+          haveLivingWill = -1;
+          haveTrust = -1;
           print("Else work will and trust api");
         }
 
@@ -1064,11 +1069,11 @@ class _WillAndTrustScreenState extends BaseState<WillAndTrustScreen> {
         jsonBody = {
           "user_id": sessionManagerVault.getUserId(),
           "will_id": willData.willId ?? "",
-          "has_will": "$haveWill",
+          "has_will": haveWill == -1 ? "" : "$haveWill",
           "original_will_located": willController.text,
-          "has_living_will": "$haveLivingWill",
+          "has_living_will": haveLivingWill == -1 ? "" : "$haveLivingWill",
           "living_will_location": livingWillController.text,
-          "has_trust": "$haveTrust",
+          "has_trust": haveTrust == -1 ? "" : "$haveTrust",
           "trust_location": trustController.text,
           if(listRemoveId.isNotEmpty)
             "remove_doc_id" : listRemoveId.join(",")
@@ -1079,17 +1084,17 @@ class _WillAndTrustScreenState extends BaseState<WillAndTrustScreen> {
         final url = Uri.parse(API_URL_VAULT + saveWillAndTrustUrl);
         http.MultipartRequest request = http.MultipartRequest('POST', url,);
 
-        if (selectedWillFile != null)
+        if (haveWill == 1 && selectedWillFile != null)
         {
           request.files.add(await http.MultipartFile.fromPath('upload_doc_will[]', selectedWillFile?.path ?? ""));
         }
 
-        if (selectedLivingWillFile != null)
+        if (haveLivingWill == 1 && selectedLivingWillFile != null)
         {
           request.files.add(await http.MultipartFile.fromPath('upload_doc_living_will[]', selectedLivingWillFile?.path ?? ""));
         }
 
-        if (selectedTrustFile != null)
+        if (haveTrust == 1 && selectedTrustFile != null)
         {
           request.files.add(await http.MultipartFile.fromPath('upload_doc_trust[]', selectedTrustFile?.path ?? ""));
         }

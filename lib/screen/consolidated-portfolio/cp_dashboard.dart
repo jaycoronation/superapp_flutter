@@ -1107,18 +1107,18 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                           const Gap(16),
                           Visibility(
                             visible: isShowSinceInception,
-                            child: setUpSinceInceptionData(),
-                            //child: performanceWidget(1),
+                            // child: setUpSinceInceptionData(),
+                            child: performanceWidget(1),
                           ),
                           Visibility(
                             visible: isShowCurrentYear,
-                            child: setUpCurrentYearXIRRData(),
-                            //child: performanceWidget(2),
+                            // child: setUpCurrentYearXIRRData(),
+                            child: performanceWidget(2),
                           ),
                           Visibility(
                             visible: isShowPreviousYear,
-                            child: setUpPreviousYearXIRRData(),
-                            //child: performanceWidget(3),
+                            // child: setUpPreviousYearXIRRData(),
+                            child: performanceWidget(3),
                           )
                         ],
                       ),
@@ -1439,335 +1439,319 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   }
 
   Widget macroAssetAllocationListWidget(){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 373,
-        decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-          borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 85),
-                  showLineDivider(),
-                  rowCellTitle("Actual Amount", white, width: 98),
-                  showLineDivider(),
-                  rowCellTitle("Actual%", white, width: 60),
-                  showLineDivider(),
-                  rowCellTitle("Policy%", white, width: 60),
-                  showLineDivider(),
-                  rowCellTitle("Variance", white, width: 64),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+        borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(flex: 2, rowCellTitle("Actual Amount", white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Actual%", white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Policy%", white, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Variance", white, maxLine: 2)),
+              ],
             ),
-            ListView.builder(
-              itemCount: resultData.macroAssetStratagic?.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final macroData = resultData.macroAssetStratagic?[index];
-                final isTotal = (macroData?.asset ?? "") == "Total";
-                final variationValue = double.tryParse("${macroData?.variation}") ?? 0;
-                final bool isLastItem = index == (resultData.macroAssetStratagic?.length ?? 0) - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, "${macroData?.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 85, isBold: isTotal, isLastIndexLeft: isLastItem),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${macroData?.amount}") , width: 98, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, "${macroData?.actual}%", titleColor: black, width: 60, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, "${macroData?.policy}%", titleColor: black, width: 60, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, "${macroData?.variation}%", titleColor: getValueColor(variationValue), width: 64, isBold: isTotal, isLastIndexRight: isLastItem),
-                    ],
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+          ),
+          ListView.builder(
+            itemCount: resultData.macroAssetStratagic?.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final macroData = resultData.macroAssetStratagic?[index];
+              final isTotal = (macroData?.asset ?? "") == "Total";
+              final variationValue = double.tryParse("${macroData?.variation}") ?? 0;
+              final bool isLastItem = index == (resultData.macroAssetStratagic?.length ?? 0) - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(rowCell(index, "${macroData?.asset}", maxLine: 3, alignment: Alignment.centerLeft, isPadding: true, isBold: isTotal, isLastIndexLeft: isLastItem)),
+                    showLineDivider(),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${macroData?.amount}"), maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${macroData?.actual}%", maxLine: 2, titleColor: black,isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${macroData?.policy}%", titleColor: black, maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${macroData?.variation}%", titleColor: getValueColor(variationValue), maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
+                  ],
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
 
   Widget microAssetAllocationListWidget(){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 368,
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-            borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Asset Class", white, alignment: Alignment.centerLeft, isPadding: true, width: 80, fontSize: 10),
-                  showLineDivider(),
-                  rowCellTitle("Actual Amount", white, width: 98, fontSize: 10),
-                  showLineDivider(),
-                  rowCellTitle("Actual%", white, width: 60, fontSize: 10),
-                  showLineDivider(),
-                  rowCellTitle("Policy%", white, width: 60, fontSize: 10),
-                  showLineDivider(),
-                  rowCellTitle("Variance", white, width: 64, fontSize: 10),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(rowCellTitle("Asset Class", white, maxLine: 2, alignment: Alignment.centerLeft, isPadding: true)),
+                showLineDivider(),
+                expandedCell(flex: 2, rowCellTitle("Actual Amount", white, maxLine: 2, )),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Actual%", white, maxLine: 2,)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Policy%", white, maxLine: 2,)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Variance", white, maxLine: 2)),
+              ],
             ),
-            ListView.builder(
-              itemCount: resultData.microAssetStratagic?.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final microData = resultData.microAssetStratagic?[index];
-                final isTotal = (microData?.asset ?? "") == "Total";
-                final variationValue = double.tryParse("${microData?.variation}") ?? 0;
-                final bool isLastItem = index == (resultData.microAssetStratagic?.length ?? 0) - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, "${microData?.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 80, isBold: isTotal, isLastIndexLeft: isLastItem, fontSize: 10),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${microData?.amount}") , width: 98, isBold: isTotal, fontSize: 10),
-                      showLineDivider(),
-                      rowCell(index, "${microData?.actual}%", titleColor: black, width: 60, isBold: isTotal, fontSize: 10),
-                      showLineDivider(),
-                      rowCell(index, "${microData?.policy}%", titleColor: black, width: 60, isBold: isTotal, fontSize: 10),
-                      showLineDivider(),
-                      rowCell(index, "${microData?.variation}%", titleColor: getValueColor(variationValue), width: 64, isBold: isTotal, isLastIndexRight: isLastItem, fontSize: 10),
-                    ],
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+          ),
+          ListView.builder(
+            itemCount: resultData.microAssetStratagic?.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final microData = resultData.microAssetStratagic?[index];
+              final isTotal = (microData?.asset ?? "") == "Total";
+              final variationValue = double.tryParse("${microData?.variation}") ?? 0;
+              final bool isLastItem = index == (resultData.microAssetStratagic?.length ?? 0) - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(rowCell(index, "${microData?.asset}", alignment: Alignment.centerLeft, isPadding: true, maxLine: 3, isBold: isTotal, isLastIndexLeft: isLastItem)),
+                    showLineDivider(),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${microData?.amount}"), maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${microData?.actual}%", titleColor: black, maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${microData?.policy}%", titleColor: black, maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${microData?.variation}%", titleColor: getValueColor(variationValue), maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
+                  ],
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
 
   Widget applicantAllocationListWidget(){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 354,
-        decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-          borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Holder Name", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
-                  showLineDivider(),
-                  rowCellTitle("Amount", white, width: 120),
-                  showLineDivider(),
-                  rowCellTitle("Allocation%", white, width: 90),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+        borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(flex: 2, rowCellTitle("Holder Name", white, alignment: Alignment.centerLeft, maxLine: 2, isPadding: true)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Amount", maxLine: 2, white)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Allocation%", maxLine: 2, white)),
+              ],
             ),
-            ListView.builder(
-              itemCount: resultData.applicantDetails?.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final applicantData = resultData.applicantDetails?[index];
-                final isTotal = (applicantData?.applicant ?? "") == "Amount Total";
-                final bool isLastItem = index == (resultData.applicantDetails?.length ?? 0) - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, "${applicantData?.applicant}", alignment: Alignment.centerLeft, isPadding: true, width: 140, isBold: isTotal, isLastIndexLeft: isLastItem),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${applicantData?.amount}") , width: 120, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, "${applicantData?.allocation}%", titleColor: black, width: 90, isBold: isTotal, isLastIndexRight: isLastItem),
-                    ],
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+          ),
+          ListView.builder(
+            itemCount: resultData.applicantDetails?.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final applicantData = resultData.applicantDetails?[index];
+              final isTotal = (applicantData?.applicant ?? "") == "Amount Total";
+              final bool isLastItem = index == (resultData.applicantDetails?.length ?? 0) - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(index, "${applicantData?.applicant}", alignment: Alignment.centerLeft, maxLine: 2, isPadding: true, isBold: isTotal, isLastIndexLeft: isLastItem)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, convertCommaSeparatedAmount("${applicantData?.amount}"), maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${applicantData?.allocation}%", titleColor: black, maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
+                  ],
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
 
   Widget serviceProviderAllocationListWidget(){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 354,
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-            borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Holder Name", white, alignment: Alignment.centerLeft, isPadding: true, width: 140),
-                  showLineDivider(),
-                  rowCellTitle("Amount", white, width: 120),
-                  showLineDivider(),
-                  rowCellTitle("Allocation%", white, width: 90),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(rowCellTitle("Holder Name", white, alignment: Alignment.centerLeft, maxLine: 2, isPadding: true)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Amount", maxLine: 2, white)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Allocation%", maxLine: 2, white)),
+              ],
             ),
-            ListView.builder(
-              itemCount: resultData.serviceProviders?.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final serviceProvider = resultData.serviceProviders?[index];
-                final isTotal = (serviceProvider?.serviceProvider ?? "") == "Total";
-                final bool isLastItem = index == (resultData.serviceProviders?.length ?? 0) - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, "${serviceProvider?.serviceProvider}", alignment: Alignment.centerLeft, isPadding: true, width: 140, isBold: isTotal, isLastIndexLeft: isLastItem),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${serviceProvider?.amount}") , width: 120, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, "${serviceProvider?.allocation}%", titleColor: black, width: 90, isBold: isTotal, isLastIndexRight: isLastItem),
-                    ],
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+          ),
+          ListView.builder(
+            itemCount: resultData.serviceProviders?.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final serviceProvider = resultData.serviceProviders?[index];
+              final isTotal = (serviceProvider?.serviceProvider ?? "") == "Total";
+              final bool isLastItem = index == (resultData.serviceProviders?.length ?? 0) - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(rowCell(index, "${serviceProvider?.serviceProvider}", alignment: Alignment.centerLeft, isPadding: true, maxLine: 2, isBold: isTotal, isLastIndexLeft: isLastItem)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, convertCommaSeparatedAmount("${serviceProvider?.amount}"), maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${serviceProvider?.allocation}%", titleColor: black, maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
+                  ],
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
 
   Widget performanceWidget(int isFor){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
-      child: Container(
-        width: 676,
-        decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
-          borderRadius: BorderRadius.circular(14)
-        ),
-        child: Column(
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  rowCellTitle("Assets", white, alignment: Alignment.centerLeft, isPadding: true, width: 130),
-                  showLineDivider(),
-                  rowCellTitle("Invested Amount", white, width: 140),
-                  showLineDivider(),
-                  rowCellTitle("Current Value", white, width: 140),
-                  showLineDivider(),
-                  rowCellTitle("Gain", white, width: 140),
-                  showLineDivider(),
-                  rowCellTitle("XIRR", white, width: 120),
-                ],
-              ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+        borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(flex: 1, rowCellTitle("Assets", white, alignment: Alignment.centerLeft,  maxLine: 2, isPadding: true,)),
+                // showLineDivider(),
+                // expandedCell(flex: 2, rowCellTitle("Invested Amount", maxLine: 2, white)),
+                showLineDivider(),
+                expandedCell(flex: 2, rowCellTitle("Current Value", maxLine: 2, white)),
+                showLineDivider(),
+                expandedCell(flex: 2, rowCellTitle("Gain", maxLine: 2, white)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("XIRR", maxLine: 2, white)),
+              ],
             ),
-            isFor == 1 ?
-            ListView.builder(
-              itemCount: listSinceInceptionNew.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final performanceData = listSinceInceptionNew[index];
-                final isTotal = (performanceData.asset ?? "") == "Overall";
-                final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
-                final bool isLastItem = index == listSinceInceptionNew.length - 1;
-                return IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      rowCell(index, "${performanceData.asset}", width: 130, isBold: isTotal, isLastIndexLeft: isLastItem),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}"), width: 140, isBold: isTotal,),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}"), width: 140, isBold: isTotal,),
-                      showLineDivider(),
-                      rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}"), width: 140, isBold: isTotal),
-                      showLineDivider(),
-                      rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
-                    ],
-                  ),
-                );
-              },
-            ) :
-            isFor == 2 ?
-            ListView.builder(
-              itemCount: listCurrentYearXIRRNew.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final performanceData = listCurrentYearXIRRNew[index];
-                final isTotal = (performanceData.asset ?? "") == "Overall";
-                final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
-                final bool isLastItem = index == listCurrentYearXIRRNew.length - 1;
-                return Row(
+          ),
+          isFor == 1 ?
+          ListView.builder(
+            itemCount: listSinceInceptionNew.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final performanceData = listSinceInceptionNew[index];
+              final isTotal = (performanceData.asset ?? "") == "Overall";
+              final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
+              final bool isLastItem = index == listSinceInceptionNew.length - 1;
+              return IntrinsicHeight(
+                child: Row(
                   children: [
-                    rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal, isLastIndexLeft: isLastItem),
+                    expandedCell(rowCell(index, "${performanceData.asset}", maxLine: 2,  alignment: Alignment.centerLeft, isPadding: true, isBold: isTotal, isLastIndexLeft: isLastItem)),
+                    // showLineDivider(),
+                    // expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}"), maxLine: 2, isBold: isTotal,)),
                     showLineDivider(),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}"), maxLine: 2, isBold: isTotal,)),
                     showLineDivider(),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}"), maxLine: 2, isBold: isTotal)),
                     showLineDivider(),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
-                    showLineDivider(),
-                    rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
+                    expandedCell(rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
                   ],
-                );
-              },
-            ) :
-            ListView.builder(
-              itemCount: listPreviousYearXIRRNew.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (context, index) {
-                final performanceData = listPreviousYearXIRRNew[index];
-                final isTotal = (performanceData.asset ?? "") == "Overall";
-                final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
-                final bool isLastItem = index == listPreviousYearXIRRNew.length - 1;
-                return Row(
+                ),
+              );
+            },
+          ) :
+          isFor == 2 ?
+          ListView.builder(
+            itemCount: listCurrentYearXIRRNew.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final performanceData = listCurrentYearXIRRNew[index];
+              final isTotal = (performanceData.asset ?? "") == "Overall";
+              final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
+              final bool isLastItem = index == listCurrentYearXIRRNew.length - 1;
+              return IntrinsicHeight(
+                child: Row(
                   children: [
-                    rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, width: 130, isBold: isTotal, isLastIndexLeft: isLastItem),
+                    expandedCell(rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, isBold: isTotal, maxLine: 2, isLastIndexLeft: isLastItem)),
+                    // showLineDivider(),
+                    // rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}"), maxLine: 2, isBold: isTotal),
                     showLineDivider(),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}") , width: 140, isBold: isTotal),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}"), maxLine: 2, isBold: isTotal)),
                     showLineDivider(),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}") , width: 140, isBold: isTotal),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}"), maxLine: 2, isBold: isTotal)),
                     showLineDivider(),
-                    rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}") , width: 140, isBold: isTotal),
-                    showLineDivider(),
-                    rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), width: 120, isBold: isTotal, isLastIndexRight: isLastItem),
+                    expandedCell(rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
                   ],
-                );
-              },
-            )
-          ],
-        ),
+                ),
+              );
+            },
+          ) :
+          ListView.builder(
+            itemCount: listPreviousYearXIRRNew.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final performanceData = listPreviousYearXIRRNew[index];
+              final isTotal = (performanceData.asset ?? "") == "Overall";
+              final gainValue = double.tryParse("${performanceData.xirr}") ?? 0;
+              final bool isLastItem = index == listPreviousYearXIRRNew.length - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(rowCell(index, "${performanceData.asset}", alignment: Alignment.centerLeft, isPadding: true, maxLine: 2, isBold: isTotal, isLastIndexLeft: isLastItem)),
+                    // showLineDivider(),
+                    // rowCell(index, convertCommaSeparatedAmount("${performanceData.investedAmount}"), maxLine: 2, isBold: isTotal),
+                    showLineDivider(),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.currentValue}"), maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(flex: 2, rowCell(index, convertCommaSeparatedAmount("${performanceData.gain}"), maxLine: 2, isBold: isTotal)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, "${performanceData.xirr}%", titleColor: getValueColor(gainValue), maxLine: 2, isBold: isTotal, isLastIndexRight: isLastItem)),
+                  ],
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }
