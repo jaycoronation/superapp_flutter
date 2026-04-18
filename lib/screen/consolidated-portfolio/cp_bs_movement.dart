@@ -96,9 +96,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           ? const LoadingWidget()
           : Container(
               margin: EdgeInsets.only(top: 8,bottom: _isShowChart ? 0 : 50),
-            child: _isShowChart
-                ?
-                  Container(
+            child: _isShowChart ?
+            Container(
               height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(color: white),
               padding: const EdgeInsets.all(12),
@@ -108,7 +107,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                   minX: 0,
                   maxX: (listGraphData.length - 1).toDouble(),
                   minY: 0,
-                  maxY:  maxY <= 0 ? 10 : maxY,
+                  // maxY:  maxY <= 0 ? 10 : maxY,
+                  maxY: listGraphData.isNotEmpty ? maxY : 0.0,
                   gridData: FlGridData(
                     show: true,
                     horizontalInterval: listGraphData.isNotEmpty ? interval : null,
@@ -117,7 +117,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        interval: interval <= 0 ? 1 : interval,
+                        //interval: interval <= 0 ? 1 : interval,
+                        interval: listGraphData.isNotEmpty ? interval : null,
                         reservedSize: 80,
                         getTitlesWidget: (value, meta) {
                           final isTopValue = value == meta.max;
@@ -463,7 +464,8 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
               .reduce((a, b) => (a) > (b) ? a : b)
               .toDouble()
               : 0;
-          final scale = calculateChartScale(rawMaxY, divisions: 7);
+          //final scale = calculateChartScale(rawMaxY, divisions: 7);
+          final scale = calculateChartScale2(0, rawMaxY, divisions: 7);
           maxY = scale.maxY;
           interval = scale.interval;
 

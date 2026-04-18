@@ -1442,7 +1442,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+        border: (resultData.macroAssetTactical?.isEmpty ?? true) ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
         borderRadius: BorderRadius.circular(14)
       ),
       child: Column(
@@ -1462,6 +1462,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ],
             ),
           ),
+          (resultData.macroAssetStratagic?.isEmpty ?? true) ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
           ListView.builder(
             itemCount: resultData.macroAssetStratagic?.length,
             shrinkWrap: true,
@@ -1498,7 +1509,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          border: (resultData.microAssetStratagic?.isEmpty ?? true) ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
           borderRadius: BorderRadius.circular(14)
       ),
       child: Column(
@@ -1518,6 +1529,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ],
             ),
           ),
+          (resultData.microAssetStratagic?.isEmpty ?? true) ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
           ListView.builder(
             itemCount: resultData.microAssetStratagic?.length,
             shrinkWrap: true,
@@ -1554,7 +1576,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+        border: (resultData.applicantDetails?.isEmpty ?? true) ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
         borderRadius: BorderRadius.circular(14)
       ),
       child: Column(
@@ -1570,6 +1592,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ],
             ),
           ),
+          (resultData.applicantDetails?.isEmpty ?? true) ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
           ListView.builder(
             itemCount: resultData.applicantDetails?.length,
             shrinkWrap: true,
@@ -1601,7 +1634,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          border: (resultData.serviceProviders?.isEmpty ?? true) ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
           borderRadius: BorderRadius.circular(14)
       ),
       child: Column(
@@ -1617,6 +1650,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
               ],
             ),
           ),
+          (resultData.serviceProviders?.isEmpty ?? true) ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
           ListView.builder(
             itemCount: resultData.serviceProviders?.length,
             shrinkWrap: true,
@@ -1648,7 +1692,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+        border: ((isFor == 1 && listSinceInceptionNew.isEmpty) || (isFor == 2 && listCurrentYearXIRRNew.isEmpty) || (isFor == 3 && listPreviousYearXIRRNew.isEmpty))  ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
         borderRadius: BorderRadius.circular(14)
       ),
       child: Column(
@@ -1669,6 +1713,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
             ),
           ),
           isFor == 1 ?
+          listSinceInceptionNew.isEmpty ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
           ListView.builder(
             itemCount: listSinceInceptionNew.length,
             shrinkWrap: true,
@@ -1697,6 +1752,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
             },
           ) :
           isFor == 2 ?
+          listCurrentYearXIRRNew.isEmpty ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
           ListView.builder(
             itemCount: listCurrentYearXIRRNew.length,
             shrinkWrap: true,
@@ -1723,6 +1789,17 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                 ),
               );
             },
+          ) :
+          listPreviousYearXIRRNew.isEmpty ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
           ) :
           ListView.builder(
             itemCount: listPreviousYearXIRRNew.length,
