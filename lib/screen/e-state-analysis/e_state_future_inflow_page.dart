@@ -67,16 +67,17 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
         body: isOnline
             ? _isLoading
             ? const LoadingWidget()
-            : SafeArea(
+            : listData.isEmpty ?
+        const Center(
+            child: MyNoDataWidget(msg: 'No future inflow data found!')
+        )
+            :
+        SafeArea(
             child: SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: listData.isEmpty ?
-                const Center(
-                  child: MyNoDataWidget(msg: 'No future inflow data found!')
-                )
-                : Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

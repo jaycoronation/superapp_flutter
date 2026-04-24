@@ -563,7 +563,7 @@ class _EStateExistingAssetsPageState extends BaseState<EStateExistingAssetsPage>
               // _isNoDataVisible = true;
             })
         );
-        showSnackBar(dataResponse.message, context);
+        //showSnackBar(dataResponse.message, context);
       }
     }else {
       noInterNet(context);

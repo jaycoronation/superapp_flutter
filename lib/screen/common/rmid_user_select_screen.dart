@@ -22,6 +22,7 @@ import 'package:superapp_flutter/widget/no_data.dart';
 import 'package:superapp_flutter/widget/no_internet.dart';
 
 import '../../utils/app_utils.dart';
+import '../e-state-analysis/fp_home_page.dart';
 
 class RMIDUserSelectScreen extends StatefulWidget {
   final String isFor;
@@ -469,8 +470,6 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
 
     if (statusCode == 200 && dataResponse.success == 1) {
 
-
-
       try {
 
         //Consolidated Portfolio
@@ -536,7 +535,7 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
         openPage();
 
       } catch (e) {
-        print(e);
+        print("Display error in rm client : $e");
       }
     }
     else
@@ -561,7 +560,8 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
     //Financial Planning
     else if(isFor == "FP")
     {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateAnalysisHomePage()),);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const FpHomePage()));
     }
     //Estate Vault
     else if(isFor == "EV")

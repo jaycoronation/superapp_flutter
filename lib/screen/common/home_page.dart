@@ -266,8 +266,8 @@ class _HomePageState extends BaseState<HomePage> {
                       else
                       {
                         //RM(broker) user
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RmFpLeadScreen()));
-                        //Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+                        openOptionSelectionDialog();
+
                       }
                     }
                     else if(data.id == "4")
@@ -413,6 +413,56 @@ class _HomePageState extends BaseState<HomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  openOptionSelectionDialog(){
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  getBottomSheetHeaderWithoutButton(context, "Select Option"),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: getCommonButton(
+                          "Client",
+                          false,
+                          () {
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
+                          }
+                        ),
+                      ),
+                      const Gap(20),
+                      Expanded(
+                        child: getCommonButton(
+                          "Leads",
+                          false,
+                          () async {
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RmFpLeadScreen()));
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

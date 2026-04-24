@@ -62,16 +62,17 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
       body: isOnline
           ? _isLoading
           ? const LoadingWidget()
-          : SafeArea(
+          : listData.isEmpty
+          ? const Center(
+          child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
+      )
+          :
+      SafeArea(
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
-                  child: listData.isEmpty
-                      ? const Center(
-                          child: MyNoDataWidget(msg: 'No aspiration/future expense found!')
-                      )
-                      : Column(
+                  child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
@@ -650,7 +651,7 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
               // _isNoDataVisible = true;
             })
         );
-        showSnackBar(dataResponse.message, context);
+        //showSnackBar(dataResponse.message, context);
       }
     }else {
       noInterNet(context);

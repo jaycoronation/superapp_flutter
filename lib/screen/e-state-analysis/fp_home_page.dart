@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/e_state_insurance_and_will_screen.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/rm_fp_add_lead_screen.dart';
+import 'package:superapp_flutter/utils/ReportDownload.dart';
 import 'package:superapp_flutter/utils/base_class.dart';
 
 import '../../common_widget/common_widget.dart';
@@ -129,13 +130,19 @@ class _FpHomePageState extends BaseState<FpHomePage> {
           actions: [
             GestureDetector(
               onTap: () {
-                final bytes = utf8.encode(sessionManager.getUserId().toString().trim());
-                final base64Str = base64.encode(bytes);
-                print("Display base 64 :$base64Str");
 
-                var _url = API_URL_ANALYSIS + generateFinalReport + base64Str;
-                handleDownload(context, _url);
-                //_getDownloadDirectory(context,_url);
+                ReportDownload.startDownload(
+                  context,
+                  sessionManager.getUserId().toString(), (val) => setState(() => isLoadingReport = val)
+                );
+
+                // final bytes = utf8.encode(sessionManager.getUserId().toString().trim());
+                // final base64Str = base64.encode(bytes);
+                // print("Display base 64 :$base64Str");
+                //
+                // var _url = API_URL_ANALYSIS + generateFinalReport + base64Str;
+                // handleDownload(context, _url);
+                // //_getDownloadDirectory(context,_url);
               },
               child: Container(
                 alignment: Alignment.centerLeft,
@@ -609,6 +616,7 @@ class _FpHomePageState extends BaseState<FpHomePage> {
           if(dataResponse.userLeadData?.isNotEmpty ?? false)
           {
             directUserInfo = dataResponse.userLeadData?[0] ?? UserLeadData();
+            print("Display user name : ${directUserInfo.firstName}");
             if ((directUserInfo.childDetails ?? "").isNotEmpty) {
               List<dynamic> decodedList = jsonDecode(directUserInfo.childDetails!);
               listChildData.clear();
@@ -628,6 +636,14 @@ class _FpHomePageState extends BaseState<FpHomePage> {
               }
             }
           }
+          else
+          {
+            print("direct user info is empty");
+          }
+        }
+        else
+        {
+          print("Else condition works ");
         }
 
       }
