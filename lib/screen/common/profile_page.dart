@@ -1,19 +1,22 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:superapp_flutter/screen/common/about_app.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/screen/common/locate_us.dart';
-import 'package:superapp_flutter/screen/common/video_list_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant/colors.dart';
+import '../../utils/Utils.dart';
 import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
+import '../../utils/session_manager_methods.dart';
 import '../insurance_data/insurance_list_screen.dart';
 import 'DocumentsScreen.dart';
+import 'LoginScreen.dart';
 import 'SuggestedActionsScreen.dart';
-import 'blogs_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -162,20 +165,20 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                         },
                         child: optionWidget("Suggested Actions")
                     ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
-                      },
-                      child: optionWidget("Videos")
-                    ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()));
-                      },
-                      child: optionWidget("Blogs")
-                    ),
+                    // GestureDetector(
+                    //   behavior: HitTestBehavior.opaque,
+                    //   onTap: () {
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
+                    //   },
+                    //   child: optionWidget("Videos")
+                    // ),
+                    // GestureDetector(
+                    //   behavior: HitTestBehavior.opaque,
+                    //   onTap: () {
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()));
+                    //   },
+                    //   child: optionWidget("Blogs")
+                    // ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () async {
@@ -344,6 +347,14 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                         ],
                       ),
                     ),
+
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        logoutFromApp();
+                      },
+                      child: optionWidget("Logout", titleColor: red)
+                    ),
                   ],
                 ),
               ),
@@ -414,7 +425,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
     );
   }
 
-  Widget optionWidget(String title){
+  Widget optionWidget(String title, {Color titleColor = black}){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -423,12 +434,13 @@ class _ProfilePageState extends BaseState<ProfilePage> {
           child: Row(
             children: [
               Expanded(
-                child: Text(title, style: getMediumTextStyle(fontSize: 16, color: black),),
+                child: Text(title, style: getMediumTextStyle(fontSize: 16, color: titleColor),),
               ),
               Image.asset(
                 'assets/images/ic_arrow_right.png',
                 width: 16,
                 height: 16,
+                color: titleColor,
               ),
               const Gap(12)
             ],
@@ -437,6 +449,107 @@ class _ProfilePageState extends BaseState<ProfilePage> {
         const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
       ],
     );
+  }
+
+  void logoutFromApp() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: white,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12)
+                ),
+                color: white
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    getBottomSheetHeaderWithoutButton(context, "", isMargin: false),
+                    Text(
+                      'Logout from Alpha Capital Super App',
+                      style: getBoldTextStyle(fontSize: 18, color: black)
+                    ),
+                    const Gap(16),
+                    Text(
+                      'Are you sure you want to logout from app?',
+                      style: getMediumTextStyle(fontSize: 16, color: black)
+                    ),
+                    const Gap(30),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: getCommonButtonBorder(
+                            "No",
+                            false,
+                            () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                          child: getCommonButton(
+                            "Yes",
+                            false,
+                            () {
+                              _logoutWork();
+                            },
+                            isUpperCaseText: false
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _logoutWork(){
+
+    sessionManagerPMS.savePerformanceList([]);
+
+    sessionManagerPMS.saveNextYearList([]);
+
+    sessionManagerPMS.savePerviousYearList([]);
+
+    sessionManagerPMS.setReportDate('');
+
+    sessionManagerPMS.saveApplicantsList([]);
+
+    Navigator.pop(context);
+    SessionManagerMethods.clear();
+    _clearMintSDKData();
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
+  }
+
+  // note while app is logging-out call this function _clearMintSDKData
+  Future<void> _clearMintSDKData() async {
+    try {
+      if (Platform.isAndroid) {
+        await MintUtils.platform.invokeMethod('clearSession');
+      } else {
+        await MintUtils.platform.invokeMethod('clearSessionIos');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override

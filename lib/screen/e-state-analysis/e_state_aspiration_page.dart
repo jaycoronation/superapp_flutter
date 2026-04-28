@@ -88,11 +88,11 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                           ),
                           const Gap(20),
                           aspirationCalculationWidget(),
-                          const Gap(10),
+                          const Gap(24),
                           Center(
                             child: Text(
                               "*Target Return may or may not be delivered due to market risk.",
-                              style: getMediumTextStyle(fontSize: 14, color: black),
+                              style: getBoldTextStyle(fontSize: 14, color: black),
                               textAlign: TextAlign.center,
                             ),
                           )

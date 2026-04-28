@@ -92,11 +92,11 @@ class _EStateFutureInflowPageState extends BaseState<EStateFutureInflowPage> {
                     ),
                     const Gap(20),
                     futureInflowCalculationWidget(),
-                    const Gap(10),
+                    const Gap(24),
                     Center(
                       child: Text(
-                        "*There will be future infolow of ₹2,00,00,000",
-                        style: getMediumTextStyle(fontSize: 14, color: black),
+                        "*There will be future infolow of ${convertCommaSeparatedAmount("${futureInflowsReport.total?.pvOfIncome}")}",
+                        style: getBoldTextStyle(fontSize: 14, color: black),
                         textAlign: TextAlign.center,
                       ),
                     )

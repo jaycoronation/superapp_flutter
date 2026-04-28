@@ -278,6 +278,7 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                   ) :
                   Expanded(
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 60),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -334,6 +335,20 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
                 ]
             )
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'add_asset_portfolio',
+        onPressed: () async{
+
+          var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(Assets(), false)));
+          if (value == "success")
+          {
+            _getPortfolioDataNew();
+          }
+        },
+        icon: Icon(Icons.add, color: white,),
+        label: Text("Add Asset", style: getMediumTextStyle(fontSize: 14, color: white),),
+        backgroundColor: blue,
       ),
     );
   }

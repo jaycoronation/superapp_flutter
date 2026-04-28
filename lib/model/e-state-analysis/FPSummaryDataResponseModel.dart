@@ -72,8 +72,9 @@ class SummaryData {
       AspirationsSummary? aspirationsSummary, 
       Networth? networth, 
       LiabilitiesData? liabilitiesData, 
-      WealthMetrics? wealthMetrics, 
-      FutureInflows? futureInflows, 
+      WealthMetrics? wealthMetrics,
+      InsuranceAnalysis? insuranceAnalysis,
+      FutureInflows? futureInflows,
       RiskComponents? riskComponents, 
       RecommendationTable? recommendationTable, 
       List<RangeOfReturn>? rangeOfReturn, 
@@ -87,6 +88,7 @@ class SummaryData {
     _networth = networth;
     _liabilitiesData = liabilitiesData;
     _wealthMetrics = wealthMetrics;
+    _insuranceAnalysis = insuranceAnalysis;
     _futureInflows = futureInflows;
     _riskComponents = riskComponents;
     _recommendationTable = recommendationTable;
@@ -114,6 +116,7 @@ class SummaryData {
     _networth = json['networth'] != null ? Networth.fromJson(json['networth']) : null;
     _liabilitiesData = json['liabilities'] != null ? LiabilitiesData.fromJson(json['liabilities']) : null;
     _wealthMetrics = json['wealth_metrics'] != null ? WealthMetrics.fromJson(json['wealth_metrics']) : null;
+    _insuranceAnalysis = json['insurance_analysis'] != null ? InsuranceAnalysis.fromJson(json['insurance_analysis']) : null;
     _futureInflows = json['future_inflows'] != null ? FutureInflows.fromJson(json['future_inflows']) : null;
     _riskComponents = json['risk_components'] != null ? RiskComponents.fromJson(json['risk_components']) : null;
     _recommendationTable = json['recommendation_table'] != null ? RecommendationTable.fromJson(json['recommendation_table']) : null;
@@ -144,6 +147,7 @@ class SummaryData {
   Networth? _networth;
   LiabilitiesData? _liabilitiesData;
   WealthMetrics? _wealthMetrics;
+  InsuranceAnalysis? _insuranceAnalysis;
   FutureInflows? _futureInflows;
   RiskComponents? _riskComponents;
   RecommendationTable? _recommendationTable;
@@ -158,6 +162,7 @@ SummaryData copyWith({  UserDetails? userDetails,
   Networth? networth,
   LiabilitiesData? liabilitiesData,
   WealthMetrics? wealthMetrics,
+  InsuranceAnalysis? insuranceAnalysis,
   FutureInflows? futureInflows,
   RiskComponents? riskComponents,
   RecommendationTable? recommendationTable,
@@ -172,6 +177,7 @@ SummaryData copyWith({  UserDetails? userDetails,
   networth: networth ?? _networth,
   liabilitiesData: liabilitiesData ?? _liabilitiesData,
   wealthMetrics: wealthMetrics ?? _wealthMetrics,
+  insuranceAnalysis: insuranceAnalysis ?? _insuranceAnalysis,
   futureInflows: futureInflows ?? _futureInflows,
   riskComponents: riskComponents ?? _riskComponents,
   recommendationTable: recommendationTable ?? _recommendationTable,
@@ -187,6 +193,7 @@ SummaryData copyWith({  UserDetails? userDetails,
   Networth? get networth => _networth;
   LiabilitiesData? get liabilitiesData => _liabilitiesData;
   WealthMetrics? get wealthMetrics => _wealthMetrics;
+  InsuranceAnalysis? get insuranceAnalysis => _insuranceAnalysis;
   FutureInflows? get futureInflows => _futureInflows;
   RiskComponents? get riskComponents => _riskComponents;
   RecommendationTable? get recommendationTable => _recommendationTable;
@@ -219,6 +226,9 @@ SummaryData copyWith({  UserDetails? userDetails,
     }
     if (_wealthMetrics != null) {
       map['wealth_metrics'] = _wealthMetrics?.toJson();
+    }
+    if (_insuranceAnalysis != null) {
+      map['insurance_analysis'] = _insuranceAnalysis?.toJson();
     }
     if (_futureInflows != null) {
       map['future_inflows'] = _futureInflows?.toJson();
@@ -1041,6 +1051,78 @@ User copyWith({  String? userId,
     map['name'] = _name;
     map['success'] = _success;
     map['message'] = _message;
+    return map;
+  }
+
+}
+
+/// need_gap_with_re : 77716739
+/// need_gap_wo_re : 97716739
+/// existing_life_insurance : 70000000
+/// life_insurance_required : 27716739
+/// health_insurance_required : "Not Required"
+/// will_status : "Please make the Will"
+
+InsuranceAnalysis insuranceAnalysisFromJson(String str) => InsuranceAnalysis.fromJson(json.decode(str));
+String insuranceAnalysisToJson(InsuranceAnalysis data) => json.encode(data.toJson());
+class InsuranceAnalysis {
+  InsuranceAnalysis({
+    String? needGapWithRe,
+    String? needGapWoRe,
+    String? existingLifeInsurance,
+    String? lifeInsuranceRequired,
+    String? healthInsuranceRequired,
+    String? willStatus,}){
+    _needGapWithRe = needGapWithRe;
+    _needGapWoRe = needGapWoRe;
+    _existingLifeInsurance = existingLifeInsurance;
+    _lifeInsuranceRequired = lifeInsuranceRequired;
+    _healthInsuranceRequired = healthInsuranceRequired;
+    _willStatus = willStatus;
+  }
+
+  InsuranceAnalysis.fromJson(dynamic json) {
+    _needGapWithRe = json['need_gap_with_re'] is int ? json['need_gap_with_re'].toString() : json['need_gap_with_re'];
+    _needGapWoRe = json['need_gap_wo_re'] is int ? json['need_gap_wo_re'].toString() : json['need_gap_wo_re'];
+    _existingLifeInsurance = json['existing_life_insurance'] is int ? json['existing_life_insurance'].toString() : json['existing_life_insurance'];
+    _lifeInsuranceRequired = json['life_insurance_required'] is int ? json['life_insurance_required'].toString() : json['life_insurance_required'];
+    _healthInsuranceRequired = json['health_insurance_required'] is int ? json['health_insurance_required'].toString() : json['health_insurance_required'];
+    _willStatus = json['will_status'] is int ? json['will_status'].toString() : json['will_status'];
+  }
+  String? _needGapWithRe;
+  String? _needGapWoRe;
+  String? _existingLifeInsurance;
+  String? _lifeInsuranceRequired;
+  String? _healthInsuranceRequired;
+  String? _willStatus;
+  InsuranceAnalysis copyWith({  String? needGapWithRe,
+    String? needGapWoRe,
+    String? existingLifeInsurance,
+    String? lifeInsuranceRequired,
+    String? healthInsuranceRequired,
+    String? willStatus,
+  }) => InsuranceAnalysis(  needGapWithRe: needGapWithRe ?? _needGapWithRe,
+    needGapWoRe: needGapWoRe ?? _needGapWoRe,
+    existingLifeInsurance: existingLifeInsurance ?? _existingLifeInsurance,
+    lifeInsuranceRequired: lifeInsuranceRequired ?? _lifeInsuranceRequired,
+    healthInsuranceRequired: healthInsuranceRequired ?? _healthInsuranceRequired,
+    willStatus: willStatus ?? _willStatus,
+  );
+  String? get needGapWithRe => _needGapWithRe;
+  String? get needGapWoRe => _needGapWoRe;
+  String? get existingLifeInsurance => _existingLifeInsurance;
+  String? get lifeInsuranceRequired => _lifeInsuranceRequired;
+  String? get healthInsuranceRequired => _healthInsuranceRequired;
+  String? get willStatus => _willStatus;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['need_gap_with_re'] = _needGapWithRe;
+    map['need_gap_wo_re'] = _needGapWoRe;
+    map['existing_life_insurance'] = _existingLifeInsurance;
+    map['life_insurance_required'] = _lifeInsuranceRequired;
+    map['health_insurance_required'] = _healthInsuranceRequired;
+    map['will_status'] = _willStatus;
     return map;
   }
 

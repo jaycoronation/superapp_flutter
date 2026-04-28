@@ -678,7 +678,7 @@ Future<String> convertImageToBase64(String imagePath) async {
   return base64Image;
 }
 
-Widget getBottomSheetHeaderWithoutButton(BuildContext context,String title){
+Widget getBottomSheetHeaderWithoutButton(BuildContext context,String title, {bool isMargin = true}){
   return SizedBox(
     width: MediaQuery.of(context).size.width,
     child: Column(
@@ -693,7 +693,7 @@ Widget getBottomSheetHeaderWithoutButton(BuildContext context,String title){
           margin: const EdgeInsets.only(top: 10, bottom: 8),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 12,bottom: 20),
+          margin: isMargin ? const EdgeInsets.only(top: 12,bottom: 20) : const EdgeInsets.all(0),
           child: Text(title, style: const TextStyle(fontSize: 20, color: black, fontWeight: FontWeight.w600)),
         ),
       ],

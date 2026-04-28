@@ -40,3 +40,5 @@ String mintLogin = "api/auth/login";
 String forgotPassword = "api/auth/sendPasswordResetMail";
 
 String userListAPI = "user/list";
+
+String getContactRMDetails = "getrmdetails";

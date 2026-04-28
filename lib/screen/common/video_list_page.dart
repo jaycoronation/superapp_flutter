@@ -46,7 +46,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
         ?  Scaffold(
           backgroundColor: white,
           appBar: AppBar(
-            toolbarHeight: 55,
+            toolbarHeight: 0,
             automaticallyImplyLeading: false,
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -180,7 +180,7 @@ class _VideoListPageState extends BaseState<VideoListPage> {
         :  Scaffold(
           backgroundColor: dashboardBg,
           appBar: AppBar(
-            toolbarHeight: 55,
+            toolbarHeight: 0,
             automaticallyImplyLeading: false,
             leading: GestureDetector(
                 behavior: HitTestBehavior.opaque,

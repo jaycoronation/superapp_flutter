@@ -26,9 +26,6 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
 
   bool isLoading = false;
 
-  double totalSumAssured = 0;
-  double totalPremiumAmount = 0;
-
   List<Insurances> listInsurance = [];
 
   @override
@@ -67,166 +64,9 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
           Center(
             child: MyNoDataWidget(msg: "No Data Found"),
           ) :
-          SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListView.builder(
-                      itemCount: listInsurance.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-
-                        final listData = listInsurance[index];
-
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      listData.insuranceCompany ?? "",
-                                      style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                                    ),
-                                  ),
-                                  const Gap(10),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          _redirectToAddUpdate(listData, true);
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/fin_plan_ic_edit_gray.png",
-                                          height: 20,
-                                          width: 20,
-                                          color: green,
-                                        ),
-                                      ),
-                                      const Gap(10),
-                                      GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () {
-                                          openDialogDelete(listData, index);
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/fin_plan_ic_delete_black.png",
-                                          height: 24,
-                                          width: 24,
-                                          color: redLight,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              const Gap(6),
-                              Divider(color: gray,),
-                              const Gap(6),
-                              titleAndValueWidget("Type", listData.type == "1" ? "Life Term Insurance" : "Medical Insurance"),
-                              const Gap(8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: titleAndValueWidget("Policy Number", listData.policyNumber ?? ""),
-                                  ),
-                                  const Gap(8),
-                                  Expanded(
-                                    child:  titleAndValueWidget("Sum Assured", convertCommaSeparatedAmount(listData.sumAssured ?? "")),
-                                  ),
-                                ],
-                              ),
-                              const Gap(8),
-                              titleAndValueWidget("Person Covered", listData.personCovered ?? ""),
-                              const Gap(8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: titleAndValueWidget("Start Date", (listData.startDate != null && listData.startDate != "") ? universalDateConverter("dd-MM-yyyy", "dd MMM, yyyy", listData.startDate ?? "") : "-"),
-                                  ),
-                                  const Gap(8),
-                                  Expanded(
-                                    child: titleAndValueWidget("End Date", (listData.endDate != null && listData.endDate != "") ? universalDateConverter("dd-MM-yyyy", "dd MMM, yyyy", listData.endDate ?? "") : "-"),
-                                  ),
-                                ],
-                              ),
-                              const Gap(8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: titleAndValueWidget("Last Payment Date", (listData.lastPaymentDate != null && listData.lastPaymentDate != "") ? universalDateConverter("dd MMM yyyy", "dd MMM, yyyy", getDateFromTimeStampNew(int.tryParse("${listData.lastPaymentDate}") ?? 0)) : "-"),
-                                  ),
-                                  const Gap(8),
-                                  Expanded(
-                                    child: titleAndValueWidget("Next Payment Date", (listData.nextDueDate != null && listData.nextDueDate != "") ? universalDateConverter("dd MMM yyyy", "dd MMM, yyyy", getDateFromTimeStampNew(int.tryParse("${listData.nextDueDate}") ?? 0)) : "-"),
-                                  ),
-                                ],
-                              ),
-                              const Gap(8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: titleAndValueWidget("Maturity Date", (listData.maturityDate != null && listData.maturityDate != "") ? universalDateConverter("dd MMM yyyy", "dd MMM, yyyy", getDateFromTimeStampNew(int.tryParse("${listData.maturityDate}") ?? 0)) : "-"),
-                                  ),
-                                  const Gap(8),
-                                  Expanded(
-                                    child: titleAndValueWidget("Premium Amount", convertCommaSeparatedAmount(listData.premiumAmount ?? "")),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    const Gap(10),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 10),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Total",
-                            style: getSemiBoldTextStyle(fontSize: 14, color: blue),
-                          ),
-                          const Gap(6),
-                          Divider(color: gray,),
-                          const Gap(6),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: titleAndValueWidget("Sum Assured", convertCommaSeparatedAmount("$totalSumAssured")),
-                              ),
-                              const Gap(8),
-                              Expanded(
-                                child: titleAndValueWidget("Premium Amount", convertCommaSeparatedAmount("$totalPremiumAmount")),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              //child: insuranceListWidget()
-            ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: buildInsuranceList()
           ),
         )
       ),
@@ -248,18 +88,264 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
     }
   }
 
-  Widget titleAndValueWidget(String title, String value){
+  Widget buildInsuranceList(){
+
+    final groupedInsurance = groupByType(listInsurance);
+    final listInsuranceKeys = groupedInsurance.keys.toList()..sort();
+
+    return ListView.builder(
+      itemCount: listInsuranceKeys.length,
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(0),
+      itemBuilder: (context, index) {
+
+        final type = listInsuranceKeys[index];
+        final List<Insurances> listInsuranceData = groupedInsurance[type] ?? [];
+
+        double totalSumAssured = 0;
+        double totalPremiumAmount = 0;
+
+        for (var item in listInsuranceData)
+        {
+          totalSumAssured += double.tryParse(item.sumAssured ?? "0") ?? 0;
+          totalPremiumAmount += double.tryParse(item.premiumAmount ?? "0") ?? 0;
+        }
+
+        final text = "${getTypeName(type)} (${listInsuranceData.length})";
+        final style = getBoldTextStyle(fontSize: 16, color: blue);
+        final width = getTextWidth(text, style);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(text, style: style),
+                  Container(
+                    margin: EdgeInsets.only(top: 4),
+                    height: 2,
+                    width: width,
+                    color: blue,
+                  ),
+                  Divider(color: gray, thickness: 1, height: 1,)
+                ],
+              )
+            ),
+
+            ...listInsuranceData.map((listData) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            listData.insuranceCompany ?? "",
+                            style: getSemiBoldTextStyle(fontSize: 14, color: black),
+                          ),
+                        ),
+                        const Gap(10),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                _redirectToAddUpdate(listData, true);
+                              },
+                              child: Image.asset(
+                                "assets/images/fin_plan_ic_edit_gray.png",
+                                height: 20,
+                                width: 20,
+                                color: green,
+                              ),
+                            ),
+                            const Gap(10),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                openDialogDelete(listData, index);
+                              },
+                              child: Image.asset(
+                                "assets/images/fin_plan_ic_delete_black.png",
+                                height: 24,
+                                width: 24,
+                                color: redLight,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    const Gap(6),
+                    Divider(color: gray,),
+                    const Gap(6),
+                    titleAndValueWidget("Applicant Name", listData.applicantName ?? "-"),
+                    const Gap(8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleAndValueWidget("Policy Number", listData.policyNumber ?? ""),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child:  titleAndValueWidget("Sum Assured", convertCommaSeparatedAmount(listData.sumAssured ?? "")),
+                        ),
+                      ],
+                    ),
+                    const Gap(8),
+                    titleAndValueWidget("Person Covered", listData.personCovered ?? ""),
+                    const Gap(8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleAndValueWidget("Policy Tenure", listData.policyTenure ?? "N/A"),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: titleAndValueWidget("Premium Frequency", listData.premiumPaymentTenure ?? "N/A"),
+                        ),
+                      ],
+                    ),
+                    const Gap(8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleAndValueWidget("Start Date", (listData.startDate != null && listData.startDate != "") ? universalDateConverter("dd-MM-yyyy", "dd MMM, yyyy", listData.startDate ?? "") : "-"),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: titleAndValueWidget("End Date", (listData.endDate != null && listData.endDate != "") ? universalDateConverter("dd-MM-yyyy", "dd MMM, yyyy", listData.endDate ?? "") : "-"),
+                        ),
+                      ],
+                    ),
+                    const Gap(8),
+                    titleAndValueWidget("Premium", convertCommaSeparatedAmount(listData.premiumAmount ?? "")),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: titleAndValueWidget("Last Payment Date", (listData.lastPaymentDate != null && listData.lastPaymentDate != "") ? universalDateConverter("dd MMM yyyy", "dd MMM, yyyy", getDateFromTimeStampNew(int.tryParse("${listData.lastPaymentDate}") ?? 0)) : "-"),
+                    //     ),
+                    //     const Gap(8),
+                    //     Expanded(
+                    //       child: titleAndValueWidget("Next Payment Date", (listData.nextDueDate != null && listData.nextDueDate != "") ? universalDateConverter("dd MMM yyyy", "dd MMM, yyyy", getDateFromTimeStampNew(int.tryParse("${listData.nextDueDate}") ?? 0)) : "-"),
+                    //     ),
+                    //   ],
+                    // ),
+                    // const Gap(8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: titleAndValueWidget("Maturity Date", (listData.maturityDate != null && listData.maturityDate != "") ? universalDateConverter("dd MMM yyyy", "dd MMM, yyyy", getDateFromTimeStampNew(int.tryParse("${listData.maturityDate}") ?? 0)) : "-"),
+                    //     ),
+                    //     const Gap(8),
+                    //     Expanded(
+                    //       child: titleAndValueWidget("Premium Amount", convertCommaSeparatedAmount(listData.premiumAmount ?? "")),
+                    //     ),
+                    //   ],
+                    // ),
+                  ],
+                ),
+              );
+            },),
+
+            if (listInsuranceData.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: borderGray, width: 1)
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Total",
+                      style: getBoldTextStyle(fontSize: 14, color: blue),
+                    ),
+                    const Gap(6),
+                    Divider(color: gray),
+                    const Gap(6),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleAndValueWidget("Sum Assured", convertCommaSeparatedAmount("$totalSumAssured"), isBold: true),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: titleAndValueWidget("Premium Amount", convertCommaSeparatedAmount("$totalPremiumAmount"), isBold: true),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              Visibility(
+                visible: index != listInsuranceKeys.length - 1,
+                child: Divider(thickness: 1),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  double getTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    return textPainter.size.width;
+  }
+
+  String getTypeName(String type) {
+
+    if(type == "1")
+    {
+      return "Life Insurance";
+    }
+    else if(type == "2")
+    {
+      return "Medical Insurance";
+    }
+    else if(type == "3")
+    {
+      return "Auto Insurance";
+    }
+    else
+    {
+      return "Other Insurance";
+    }
+  }
+
+  Widget titleAndValueWidget(String title, String value, {bool isBold = false}){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+          style: isBold ? getBoldTextStyle(fontSize: 12, color: graySemiDark) : getMediumTextStyle(fontSize: 12, color: graySemiDark),
         ),
         const Gap(4),
         Text(
           value,
-          style: getMediumTextStyle(fontSize: 12, color: black),
+          style: isBold ? getBoldTextStyle(fontSize: 12, color: black) : getMediumTextStyle(fontSize: 12, color: black),
         )
       ],
     );
@@ -338,6 +424,20 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
     );
   }
 
+  Map<String, List<Insurances>> groupByType(List<Insurances> items) {
+    Map<String, List<Insurances>> grouped = {};
+
+    for (var item in items) {
+      if (!grouped.containsKey(item.type))
+      {
+        grouped["${item.type}"] = [];
+      }
+      grouped[item.type]?.add(item);
+    }
+
+    return grouped;
+  }
+
   deleteInsurance(String insuranceId, int index) async{
     if(isOnline)
     {
@@ -359,14 +459,7 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
         if(statusCode == 200 && dataResponse.success == 1)
         {
           showToast("${dataResponse.message}");
-          setState(() {
-            listInsurance.removeAt(index);
-          });
-          for (var item in (listInsurance))
-          {
-            totalSumAssured += parseAmount(item.sumAssured);
-            totalPremiumAmount += parseAmount(item.premiumAmount);
-          }
+          fetchInsuranceList();
         }
         else
         {
@@ -409,12 +502,6 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
         if(statusCode == 200 && dataResponse.success == 1)
         {
           listInsurance = dataResponse.insurances ?? [];
-
-          for (var item in (listInsurance))
-          {
-            totalSumAssured += parseAmount(item.sumAssured);
-            totalPremiumAmount += parseAmount(item.premiumAmount);
-          }
         }
         else
         {

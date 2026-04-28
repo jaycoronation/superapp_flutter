@@ -52,7 +52,7 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: dashboardBg,
+      backgroundColor: white,
       appBar: AppBar(
         toolbarHeight: 55,
         automaticallyImplyLeading: false,
@@ -196,140 +196,140 @@ class _EStateRiskProfileScreenNewState extends BaseState<EStateRiskProfileScreen
                         ),
                       ) :
                       rangeOfReturnWidget(),
-                      Container(
-                        height: 350,
-                        margin: const EdgeInsets.only(top: 24, bottom: 16),
-                        child: BarChart(
-                          BarChartData(
-                            alignment: BarChartAlignment.spaceAround,
-                            minY: minY,
-                            maxY: maxY,
-                            gridData: FlGridData(
-                              show: true,
-                              horizontalInterval: listReturnOfRisk.isNotEmpty ? interval : null,
-                            ),
-                            borderData: FlBorderData(show: false),
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  interval: listReturnOfRisk.isNotEmpty ? interval : null,
-                                  reservedSize: 45,
-                                  getTitlesWidget: (value, meta) {
-                                    final isTopValue = value == meta.max;
-                                    return Padding(
-                                      padding: EdgeInsets.only(top: isTopValue ? 10 : 0, left: 10),
-                                      child: Text(
-                                        value.toStringAsFixed(0),
-                                        style: getMediumTextStyle(fontSize: 12, color: black),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              rightTitles: AxisTitles(),
-                              topTitles: AxisTitles(),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  getTitlesWidget: (value, meta) {
-                                    if (value.toInt() >= listReturnOfRisk.length)
-                                    {
-                                      return const SizedBox();
-                                    }
-
-                                    return Padding(
-                                      padding: const EdgeInsets.only(bottom: 4),
-                                      child: Text(
-                                        "${listReturnOfRisk[value.toInt()].rangeOfReturn}",
-                                        style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            barGroups: List.generate(listReturnOfRisk.length, (index) {
-                              final item = listReturnOfRisk[index];
-                              return BarChartGroupData(
-                                x: index,
-                                barsSpace: 6,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: item.oneYearValue,
-                                    width: 24,
-                                    color: tableLightOrange,
-                                    borderRadius: BorderRadius.circular(0),
-                                    rodStackItems: [
-                                      BarChartRodStackItem(
-                                        0,
-                                        item.oneYearValue,
-                                        tableLightOrange,
-                                        label: "${item.oneYearValue}",
-                                        labelStyle: getMediumTextStyle(fontSize: 6, color: black)
-                                      ),
-                                    ],
-                                  ),
-                                  BarChartRodData(
-                                    toY: item.threeYearValue,
-                                    width: 24,
-                                    color: tableLightBlue,
-                                    borderRadius: BorderRadius.circular(0),
-                                    rodStackItems: [
-                                      BarChartRodStackItem(
-                                        0,
-                                        item.threeYearValue,
-                                        tableLightBlue,
-                                        label: "${item.threeYearValue}",
-                                        labelStyle: getMediumTextStyle(fontSize: 6, color: black)
-                                      ),
-                                    ],
-                                  ),
-                                  BarChartRodData(
-                                    toY: item.fiveYearValue,
-                                    width: 24,
-                                    color: tableLightGreen,
-                                    borderRadius: BorderRadius.circular(0),
-                                    rodStackItems: [
-                                      BarChartRodStackItem(
-                                        0,
-                                        item.fiveYearValue,
-                                        tableLightGreen,
-                                        label: "${item.fiveYearValue}",
-                                        labelStyle: getMediumTextStyle(fontSize: 6, color: black)
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Wrap(
-                          spacing: 16,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            wrapValueItem(tableLightOrange, "One Year"),
-                            wrapValueItem(tableLightBlue, "Three Year"),
-                            wrapValueItem(tableLightGreen, "Five Year"),
-                          ],
-                        ),
-                      ),
-                      const Gap(16),
-                      Center(
-                        child: Text(
-                          "*Expected profit growth may or may not happen in future",
-                          style: getMediumTextStyle(fontSize: 12, color: black),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                      // Container(
+                      //   height: 350,
+                      //   margin: const EdgeInsets.only(top: 24, bottom: 16),
+                      //   child: BarChart(
+                      //     BarChartData(
+                      //       alignment: BarChartAlignment.spaceAround,
+                      //       minY: minY,
+                      //       maxY: maxY,
+                      //       gridData: FlGridData(
+                      //         show: true,
+                      //         horizontalInterval: listReturnOfRisk.isNotEmpty ? interval : null,
+                      //       ),
+                      //       borderData: FlBorderData(show: false),
+                      //       titlesData: FlTitlesData(
+                      //         leftTitles: AxisTitles(
+                      //           sideTitles: SideTitles(
+                      //             showTitles: true,
+                      //             interval: listReturnOfRisk.isNotEmpty ? interval : null,
+                      //             reservedSize: 45,
+                      //             getTitlesWidget: (value, meta) {
+                      //               final isTopValue = value == meta.max;
+                      //               return Padding(
+                      //                 padding: EdgeInsets.only(top: isTopValue ? 10 : 0, left: 10),
+                      //                 child: Text(
+                      //                   value.toStringAsFixed(0),
+                      //                   style: getMediumTextStyle(fontSize: 12, color: black),
+                      //                   maxLines: 1,
+                      //                   overflow: TextOverflow.ellipsis,
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //         rightTitles: AxisTitles(),
+                      //         topTitles: AxisTitles(),
+                      //         bottomTitles: AxisTitles(
+                      //           sideTitles: SideTitles(
+                      //             showTitles: true,
+                      //             getTitlesWidget: (value, meta) {
+                      //               if (value.toInt() >= listReturnOfRisk.length)
+                      //               {
+                      //                 return const SizedBox();
+                      //               }
+                      //
+                      //               return Padding(
+                      //                 padding: const EdgeInsets.only(bottom: 4),
+                      //                 child: Text(
+                      //                   "${listReturnOfRisk[value.toInt()].rangeOfReturn}",
+                      //                   style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                      //                   maxLines: 1,
+                      //                   overflow: TextOverflow.ellipsis,
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       barGroups: List.generate(listReturnOfRisk.length, (index) {
+                      //         final item = listReturnOfRisk[index];
+                      //         return BarChartGroupData(
+                      //           x: index,
+                      //           barsSpace: 6,
+                      //           barRods: [
+                      //             BarChartRodData(
+                      //               toY: item.oneYearValue,
+                      //               width: 24,
+                      //               color: tableLightOrange,
+                      //               borderRadius: BorderRadius.circular(0),
+                      //               rodStackItems: [
+                      //                 BarChartRodStackItem(
+                      //                   0,
+                      //                   item.oneYearValue,
+                      //                   tableLightOrange,
+                      //                   label: "${item.oneYearValue}",
+                      //                   labelStyle: getMediumTextStyle(fontSize: 6, color: black)
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //             BarChartRodData(
+                      //               toY: item.threeYearValue,
+                      //               width: 24,
+                      //               color: tableLightBlue,
+                      //               borderRadius: BorderRadius.circular(0),
+                      //               rodStackItems: [
+                      //                 BarChartRodStackItem(
+                      //                   0,
+                      //                   item.threeYearValue,
+                      //                   tableLightBlue,
+                      //                   label: "${item.threeYearValue}",
+                      //                   labelStyle: getMediumTextStyle(fontSize: 6, color: black)
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //             BarChartRodData(
+                      //               toY: item.fiveYearValue,
+                      //               width: 24,
+                      //               color: tableLightGreen,
+                      //               borderRadius: BorderRadius.circular(0),
+                      //               rodStackItems: [
+                      //                 BarChartRodStackItem(
+                      //                   0,
+                      //                   item.fiveYearValue,
+                      //                   tableLightGreen,
+                      //                   label: "${item.fiveYearValue}",
+                      //                   labelStyle: getMediumTextStyle(fontSize: 6, color: black)
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //           ],
+                      //         );
+                      //       }),
+                      //     ),
+                      //   ),
+                      // ),
+                      // Center(
+                      //   child: Wrap(
+                      //     spacing: 16,
+                      //     runSpacing: 8,
+                      //     alignment: WrapAlignment.center,
+                      //     children: [
+                      //       wrapValueItem(tableLightOrange, "One Year"),
+                      //       wrapValueItem(tableLightBlue, "Three Year"),
+                      //       wrapValueItem(tableLightGreen, "Five Year"),
+                      //     ],
+                      //   ),
+                      // ),
+                      // const Gap(16),
+                      // Center(
+                      //   child: Text(
+                      //     "*Expected profit growth may or may not happen in future",
+                      //     style: getMediumTextStyle(fontSize: 12, color: black),
+                      //     textAlign: TextAlign.center,
+                      //   ),
+                      // ),
                       const Gap(20)
                     ],
                   ),

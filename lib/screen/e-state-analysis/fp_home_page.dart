@@ -168,16 +168,19 @@ class _FpHomePageState extends BaseState<FpHomePage> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: white,
-                                  border: Border.all(color: borderGray)
-                              ),
-                              child: Text(
-                                "${sessionManager.getUserType() == "client" ? "Name" : "Client"}: ${directUserInfo.firstName ?? "-"}",
-                                style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                            Visibility(
+                              visible: directUserInfo.firstName?.isNotEmpty ?? false,
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 8),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: white,
+                                    border: Border.all(color: borderGray)
+                                ),
+                                child: Text(
+                                  "${sessionManager.getUserType() == "client" ? "Name" : "Client"}: ${directUserInfo.firstName ?? "-"}",
+                                  style: getMediumTextStyle(fontSize: 12, color: blackLight),
+                                ),
                               ),
                             ),
                             Visibility(
@@ -220,7 +223,7 @@ class _FpHomePageState extends BaseState<FpHomePage> {
                         ),
                       ),
                     ),
-                    const Gap(10),
+
                     Visibility(
                       visible: sessionManager.getUserType() == "client",
                       child: GestureDetector(
@@ -235,12 +238,19 @@ class _FpHomePageState extends BaseState<FpHomePage> {
                             });
                           }
                         },
-                        child: Text(
-                          "Update Family Info",
-                          style: getMediumTextStyle(fontSize: 12, color: graySemiDark),
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                            color: blue,
+                            borderRadius: BorderRadius.circular(24)
+                          ),
+                          padding: const EdgeInsets.only(left: 8, right: 8, top: 12, bottom: 12),
+                          child: Center(
+                            child: Text("Update Family Info", style: getBoldTextStyle(fontSize: 12, color: white),),
+                          ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const Gap(10),

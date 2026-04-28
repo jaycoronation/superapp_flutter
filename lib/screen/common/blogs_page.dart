@@ -99,7 +99,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
         ? Scaffold(
             backgroundColor: dashboardBg,
             appBar: AppBar(
-              toolbarHeight: 55,
+              toolbarHeight: 0,
               automaticallyImplyLeading: false,
               leading: GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -145,7 +145,7 @@ class _BlogsPageState extends BaseState<BlogsPage> {
         : Scaffold(
         backgroundColor: dashboardBg,
         appBar: AppBar(
-          toolbarHeight: 55,
+          toolbarHeight: 0,
           leading: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {

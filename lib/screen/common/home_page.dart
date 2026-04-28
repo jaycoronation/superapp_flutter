@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
+import 'package:superapp_flutter/screen/common/blog_and_videos_tab_screen.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
@@ -27,11 +28,9 @@ import '../../model/CommanResponse.dart';
 import '../../model/CommonModel.dart';
 import '../../model/video_data_response_model.dart';
 import '../../utils/Utils.dart';
-import '../../utils/session_manager_methods.dart';
 import '../../widget/loading.dart';
 import '../consolidated-portfolio/cp_home_page.dart';
 import '../e-state-valut/e_state_valut_home_page.dart';
-import 'LoginScreen.dart';
 import 'SuggestedActionsScreen.dart';
 import 'blogs_page.dart';
 import 'contact_page.dart';
@@ -87,11 +86,10 @@ class _HomePageState extends BaseState<HomePage> {
       CommonValueModel(title: "Financial Planning", description: "Strategic Roadmap for Future Investments", image: "assets/images/ic_estate_a.png", id: "3"),
       CommonValueModel(title: "Legacy Planning", description: "Smooth Succession of Wealth", image: "assets/images/ic_vault.png", id: "4"),
       // CommonValueModel(title: "Fix Meeting", description: "Fix Meeting", image: "assets/images/ic_meeting.png", id: "5"),
+      CommonValueModel(title: "Insurance Tracker", description: "My Insurance", image: "assets/images/img_insurance.png", id: "9"),
       CommonValueModel(title: "Tasks & Summaries", description: "Track Your Financial To-Dos", image: "assets/images/img_task_summary.png", id: "5"),
+      CommonValueModel(title: "Blogs & Videos", description: "Blog & Videos", image: "assets/images/ic_videos.png", id: "7"),
       CommonValueModel(title: "Contact", description: "Get in Touch", image: "assets/images/ic_contact.png", id: "6"),
-      // CommonValueModel(title: "Blogs", description: "Blogs", image: "assets/images/ic_blog.png", id: "7"),
-      // CommonValueModel(title: "Videos", description: "Videos", image: "assets/images/ic_videos.png", id: "8"),
-      // CommonValueModel(title: "Insurance", description: "My Insurance", image: "assets/images/ic_insurance.png", id: "9"),
       // CommonValueModel(title: "Suggested Actions", description: "Suggested Actions", image: "assets/images/portfolio_ic_capital_gain.png", id: "10"),
     ];
     print("Display list data length : ${listDashboardData.length}");
@@ -136,24 +134,27 @@ class _HomePageState extends BaseState<HomePage> {
                 ),
 
                 Expanded(
-                    child: Text(
-                      sessionManager.getUserType() != "client" ? "Welcome ${toDisplayCase(sessionManager.getRMIDName())}" : "Welcome ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                    )),
+                  child: Text(
+                    sessionManager.getUserType() != "client" ? "Welcome ${toDisplayCase(sessionManager.getRMIDName())}" : "Welcome ${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                  )
+                ),
 
-                GestureDetector(
-                  onTap: () {
-                    logoutFromApp();
-                  },
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(left: 8),
-                    child: Image.asset('assets/images/ic_logout.png',
-                        width: 40, height: 40),
-                  ),
-                )
+                // GestureDetector(
+                //   onTap: () {
+                //
+                //   },
+                //   child: Container(
+                //     alignment: Alignment.centerLeft,
+                //     margin: const EdgeInsets.only(left: 8),
+                //     child: Image.asset(
+                //         'assets/images/ic_notification.png',
+                //         width: 22, height: 22
+                //     ),
+                //   ),
+                // )
               ],
             )),
         body: SafeArea(
@@ -196,13 +197,14 @@ class _HomePageState extends BaseState<HomePage> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
+
           Expanded(
             child: GridView.builder(
               itemCount: listDashboardData.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 8, mainAxisSpacing: 8, ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 8, mainAxisSpacing: 8, mainAxisExtent: 150),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              physics: NeverScrollableScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
 
                 var data = listDashboardData[index];
@@ -272,7 +274,7 @@ class _HomePageState extends BaseState<HomePage> {
                     }
                     else if(data.id == "4")
                     {
-                      //estate value
+                      //Legacy Planning
                       if(sessionManager.getUserType() == "client")
                       {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()),);
@@ -302,14 +304,19 @@ class _HomePageState extends BaseState<HomePage> {
                     }
                     else if(data.id == "7")
                     {
-                      //blogs
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()),);
+                      //Blogs & Videos
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogAndVideosTabScreen()));
                     }
-                    else if(data.id == "8")
-                    {
-                      //videos
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
-                    }
+                    // else if(data.id == "7")
+                    // {
+                    //   //blogs
+                    //   Navigator.push(context, MaterialPageRoute(builder: (context) => const BlogsPage()),);
+                    // }
+                    // else if(data.id == "8")
+                    // {
+                    //   //videos
+                    //   Navigator.push(context, MaterialPageRoute(builder: (context) => const VideoListPage()));
+                    // }
                     else if(data.id == "9")
                     {
                       //insurance
@@ -326,7 +333,7 @@ class _HomePageState extends BaseState<HomePage> {
                     decoration: const BoxDecoration(color: white, borderRadius: BorderRadius.all(Radius.circular(15))),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset(
                           data.image,
@@ -337,71 +344,18 @@ class _HomePageState extends BaseState<HomePage> {
                           data.title,
                           maxLines: 2,
                           style: TextStyle(
-                              color: black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        const Gap(4),
-                        Text(
-                          data.description,
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: grayDark,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500
-                          ),
+                            color: black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
                   ),
-                  // child: Container(
-                  //   padding: const EdgeInsets.only(left: 15, right: 15, top: 16, bottom: 16),
-                  //   decoration: BoxDecoration(
-                  //     color: white,
-                  //     borderRadius: BorderRadius.circular(15)
-                  //   ),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Image.asset(
-                  //           data.image,
-                  //           height: 40,
-                  //           width: 40,
-                  //         ),
-                  //       ),
-                  //
-                  //       Spacer(),
-                  //       Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Text(
-                  //             data.title,
-                  //             maxLines: 2,
-                  //             style: TextStyle(
-                  //                 color: black,
-                  //                 fontSize: 18,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           const Gap(4),
-                  //           Text(
-                  //             data.description,
-                  //             style: getMediumTextStyle(fontSize: 12, color: grayDark),
-                  //             maxLines: 2,
-                  //             overflow: TextOverflow.ellipsis,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                 );
               },
             ),
           ),
+
           Container(
             alignment: Alignment.center,
             child: Image.asset(
@@ -1484,132 +1438,7 @@ class _HomePageState extends BaseState<HomePage> {
     }
   }
 
-  void logoutFromApp() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: white,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-      builder: (BuildContext context) {
-        return Wrap(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
-                  color: white),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: 2,
-                    width: 40,
-                    alignment: Alignment.center,
-                    color: black,
-                    margin: const EdgeInsets.only(top: 10, bottom: 10),
-                  ),
-                  Container(
-                      margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: const Text('Logout from Alpha Capital Super App',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                              color: black))),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10, bottom: 15),
-                    child: const Text(
-                        'Are you sure you want to logout from app?',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: black)),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                        left: 15, right: 15, bottom: 12, top: 20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SizedBox(
-                                height: kButtonHeight,
-                                child: TextButton(
-                                  style: ButtonStyle(
-                                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          side: const BorderSide(width: 1, color: blue),
-                                          borderRadius: BorderRadius.circular(kBorderRadius),
-                                        ),
-                                      ),
-                                      backgroundColor: WidgetStateProperty.all<Color>(white)
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("No",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          color: blue)),
-                                ))),
-                        const Gap(20),
-                        Expanded(
-                          child: SizedBox(
-                            height: kButtonHeight,
-                            child: TextButton(
-                              style: ButtonStyle(
-                                  shape: WidgetStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(kBorderRadius),
-                                    ),
-                                  ),
-                                  backgroundColor: WidgetStateProperty.all<Color>(blue)),
-                              onPressed: () {
-                                _logoutWork();
-                              },
-                              child: const Text("Yes",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      color: white)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Gap(30)
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  _logoutWork(){
-
-    sessionManagerPMS.savePerformanceList([]);
-
-    sessionManagerPMS.saveNextYearList([]);
-
-    sessionManagerPMS.savePerviousYearList([]);
-
-    sessionManagerPMS.setReportDate('');
-
-    sessionManagerPMS.saveApplicantsList([]);
-
-    Navigator.pop(context);
-    SessionManagerMethods.clear();
-    _clearMintSDKData();
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreenNew()), (Route<dynamic> route) => false);
-  }
 
   //  add this class member function for check is available session or not
   // note in case of available session mint  will return true and will open the respective user logged-In
@@ -1623,18 +1452,6 @@ class _HomePageState extends BaseState<HomePage> {
     }
   }
 
-  // note while app is logging-out call this function _clearMintSDKData
-  Future<void> _clearMintSDKData() async {
-    try {
-      if (Platform.isAndroid) {
-        await MintUtils.platform.invokeMethod('clearSession');
-      } else {
-        await MintUtils.platform.invokeMethod('clearSessionIos');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
 
   /*updateDeviceTokenData() async {
       HttpWithMiddleware http = HttpWithMiddleware.build(middlewares: [

@@ -66,6 +66,11 @@ InsuranceListResponseModel copyWith({  List<Insurances>? insurances,
 /// maturity_date : "18-03-2028"
 /// last_payment_date : "18-03-2026"
 /// next_due_date : "18-04-2026"
+/// policy_tenure: "5"
+/// premium_payment_tenure : "Yearly"
+/// applicant_name: "MUKESH JINDAL"
+/// document: "1777294347_img_insurance.png"
+/// file_url: "http:\/\/portfolio.alphacapital.in\/api\/assets\/upload\/insurance\/1777294347_img_insurance.png"
 
 Insurances insurancesFromJson(String str) => Insurances.fromJson(json.decode(str));
 String insurancesToJson(Insurances data) => json.encode(data.toJson());
@@ -85,7 +90,13 @@ class Insurances {
       String? userId, 
       String? maturityDate, 
       String? lastPaymentDate, 
-      String? nextDueDate,}){
+      String? nextDueDate,
+      String? policyTenure,
+      String? premiumPaymentTenure,
+      String? applicantName,
+      String? document,
+      String? fileUrl,
+  }){
     _insuranceId = insuranceId;
     _type = type;
     _insuranceCompany = insuranceCompany;
@@ -101,6 +112,11 @@ class Insurances {
     _maturityDate = maturityDate;
     _lastPaymentDate = lastPaymentDate;
     _nextDueDate = nextDueDate;
+    _policyTenure = policyTenure;
+    _premiumPaymentTenure = premiumPaymentTenure;
+    _applicantName = applicantName;
+    _document = document;
+    _fileUrl = fileUrl;
 }
 
   Insurances.fromJson(dynamic json) {
@@ -119,6 +135,11 @@ class Insurances {
     _maturityDate = json['maturity_date'];
     _lastPaymentDate = json['last_payment_date'];
     _nextDueDate = json['next_due_date'];
+    _policyTenure = json['policy_tenure'];
+    _premiumPaymentTenure = json['premium_payment_tenure'];
+    _applicantName = json['applicant_name'];
+    _document = json['document'];
+    _fileUrl = json['file_url'];
   }
   String? _insuranceId;
   String? _type;
@@ -135,6 +156,11 @@ class Insurances {
   String? _maturityDate;
   String? _lastPaymentDate;
   String? _nextDueDate;
+  String? _policyTenure;
+  String? _premiumPaymentTenure;
+  String? _applicantName;
+  String? _document;
+  String? _fileUrl;
 Insurances copyWith({  String? insuranceId,
   String? type,
   String? insuranceCompany,
@@ -150,6 +176,11 @@ Insurances copyWith({  String? insuranceId,
   String? maturityDate,
   String? lastPaymentDate,
   String? nextDueDate,
+  String? policyTenure,
+  String? premiumPaymentTenure,
+  String? applicantName,
+  String? document,
+  String? fileUrl,
 }) => Insurances(  insuranceId: insuranceId ?? _insuranceId,
   type: type ?? _type,
   insuranceCompany: insuranceCompany ?? _insuranceCompany,
@@ -165,6 +196,11 @@ Insurances copyWith({  String? insuranceId,
   maturityDate: maturityDate ?? _maturityDate,
   lastPaymentDate: lastPaymentDate ?? _lastPaymentDate,
   nextDueDate: nextDueDate ?? _nextDueDate,
+  policyTenure: policyTenure ?? _policyTenure,
+  premiumPaymentTenure: premiumPaymentTenure ?? _premiumPaymentTenure,
+  applicantName: applicantName ?? _applicantName,
+  document: document ?? _document,
+  fileUrl: fileUrl ?? _fileUrl,
 );
   String? get insuranceId => _insuranceId;
   String? get type => _type;
@@ -181,6 +217,11 @@ Insurances copyWith({  String? insuranceId,
   String? get maturityDate => _maturityDate;
   String? get lastPaymentDate => _lastPaymentDate;
   String? get nextDueDate => _nextDueDate;
+  String? get policyTenure => _policyTenure;
+  String? get premiumPaymentTenure => _premiumPaymentTenure;
+  String? get applicantName => _applicantName;
+  String? get document => _document;
+  String? get fileUrl => _fileUrl;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -199,6 +240,11 @@ Insurances copyWith({  String? insuranceId,
     map['maturity_date'] = _maturityDate;
     map['last_payment_date'] = _lastPaymentDate;
     map['next_due_date'] = _nextDueDate;
+    map['policy_tenure'] = _policyTenure;
+    map['premium_payment_tenure'] = _premiumPaymentTenure;
+    map['applicant_name'] = _applicantName;
+    map['document'] = _document;
+    map['file_url'] = _fileUrl;
     return map;
   }
 

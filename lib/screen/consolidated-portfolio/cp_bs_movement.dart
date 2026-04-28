@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/common_widget/common_widget.dart';
 import 'package:superapp_flutter/utils/app_utils.dart';
@@ -25,10 +26,8 @@ class CPBsMovementPage extends StatefulWidget {
 class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
   bool _isLoading = false;
   bool _isShowChart = false;
-  List<SheetData> listSheetData =
-      List<SheetData>.empty(growable: true);
-  List<GraphData> listGraphData =
-  List<GraphData>.empty(growable: true);
+  List<SheetData> listSheetData = List<SheetData>.empty(growable: true);
+  List<GraphData> listGraphData = List<GraphData>.empty(growable: true);
 
   //List<FlSpot> spotsData = List<FlSpot>.empty(growable: true);
   List<Color> gradientColors = [
@@ -91,164 +90,222 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
           )
         ],
       ),
-      backgroundColor: white,
+      backgroundColor: dashboardBg,
       body: _isLoading
           ? const LoadingWidget()
           : Container(
-              margin: EdgeInsets.only(top: 8,bottom: _isShowChart ? 0 : 50),
-            child: _isShowChart ?
-            Container(
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(color: white),
-              padding: const EdgeInsets.all(12),
-              margin: const EdgeInsets.only(top: 8),
-              child: LineChart(
-                LineChartData(
-                  minX: 0,
-                  maxX: (listGraphData.length - 1).toDouble(),
-                  minY: 0,
-                  // maxY:  maxY <= 0 ? 10 : maxY,
-                  maxY: listGraphData.isNotEmpty ? maxY : 0.0,
-                  gridData: FlGridData(
-                    show: true,
-                    horizontalInterval: listGraphData.isNotEmpty ? interval : null,
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        //interval: interval <= 0 ? 1 : interval,
-                        interval: listGraphData.isNotEmpty ? interval : null,
-                        reservedSize: 80,
-                        getTitlesWidget: (value, meta) {
-                          final isTopValue = value == meta.max;
-                          return Padding(
-                            padding: EdgeInsets.only(top: isTopValue ? 10 : 0,),
-                            child: Text(
-                              value.toStringAsFixed(0),
-                              style: getMediumTextStyle(fontSize: 10, color: black),
-                            ),
-                          );
-                        },
-                      ),
+              margin: EdgeInsets.only(top: 8,),
+              child: _isShowChart ?
+              Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(color: white),
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(top: 8, right: 20),
+                child: LineChart(
+                  LineChartData(
+                    minX: 0,
+                    maxX: (listGraphData.length - 1).toDouble(),
+                    minY: 0,
+                    // maxY:  maxY <= 0 ? 10 : maxY,
+                    maxY: listGraphData.isNotEmpty ? maxY : 0.0,
+                    gridData: FlGridData(
+                      show: true,
+                      horizontalInterval: listGraphData.isNotEmpty ? interval : null,
                     ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        interval: bottomYearInterval <= 0 ? 1 : bottomYearInterval.toDouble(),
-                        reservedSize: 70,
-                        getTitlesWidget: (value, meta) {
-                          int index = value.round();
-
-                          if (index >= 0 && index < listGraphData.length) {
-                            return SideTitleWidget(
-                              meta: meta,
-                              space: 8,
-                              child: Transform.rotate(
-                                angle: -0.5,
-                                child: Text(
-                                  listGraphData[index].timestamp.toString(),
-                                  style: getRegularTextStyle(fontSize: 12, color: black),
-                                ),
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          //interval: interval <= 0 ? 1 : interval,
+                          interval: listGraphData.isNotEmpty ? interval : null,
+                          reservedSize: 80,
+                          getTitlesWidget: (value, meta) {
+                            final isTopValue = value == meta.max;
+                            return Padding(
+                              padding: EdgeInsets.only(top: isTopValue ? 10 : 0,),
+                              child: Text(
+                                value.toStringAsFixed(0),
+                                style: getMediumTextStyle(fontSize: 10, color: black),
                               ),
                             );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ),
-                    rightTitles: AxisTitles(),
-                    topTitles: AxisTitles(),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                      isCurved: true,
-                      barWidth: 3,
-                      color: tableLightBlue,
-                      dotData: FlDotData(show: true),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        gradient: LinearGradient(
-                          colors: [white, lightBlue2],
+                          },
                         ),
                       ),
-                      spots: listGraphData.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), double.tryParse("${entry.value.total}") ?? 0.0,),).toList(),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 1,
+                          reservedSize: 50,
+                          getTitlesWidget: (value, meta) {
+                            int index = value.round();
+
+                            if (index >= 0 && index < listGraphData.length) {
+                              return SideTitleWidget(
+                                meta: meta,
+                                space: 8,
+                                child: Transform.rotate(
+                                  angle: -0.5,
+                                  child: Text(
+                                    "${listGraphData[index].timestamp}",
+                                    style: getRegularTextStyle(fontSize: 8, color: black),
+                                  ),
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ),
+                      rightTitles: AxisTitles(),
+                      topTitles: AxisTitles(),
                     ),
-                  ],
-                  lineTouchData: LineTouchData(
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipColor: (_) => grayDark,
-                      getTooltipItems: (touchedSpots) {
-                        return touchedSpots.map((spot) {
-                          final data =
-                          listGraphData[spot.x.toInt()];
-                          return LineTooltipItem(
-                            "${data.timestamp}\nTotal Profit: ${convertCommaSeparatedAmount("${data.total?.toStringAsFixed(0)}")}",
-                            getMediumTextStyle(
-                                fontSize: 12, color: white),
-                          );
-                        }).toList();
-                      },
+                    borderData: FlBorderData(show: false),
+                    lineBarsData: [
+                      LineChartBarData(
+                        isCurved: true,
+                        barWidth: 3,
+                        color: tableLightBlue,
+                        dotData: FlDotData(show: true),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            colors: [white, lightBlue2],
+                          ),
+                        ),
+                        spots: listGraphData.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), double.tryParse("${entry.value.total}") ?? 0.0,),).toList(),
+                      ),
+                    ],
+                    lineTouchData: LineTouchData(
+                      touchTooltipData: LineTouchTooltipData(
+                        getTooltipColor: (_) => grayDark,
+                        getTooltipItems: (touchedSpots) {
+                          return touchedSpots.map((spot) {
+                            final data =
+                            listGraphData[spot.x.toInt()];
+                            return LineTooltipItem(
+                              "${data.timestamp}\nTotal Profit: ${convertCommaSeparatedAmount("${data.total?.toStringAsFixed(0)}")}",
+                              getMediumTextStyle(
+                                  fontSize: 12, color: white),
+                            );
+                          }).toList();
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
+              )
+              : SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                  children: [
+                    SizedBox(
+                      height: 300,
+                      child:  Container(
+                        decoration: BoxDecoration(color: white),
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.only(top: 8),
+                        child: LineChart(
+                          LineChartData(
+                            minX: 0,
+                            maxX: (listGraphData.length - 1).toDouble(),
+                            minY: 0,
+                            // maxY:  maxY <= 0 ? 10 : maxY,
+                            maxY: listGraphData.isNotEmpty ? maxY : 0.0,
+                            gridData: FlGridData(
+                              show: true,
+                              horizontalInterval: listGraphData.isNotEmpty ? interval : null,
+                            ),
+                            titlesData: FlTitlesData(
+                              leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  //interval: interval <= 0 ? 1 : interval,
+                                  interval: listGraphData.isNotEmpty ? interval : null,
+                                  reservedSize: 80,
+                                  getTitlesWidget: (value, meta) {
+                                    final isTopValue = value == meta.max;
+                                    return Padding(
+                                      padding: EdgeInsets.only(top: isTopValue ? 10 : 0,),
+                                      child: Text(
+                                        value.toStringAsFixed(0),
+                                        style: getMediumTextStyle(fontSize: 10, color: black),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  interval: bottomYearInterval <= 0 ? 1 : bottomYearInterval.toDouble(),
+                                  reservedSize: 70,
+                                  getTitlesWidget: (value, meta) {
+                                    int index = value.round();
 
-                // ? Container(
-                //     margin: const EdgeInsets.only(top: 32, right: 22,),
-                //     height: kIsWeb ? 800 : 300 ,
-                //     child: LineChart(
-                //         generatedLineChart(),
-                //       duration: Duration(milliseconds: 150), // Optional
-                //       curve: Curves.linear,
-                //     )
-                // )
-                : Column(
-                children: [
-                  Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 6, right: 6),
-                          child: Stack(
-                            children: [
-                              listSheetData.isNotEmpty
-                                  ? Column(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                                        decoration: const BoxDecoration(
-                                            color:semiBlue,
-                                            borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))),
-                                        child: const Row(
-                                          children: [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Month/Date',
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Text('Total Amount',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color: blue,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600))),
-                                          ],
+                                    if (index >= 0 && index < listGraphData.length) {
+                                      return SideTitleWidget(
+                                        meta: meta,
+                                        space: 8,
+                                        child: Transform.rotate(
+                                          angle: -0.4,
+                                          child: Text(
+                                            universalDateConverter("dd.MM.yyyy", "dd MMM, yyyy", "${listGraphData[index].timestamp}"),
+                                            style: getRegularTextStyle(fontSize: 10, color: black),
+                                          ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: _itemList(),
-                                      ),
-                                    ])
-                                  : const MyNoDataWidget(msg: "No data found."),
+                                      );
+                                    }
+                                    return const SizedBox.shrink();
+                                  },
+                                ),
+                              ),
+                              rightTitles: AxisTitles(),
+                              topTitles: AxisTitles(),
+                            ),
+                            borderData: FlBorderData(show: false),
+                            lineBarsData: [
+                              LineChartBarData(
+                                isCurved: true,
+                                barWidth: 3,
+                                color: tableLightBlue,
+                                dotData: FlDotData(show: true),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  gradient: LinearGradient(
+                                    colors: [white, lightBlue2],
+                                  ),
+                                ),
+                                spots: listGraphData.asMap().entries.map((entry) => FlSpot(entry.key.toDouble(), double.tryParse("${entry.value.total}") ?? 0.0,),).toList(),
+                              ),
                             ],
-                          )))
-                ],
+                            lineTouchData: LineTouchData(
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipColor: (_) => grayDark,
+                                getTooltipItems: (touchedSpots) {
+                                  return touchedSpots.map((spot) {
+                                    final data =
+                                    listGraphData[spot.x.toInt()];
+                                    return LineTooltipItem(
+                                      "${data.timestamp}\nTotal Profit: ${convertCommaSeparatedAmount("${data.total?.toStringAsFixed(0)}")}",
+                                      getMediumTextStyle(
+                                          fontSize: 12, color: white),
+                                    );
+                                  }).toList();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+                    listSheetData.isNotEmpty
+                    ? buildBsMovementWidget()
+                    : const MyNoDataWidget(msg: "No data found."),
+                  ],),
+                ),
               ),
           ),
     );
@@ -262,57 +319,110 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
     // Add other supported orientations if needed
   ];
 
+  Widget buildBsMovementWidget(){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: listSheetData.isEmpty ? Border.all(color: blue) : Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(rowCellTitle("Month/Date", white, alignment: Alignment.centerLeft, isPadding: true, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Total Amount", white, maxLine: 2)),
+              ],
+            ),
+          ),
+
+          listSheetData.isEmpty ?
+          Container(
+            height: 100,
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Center(
+              child: Text(
+                "No Data Found",
+                style: getMediumTextStyle(fontSize: 14, color: blackLight),
+              ),
+            ),
+          ) :
+          ListView.builder(
+            itemCount: listSheetData.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              final sheetData = listSheetData[index];
+              final bool isLastIndex = index == listSheetData.length - 1;
+              return IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(rowCell(index, universalDateConverter("dd.MM.yyyy", "dd MMM, yyyy", "${sheetData.timestamp}"), alignment: Alignment.centerLeft, isPadding: true, maxLine: 2, isLastIndexLeft: isLastIndex)),
+                    showLineDivider(),
+                    expandedCell(rowCell(index, convertCommaSeparatedAmount("${listSheetData[index].total}"), maxLine: 2,)),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   ListView _itemList() {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         primary: false,
         padding: EdgeInsets.zero,
         itemCount: listSheetData.length,
-        itemBuilder: (ctx, index) => (Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
-                    decoration: BoxDecoration(
-                        color: index % 2 == 0 ? white : semiBlue,
-                        borderRadius: index == listSheetData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                                children: [
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          toDisplayCase(listSheetData[index]
-                                              .timestamp
-                                              .toString()),
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                          convertCommaSeparatedAmount(listSheetData[index].total.toString()),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w200))),
-                                ],
-                              ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )));
+        itemBuilder: (ctx, index) => (
+          Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                  decoration: BoxDecoration(
+                      color: index % 2 == 0 ? white : semiBlue,
+                      borderRadius: index == listSheetData.length - 1 ? const BorderRadius.only(bottomLeft:Radius.circular(8),bottomRight: Radius.circular(8)) : const BorderRadius.all(Radius.circular(0))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              toDisplayCase(listSheetData[index].timestamp.toString()),
+                              style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w700)
+                            )
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              convertCommaSeparatedAmount(listSheetData[index].total.toString()),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: black, fontSize: 14, fontWeight: FontWeight.w200)
+                            )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+         )
+        )
+    );
   }
 
 /*  LineChartData generatedLineChart() {
@@ -464,12 +574,16 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
               .reduce((a, b) => (a) > (b) ? a : b)
               .toDouble()
               : 0;
-          //final scale = calculateChartScale(rawMaxY, divisions: 7);
-          final scale = calculateChartScale2(0, rawMaxY, divisions: 7);
+
+          print("Display raw max : $rawMaxY");
+
+          final scale = calculateChartScale(rawMaxY, divisions: 6);
+          // final scale = calculateChartScale2(0, rawMaxY, divisions: 7);
           maxY = scale.maxY;
           interval = scale.interval;
 
-          if (interval <= 0) {
+          if (interval <= 0)
+          {
             interval = 1;
           }
 

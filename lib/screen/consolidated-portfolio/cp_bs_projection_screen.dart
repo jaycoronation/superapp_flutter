@@ -116,6 +116,8 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
             margin: const EdgeInsets.only(top: 8),
             child: LineChart(
               LineChartData(
+                clipData: FlClipData.all(),
+                rangeAnnotations: RangeAnnotations(),
                 minX: 0,
                 maxX: (listBalanceSheetData.length - 1).toDouble(),
                 minY: 0,
@@ -171,7 +173,17 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
                     isCurved: true,
                     barWidth: 3,
                     color: tableLightBlue,
-                    dotData: FlDotData(show: true),
+                    dotData: FlDotData(
+                      show: true,
+                      getDotPainter: (spot, percent, barData, index) {
+                        return FlDotCirclePainter(
+                          radius: 3, // smaller dots = no overflow feel
+                          color: tableLightBlue,
+                          strokeWidth: 0,
+                        );
+                      },
+                    ),
+                   // dotData: FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
                       gradient: LinearGradient(
@@ -182,7 +194,10 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
                   ),
                 ],
                 lineTouchData: LineTouchData(
+                  handleBuiltInTouches: true,
                   touchTooltipData: LineTouchTooltipData(
+                    fitInsideHorizontally: true,
+                    fitInsideVertically: true,
                     getTooltipColor: (_) => grayDark,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
@@ -248,117 +263,146 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
                           ),
                           const Gap(8),
                           Divider(color: gray,),
-                          const Gap(8),
                           SizedBox(
-                            height: 300,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              child: SizedBox(
-                                width: chartWidth < MediaQuery.of(context).size.width ? MediaQuery.of(context).size.width : chartWidth,
-                                child: LineChart(
-                                  LineChartData(
-                                    minX: 0,
-                                    maxX: (listBalanceSheetData.length - 1).toDouble(),
-                                    minY: 0,
-                                    maxY: listBalanceSheetData.isNotEmpty ? maxY : 0.0,
-                                    gridData: FlGridData(
-                                      show: true,
-                                      horizontalInterval: listBalanceSheetData.isNotEmpty ? interval : null,
-                                    ),
-                                    titlesData: FlTitlesData(
-                                      leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          interval: listBalanceSheetData.isNotEmpty ? interval : null,
-                                          reservedSize: 80,
-                                          getTitlesWidget: (value, meta) {
-                                            final isTopValue = value == meta.max;
-                                            return Padding(
-                                              padding: EdgeInsets.only(top: isTopValue ? 10 : 0,),
-                                              child: Text(
-                                                value.toStringAsFixed(0),
-                                                style: getMediumTextStyle(fontSize: 10, color: black),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          interval: 1,
-                                          getTitlesWidget: (value, meta) {
-                                            int index = value.toInt();
-                                            if (index >= 0 &&
-                                                index < listBalanceSheetData.length) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(top: 8),
-                                                child: Text(
-                                                  listBalanceSheetData[index].year.toString(),
-                                                  style: const TextStyle(fontSize: 10),
-                                                ),
-                                              );
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                        ),
-                                      ),
-
-                                      rightTitles: AxisTitles(),
-                                      topTitles: AxisTitles(),
-                                    ),
-
-                                    borderData: FlBorderData(show: false),
-
-                                    lineBarsData: [
-                                      LineChartBarData(
-                                        isCurved: true,
-                                        barWidth: 3,
-                                        color: tableLightBlue,
-                                        dotData: FlDotData(show: true),
-                                        belowBarData: BarAreaData(
-                                          show: true,
-                                          gradient: LinearGradient(
-                                            colors: [white, lightBlue2],
-                                          ),
-                                        ),
-                                        spots: listBalanceSheetData
-                                            .asMap()
-                                            .entries
-                                            .map(
-                                              (entry) => FlSpot(
-                                            entry.key.toDouble(),
-                                            double.tryParse(
-                                                "${entry.value.closingBalance}") ??
-                                                0.0,
-                                          ),
-                                        )
-                                            .toList(),
-                                      ),
-                                    ],
-
-                                    lineTouchData: LineTouchData(
-                                      touchTooltipData: LineTouchTooltipData(
-                                        getTooltipColor: (_) => grayDark,
-                                        getTooltipItems: (touchedSpots) {
-                                          return touchedSpots.map((spot) {
-                                            final data =
-                                            listBalanceSheetData[spot.x.toInt()];
-                                            return LineTooltipItem(
-                                              "${data.year}\nClosing Balance: ${convertCommaSeparatedAmount("${data.closingBalance?.toStringAsFixed(0)}")}",
-                                              getMediumTextStyle(
-                                                  fontSize: 12, color: white),
-                                            );
-                                          }).toList();
+                            child: SizedBox(
+                              height: 300,
+                              width: MediaQuery.of(context).size.width,
+                              child: LineChart(
+                                LineChartData(
+                                  clipData: FlClipData.all(),
+                                  rangeAnnotations: RangeAnnotations(),
+                                  minX: 0,
+                                  maxX: (listBalanceSheetData.length - 1).toDouble(),
+                                  minY: 0,
+                                  maxY: listBalanceSheetData.isNotEmpty ? maxY : 0.0,
+                                  gridData: FlGridData(
+                                    show: true,
+                                    horizontalInterval: listBalanceSheetData.isNotEmpty ? interval : null,
+                                  ),
+                                  titlesData: FlTitlesData(
+                                    leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        interval: listBalanceSheetData.isNotEmpty ? interval : null,
+                                        reservedSize: 80,
+                                        getTitlesWidget: (value, meta) {
+                                          final isTopValue = value == meta.max;
+                                          return Padding(
+                                            padding: EdgeInsets.only(top: isTopValue ? 10 : 0,),
+                                            child: Text(
+                                              value.toStringAsFixed(0),
+                                              style: getMediumTextStyle(fontSize: 10, color: black),
+                                            ),
+                                          );
                                         },
                                       ),
+                                    ),
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        interval: getDynamicInterval(),
+                                        getTitlesWidget: (value, meta) {
+                                          int index = value.toInt();
+
+                                          if (index >= 0 && index < listBalanceSheetData.length) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(top: 8),
+                                              child: Text(
+                                                listBalanceSheetData[index].year.toString(),
+                                                style: const TextStyle(fontSize: 10),
+                                              ),
+                                            );
+                                          }
+                                          return const SizedBox.shrink();
+                                        },
+                                      ),
+                                    ),
+                                    // bottomTitles: AxisTitles(
+                                    //   sideTitles: SideTitles(
+                                    //     showTitles: true,
+                                    //     interval: 1,
+                                    //     getTitlesWidget: (value, meta) {
+                                    //       int index = value.toInt();
+                                    //       if (index >= 0 &&
+                                    //           index < listBalanceSheetData.length) {
+                                    //         return Padding(
+                                    //           padding: const EdgeInsets.only(top: 8),
+                                    //           child: Text(
+                                    //             listBalanceSheetData[index].year.toString(),
+                                    //             style: const TextStyle(fontSize: 10),
+                                    //           ),
+                                    //         );
+                                    //       }
+                                    //       return const SizedBox.shrink();
+                                    //     },
+                                    //   ),
+                                    // ),
+
+                                    rightTitles: AxisTitles(),
+                                    topTitles: AxisTitles(),
+                                  ),
+
+                                  borderData: FlBorderData(show: false),
+
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      isCurved: true,
+                                      barWidth: 3,
+                                      color: tableLightBlue,
+                                      dotData: FlDotData(
+                                        show: true,
+                                        getDotPainter: (spot, percent, barData, index) {
+                                          return FlDotCirclePainter(
+                                            radius: 2, // smaller dots = no overflow feel
+                                            color: tableLightBlue,
+                                            strokeWidth: 0,
+                                          );
+                                        },
+                                      ),
+                                      //dotData: FlDotData(show: true),
+                                      belowBarData: BarAreaData(
+                                        show: true,
+                                        gradient: LinearGradient(
+                                          colors: [white, lightBlue2],
+                                        ),
+                                      ),
+                                      spots: listBalanceSheetData
+                                          .asMap()
+                                          .entries
+                                          .map(
+                                            (entry) => FlSpot(
+                                          entry.key.toDouble(),
+                                          double.tryParse(
+                                              "${entry.value.closingBalance}") ??
+                                              0.0,
+                                        ),
+                                      )
+                                          .toList(),
+                                    ),
+                                  ],
+
+                                  lineTouchData: LineTouchData(
+                                    handleBuiltInTouches: true,
+                                    touchTooltipData: LineTouchTooltipData(
+                                      fitInsideHorizontally: true,
+                                      fitInsideVertically: true,
+                                      getTooltipColor: (_) => grayDark,
+                                      getTooltipItems: (touchedSpots) {
+                                        return touchedSpots.map((spot) {
+                                          final data = listBalanceSheetData[spot.x.toInt()];
+                                          return LineTooltipItem(
+                                            "${data.year}\nClosing Balance: ${convertCommaSeparatedAmount("${data.closingBalance?.toStringAsFixed(0)}")}",
+                                            getMediumTextStyle(fontSize: 12, color: white),
+                                          );
+                                        }).toList();
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
+                          const Gap(8),
                         ],
                       )
                   ),
@@ -445,6 +489,15 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
         ),
       ),
     );
+  }
+
+  double getDynamicInterval() {
+    int length = listBalanceSheetData.length;
+
+    if (length <= 6) return 1;
+    if (length <= 12) return 2;
+    if (length <= 20) return 3;
+    return (length / 6).ceilToDouble(); // approx 5-6 labels
   }
 
   String formatIndianAmount(double value) {

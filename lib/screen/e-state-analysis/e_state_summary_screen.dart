@@ -52,6 +52,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
   AspirationsSummaryTotal aspirationsSummaryTotal = AspirationsSummaryTotal();
   List<NetworthList> listNetWorth = [];
   NetworthTotal listNetWorthTotal = NetworthTotal();
+  InsuranceAnalysis insuranceAnalysis = InsuranceAnalysis();
 
   String selectedRiskProfileType = "";
 
@@ -870,6 +871,27 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
+                          "Insurance & Will Analysis :",
+                          style: getSemiBoldTextStyle(fontSize: 14, color: blue),
+                        ),
+                        const Gap(16),
+                        insuranceAndWillWidget(),
+                        const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Gap(20),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(8)
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                           "Action points :",
                           style: getSemiBoldTextStyle(fontSize: 14, color: blue),
                         ),
@@ -1555,6 +1577,88 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
     );
   }
 
+  Widget insuranceAndWillWidget(){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: blue), left: BorderSide(color: blue), right: BorderSide(color: blue)),
+          borderRadius: BorderRadius.circular(14)
+      ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                expandedCell(flex: 2, rowCellTitle("Wealth Component", white, alignment: Alignment.centerLeft, isPadding: true, maxLine: 2)),
+                showLineDivider(),
+                expandedCell(rowCellTitle("Current Status / Gap", white, maxLine: 2)),
+              ],
+            ),
+          ),
+
+          Column(
+            children: [
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(0, "Need Gap today (With Real Estate)", maxLine: 2, alignment: Alignment.centerLeft)),
+                    showLineDivider(),
+                    expandedCell(rowCell(0, convertCommaSeparatedAmount("${insuranceAnalysis.needGapWithRe}"), maxLine: 2)),
+                  ],
+                ),
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(0, "Need Gap today (Without Real Estate)", maxLine: 2, alignment: Alignment.centerLeft)),
+                    showLineDivider(),
+                    expandedCell(rowCell(0, convertCommaSeparatedAmount("${insuranceAnalysis.needGapWoRe}"), maxLine: 2)),
+                  ],
+                ),
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(0, "Existing Life Insurance", maxLine: 2, alignment: Alignment.centerLeft)),
+                    showLineDivider(),
+                    expandedCell(rowCell(0, convertCommaSeparatedAmount("${insuranceAnalysis.existingLifeInsurance}"), maxLine: 2)),
+                  ],
+                ),
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(0, "Life Insurance Required", maxLine: 2, alignment: Alignment.centerLeft, isBold: true)),
+                    showLineDivider(),
+                    expandedCell(rowCell(0, convertCommaSeparatedAmount("${insuranceAnalysis.lifeInsuranceRequired}"), isBold: true, maxLine: 2)),
+                  ],
+                ),
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(0, "Health Insurance Required", maxLine: 2, isBold: true, alignment: Alignment.centerLeft)),
+                    showLineDivider(),
+                    expandedCell(rowCell(0, "${insuranceAnalysis.healthInsuranceRequired}", isBold: true, maxLine: 2)),
+                  ],
+                ),
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    expandedCell(flex: 2, rowCell(0, "Will to be made for succession", maxLine: 2, isBold: true, alignment: Alignment.centerLeft, isLastIndexLeft: true)),
+                    showLineDivider(),
+                    expandedCell(rowCell(0, "${insuranceAnalysis.willStatus}", isBold: true, maxLine: 2, isLastIndexRight: true)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget actionPointWidget(String title){
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
@@ -1737,6 +1841,8 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
           selectedRiskProfileType = summaryData.userDetails?.riskProfile ?? "";
           listRiskProfileAllocation = summaryData.riskProfileAllocation ?? [];
           listReturnOfRisk = summaryData.rangeOfReturn ?? [];
+
+          insuranceAnalysis = summaryData.insuranceAnalysis ?? InsuranceAnalysis();
 
           if (listReturnOfRisk.isNotEmpty)
           {

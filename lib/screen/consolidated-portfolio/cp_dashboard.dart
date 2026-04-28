@@ -439,918 +439,161 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     ),
 
                     Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      margin: const EdgeInsets.only(left: 16,right: 16),
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Macro Asset Allocation - Strategic:",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  setState(() {
-                                    isShowMacroAssetGraph = !isShowMacroAssetGraph;
-                                  });
-                                },
-                                child: Text(
-                                  isShowMacroAssetGraph ? "Table" : "Graph",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              )
-                            ],
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: isShowMacroAssetGraph,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20, bottom: 10),
-                                  height: 170,
-                                  child: PieChart(
-                                    PieChartData(
-                                      sectionsSpace: 2,
-                                      centerSpaceRadius: 0,
-                                      startDegreeOffset: -100,
-                                      pieTouchData: PieTouchData(
-                                        touchCallback: (event, response) {
-                                          setState(() {
-                                            if (!event.isInterestedForInteractions || response == null || response.touchedSection == null)
-                                            {
-                                              touchedIndexMacroAsset = -1;
-                                              return;
-                                            }
-                                            touchedIndexMacroAsset = response.touchedSection!.touchedSectionIndex;
-                                          });
-                                        },
-                                      ),
-                                      sections: List.generate(
-                                        (resultData.macroAssetStratagic ?? [])
-                                            .where((e) => (e.asset ?? "") != "Total")
-                                            .length,
-                                            (i) {
-
-                                          final filteredList = (resultData.macroAssetStratagic ?? []).where((e) => (e.asset ?? "") != "Total").toList();
-                                          final value = filteredList[i];
-                                          final isTouched = i == touchedIndexMacroAsset;
-                                          final percentValue = (value.actual ?? 0).toDouble();
-
-                                          if (percentValue == 0)
-                                          {
-                                            return PieChartSectionData(value: 0);
-                                          }
-
-                                          return PieChartSectionData(
-                                            showTitle: percentValue > 1,
-                                            titlePositionPercentageOffset:
-                                            percentValue < 1 ? 1.1 : 0.7,
-                                            color: isTouched ? colorMainAll[i % colorMainAll.length].withValues(alpha: 0.8) :
-                                            colorMainAll[i % colorMainAll.length],
-                                            value: percentValue,
-                                            radius: isTouched ? 120 : 100,
-                                            title: isTouched
-                                                ? "${value.actual}%"
-                                                : "${percentValue.toStringAsFixed(0)}%",
-                                            titleStyle: getSemiBoldTextStyle(
-                                                fontSize: 12, color: white),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(16),
-                                Visibility(
-                                  visible: (resultData.macroAssetStratagic?.isNotEmpty ?? false),
-                                  child: Center(
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 8,
-                                      alignment: WrapAlignment.center,
-                                      children: (resultData.macroAssetStratagic ?? []).where((e) => (e.asset ?? "") != "Total").toList().asMap().entries.map((entry) {
-
-                                        final index = entry.key;
-                                        final item = entry.value;
-
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 14,
-                                              height: 14,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: colorMainAll[index % colorMainAll.length],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              item.asset ?? "",
-                                              style: getMediumTextStyle(fontSize: 12, color: black),
-                                            ),
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(20),
-                              ],
-                            ),
-                          ),
-                          Visibility(
-                            visible: !isShowMacroAssetGraph && (resultData.macroAssetStratagic?.isNotEmpty ?? false),
-                            child: macroAssetAllocationListWidget()
+                          const Text('Asset Allocation',
+                              style: TextStyle(
+                                  color: blue,
+                                  fontSize: 16,
+                                  fontWeight:
+                                  FontWeight.w600)),
+                          const Spacer(),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                _isShowTopTable = !_isShowTopTable;
+                              });
+                            },
+                            child: Text(_isShowTopTable ? 'Graph' : 'Table',
+                                style: const TextStyle(
+                                    color: blue,
+                                    fontSize: 16,
+                                    fontWeight:
+                                    FontWeight.w600)),
                           ),
                         ],
                       ),
                     ),
-
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
+                    const Gap(16),
+                    _isShowTopTable
+                        ? setUpAssetAllocationTopTableData()
+                        : SizedBox(
+                      height: 250,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  touchedIndexAsset = -1;
+                                  return;
+                                }
+                                touchedIndexAsset = pieTouchResponse
+                                    .touchedSection!.touchedSectionIndex;
+                              });
+                            },
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 60,
+                          sections: generateAssetAllocationChart(),
+                        ),
                       ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    const Gap(16),
+                    _isShowTopTable ? Container () : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List.generate(resultData.macroAssetStratagic?.isNotEmpty ?? false ? (resultData.macroAssetStratagic?.length ?? 0) - 1 : 0, (i) {
+                        return resultData.macroAssetStratagic![i].actual != 0 ? Container(
+                          margin: const EdgeInsets.all(6),
+                          child: Indicator(
+                            color: colorsAssetAllocation[i],
+                            text: resultData.macroAssetStratagic![i].asset.toString(),
+                            isSquare: false,
+                            size: touchedIndexAsset == i ? 18 : 16,
+                            textColor: touchedIndexAsset == i
+                                ? Colors.black
+                                : Colors.black38,
+                          ),
+                        ) : Container();
+                      }),
+                    ),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16,right: 16),
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Micro Asset Allocation - Strategic:",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  setState(() {
-                                    isShowMicroAssetGraph = !isShowMicroAssetGraph;
-                                  });
-                                },
-                                child: Text(
-                                  isShowMicroAssetGraph ? "Table" : "Graph",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              )
-                            ],
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: isShowMicroAssetGraph,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20, bottom: 10),
-                                  height: 170,
-                                  child: PieChart(
-                                    PieChartData(
-                                      sectionsSpace: 2,
-                                      centerSpaceRadius: 0,
-                                      startDegreeOffset: -100,
-                                      pieTouchData: PieTouchData(
-                                        touchCallback: (event, response) {
-                                          setState(() {
-                                            if (!event.isInterestedForInteractions || response == null || response.touchedSection == null)
-                                            {
-                                              touchedIndexMicroAsset = -1;
-                                              return;
-                                            }
-                                            touchedIndexMicroAsset = response.touchedSection!.touchedSectionIndex;
-                                          });
-                                        },
-                                      ),
-                                      sections: List.generate(
-                                        (resultData.microAssetStratagic ?? [])
-                                            .where((e) => (e.asset ?? "") != "Total")
-                                            .length,
-                                            (i) {
-
-                                          final filteredList = (resultData.microAssetStratagic ?? []).where((e) => (e.asset ?? "") != "Total").toList();
-                                          final value = filteredList[i];
-                                          final isTouched = i == touchedIndexMicroAsset;
-                                          final percentValue = (value.actual ?? 0).toDouble();
-
-                                          if (percentValue == 0)
-                                          {
-                                            return PieChartSectionData(value: 0);
-                                          }
-
-                                          return PieChartSectionData(
-                                            showTitle: percentValue > 1,
-                                            titlePositionPercentageOffset:
-                                            percentValue < 1 ? 1.1 : 0.7,
-                                            color: isTouched ? colorMainAll[i % colorMainAll.length].withValues(alpha: 0.8) :
-                                            colorMainAll[i % colorMainAll.length],
-                                            value: percentValue,
-                                            radius: isTouched ? 120 : 100,
-                                            title: isTouched
-                                                ? "${value.actual}%"
-                                                : "${percentValue.toStringAsFixed(0)}%",
-                                            titleStyle: getSemiBoldTextStyle(
-                                                fontSize: 12, color: white),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(16),
-                                Visibility(
-                                  visible: (resultData.microAssetStratagic?.isNotEmpty ?? false),
-                                  child: Center(
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 8,
-                                      alignment: WrapAlignment.center,
-                                      children: (resultData.microAssetStratagic ?? []).where((e) => (e.asset ?? "") != "Total").toList().asMap().entries.map((entry) {
-
-                                        final index = entry.key;
-                                        final item = entry.value;
-
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 14,
-                                              height: 14,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: colorMainAll[index % colorMainAll.length],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              item.asset ?? "",
-                                              style: getMediumTextStyle(fontSize: 12, color: black),
-                                            ),
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(20),
-                              ],
-                            ),
-                          ),
-                          Visibility(
-                              visible: !isShowMicroAssetGraph && (resultData.macroAssetStratagic?.isNotEmpty ?? false),
-                              child: microAssetAllocationListWidget()
+                          const Text('Applicants Allocation : ',
+                              style: TextStyle(
+                                  color: blue,
+                                  fontSize: 16,
+                                  fontWeight:
+                                  FontWeight.w600)),
+                          const Spacer(),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                _isShowTable = !_isShowTable;
+                              });
+                            },
+                            child: Text(_isShowTable ? 'Graph' : 'Table',
+                                style: const TextStyle(
+                                    color: blue,
+                                    fontSize: 16,
+                                    fontWeight:
+                                    FontWeight.w600)),
                           ),
                         ],
                       ),
                     ),
-
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Holder Allocation:",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  setState(() {
-                                    isShowApplicantGraph = !isShowApplicantGraph;
-                                  });
-                                },
-                                child: Text(
-                                  isShowApplicantGraph ? "Table" : "Graph",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              )
-                            ],
+                    const Gap(16),
+                    _isShowTable ? setUpApplicantsData() : SizedBox(
+                      height: 250,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                                  touchedIndexApplicant = -1;
+                                  return;
+                                }
+                                touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                              });
+                            },
                           ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: isShowApplicantGraph,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20, bottom: 10),
-                                  height: 170,
-                                  child: PieChart(
-                                    PieChartData(
-                                      sectionsSpace: 2,
-                                      centerSpaceRadius: 0,
-                                      startDegreeOffset: -100,
-                                      pieTouchData: PieTouchData(
-                                        touchCallback: (event, response) {
-                                          setState(() {
-                                            if (!event.isInterestedForInteractions || response == null || response.touchedSection == null)
-                                            {
-                                              touchedIndexApplicantDetail = -1;
-                                              return;
-                                            }
-                                            touchedIndexApplicantDetail = response.touchedSection!.touchedSectionIndex;
-                                          });
-                                        },
-                                      ),
-                                      sections: List.generate(
-                                        (resultData.applicantDetails ?? [])
-                                            .where((e) => (e.applicant ?? "") != "Amount Total")
-                                            .length,
-                                            (i) {
-
-                                          final filteredList = (resultData.applicantDetails ?? []).where((e) => (e.applicant ?? "") != "Amount Total").toList();
-                                          final value = filteredList[i];
-                                          final isTouched = i == touchedIndexApplicantDetail;
-                                          final percentValue = (value.allocation ?? 0).toDouble();
-
-                                          if (percentValue == 0)
-                                          {
-                                            return PieChartSectionData(value: 0);
-                                          }
-
-                                          return PieChartSectionData(
-                                            showTitle: percentValue > 1,
-                                            titlePositionPercentageOffset:
-                                            percentValue < 1 ? 1.1 : 0.7,
-                                            color: isTouched ? colorMainAll[i % colorMainAll.length].withValues(alpha: 0.8) :
-                                            colorMainAll[i % colorMainAll.length],
-                                            value: percentValue,
-                                            radius: isTouched ? 120 : 100,
-                                            title: isTouched
-                                                ? "${value.allocation}%"
-                                                : "${percentValue.toStringAsFixed(0)}%",
-                                            titleStyle: getSemiBoldTextStyle(
-                                                fontSize: 12, color: white),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(16),
-                                Visibility(
-                                  visible: (resultData.applicantDetails?.isNotEmpty ?? false),
-                                  child: Center(
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 8,
-                                      alignment: WrapAlignment.center,
-                                      children: (resultData.applicantDetails ?? []).where((e) => (e.applicant ?? "") != "Amount Total").toList().asMap().entries.map((entry) {
-
-                                        final index = entry.key;
-                                        final item = entry.value;
-
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 14,
-                                              height: 14,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: colorMainAll[index % colorMainAll.length],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              item.applicant ?? "",
-                                              style: getMediumTextStyle(fontSize: 12, color: black),
-                                            ),
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(20),
-                              ],
-                            ),
+                          borderData: FlBorderData(
+                            show: false,
                           ),
-                          Visibility(
-                            visible: !isShowApplicantGraph && (resultData.applicantDetails?.isNotEmpty ?? false),
-                            child: applicantAllocationListWidget()
-                          ),
-                        ],
+                          sectionsSpace: 0,
+                          centerSpaceRadius: 60,
+                          sections: generateApplicantsChart(),
+                        ),
                       ),
                     ),
-
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Service Provider Diversification:",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              ),
-                              GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  setState(() {
-                                    isShowServiceProviderGraph = !isShowServiceProviderGraph;
-                                  });
-                                },
-                                child: Text(
-                                  isShowServiceProviderGraph ? "Table" : "Graph",
-                                  style: getBoldTextStyle(fontSize: 14, color: blue),
-                                ),
-                              )
-                            ],
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: isShowServiceProviderGraph,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20, bottom: 10),
-                                  height: 170,
-                                  child: PieChart(
-                                    PieChartData(
-                                      sectionsSpace: 2,
-                                      centerSpaceRadius: 0,
-                                      startDegreeOffset: -100,
-                                      pieTouchData: PieTouchData(
-                                        touchCallback: (event, response) {
-                                          setState(() {
-                                            if (!event.isInterestedForInteractions || response == null || response.touchedSection == null)
-                                            {
-                                              touchedIndexServiceProvider = -1;
-                                              return;
-                                            }
-                                            touchedIndexServiceProvider = response.touchedSection!.touchedSectionIndex;
-                                          });
-                                        },
-                                      ),
-                                      sections: List.generate(
-                                        (resultData.serviceProviders ?? [])
-                                            .where((e) => (e.serviceProvider ?? "") != "Total")
-                                            .length,
-                                            (i) {
-
-                                          final filteredList = (resultData.serviceProviders ?? []).where((e) => (e.serviceProvider ?? "") != "Total").toList();
-                                          final value = filteredList[i];
-                                          final isTouched = i == touchedIndexServiceProvider;
-                                          final percentValue = (value.allocation ?? 0).toDouble();
-
-                                          if (percentValue == 0)
-                                          {
-                                            return PieChartSectionData(value: 0);
-                                          }
-
-                                          return PieChartSectionData(
-                                            showTitle: percentValue > 1,
-                                            titlePositionPercentageOffset:
-                                            percentValue < 1 ? 1.1 : 0.7,
-                                            color: isTouched ? colorMainAll[i % colorMainAll.length].withValues(alpha: 0.8) :
-                                            colorMainAll[i % colorMainAll.length],
-                                            value: percentValue,
-                                            radius: isTouched ? 120 : 100,
-                                            title: isTouched
-                                                ? "${value.allocation}%"
-                                                : "${percentValue.toStringAsFixed(0)}%",
-                                            titleStyle: getSemiBoldTextStyle(
-                                                fontSize: 12, color: white),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(16),
-                                Visibility(
-                                  visible: (resultData.serviceProviders?.isNotEmpty ?? false),
-                                  child: Center(
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 8,
-                                      alignment: WrapAlignment.center,
-                                      children: (resultData.serviceProviders ?? []).where((e) => (e.serviceProvider ?? "") != "Total").toList().asMap().entries.map((entry) {
-
-                                        final index = entry.key;
-                                        final item = entry.value;
-
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 14,
-                                              height: 14,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: colorMainAll[index % colorMainAll.length],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              item.serviceProvider ?? "",
-                                              style: getMediumTextStyle(fontSize: 12, color: black),
-                                            ),
-                                          ],
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(20),
-                              ],
+                    const Gap(16),
+                    _isShowTable
+                        ? Container()
+                    : Wrap(
+                      alignment: WrapAlignment.center,
+                      children: List.generate(
+                        resultData.applicantDetails?.length ?? 0,
+                            (i) {
+                          return resultData.applicantDetails![i].allocation != 0
+                              ? Container(
+                            margin: const EdgeInsets.all(6),
+                            child: Indicator(
+                              color: colorsApplicantAllocation[i],
+                              text: resultData.applicantDetails![i].applicant.toString(),
+                              isSquare: false,
+                              size: touchedIndexApplicant == i ? 18 : 16,
+                              textColor: touchedIndexApplicant == i
+                                  ? Colors.black
+                                  : Colors.black38,
                             ),
-                          ),
-                          Visibility(
-                              visible: !isShowServiceProviderGraph && (resultData.serviceProviders?.isNotEmpty ?? false),
-                              child: serviceProviderAllocationListWidget()
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Performance:",
-                            style: getBoldTextStyle(fontSize: 14, color: blue),
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    setState(() {
-                                      isShowSinceInception = true;
-                                      isShowCurrentYear = false;
-                                      isShowPreviousYear = false;
-                                    });
-                                  },
-                                  child: Text(
-                                    "Since Inception",
-                                    style: getMediumTextStyle(fontSize: 14, color: isShowSinceInception ? blue : black),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                              const Gap(8),
-                              Expanded(
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    setState(() {
-                                      isShowCurrentYear = true;
-                                      isShowSinceInception = false;
-                                      isShowPreviousYear = false;
-                                    });
-                                  },
-                                  child: Text(
-                                    getCurrentFinancialYear(),
-                                    style: getMediumTextStyle(fontSize: 14, color:  isShowCurrentYear ? blue : black),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                              const Gap(8),
-                              Expanded(
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    setState(() {
-                                      isShowPreviousYear = true;
-                                      isShowSinceInception = false;
-                                      isShowCurrentYear = false;
-                                    });
-                                  },
-                                  child: Text(
-                                    getPreviousFinancialYear(),
-                                    style: getMediumTextStyle(fontSize: 14, color: isShowPreviousYear ? blue : black),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(4),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Divider(color: isShowSinceInception ? blue : Colors.transparent, height: 1, thickness: 1,),
-                              ),
-                              const Gap(8),
-                              Expanded(
-                                child: Divider(color: isShowCurrentYear ? blue : Colors.transparent, height: 1, thickness: 1,),
-                              ),
-                              const Gap(8),
-                              Expanded(
-                                child: Divider(color: isShowPreviousYear ? blue : Colors.transparent, height: 1, thickness: 1,),
-                              ),
-                            ],
-                          ),
-                          const Gap(16),
-                          Visibility(
-                            visible: isShowSinceInception,
-                            // child: setUpSinceInceptionData(),
-                            child: performanceWidget(1),
-                          ),
-                          Visibility(
-                            visible: isShowCurrentYear,
-                            // child: setUpCurrentYearXIRRData(),
-                            child: performanceWidget(2),
-                          ),
-                          Visibility(
-                            visible: isShowPreviousYear,
-                            // child: setUpPreviousYearXIRRData(),
-                            child: performanceWidget(3),
                           )
-                        ],
+                              : const SizedBox.shrink();
+                        },
                       ),
                     ),
-
-                   /* Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Allocation by Fund Houses:",
-                            style: getBoldTextStyle(fontSize: 14, color: blue),
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: resultData.fundHouseAllocation?.isNotEmpty ?? false,
-                            child: fundHouseAllocationWidget()
-                          ),
-                          const Gap(10),
-                          Text(
-                            "*3 Fund houses with allocation below 2% should be sold or allocation should be increased in them if they are good to make the exposure meaningful.",
-                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                          ),
-                          const Gap(12),
-                        ],
-                      ),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Allocation by Schemes:",
-                            style: getBoldTextStyle(fontSize: 14, color: blue),
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: resultData.schemeAllocation?.isNotEmpty ?? false,
-                            child: schemeAllocationWidget(),
-                          ),
-                          const Gap(10),
-                          Text(
-                            "*35 Schemes with allocation below 2% should be sold or allocation should be increased in them if they are good to make the exposure meaningful.",
-                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                          ),
-                          const Gap(12),
-                        ],
-                      ),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(8)
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Last 30 Days Transactions:",
-                            style: getBoldTextStyle(fontSize: 14, color: blue),
-                          ),
-                          const Gap(8),
-                          Divider(color: gray,),
-                          const Gap(8),
-                          Visibility(
-                            visible: listLast30DaysTransaction.isNotEmpty,
-                            child: last30DaysTransactionWidget(),
-                          ),
-                          const Gap(12),
-                        ],
-                      ),
-                    ),*/
-
-
-
-
-
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 16,right: 16),
-                    //   child: Row(
-                    //     children: [
-                    //       const Text('Asset Allocation',
-                    //           style: TextStyle(
-                    //               color: blue,
-                    //               fontSize: 16,
-                    //               fontWeight:
-                    //               FontWeight.w600)),
-                    //       const Spacer(),
-                    //       InkWell(
-                    //         onTap: (){
-                    //           setState(() {
-                    //             _isShowTopTable = !_isShowTopTable;
-                    //           });
-                    //         },
-                    //         child: Text(_isShowTopTable ? 'Graph' : 'Table',
-                    //             style: const TextStyle(
-                    //                 color: blue,
-                    //                 fontSize: 16,
-                    //                 fontWeight:
-                    //                 FontWeight.w600)),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const Gap(16),
-                    // _isShowTopTable
-                    //     ? setUpAssetAllocationTopTableData()
-                    //     : SizedBox(
-                    //   height: 250,
-                    //   child: PieChart(
-                    //     PieChartData(
-                    //       pieTouchData: PieTouchData(
-                    //         touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                    //           setState(() {
-                    //             if (!event.isInterestedForInteractions ||
-                    //                 pieTouchResponse == null ||
-                    //                 pieTouchResponse.touchedSection == null) {
-                    //               touchedIndexAsset = -1;
-                    //               return;
-                    //             }
-                    //             touchedIndexAsset = pieTouchResponse
-                    //                 .touchedSection!.touchedSectionIndex;
-                    //           });
-                    //         },
-                    //       ),
-                    //       borderData: FlBorderData(
-                    //         show: false,
-                    //       ),
-                    //       sectionsSpace: 0,
-                    //       centerSpaceRadius: 60,
-                    //       sections: generateAssetAllocationChart(),
-                    //     ),
-                    //   ),
-                    // ),
-                    // const Gap(16),
-                    // _isShowTopTable ? Container () : Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   crossAxisAlignment: CrossAxisAlignment.center,
-                    //   children: List.generate(resultData.macroAssetStratagic?.isNotEmpty ?? false ? (resultData.macroAssetStratagic?.length ?? 0) - 1 : 0, (i) {
-                    //     return resultData.macroAssetStratagic![i].actual != 0 ? Container(
-                    //       margin: const EdgeInsets.all(6),
-                    //       child: Indicator(
-                    //         color: colorsAssetAllocation[i],
-                    //         text: resultData.macroAssetStratagic![i].asset.toString(),
-                    //         isSquare: false,
-                    //         size: touchedIndexAsset == i ? 18 : 16,
-                    //         textColor: touchedIndexAsset == i
-                    //             ? Colors.black
-                    //             : Colors.black38,
-                    //       ),
-                    //     ) : Container();
-                    //   }),
-                    // ),
-                    // const Gap(16),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 16,right: 16),
-                    //   child: Row(
-                    //     children: [
-                    //       const Text('Applicants Allocation : ',
-                    //           style: TextStyle(
-                    //               color: blue,
-                    //               fontSize: 16,
-                    //               fontWeight:
-                    //               FontWeight.w600)),
-                    //       const Spacer(),
-                    //       InkWell(
-                    //         onTap: (){
-                    //           setState(() {
-                    //             _isShowTable = !_isShowTable;
-                    //           });
-                    //         },
-                    //         child: Text(_isShowTable ? 'Graph' : 'Table',
-                    //             style: const TextStyle(
-                    //                 color: blue,
-                    //                 fontSize: 16,
-                    //                 fontWeight:
-                    //                 FontWeight.w600)),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const Gap(16),
-                    // _isShowTable ? setUpApplicantsData() : SizedBox(
-                    //   height: 250,
-                    //   child: PieChart(
-                    //     PieChartData(
-                    //       pieTouchData: PieTouchData(
-                    //         touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                    //           setState(() {
-                    //             if (!event.isInterestedForInteractions ||
-                    //                 pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
-                    //               touchedIndexApplicant = -1;
-                    //               return;
-                    //             }
-                    //             touchedIndexApplicant = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    //           });
-                    //         },
-                    //       ),
-                    //       borderData: FlBorderData(
-                    //         show: false,
-                    //       ),
-                    //       sectionsSpace: 0,
-                    //       centerSpaceRadius: 60,
-                    //       sections: generateApplicantsChart(),
-                    //     ),
-                    //   ),
-                    // ),
-                    // const Gap(16),
-                    // _isShowTable ? Container() :Row(
+                    //     :Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   crossAxisAlignment: CrossAxisAlignment.center,
                     //   children: List.generate(resultData.applicantDetails?.isNotEmpty ?? false ? (resultData.applicantDetails?.length ?? 0) - 1 : 0, (i) {
@@ -1368,71 +611,71 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
                     //     ) : Container();
                     //   }),
                     // ),
-                    // const Gap(16),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 16),
-                    //   child: const Text('Asset Allocation - Strategic : ',
-                    //       style: TextStyle(
-                    //           color: blue,
-                    //           fontSize: 16,
-                    //           fontWeight:
-                    //           FontWeight.w600)),
-                    // ),
-                    // const Gap(16),
-                    // setUpAssetAllocationStrategicTab(),
-                    // _isVisibleStrategic
-                    //     ? setUpAssetAllocationStrategicMacroData()
-                    //     : setUpAssetAllocationStrategicMicroData(),
-                    // const Gap(16),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 16),
-                    //   child: const Text('Asset Allocation - Tactical : ',
-                    //       style: TextStyle(
-                    //           color: blue,
-                    //           fontSize: 16,
-                    //           fontWeight:
-                    //           FontWeight.w600)),
-                    // ),
-                    // const Gap(16),
-                    // setUpAssetAllocationTacticalTab(),
-                    // _isVisibleTactical
-                    //     ? setUpAssetAllocationTacticalMacroData()
-                    //     : setUpAssetAllocationTacticalMicroData(),
-                    // const Gap(16),
-                    // Container(
-                    //   width: double.infinity,
-                    //   margin: const EdgeInsets.only(left: 16),
-                    //   child: Text('*Equity market is overvalued by ${percentageResponse.masterMarketPercentage}%',textAlign: TextAlign.center,
-                    //       style: const TextStyle(
-                    //           color: blue,
-                    //           fontSize: 16,
-                    //           fontStyle: FontStyle.italic,
-                    //           fontWeight: FontWeight.bold)),
-                    // ),
-                    // const Gap(16),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 16),
-                    //   child: const Text('Performance : ',
-                    //       style: TextStyle(
-                    //           color: blue,
-                    //           fontSize: 16,
-                    //           fontWeight:
-                    //           FontWeight.w600)),
-                    // ),
-                    // const Gap(16),
-                    // setUpPerformanceTab(),
-                    // _isSinceInceptionLoading
-                    //     ? const CPDashboardLoadingWidget()
-                    //     : _isVisibleSinceInception
-                    //     ? setUpSinceInceptionData()
-                    //     : _isCurrentYearXIRRLoading
-                    //     ? const CPDashboardLoadingWidget()
-                    //     : _isVisible2023_24
-                    //     ? setUpCurrentYearXIRRData()
-                    //     : _isPreviousYearXIRRLoading
-                    //     ? const CPDashboardLoadingWidget()
-                    //     : setUpPreviousYearXIRRData(),
-                    // const Gap(16)
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: const Text('Asset Allocation - Strategic : ',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                    ),
+                    const Gap(16),
+                    setUpAssetAllocationStrategicTab(),
+                    _isVisibleStrategic
+                        ? setUpAssetAllocationStrategicMacroData()
+                        : setUpAssetAllocationStrategicMicroData(),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: const Text('Asset Allocation - Tactical : ',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                    ),
+                    const Gap(16),
+                    setUpAssetAllocationTacticalTab(),
+                    _isVisibleTactical
+                        ? setUpAssetAllocationTacticalMacroData()
+                        : setUpAssetAllocationTacticalMicroData(),
+                    const Gap(16),
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(left: 16),
+                      child: Text('*Equity market is overvalued by ${percentageResponse.masterMarketPercentage}%',textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    const Gap(16),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: const Text('Performance : ',
+                          style: TextStyle(
+                              color: blue,
+                              fontSize: 16,
+                              fontWeight:
+                              FontWeight.w600)),
+                    ),
+                    const Gap(16),
+                    setUpPerformanceTab(),
+                    _isSinceInceptionLoading
+                        ? const CPDashboardLoadingWidget()
+                        : _isVisibleSinceInception
+                        ? setUpSinceInceptionData()
+                        : _isCurrentYearXIRRLoading
+                        ? const CPDashboardLoadingWidget()
+                        : _isVisible2023_24
+                        ? setUpCurrentYearXIRRData()
+                        : _isPreviousYearXIRRLoading
+                        ? const CPDashboardLoadingWidget()
+                        : setUpPreviousYearXIRRData(),
+                    const Gap(16)
                   ],
                 ),))
     );
