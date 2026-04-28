@@ -468,13 +468,13 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("*Inflation is assumed at 6%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("*Inflation is assumed at 6%"),
                               const Gap(2),
-                              Text("**Expected profit growth is 12%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("**Expected profit growth is 12%"),
                               const Gap(2),
-                              Text("***Expected growth in fresh inflow is 10%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("***Expected growth in fresh inflow is 10%"),
                               const Gap(2),
-                              Text("**Expected profit growth may or may not happen in future due to market risk.", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("**Expected profit growth may or may not happen in future due to market risk."),
                             ],
                           ),
                         ),
@@ -505,7 +505,106 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
     return format.format(value);
   }
 
-  Widget balanceSheetDataWidget(){
+  Widget balanceSheetDataWidget() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        decoration: BoxDecoration(
+          // border: Border.all(color: blue),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+              decoration: const BoxDecoration(
+                color: semiBlue,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+              ),
+              child: Row(
+                children: [
+                  tableHeader("Year", width: 80, align: TextAlign.left),
+                  tableHeader("Opening Balance", width: 140),
+                  tableHeader("Outflow", width: 120),
+                  tableHeader("Fresh Inflow", width: 140),
+                  tableHeader("Expected Profit", width: 140),
+                  tableHeader("Closing Balance", width: 140),
+                  tableHeader("Present Value", width: 140),
+                ],
+              ),
+            ),
+
+            Column(
+              children: List.generate(balanceSheetCount, (index) {
+                final data = listBalanceSheetData[index];
+                final isLast = index == balanceSheetCount - 1;
+
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: index % 2 == 0 ? white : semiBlue,
+                    borderRadius: isLast
+                        ? const BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    )
+                        : BorderRadius.zero,
+                  ),
+                  child: Row(
+                    children: [
+                      tableCell("${data.year}", isAmount: false, width: 80, align: TextAlign.left, isBold: true),
+                      tableCell("${data.openingBalance}", width: 140),
+                      tableCell("${data.outflow}", width: 120),
+                      tableCell("${data.freshInflow}", width: 140),
+                      tableCell("${data.expectedProfit}", width: 140),
+                      tableCell("${data.closingBalance}", width: 140),
+                      tableCell("${data.presentValue}", width: 140),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget tableHeader(String text, {double width = 120, TextAlign align = TextAlign.center}) {
+    return SizedBox(
+      width: width,
+      child: Text(
+        text,
+        textAlign: align,
+        style: const TextStyle(
+          color: blue,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget tableCell(String value, {double width = 120, TextAlign align = TextAlign.center, bool isBold = false, bool isAmount = true}) {
+    return SizedBox(
+      width: width,
+      child: Text(
+        isAmount ? convertCommaSeparatedAmount(value) : value,
+        textAlign: align,
+        style: TextStyle(
+          color: black,
+          fontSize: 14,
+          fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
+        ),
+      ),
+    );
+  }
+
+/*  Widget balanceSheetDataWidget(){
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
@@ -569,7 +668,7 @@ class _CpBsProjectionScreenState extends BaseState<CpBsProjectionScreen> {
         ),
       ),
     );
-  }
+  }*/
 
   fetchBsProjectionData() async{
     if(isOnline)

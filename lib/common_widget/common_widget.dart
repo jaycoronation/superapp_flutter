@@ -185,3 +185,11 @@ Widget getDisplayFilterCategory(String title, List<String> listData){
     ),
   );
 }
+
+Widget belowTableTitle(String title, {TextAlign textAlign = TextAlign.center, double fontSize = 12, Color fontColor = blackLight}){
+  return Text(
+    title,
+    style: getBoldTextStyle(fontSize: fontSize, color: fontColor),
+    textAlign: textAlign,
+  );
+}

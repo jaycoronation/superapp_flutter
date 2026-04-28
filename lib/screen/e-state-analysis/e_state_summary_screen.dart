@@ -163,11 +163,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         aspirationCalculationWidget(),
                         const Gap(16),
                         Center(
-                          child: Text(
-                            "*Target Return may or may not be delivered due to market risk.",
-                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                            textAlign: TextAlign.center,
-                          ),
+                          child: belowTableTitle("*Target Return may or may not be delivered due to market risk.")
                         ),
                         const Gap(10),
                       ],
@@ -216,11 +212,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         existingAssetWidget(),
                         const Gap(16),
                         Center(
-                          child: Text(
-                            "*Expected return may or may not come in future due to market risk",
-                            style: getMediumTextStyle(fontSize: 12, color: blackLight),
-                            textAlign: TextAlign.center,
-                          ),
+                          child: belowTableTitle("*Expected return may or may not come in future due to market risk")
                         ),
                         const Gap(10),
                       ],
@@ -314,11 +306,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         futureInflowWidget(),
                         const Gap(10),
                         Center(
-                          child: Text(
-                            "*There will be future infolow of ${convertCommaSeparatedAmount(summaryData.futureInflows?.futureInflowsTotal?.pvOfIncome ?? "")}",
-                            style: getRegularTextStyle(fontSize: 12, color: blackLight),
-                            textAlign: TextAlign.center,
-                          ),
+                          child: belowTableTitle("*There will be future inflow of ${convertCommaSeparatedAmount(summaryData.futureInflows?.futureInflowsTotal?.pvOfIncome ?? "")}")
                         ),
                         const Gap(10),
                       ],
@@ -531,11 +519,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         ),
                         const Gap(10),
                         Center(
-                          child: Text(
-                            "*Expected profit growth may or may not happen in future",
-                            style: getRegularTextStyle(fontSize: 12, color: blackLight),
-                            textAlign: TextAlign.center,
-                          ),
+                          child: belowTableTitle("*Expected profit growth may or may not happen in future"),
                         ),
                         const Gap(10),
                       ],
@@ -761,11 +745,7 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                         ourRecommendationWidget(),
                         const Gap(10),
                         Center(
-                          child: Text(
-                            "*Expected return may or may not come in future due to market risk",
-                            style: getRegularTextStyle(fontSize: 12, color: blackLight),
-                            textAlign: TextAlign.center,
-                          ),
+                          child: belowTableTitle("*Expected return may or may not come in future due to market risk"),
                         ),
                         const Gap(10),
                       ],
@@ -824,13 +804,13 @@ class _EStateSummaryScreenState extends BaseState<EStateSummaryScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("*Inflation is assumed at 6%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("*Inflation is assumed at 6%"),
                               const Gap(2),
-                              Text("**Expected profit growth is 12%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("**Expected profit growth is 12%"),
                               const Gap(2),
-                              Text("***Expected growth in fresh inflow is 10%", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("***Expected growth in fresh inflow is 10%"),
                               const Gap(2),
-                              Text("**Expected profit growth may or may not happen in future due to market risk.", style: getMediumTextStyle(fontSize: 12, color: blackLight), textAlign: TextAlign.center,),
+                              belowTableTitle("**Expected profit growth may or may not happen in future due to market risk."),
                             ],
                           ),
                         ),

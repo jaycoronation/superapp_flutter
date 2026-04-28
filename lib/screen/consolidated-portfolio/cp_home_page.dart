@@ -12,7 +12,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/GenerateReportResponseModel.dart';
-import 'package:superapp_flutter/screen/consolidated-portfolio/asset/AssetListScreen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_movement.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_bs_projection_screen.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_capital_gain.dart';
@@ -33,7 +32,7 @@ import '../../utils/app_utils.dart';
 import '../../utils/base_class.dart';
 
 class CPHomePage extends StatefulWidget {
-  const CPHomePage({Key? key}) : super(key: key);
+  const CPHomePage({super.key});
 
   @override
   CPHomePageState createState() => CPHomePageState();
@@ -109,7 +108,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
       child: Scaffold(
         backgroundColor: appBg,
         appBar: AppBar(
-            toolbarHeight: _currentIndex == 2 ? 60 : 60,
+            toolbarHeight: _currentIndex == 2 ? 50 : 60,
             automaticallyImplyLeading: false,
             backgroundColor: appBg,
             elevation: 0,
@@ -139,7 +138,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                 child: getBackArrow(),
               ),
             ),
-            centerTitle: true,
+            centerTitle: false,
             titleSpacing: 0,
             title: getTitle(
               _currentIndex == 0
@@ -158,7 +157,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                       onTap: () async{
                         _handler.sendMessage(Message(100,""));
                       },
-                      child: Image.asset(isSearchNetWorth ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: black,)
+                      child: Image.asset(isSearchNetWorth ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: blue,)
                   ),
                 ),
               ),
@@ -171,7 +170,7 @@ class CPHomePageState extends BaseState<CPHomePage> {
                       onTap: () async{
                         _handler.sendMessage(Message(101,""));
                       },
-                      child: Image.asset(isSearchPortfolio ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: black,)
+                      child: Image.asset(isSearchPortfolio ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: blue,)
                   ),
                 ),
               ),
@@ -181,13 +180,28 @@ class CPHomePageState extends BaseState<CPHomePage> {
                 },
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(right: 5),
+                  margin: const EdgeInsets.only(right: 4),
                   padding: const EdgeInsets.all(3),
                   width: 32,
                   height:  32,
                   child: Image.asset('assets/images/vault_ic_share_pdf.png', width: 32, height: 32, color: blue),
                 ),
               ),
+              Visibility(
+                visible: _currentIndex == 2,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    _handler.sendMessage(Message(105,""));
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, top: 4, bottom: 4, right: 4),
+                    child: Center(
+                      child: Text("+ Add Asset", style: getBoldTextStyle(fontSize: 14, color: blue),),
+                    ),
+                  ),
+                ),
+              )
             ]
         ),
         body: Column(
@@ -553,33 +567,33 @@ class CPHomePageState extends BaseState<CPHomePage> {
                             thickness: 0.5,
                             color: divider_color,
                           ),
-                          const Gap(12),
-                          InkWell(
-                            onTap: (){
-                              Navigator.pop(context);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AssetListScreen()));
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
-                                  Container(width: 12),
-                                  const Text(
-                                    "Add Assets",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Gap(12),
-                          const Divider(
-                            height: 0.5,
-                            thickness: 0.5,
-                            color: divider_color,
-                          ),
+                          // const Gap(12),
+                          // InkWell(
+                          //   onTap: (){
+                          //     Navigator.pop(context);
+                          //     Navigator.push(context, MaterialPageRoute(builder: (context) => const AssetListScreen()));
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(8),
+                          //     child: Row(
+                          //       children: [
+                          //         Image.asset('assets/images/portfolio_ic_capital_gain.png', width: 24, height: 24,color: blue),
+                          //         Container(width: 12),
+                          //         const Text(
+                          //           "Add Assets",
+                          //           textAlign: TextAlign.start,
+                          //           style: TextStyle(fontSize: 18, color: blue, fontWeight: FontWeight.w600),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
+                          // const Gap(12),
+                          // const Divider(
+                          //   height: 0.5,
+                          //   thickness: 0.5,
+                          //   color: divider_color,
+                          // ),
 
                           Image.asset('assets/images/portfolio_icon_logo_header_blue.png',fit: BoxFit.contain,color: blue, width: 250,height: 100,),
 

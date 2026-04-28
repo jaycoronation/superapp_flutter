@@ -72,6 +72,10 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
         });
         _handler.sendMessage(Message(104,""));
       }
+      else if(message.what == 105)
+      {
+        _redirectToAddAsset();
+      }
     });
 
     if ((sessionManagerPMS.getApplicantsList() != null))
@@ -153,6 +157,18 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
       }
     }
     return "";
+  }
+
+  _redirectToAddAsset() async{
+    var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(Assets(), false)));
+    if (value == "success")
+    {
+      _getPortfolioDataNew();
+    }
+    else
+    {
+      print("Simple back press in screen");
+    }
   }
 
   @override
@@ -336,20 +352,20 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
             )
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'add_asset_portfolio',
-        onPressed: () async{
-
-          var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(Assets(), false)));
-          if (value == "success")
-          {
-            _getPortfolioDataNew();
-          }
-        },
-        icon: Icon(Icons.add, color: white,),
-        label: Text("Add Asset", style: getMediumTextStyle(fontSize: 14, color: white),),
-        backgroundColor: blue,
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   heroTag: 'add_asset_portfolio',
+      //   onPressed: () async{
+      //
+      //     var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(Assets(), false)));
+      //     if (value == "success")
+      //     {
+      //       _getPortfolioDataNew();
+      //     }
+      //   },
+      //   icon: Icon(Icons.add, color: white,),
+      //   label: Text("Add Asset", style: getMediumTextStyle(fontSize: 14, color: white),),
+      //   backgroundColor: blue,
+      // ),
     );
   }
 

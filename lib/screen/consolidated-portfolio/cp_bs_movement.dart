@@ -302,7 +302,31 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
                     ),
                     const Gap(20),
                     listSheetData.isNotEmpty
-                    ? buildBsMovementWidget()
+                    //? buildBsMovementWidget()
+                    ? Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 8,right: 8,top: 14,bottom: 14),
+                            decoration: const BoxDecoration(
+                                color:semiBlue,
+                                borderRadius: BorderRadius.only(topLeft:Radius.circular(8),topRight: Radius.circular(8))
+                            ),
+                            child: const Row(
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: Text('Month/Date', style: TextStyle(color: blue, fontSize: 16, fontWeight: FontWeight.w600))
+                                ),
+                                Expanded(
+                                    flex: 1,
+                                    child: Text('Total Amount', textAlign: TextAlign.center, style: TextStyle(color: blue, fontSize: 16, fontWeight: FontWeight.w600))
+                                ),
+                              ],
+                            ),
+                          ),
+                          _itemList(),
+                        ]
+                    )
                     : const MyNoDataWidget(msg: "No data found."),
                   ],),
                 ),
@@ -311,7 +335,6 @@ class CPBsMovementPageState extends BaseState<CPBsMovementPage> {
     );
   }
 
-  @override
   final List<DeviceOrientation> supportedOrientations = [
     DeviceOrientation.portraitUp,
     DeviceOrientation.landscapeRight,

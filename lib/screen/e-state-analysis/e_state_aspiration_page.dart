@@ -89,13 +89,14 @@ class _EStateAspirationPageState extends BaseState<EStateAspirationPage> {
                           const Gap(20),
                           aspirationCalculationWidget(),
                           const Gap(24),
-                          Center(
-                            child: Text(
-                              "*Target Return may or may not be delivered due to market risk.",
-                              style: getBoldTextStyle(fontSize: 14, color: black),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              belowTableTitle("*Target Return may or may not be delivered due to market risk."),
+                              const Gap(2),
+                              belowTableTitle("Wealth required today is ${convertCommaSeparatedAmount(totalAspiration.wealthRequiredTodayTotal ?? "")}"),
+                            ],
+                          ),
 
 
                           // Text("*Target Return may or may not be delivered due to market risk.",style: TextStyle(color: black,fontSize: 16,fontWeight: FontWeight.w500),),

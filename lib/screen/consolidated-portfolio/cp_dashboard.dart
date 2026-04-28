@@ -100,7 +100,7 @@ class CPDashboardPageState extends BaseState<CPDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: dashboardBg,
+      backgroundColor: white,
       body: _isLoading
           ? const LoadingWidget()
           : ResponsiveWidget.isMediumScreen(context)
