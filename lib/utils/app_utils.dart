@@ -341,6 +341,12 @@ tabNavigationReload() {
 /*convert string to CamelCase*/
 toDisplayCase (String str) {
   try {
+
+    if (str.isEmpty)
+      {
+        return str;
+      }
+
     return str.toLowerCase().split(' ').map((word) {
         String leftText = (word.length > 1) ? word.substring(1, word.length) : '';
         return word[0].toUpperCase() + leftText;
