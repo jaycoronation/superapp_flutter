@@ -313,6 +313,7 @@ class _LoginScreenNewState extends BaseState<LoginScreenNew> {
       {
         sessionManager.setRMIUserName(res['result']['username']);
         sessionManager.setRMIDName(res['result']['name']);
+        sessionManager.setRMIDEmail(res['result']['email']);
 
         print("Display user name : ${sessionManager.getRMIUserName()}");
         print("Display name : ${sessionManager.getRMIDName()}");

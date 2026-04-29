@@ -15,6 +15,7 @@ class SessionManager {
   final String rmidAdminId = "rmidAdminId";
   final String rmUserName = "rmUserName";
   final String rmName = "rmName";
+  final String rmEmail = "rmEmail";
 
   //set data into shared preferences...
   Future createLoginSession(String userIdApi,String fullNameApi ,String emailApi,
@@ -135,6 +136,15 @@ class SessionManager {
   Future<void> setRMIDName(String data)
   async {
     await SessionManagerMethods.setString(rmName, data);
+  }
+
+  String getRMIDEmail() {
+    return checkValidString(SessionManagerMethods.getString(rmEmail));
+  }
+
+  Future<void> setRMIDEmail(String data)
+  async {
+    await SessionManagerMethods.setString(rmEmail, data);
   }
 
   checkValidString (String? value) {

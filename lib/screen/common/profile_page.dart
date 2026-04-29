@@ -19,7 +19,7 @@ import 'LoginScreen.dart';
 import 'SuggestedActionsScreen.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   BaseState<ProfilePage> createState() => _ProfilePageState();
@@ -46,7 +46,6 @@ class _ProfilePageState extends BaseState<ProfilePage> {
         backgroundColor: white,
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
             color: dashboardBg,
             borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))
@@ -84,18 +83,21 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          toDisplayCase("${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}"),
+                          displayOrDash(getIsClient() ? toDisplayCase("${sessionManagerPMS.getFirstName()} ${sessionManagerPMS.getLastName()}") : toDisplayCase(sessionManager.getRMIDName())),
                           textAlign: TextAlign.start,
                           style: const TextStyle(fontWeight: FontWeight.w500, color: black, fontSize: 22, fontFamily: 'Colfax'),
                         ),
-                        Container(
-                          decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(8)),
-                          padding: const EdgeInsets.fromLTRB(6, 3, 6, 3),
-                          margin: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            sessionManagerPMS.getEmail(),
-                            textAlign: TextAlign.start,
-                            style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 14, fontFamily: 'Colfax'),
+                        Visibility(
+                          visible: getIsClient() ? (sessionManagerPMS.getEmail().isNotEmpty) :  sessionManager.getRMIDEmail().isNotEmpty,
+                          child: Container(
+                            decoration: BoxDecoration(color: gray, borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.fromLTRB(6, 3, 6, 3),
+                            margin: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              displayOrDash(getIsClient() ? sessionManagerPMS.getEmail() : sessionManager.getRMIDEmail()),
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(fontWeight: FontWeight.w400, color: black, fontSize: 14, fontFamily: 'Colfax'),
+                            ),
                           ),
                         ),
 
@@ -117,47 +119,15 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       onTap: () async {
                         startActivity(context, const DocumentsScreen());
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Document",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("Document")
                     ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const InsuranceListScreen()),);
-                      },
-                      child: optionWidget("Insurance")
-                    ),
+                    // GestureDetector(
+                    //   behavior: HitTestBehavior.opaque,
+                    //   onTap: () {
+                    //     Navigator.push(context, MaterialPageRoute(builder: (context) => const InsuranceListScreen()),);
+                    //   },
+                    //   child: optionWidget("Insurance")
+                    // ),
                     GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () {
@@ -188,39 +158,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                           launchUrl(urlData,mode: LaunchMode.externalApplication);
                         }
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("About Us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("About Us")
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -231,39 +169,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                           launchUrl(urlData,mode: LaunchMode.externalApplication);
                         }
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("RIA Charter",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("RIA Charter")
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -274,78 +180,14 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                           launchUrl(urlData,mode: LaunchMode.externalApplication);
                         }
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Privacy Policy",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("Privacy Policy")
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () async {
                         startActivity(context, const LocateUsPage());
                       },
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: false,
-                                  child: SizedBox(
-                                    width: 48,
-                                    height: 48,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                                      child: Image.asset('assets/images/ic_placeholder.png', width: 16, height: 16, color: black),
-                                    ),
-                                  ),
-                                ),
-                                const Text("Locate us",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w500,color:  black,fontSize: 16),),
-                                const Spacer(),
-                                Image.asset(
-                                  'assets/images/ic_arrow_right.png',
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                const Gap(12)
-                              ],
-                            ),
-                          ),
-                          const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
-                        ],
-                      ),
+                      child: optionWidget("Locate us")
                     ),
 
                     GestureDetector(
@@ -353,7 +195,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
                       onTap: () {
                         logoutFromApp();
                       },
-                      child: optionWidget("Logout", titleColor: red)
+                      child: optionWidget("Logout", titleColor: red, isShowDivider: false)
                     ),
                   ],
                 ),
@@ -425,7 +267,7 @@ class _ProfilePageState extends BaseState<ProfilePage> {
     );
   }
 
-  Widget optionWidget(String title, {Color titleColor = black}){
+  Widget optionWidget(String title, {Color titleColor = black, bool isShowDivider = true}){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -446,7 +288,10 @@ class _ProfilePageState extends BaseState<ProfilePage> {
             ],
           ),
         ),
-        const Divider(thickness: 0.7, height: 0.7, color: lightgrey,indent: 12,endIndent: 12,)
+        Visibility(
+          visible: isShowDivider,
+          child: const Divider(thickness: 1, height: 1, color: lightgrey, indent: 12, endIndent: 12,)
+        )
       ],
     );
   }

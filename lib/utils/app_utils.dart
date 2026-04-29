@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:superapp_flutter/utils/session_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../common_widget/common_widget.dart';
 import '../constant/colors.dart';
@@ -864,4 +865,9 @@ Widget getBottomSheetItemWithSelection(String title, bool isSelected, bool isDiv
       ),
     ],
   );
+}
+
+bool getIsClient(){
+  SessionManager sessionManager = SessionManager();
+  return sessionManager.getUserType() == "client";
 }

@@ -491,7 +491,7 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
         ]);
         final url = Uri.parse(API_URL_CP + insuranceListApi);
         Map<String, String> jsonBody = {
-          "user_id" : sessionManagerPMS.getUserId(),
+          "user_id" : getIsClient() ? sessionManagerPMS.getUserId() : sessionManager.getRMIDAdminId(),
         };
         final response = await http.post(url, body: jsonBody);
         final statusCode = response.statusCode;
@@ -505,7 +505,8 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
         }
         else
         {
-         showToast("${dataResponse.message}");
+          print("Display success code is 0 :${dataResponse.message}");
+         // showToast("${dataResponse.message}");
         }
       }
       catch(e)

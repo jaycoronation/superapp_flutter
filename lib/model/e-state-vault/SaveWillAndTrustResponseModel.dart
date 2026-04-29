@@ -18,7 +18,7 @@ class SaveWillAndTrustResponseModel {
   SaveWillAndTrustResponseModel.fromJson(dynamic json) {
     _success = json['success'];
     _message = json['message'];
-    _willId = json['will_id'];
+    _willId = json['will_id'] is int ? json['will_id'].toString() : json['will_id'];
   }
   num? _success;
   String? _message;

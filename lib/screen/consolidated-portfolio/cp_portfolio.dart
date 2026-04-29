@@ -160,7 +160,9 @@ class CPPortfolioPageState extends BaseState<CPPortfolioPage> {
   }
 
   _redirectToAddAsset() async{
+    if (!mounted) return;
     var value = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddAssetScreen(Assets(), false)));
+    if (!mounted) return;
     if (value == "success")
     {
       _getPortfolioDataNew();
