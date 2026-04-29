@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -16,11 +17,10 @@ import '../../constant/analysis_api_end_point.dart';
 import '../../constant/api_end_point.dart';
 import '../../constant/colors.dart';
 import '../../model/e-state-analysis/RmFpUserListResponseModel.dart';
+import '../../utils/MessageHandler.dart';
 import '../../widget/loading.dart';
 import '../../widget/loading_more.dart';
 import '../../widget/no_data.dart';
-import 'e_state_analysis_home_page.dart';
-import 'e_state_summary_screen.dart';
 
 class RmFpLeadScreen extends StatefulWidget {
   const RmFpLeadScreen({super.key});
@@ -54,8 +54,12 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
 
   ScrollController _scrollViewController = ScrollController();
 
+  StreamSubscription<Message>? _subscription;
+  final MessageHandler _handler = MessageHandler();
+
   @override
   void initState() {
+    super.initState();
     fetchRmUserLeadList(true);
     getUserList();
     _scrollViewController = ScrollController();
@@ -79,7 +83,23 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
       }
       pagination();
     },);
-    super.initState();
+
+    _subscription = _handler.stream.listen((message) async {
+      if(message.what == 109)
+      {
+        if (!mounted) return;
+        setState(() {
+          if(searchController.text != "" && isSearchShow == true)
+          {
+            searchValue = "";
+            searchController.text = "";
+            fetchRmUserLeadList(true);
+          }
+          isSearchShow = !isSearchShow;
+        });
+        _handler.sendMessage(Message(107,""));
+      }
+    });
   }
 
   void pagination(){
@@ -96,11 +116,17 @@ class _RmFpLeadScreenState extends BaseState<RmFpLeadScreen> {
   }
 
   @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: dashboardBg,
       appBar: AppBar(
-        toolbarHeight: 55,
+        toolbarHeight: 0,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
           onTap: () {

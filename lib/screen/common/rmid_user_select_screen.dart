@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:superapp_flutter/model/UserListResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/NetworthResponseModel.dart';
 import 'package:superapp_flutter/model/consolidated-portfolio/PercentageResponse.dart';
 import 'package:superapp_flutter/screen/consolidated-portfolio/cp_home_page.dart';
-import 'package:superapp_flutter/screen/e-state-analysis/e_state_analysis_home_page.dart';
 import 'package:superapp_flutter/screen/e-state-valut/e_state_valut_home_page.dart';
 import 'package:superapp_flutter/service/JobService.dart';
 import 'package:superapp_flutter/utils/base_class.dart';
@@ -21,12 +21,14 @@ import 'package:superapp_flutter/widget/loading_more.dart';
 import 'package:superapp_flutter/widget/no_data.dart';
 import 'package:superapp_flutter/widget/no_internet.dart';
 
+import '../../utils/MessageHandler.dart';
 import '../../utils/app_utils.dart';
 import '../e-state-analysis/fp_home_page.dart';
 
 class RMIDUserSelectScreen extends StatefulWidget {
   final String isFor;
-  const RMIDUserSelectScreen(this.isFor, {super.key});
+  final bool isFromTab;
+  const RMIDUserSelectScreen(this.isFor, {required this.isFromTab, super.key});
 
   @override
   BaseState<RMIDUserSelectScreen> createState() => _RMIDUserSelectScreenState();
@@ -42,6 +44,7 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
   bool isLastPage = false;
   bool isScrollingDown = false;
   bool isSearchShow = false;
+  bool isFromTab = false;
 
   String searchText = "";
   TextEditingController searchController = TextEditingController();
@@ -50,9 +53,13 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
 
   List<Users> listUserData = [];
 
+  StreamSubscription<Message>? _subscription;
+  final MessageHandler _handler = MessageHandler();
+
   @override
   void initState() {
     isFor = (widget as RMIDUserSelectScreen).isFor;
+    isFromTab = (widget as RMIDUserSelectScreen).isFromTab;
     getUserList(true);
     _scrollViewController = ScrollController();
     _scrollViewController.addListener(() {
@@ -75,6 +82,24 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
       }
       pagination();
     });
+
+    _subscription = _handler.stream.listen((message) async {
+      if(message.what == 108)
+      {
+        if (!mounted) return;
+        setState(() {
+          if(searchController.text != "" && isSearchShow == true)
+          {
+            searchText = "";
+            searchController.text = "";
+            getUserList(true);
+          }
+          isSearchShow = !isSearchShow;
+        });
+        _handler.sendMessage(Message(106,""));
+      }
+    });
+
     super.initState();
   }
 
@@ -103,12 +128,18 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
   }
 
   @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: dashboardBg,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        toolbarHeight: 55,
+        toolbarHeight: isFromTab ? 0 : 55,
         automaticallyImplyLeading: false,
         leading: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -180,99 +211,8 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
         child: Column(
           children: [
             Visibility(
-              visible: isSearchShow && !isLoading,
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  color: gray,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextField(
-                  cursorColor: black,
-                  controller: searchController,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.search,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: black,
-                      fontWeight: FontWeight.w400
-                  ),
-                  onSubmitted: (value) {
-                    if(value.isEmpty)
-                    {
-                      setState(() {
-                        searchText = '';
-                        searchController.text = "";
-                      });
-                      getUserList(true);
-                    }
-                    else
-                    {
-                      setState(() {
-                        searchText = value;
-                      });
-                      getUserList(true);
-                    }
-                  },
-                  onChanged: (value) {
-                    if(searchController.text.isEmpty)
-                    {
-                      setState(() {
-                        searchText = '';
-                        searchController.text = "";
-                      });
-                      getUserList(true);
-                    }
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    hintText: 'Search user...',
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0), borderSide: BorderSide.none),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0), borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(0.0), borderSide: BorderSide.none),
-                    contentPadding: const EdgeInsets.only(left: 12, right: 12),
-                    prefixIcon: const InkWell(
-                      onTap: null,
-                      child: Icon(Icons.search_rounded, size: 26, color: black),
-                    ),
-                    suffixIcon: searchText.isNotEmpty
-                        ? GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        hideKeyboard(context);
-                        if (searchText.isNotEmpty)
-                        {
-                          setState(() {
-                            searchText = "";
-                            searchController.text = "";
-                          });
-
-                          if (isOnline)
-                          {
-                            getUserList(true);
-                          }
-                          else {
-                            noInterNet(context);
-                          }
-                        }
-                        else
-                        {
-                          setState(() {
-                            searchText = "";
-                            searchController.text = "";
-                          });
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Image.asset('assets/images/ic_close.png', height: 12, width: 12, color: gray),
-                      ),
-                    )
-                        : null,
-                  ),
-                ),
-              ),
+              visible: isSearchShow,
+              child: searchView(),
             ),
             const Gap(10),
             Expanded(child: isLoading ? LoadingWidget() : setUserList()),
@@ -280,6 +220,71 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
             const Gap(20)
           ],
         ),
+      ),
+    );
+  }
+
+  Widget searchView(){
+    return Container(
+      margin: EdgeInsets.only(top: 10, bottom: 10),
+      child: commonSearchTextField(
+        searchController,
+        "Search user...",
+        //on change
+        (value) {
+          if(searchController.text.isEmpty)
+          {
+            setState(() {
+              searchText = '';
+              searchController.text = "";
+            });
+            getUserList(true);
+          }
+        },
+        // on submit
+        (value) {
+          if(value.isEmpty)
+          {
+            setState(() {
+              searchText = '';
+              searchController.text = "";
+            });
+            getUserList(true);
+          }
+          else
+          {
+            setState(() {
+              searchText = value;
+            });
+            getUserList(true);
+          }
+        },
+        //close clear
+        () {
+          hideKeyboard(context);
+          if (searchText.isNotEmpty)
+          {
+            setState(() {
+              searchText = "";
+              searchController.text = "";
+            });
+
+            if (isOnline)
+            {
+              getUserList(true);
+            }
+            else {
+              noInterNet(context);
+            }
+          }
+          else
+          {
+            setState(() {
+              searchText = "";
+              searchController.text = "";
+            });
+          }
+        },
       ),
     );
   }

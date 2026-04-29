@@ -11,6 +11,7 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:superapp_flutter/model/UpdateDeviceTokenResponseModel.dart';
 import 'package:superapp_flutter/screen/common/blog_and_videos_tab_screen.dart';
 import 'package:superapp_flutter/screen/common/profile_page.dart';
+import 'package:superapp_flutter/screen/common/rm_option_select_tab_screen.dart';
 import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/screen/common/task_and_summaries_screen.dart';
 import 'package:superapp_flutter/screen/e-state-analysis/fp_home_page.dart';
@@ -253,7 +254,7 @@ class _HomePageState extends BaseState<HomePage> {
                       }
                       else
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP", isFromTab: false,)));
                       }
                     }
                     else if(data.id == "3")
@@ -268,8 +269,7 @@ class _HomePageState extends BaseState<HomePage> {
                       else
                       {
                         //RM(broker) user
-                        openOptionSelectionDialog();
-
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RmOptionSelectTabScreen()));
                       }
                     }
                     else if(data.id == "4")
@@ -282,7 +282,7 @@ class _HomePageState extends BaseState<HomePage> {
                       }
                       else
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV", isFromTab: false,)));
                       }
                     }
                     else if(data.id == "5")
@@ -370,56 +370,6 @@ class _HomePageState extends BaseState<HomePage> {
     );
   }
 
-  openOptionSelectionDialog(){
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-      builder: (BuildContext context) {
-        return Wrap(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)), color: white),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  getBottomSheetHeaderWithoutButton(context, "Select Option"),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: getCommonButton(
-                          "Client",
-                          false,
-                          () {
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("FP")));
-                          }
-                        ),
-                      ),
-                      const Gap(20),
-                      Expanded(
-                        child: getCommonButton(
-                          "Leads",
-                          false,
-                          () async {
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const RmFpLeadScreen()));
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Widget homePageBlocks() {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
@@ -484,7 +434,7 @@ class _HomePageState extends BaseState<HomePage> {
                       }
                       else
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP")));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("CP", isFromTab: false,)));
                       }
                     }
                     else if(data.id == "3")
@@ -513,7 +463,7 @@ class _HomePageState extends BaseState<HomePage> {
                       }
                       else
                       {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV")));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RMIDUserSelectScreen("EV", isFromTab: false,)));
                       }
                     }
                     else if(data.id == "5")
@@ -1388,7 +1338,7 @@ class _HomePageState extends BaseState<HomePage> {
       osVersion = androidInfo.version.release;
     } else {
       IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
-      deviceName = iosInfo.utsname.machine ?? '';
+      deviceName = iosInfo.utsname.machine;
       osVersion = iosInfo.systemName;
     }
   }

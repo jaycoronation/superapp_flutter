@@ -1,49 +1,71 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:superapp_flutter/screen/common/blogs_page.dart';
-import 'package:superapp_flutter/screen/common/video_list_page.dart';
+import 'package:superapp_flutter/screen/common/rmid_user_select_screen.dart';
 import 'package:superapp_flutter/utils/base_class.dart';
 
 import '../../common_widget/common_widget.dart';
 import '../../constant/colors.dart';
 import '../../model/CommonModel.dart';
+import '../../utils/MessageHandler.dart';
+import '../e-state-analysis/rm_fp_lead_screen.dart';
 
-class BlogAndVideosTabScreen extends StatefulWidget {
-  const BlogAndVideosTabScreen({super.key});
+class RmOptionSelectTabScreen extends StatefulWidget {
+  const RmOptionSelectTabScreen({super.key});
 
   @override
-  BaseState<BlogAndVideosTabScreen> createState() => _BlogAndVideosTabScreenState();
+  BaseState<RmOptionSelectTabScreen> createState() => _RmOptionSelectTabScreenState();
 }
 
-class _BlogAndVideosTabScreenState extends BaseState<BlogAndVideosTabScreen> with SingleTickerProviderStateMixin{
+class _RmOptionSelectTabScreenState extends BaseState<RmOptionSelectTabScreen>with SingleTickerProviderStateMixin {
 
   ScrollController scrollController = ScrollController();
-
   int currentIndex = 0;
   late TabController tabController;
-
   List<TabModel> tabList = [];
+
+  StreamSubscription<Message>? _subscription;
+  final MessageHandler _handler = MessageHandler();
+
+  bool isSearchClient = true;
+  bool isSearchLead = true;
 
   @override
   void initState() {
     super.initState();
     _init();
+    _subscription = _handler.stream.listen((message) {
+      if(message.what == 106)
+      {
+        if (!mounted) return;
+        setState(() {
+          isSearchClient = !isSearchClient;
+        });
+      }
+      else if(message.what == 107)
+      {
+        if (!mounted) return;
+        setState(() {
+          isSearchLead = !isSearchLead;
+        });
+      }
+    });
   }
+
 
   void _init() async {
     setData();
 
     if (!mounted) return;
 
-    tabController = TabController(
-      length: tabList.length,
-      vsync: this,
-      initialIndex: currentIndex,
-    );
+    tabController = TabController(length: tabList.length, vsync: this, initialIndex: currentIndex,);
 
     tabController.addListener(() {
       if (!mounted) return;
 
       setState(() {
+        isSearchClient = true;
+        isSearchLead = true;
         currentIndex = tabController.index;
       });
     });
@@ -53,9 +75,16 @@ class _BlogAndVideosTabScreenState extends BaseState<BlogAndVideosTabScreen> wit
 
   setData(){
     tabList = [
-      TabModel(id: "1", title: "Blog"),
-      TabModel(id: "2", title: "Videos"),
+      TabModel(id: "1", title: "Client"),
+      TabModel(id: "2", title: "Leads"),
     ];
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -73,8 +102,36 @@ class _BlogAndVideosTabScreenState extends BaseState<BlogAndVideosTabScreen> wit
           },
           child: getBackArrow(),
         ),
-        title: getTitle("Blog & Videos"),
+        title: getTitle(""),
         backgroundColor: white,
+        actions: [
+          Visibility(
+            visible: currentIndex == 0,
+            child: Container(
+              margin: const EdgeInsets.only(right: 12),
+              child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async{
+                    _handler.sendMessage(Message(108, ""));
+                  },
+                  child: Image.asset(isSearchClient ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: blue,)
+              ),
+            ),
+          ),
+          Visibility(
+            visible: currentIndex == 1,
+            child: Container(
+              margin: const EdgeInsets.only(right: 12),
+              child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async{
+                    _handler.sendMessage(Message(109, ""));
+                  },
+                  child: Image.asset(isSearchLead ? "assets/images/ic_search.png" : "assets/images/ic_search_cancel.png", width: 22, height: 22, color: blue,)
+              ),
+            ),
+          ),
+        ],
       ),
       body: NestedScrollView(
         controller: scrollController,
@@ -124,8 +181,8 @@ class _BlogAndVideosTabScreenState extends BaseState<BlogAndVideosTabScreen> wit
             controller: tabController,
             physics: const ClampingScrollPhysics(),
             children: [
-              const BlogsPage(),
-              const VideoListPage(),
+              const RMIDUserSelectScreen("FP", isFromTab: true,),
+              const RmFpLeadScreen(),
             ],
           ),
         ),
@@ -135,6 +192,6 @@ class _BlogAndVideosTabScreenState extends BaseState<BlogAndVideosTabScreen> wit
 
   @override
   void castStatefulWidget() {
-    widget as BlogAndVideosTabScreen;
+    widget as RmOptionSelectTabScreen;
   }
 }
