@@ -24,6 +24,7 @@ import 'package:superapp_flutter/widget/no_internet.dart';
 import '../../utils/MessageHandler.dart';
 import '../../utils/app_utils.dart';
 import '../e-state-analysis/fp_home_page.dart';
+import '../insurance_data/insurance_list_screen.dart';
 
 class RMIDUserSelectScreen extends StatefulWidget {
   final String isFor;
@@ -532,6 +533,18 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
             dataResponse.vault?.cityId ?? '',
           );
         }
+        else if(isFor == "MI")
+        {
+          sessionManagerPMS.setIsLoggedIn(true);
+          await sessionManagerPMS.createLoginSession(
+              dataResponse.portfolio?.userId ?? '',
+              dataResponse.portfolio?.firstName ?? '',
+              dataResponse.portfolio?.lastName ?? '',
+              dataResponse.portfolio?.email ?? '',
+              dataResponse.portfolio?.panNo ?? ''
+          );
+
+        }
 
         setState(() {
           getSet.isLoading = false;
@@ -572,6 +585,10 @@ class _RMIDUserSelectScreenState extends BaseState<RMIDUserSelectScreen> {
     else if(isFor == "EV")
     {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const EStateVaultHomePage()),);
+    }
+    else if(isFor == "MI")
+    {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const InsuranceListScreen()),);
     }
 
   }

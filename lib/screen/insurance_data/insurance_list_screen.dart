@@ -491,7 +491,7 @@ class _InsuranceListScreenState extends BaseState<InsuranceListScreen> {
         ]);
         final url = Uri.parse(API_URL_CP + insuranceListApi);
         Map<String, String> jsonBody = {
-          "user_id" : getIsClient() ? sessionManagerPMS.getUserId() : sessionManager.getRMIDAdminId(),
+          "user_id" : sessionManagerPMS.getUserId(),
         };
         final response = await http.post(url, body: jsonBody);
         final statusCode = response.statusCode;
